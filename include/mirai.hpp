@@ -130,9 +130,53 @@ namespace Cyan
 				throw runtime_error(res.ErrorMsg);
 			return false;
 		}
-		bool SendQuoteMessage(MessageSourceID target, const MessageChain& messageChain);
-		FriendImage UploadFriendImage(const string& fileName);
-		GroupImage UploadGroupImage(const string& fileName);
+		bool SendQuoteMessage(MessageSourceID target, MessageChain& messageChain);
+		FriendImage UploadFriendImage(const string& fileName)
+		{
+			using namespace rapidjson;
+			static const string api_url = api_url_prefix_ + "/uploadImage";
+
+			HTTP http; http.SetContentType("multipart/form-data");
+			http.AddMimeData("sessionKey", sessionKey_);
+			http.AddMimeData("type", "friend");
+			http.AddMimeFile("img", fileName);
+			auto res = http.Post(api_url);
+			FriendImage fImg;
+
+			if (res.Ready)
+			{
+				if (!res.Content.empty())
+				{
+					fImg.ID = res.Content;
+				}
+			}
+			else
+				throw runtime_error(res.ErrorMsg);
+			return fImg;
+		}
+		GroupImage UploadGroupImage(const string& fileName)
+		{
+			using namespace rapidjson;
+			static const string api_url = api_url_prefix_ + "/uploadImage";
+
+			HTTP http; http.SetContentType("multipart/form-data");
+			http.AddMimeData("sessionKey", sessionKey_);
+			http.AddMimeData("type", "group");
+			http.AddMimeFile("img", fileName);
+			auto res = http.Post(api_url);
+			FriendImage fImg;
+
+			if (res.Ready)
+			{
+				if (!res.Content.empty())
+				{
+					fImg.ID = res.Content;
+				}
+			}
+			else
+				throw runtime_error(res.ErrorMsg);
+			return fImg;
+		}
 		vector<Friend_t> GetFriendList()
 		{
 			using namespace rapidjson;
@@ -160,13 +204,237 @@ namespace Cyan
 			return result;
 
 		}
-		vector<Group_t> GetGroupList() const;
-		vector<GroupMember_t> GetGroupMembers(GID_t target) const;
-		bool MuteAll(GID_t target);
-		bool UnMuteAll(GID_t target);
-		bool Mute(GID_t GID, QQ_t memberID, unsigned int time);
-		bool UnMute(GID_t GID, QQ_t memberID, unsigned int time);
-		bool Kick(GID_t GID, QQ_t memberID, const string& msg);
+		vector<Group_t> GetGroupList()
+		{
+			using namespace rapidjson;
+			static const string api_url = api_url_prefix_ + "/groupList?sessionKey=" + sessionKey_;
+			vector<Group_t> result;
+
+			HTTP http;
+			auto res = http.Get(api_url);
+			if (res.Ready)
+			{
+				JsonDoc reJson;
+				if (reJson.Parse(res.Content.data()).HasParseError())
+					throw runtime_error("解析响应 JSON 时出错");
+				if (!reJson.IsArray())
+					throw runtime_error("解析响应 JSON 时出错");
+				for (SizeType i = 0; i < reJson.Size(); i++)
+				{
+					Group_t g;
+					g.Set(reJson[i]);
+					result.push_back(g);
+				}
+			}
+			else
+				throw runtime_error(res.ErrorMsg);
+			return result;
+		}
+		vector<GroupMember_t> GetGroupMembers(GID_t target)
+		{
+			using namespace rapidjson;
+			string api_url = 
+				api_url_prefix_ + 
+				"/memberList?sessionKey=" + 
+				sessionKey_ +
+				"&target=" + 
+				std::to_string(target);
+
+			vector<GroupMember_t> result;
+
+			HTTP http;
+			auto res = http.Get(api_url);
+			if (res.Ready)
+			{
+				JsonDoc reJson;
+				if (reJson.Parse(res.Content.data()).HasParseError())
+					throw runtime_error("解析响应 JSON 时出错");
+				if (!reJson.IsArray())
+					throw runtime_error("解析响应 JSON 时出错");
+				for (SizeType i = 0; i < reJson.Size(); i++)
+				{
+					GroupMember_t g;
+					g.Set(reJson[i]);
+					result.push_back(g);
+				}
+			}
+			else
+				throw runtime_error(res.ErrorMsg);
+			return result;
+
+		}
+		bool MuteAll(GID_t target)
+		{
+			using namespace rapidjson;
+			static const char* const jsonStr = R"( { "sessionKey" : "", "target":0 } )";
+			static const string api_url = api_url_prefix_ + "/muteAll";
+			JsonDoc jdoc;
+			if (jdoc.Parse(jsonStr).HasParseError()) throw runtime_error("未知错误");
+			jdoc["sessionKey"].SetString(sessionKey_.data(), sessionKey_.size());
+			jdoc["target"].SetInt64(target);
+			string pData = JsonDoc2String(jdoc);
+
+			HTTP http; http.SetContentType("application/json;charset=UTF-8");
+			auto res = http.Post(api_url, pData);
+			if (res.Ready)
+			{
+				JsonDoc reJson;
+				if (reJson.Parse(res.Content.data()).HasParseError())
+					throw runtime_error("解析响应 JSON 时出错");
+				Value::MemberIterator code_it = reJson.FindMember("code");
+				Value::MemberIterator msg_it = reJson.FindMember("msg");
+				if (code_it == reJson.MemberEnd() || !code_it->value.IsNumber())
+					throw runtime_error("解析响应 JSON 时出错");
+				if (msg_it == reJson.MemberEnd() || !msg_it->value.IsString())
+					throw runtime_error("解析响应 JSON 时出错");
+				if (code_it->value.GetInt() == 0)
+					return true;
+				else
+					throw runtime_error(msg_it->value.GetString());
+			}
+			else
+				throw runtime_error(res.ErrorMsg);
+			return false;
+		}
+		bool UnMuteAll(GID_t target)
+		{
+			using namespace rapidjson;
+			static const char* const jsonStr = R"( { "sessionKey" : "", "target":0 } )";
+			static const string api_url = api_url_prefix_ + "/unmuteAll";
+			JsonDoc jdoc;
+			if (jdoc.Parse(jsonStr).HasParseError()) throw runtime_error("未知错误");
+			jdoc["sessionKey"].SetString(sessionKey_.data(), sessionKey_.size());
+			jdoc["target"].SetInt64(target);
+			string pData = JsonDoc2String(jdoc);
+
+			HTTP http; http.SetContentType("application/json;charset=UTF-8");
+			auto res = http.Post(api_url, pData);
+			if (res.Ready)
+			{
+				JsonDoc reJson;
+				if (reJson.Parse(res.Content.data()).HasParseError())
+					throw runtime_error("解析响应 JSON 时出错");
+				Value::MemberIterator code_it = reJson.FindMember("code");
+				Value::MemberIterator msg_it = reJson.FindMember("msg");
+				if (code_it == reJson.MemberEnd() || !code_it->value.IsNumber())
+					throw runtime_error("解析响应 JSON 时出错");
+				if (msg_it == reJson.MemberEnd() || !msg_it->value.IsString())
+					throw runtime_error("解析响应 JSON 时出错");
+				if (code_it->value.GetInt() == 0)
+					return true;
+				else
+					throw runtime_error(msg_it->value.GetString());
+			}
+			else
+				throw runtime_error(res.ErrorMsg);
+			return false;
+		}
+		bool Mute(GID_t GID, QQ_t memberID, unsigned int time)
+		{
+			using namespace rapidjson;
+			static const char* const jsonStr = R"( { "sessionKey" : "", "target":0 , "memberId": 0,"time": 0 } )";
+			static const string api_url = api_url_prefix_ + "/mute";
+			JsonDoc jdoc;
+			if (jdoc.Parse(jsonStr).HasParseError()) throw runtime_error("未知错误");
+			jdoc["sessionKey"].SetString(sessionKey_.data(), sessionKey_.size());
+			jdoc["target"].SetInt64(GID);
+			jdoc["memberId"].SetInt64(memberID);
+			jdoc["time"].SetInt(time);
+			string pData = JsonDoc2String(jdoc);
+
+			HTTP http; http.SetContentType("application/json;charset=UTF-8");
+			auto res = http.Post(api_url, pData);
+			if (res.Ready)
+			{
+				JsonDoc reJson;
+				if (reJson.Parse(res.Content.data()).HasParseError())
+					throw runtime_error("解析响应 JSON 时出错");
+				Value::MemberIterator code_it = reJson.FindMember("code");
+				Value::MemberIterator msg_it = reJson.FindMember("msg");
+				if (code_it == reJson.MemberEnd() || !code_it->value.IsNumber())
+					throw runtime_error("解析响应 JSON 时出错");
+				if (msg_it == reJson.MemberEnd() || !msg_it->value.IsString())
+					throw runtime_error("解析响应 JSON 时出错");
+				if (code_it->value.GetInt() == 0)
+					return true;
+				else
+					throw runtime_error(msg_it->value.GetString());
+			}
+			else
+				throw runtime_error(res.ErrorMsg);
+			return false;
+
+		}
+		bool UnMute(GID_t GID, QQ_t memberID)
+		{
+			using namespace rapidjson;
+			static const char* const jsonStr = R"( { "sessionKey" : "", "target":0 , "memberId": 0} )";
+			static const string api_url = api_url_prefix_ + "/unmute";
+			JsonDoc jdoc;
+			if (jdoc.Parse(jsonStr).HasParseError()) throw runtime_error("未知错误");
+			jdoc["sessionKey"].SetString(sessionKey_.data(), sessionKey_.size());
+			jdoc["target"].SetInt64(GID);
+			jdoc["memberId"].SetInt64(memberID);
+			string pData = JsonDoc2String(jdoc);
+
+			HTTP http; http.SetContentType("application/json;charset=UTF-8");
+			auto res = http.Post(api_url, pData);
+			if (res.Ready)
+			{
+				JsonDoc reJson;
+				if (reJson.Parse(res.Content.data()).HasParseError())
+					throw runtime_error("解析响应 JSON 时出错");
+				Value::MemberIterator code_it = reJson.FindMember("code");
+				Value::MemberIterator msg_it = reJson.FindMember("msg");
+				if (code_it == reJson.MemberEnd() || !code_it->value.IsNumber())
+					throw runtime_error("解析响应 JSON 时出错");
+				if (msg_it == reJson.MemberEnd() || !msg_it->value.IsString())
+					throw runtime_error("解析响应 JSON 时出错");
+				if (code_it->value.GetInt() == 0)
+					return true;
+				else
+					throw runtime_error(msg_it->value.GetString());
+			}
+			else
+				throw runtime_error(res.ErrorMsg);
+			return false;
+
+		}
+		bool Kick(GID_t GID, QQ_t memberID, const string& msg = "")
+		{
+			using namespace rapidjson;
+			static const char* const jsonStr = R"( { "sessionKey":"", "target":0 , "memberId": 0,"msg":"" } )";
+			static const string api_url = api_url_prefix_ + "/kick";
+			JsonDoc jdoc;
+			if (jdoc.Parse(jsonStr).HasParseError()) throw runtime_error("未知错误");
+			jdoc["sessionKey"].SetString(sessionKey_.data(), sessionKey_.size());
+			jdoc["target"].SetInt64(GID);
+			jdoc["memberId"].SetInt64(memberID);
+			jdoc["msg"].SetString(msg.data(), msg.size());
+			string pData = JsonDoc2String(jdoc);
+
+			HTTP http; http.SetContentType("application/json;charset=UTF-8");
+			auto res = http.Post(api_url, pData);
+			if (res.Ready)
+			{
+				JsonDoc reJson;
+				if (reJson.Parse(res.Content.data()).HasParseError())
+					throw runtime_error("解析响应 JSON 时出错");
+				Value::MemberIterator code_it = reJson.FindMember("code");
+				Value::MemberIterator msg_it = reJson.FindMember("msg");
+				if (code_it == reJson.MemberEnd() || !code_it->value.IsNumber())
+					throw runtime_error("解析响应 JSON 时出错");
+				if (msg_it == reJson.MemberEnd() || !msg_it->value.IsString())
+					throw runtime_error("解析响应 JSON 时出错");
+				if (code_it->value.GetInt() == 0)
+					return true;
+				else
+					throw runtime_error(msg_it->value.GetString());
+			}
+			else
+				throw runtime_error(res.ErrorMsg);
+			return false;
+		}
 		bool Release()
 		{
 			try
@@ -183,7 +451,7 @@ namespace Cyan
 		bool SessionVerify() const
 		{
 			using namespace rapidjson;
-			static const char* const jsonStr = R"( { "sessionKey" : "", "qq":1234567 } )";
+			static const char* const jsonStr = R"( { "sessionKey" : "", "qq":0 } )";
 			static const string api_url = api_url_prefix_ + "/verify";
 			JsonDoc jdoc;
 			if (jdoc.Parse(jsonStr).HasParseError()) throw runtime_error("未知错误");
@@ -216,7 +484,7 @@ namespace Cyan
 		bool SessionRelease() const
 		{
 			using namespace rapidjson;
-			static const char* const jsonStr = R"( { "sessionKey" : "", "qq":1234567 } )";
+			static const char* const jsonStr = R"( { "sessionKey" : "", "qq":0 } )";
 			static const string api_url = api_url_prefix_ + "/release";
 			JsonDoc jdoc;
 			if (jdoc.Parse(jsonStr).HasParseError()) throw runtime_error("未知错误");

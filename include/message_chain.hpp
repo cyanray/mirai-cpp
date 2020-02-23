@@ -24,7 +24,7 @@ namespace Cyan
 		MessageChain& At(const QQ_t qq)
 		{
 			using namespace rapidjson;
-			static const char* const jsonStr = R"( { "type":"At" , "target":1234567 , "display":"@123" } )";
+			static const char* const jsonStr = R"( { "type":"At" , "target":0 , "display":"@123" } )";
 			JsonDoc jdoc;
 			if (jdoc.Parse(jsonStr).HasParseError()) throw runtime_error("未知错误");
 			jdoc["target"].SetInt64(qq);
@@ -45,7 +45,7 @@ namespace Cyan
 		MessageChain& Face(int faceID)
 		{
 			using namespace rapidjson;
-			static const char* const jsonStr = R"( { "type":"Face" , "faceId":123 } )";
+			static const char* const jsonStr = R"( { "type":"Face" , "faceId":0 } )";
 			JsonDoc jdoc;
 			if (jdoc.Parse(jsonStr).HasParseError()) throw runtime_error("未知错误");
 			jdoc["faceId"].SetInt(faceID);
@@ -67,10 +67,10 @@ namespace Cyan
 		MessageChain& Image(const FriendImage& ImageID)
 		{
 			using namespace rapidjson;
-			static const char* const jsonStr = R"( { "type":"Image" , "imageID":"" } )";
+			static const char* const jsonStr = R"( { "type":"Image" , "imageId":"" } )";
 			JsonDoc jdoc;
 			if (jdoc.Parse(jsonStr).HasParseError()) throw runtime_error("未知错误");
-			jdoc["imageID"].SetString(ImageID.ID.data(), ImageID.ID.size());
+			jdoc["imageId"].SetString(ImageID.ID.data(), ImageID.ID.size(),messages_.GetAllocator());
 			Value v(jdoc, messages_.GetAllocator());
 			messages_.PushBack(v, messages_.GetAllocator());
 			return *this;
@@ -78,10 +78,10 @@ namespace Cyan
 		MessageChain& Image(const GroupImage& ImageID)
 		{
 			using namespace rapidjson;
-			static const char* const jsonStr = R"( { "type":"Image" , "imageID":"" } )";
+			static const char* const jsonStr = R"( { "type":"Image" , "imageId":"" } )";
 			JsonDoc jdoc;
 			if (jdoc.Parse(jsonStr).HasParseError()) throw runtime_error("未知错误");
-			jdoc["imageID"].SetString(ImageID.ID.data(), ImageID.ID.size());
+			jdoc["imageId"].SetString(ImageID.ID.data(), ImageID.ID.size(),messages_.GetAllocator());
 			Value v(jdoc, messages_.GetAllocator());
 			messages_.PushBack(v, messages_.GetAllocator());
 			return *this;
@@ -100,7 +100,7 @@ namespace Cyan
 				messages_.PushBack(json[i], messages_.GetAllocator());
 			}
 		}
-		virtual const JsonDoc& ToJson() override
+		virtual JsonDoc& ToJson() override
 		{
 			return messages_;
 		}

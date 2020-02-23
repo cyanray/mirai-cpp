@@ -14,7 +14,7 @@ namespace Cyan
 	public:
 		Serializable() {}
 		virtual bool Set(JsonVal& json) = 0;
-		virtual const JsonDoc& ToJson() = 0;
+		virtual JsonDoc& ToJson() = 0;
 		virtual string ToString() = 0;
 		virtual ~Serializable() {}
 	};

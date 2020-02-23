@@ -32,25 +32,55 @@ int main()
 
 	cout << g2.ToString() << endl;
 
-	vector<Friend_t> fs = bot.GetFriendList();
-
-	for (auto f : fs)
-	{
-		cout << f.QQ << "\t" << f.NickName << "\t" << f.Remark << endl;
-
-	}
-
-	MessageChain mc;
-	mc
-		.Face(3)
-		.Plain("你好")
-		.Plain("\n")
-		.Plain("世界!")
-		.Plain("🤣🤣🤣");
 	try
 	{
-		bot.SendFriendMessage(484599279ll, mc);
-		bot.SendGroupMessage(1029259687ll, MessageChain().Plain("你好\n").Plain("祝福你我的朋友!"));
+		//bot.Kick(1013323391ll, 484599279ll, "gundan");
+	}
+	catch (const std::exception & ex)
+	{
+		cout << ex.what() << endl;
+	}
+
+	//vector<Group_t> fs = bot.GetGroupList();
+
+	//for (auto f : fs)
+	//{
+	//	try
+	//	{
+	//		bot.MuteAll(f.GID);
+	//	}
+	//	catch (const std::exception & ex)
+	//	{
+	//		cout << ex.what() << endl;
+	//	}
+
+	//	vector<GroupMember_t> gm = bot.GetGroupMembers(f.GID);
+	//	for (auto m : gm)
+	//	{
+	//		cout << m.QQ << " " << m.MemberName << " " << m.Group.Name << endl;
+	//	}
+	//	cout << endl;
+
+	//}
+
+	FriendImage fImg = bot.UploadFriendImage("D:/b.jpg");
+
+	MessageChain messageChain;
+	messageChain
+		.Face(3)
+		//.Plain("伞兵一号得得得得得得得得得得")
+		.Plain("\n")
+		.Plain("Hello World!")
+		.Plain("🤣🤣🤣")
+		.Image(fImg);
+
+	cout << messageChain.ToString() << endl;
+
+	try
+	{
+		bot.SendFriendMessage(484599279ll, messageChain);
+		//bot.UnMute(1013323391ll, 484599279ll);
+		//bot.SendGroupMessage(1013323391ll, messageChain);
 	}
 	catch (const std::exception & ex)
 	{
