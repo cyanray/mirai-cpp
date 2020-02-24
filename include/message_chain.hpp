@@ -21,10 +21,24 @@ namespace Cyan
 		{
 			messages_ = mc.messages_;
 		}
+		MessageChain(MessageChain&& mc)
+		{
+			std::swap(messages_, mc.messages_);
+		}
 		MessageChain& operator=(const MessageChain& mc)
 		{
 			MessageChain tmp(mc);
 			std::swap(messages_, tmp.messages_);
+			return *this;
+		}
+		MessageChain& operator=(MessageChain&& mc)
+		{
+			std::swap(messages_, mc.messages_);
+			return *this;
+		}
+		MessageChain& operator+(const MessageChain& mc)
+		{
+			messages_.insert(messages_.end(), mc.messages_.begin(), mc.messages_.end());
 			return *this;
 		}
 		virtual ~MessageChain() = default;

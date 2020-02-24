@@ -18,7 +18,6 @@ namespace Cyan
 	// 消息源 ID
 	typedef int64_t MessageSourceID;
 
-
 	enum class GroupPermission
 	{
 		Member,

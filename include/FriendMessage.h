@@ -1,32 +1,32 @@
 #pragma once
-#ifndef mirai_cpp__GroupMessage_h_H_
-#define mirai_cpp__GroupMessage_h_H_
+#ifndef mirai_cpp__FriendMessage_h_H_
+#define mirai_cpp__FriendMessage_h_H_
 
 #include "typedef.hpp"
 #include "message_chain.hpp"
 namespace Cyan
 {
 
-	class GroupMessage : public Serializable
+	class FriendMessage : public Serializable
 	{
 	public:
 		MessageChain MessageChain;
-		GroupMember_t Sender;
+		Friend_t Sender;
 
-		GroupMessage() = default;
-		GroupMessage(const GroupMessage& gm)
+		FriendMessage() = default;
+		FriendMessage(const FriendMessage& gm)
 		{
 			MessageChain = gm.MessageChain;
 			Sender = gm.Sender;
 		}
-		GroupMessage& operator=(const GroupMessage& t)
+		FriendMessage& operator=(const FriendMessage& t)
 		{
-			GroupMessage tmp(t);
+			FriendMessage tmp(t);
 			std::swap(this->MessageChain, tmp.MessageChain);
 			std::swap(this->Sender, tmp.Sender);
 			return *this;
 		}
-		virtual ~GroupMessage() = default;
+		virtual ~FriendMessage() = default;
 		virtual bool Set(const json& j) override
 		{
 			this->MessageChain.Set(j["messageChain"]);

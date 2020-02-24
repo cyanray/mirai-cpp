@@ -10,9 +10,9 @@
 #include <functional>
 #include <nlohmann/json.hpp>
 #include "typedef.hpp"
+#include "FriendMessage.h"
 #include "GroupMessage.h"
 #include "message_chain.hpp"
-#include <iostream>
 using std::string;
 using std::runtime_error;
 using std::vector;
@@ -22,16 +22,13 @@ using nlohmann::json;
 
 namespace Cyan
 {
-
+	typedef std::function<void(FriendMessage)> FriendMessageProcesser;
 	typedef std::function<void(GroupMessage)> GroupMessageProcesser;
 
 	class MiraiBot
 	{
 	public:
-		MiraiBot()
-		{
-			groupMessageProcesser_ = [](GroupMessage) {};
-		}
+		MiraiBot() = default;
 		~MiraiBot() = default;
 		bool Auth(const string& authKey, QQ_t qq)
 		{
@@ -400,7 +397,10 @@ namespace Cyan
 
 		}
 
-		void OnFriendMessageReceived();
+		void OnFriendMessageReceived(FriendMessageProcesser friendMessageProcesser)
+		{
+			friendMessageProcesser_ = friendMessageProcesser;
+		}
 		void OnGroupMessageReceived(GroupMessageProcesser groupMessageProcesser)
 		{
 			groupMessageProcesser_ = groupMessageProcesser;
@@ -408,7 +408,7 @@ namespace Cyan
 
 		void EventLoop()
 		{
-			unsigned count_per_loop = 10;
+			unsigned count_per_loop = 20;
 			unsigned time_interval = 100;
 			while (true)
 			{
@@ -476,9 +476,6 @@ namespace Cyan
 			return false;
 		}
 
-
-
-
 		unsigned int FetchMessagesAndEvents(unsigned int count = 10)
 		{
 			stringstream api_url;
@@ -501,11 +498,18 @@ namespace Cyan
 				for (const auto& ele : reJson)
 				{
 					MiraiEvent type = MiraiEventStr(ele["type"].get<string>());
-					if (type == MiraiEvent::GroupMessage)
+					if (groupMessageProcesser_ && type == MiraiEvent::GroupMessage)
 					{
 						GroupMessage gm;
 						gm.Set(ele);
 						std::async(std::launch::async, [&]() { groupMessageProcesser_(gm); });
+						continue;
+					}
+					if (friendMessageProcesser_ && type == MiraiEvent::FriendMessage)
+					{
+						FriendMessage fm;
+						fm.Set(ele);
+						std::async(std::launch::async, [&]() { friendMessageProcesser_(fm); });
 						continue;
 					}
 	
@@ -521,6 +525,7 @@ namespace Cyan
 		string sessionKey_;
 		string api_url_prefix_ = "http://127.0.0.1:8080";
 		GroupMessageProcesser groupMessageProcesser_;
+		FriendMessageProcesser friendMessageProcesser_;
 
 	};
 } // namespace Cyan
