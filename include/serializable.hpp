@@ -1,21 +1,20 @@
 ﻿#pragma once
 #ifndef mirai_cpp__serializable_hpp_H_
 #define mirai_cpp__serializable_hpp_H_
-#include <rapidjson/document.h>
+#include <nlohmann/json.hpp>
 #include <string>
 using std::string;
+using nlohmann::json;
 
-typedef rapidjson::Document JsonDoc;
-typedef rapidjson::Value JsonVal;
 namespace Cyan
 {
 	class Serializable
 	{
 	public:
 		Serializable() {}
-		virtual bool Set(JsonVal& json) = 0;
-		virtual JsonDoc& ToJson() = 0;
-		virtual string ToString() = 0;
+		virtual bool Set(const json& json) = 0;
+		virtual json ToJson() const = 0;
+		virtual string ToString() const = 0;
 		virtual ~Serializable() {}
 	};
 

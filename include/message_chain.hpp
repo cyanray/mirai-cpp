@@ -7,7 +7,7 @@
 #include <iostream>
 #include "serializable.hpp"
 #include "typedef.hpp"
-#include <rapidjson/document.h>
+#include <nlohmann/json.hpp>
 using std::string;
 using std::stringstream;
 using std::runtime_error;
@@ -16,100 +16,81 @@ namespace Cyan
 	class MessageChain : public Serializable
 	{
 	public:
-		MessageChain()
+		MessageChain() :messages_(json::array()) {}
+		MessageChain(const MessageChain& mc)
 		{
-			messages_.SetArray();
+			messages_ = mc.messages_;
+		}
+		MessageChain& operator=(const MessageChain& mc)
+		{
+			MessageChain tmp(mc);
+			std::swap(messages_, tmp.messages_);
+			return *this;
 		}
 		virtual ~MessageChain() = default;
 		MessageChain& At(const QQ_t qq)
 		{
-			using namespace rapidjson;
-			static const char* const jsonStr = R"( { "type":"At" , "target":0 , "display":"@123" } )";
-			JsonDoc jdoc;
-			if (jdoc.Parse(jsonStr).HasParseError()) throw runtime_error("未知错误");
-			jdoc["target"].SetInt64(qq);
-			Value v(jdoc, messages_.GetAllocator());
-			messages_.PushBack(v, messages_.GetAllocator());
+			json j;
+			j["type"] = "At";
+			j["target"] = qq;
+			j["display"] = "@@";
+			messages_.push_back(j);
 			return *this;
 		}
 		MessageChain& AtAll()
 		{
-			using namespace rapidjson;
-			static const char* const jsonStr = R"( { "type":"AtAll" } )";
-			JsonDoc jdoc;
-			if (jdoc.Parse(jsonStr).HasParseError()) throw runtime_error("未知错误");
-			Value v(jdoc, messages_.GetAllocator());
-			messages_.PushBack(v, messages_.GetAllocator());
+			messages_.push_back({ {"type","AtAll"} });
 			return *this;
 		}
 		MessageChain& Face(int faceID)
 		{
-			using namespace rapidjson;
-			static const char* const jsonStr = R"( { "type":"Face" , "faceId":0 } )";
-			JsonDoc jdoc;
-			if (jdoc.Parse(jsonStr).HasParseError()) throw runtime_error("未知错误");
-			jdoc["faceId"].SetInt(faceID);
-			Value v(jdoc, messages_.GetAllocator());
-			messages_.PushBack(v, messages_.GetAllocator());
+			json j;
+			j["type"] = "Face";
+			j["faceId"] = faceID;
+			messages_.push_back(j);
 			return *this;
 		}
 		MessageChain& Plain(const string& plainText)
 		{
-			using namespace rapidjson;
-			static const char* const jsonStr = R"( { "type":"Plain" , "text":"" } )";
-			JsonDoc jdoc;
-			if (jdoc.Parse(jsonStr).HasParseError()) throw runtime_error("未知错误");
-			jdoc["text"].SetString(plainText.data(), plainText.size(),messages_.GetAllocator());
-			Value v(jdoc, messages_.GetAllocator());
-			messages_.PushBack(v, messages_.GetAllocator());
+			json j;
+			j["type"] = "Plain";
+			j["text"] = plainText;
+			messages_.push_back(j);
 			return *this;
 		}
-		MessageChain& Image(const FriendImage& ImageID)
+		MessageChain& Image(const FriendImage& Image)
 		{
-			using namespace rapidjson;
-			static const char* const jsonStr = R"( { "type":"Image" , "imageId":"" } )";
-			JsonDoc jdoc;
-			if (jdoc.Parse(jsonStr).HasParseError()) throw runtime_error("未知错误");
-			jdoc["imageId"].SetString(ImageID.ID.data(), ImageID.ID.size(),messages_.GetAllocator());
-			Value v(jdoc, messages_.GetAllocator());
-			messages_.PushBack(v, messages_.GetAllocator());
+			json j;
+			j["type"] = "Image";
+			j["imageId"] = Image.ID;
+			messages_.push_back(j);
 			return *this;
 		}
-		MessageChain& Image(const GroupImage& ImageID)
+		MessageChain& Image(const GroupImage& Image)
 		{
-			using namespace rapidjson;
-			static const char* const jsonStr = R"( { "type":"Image" , "imageId":"" } )";
-			JsonDoc jdoc;
-			if (jdoc.Parse(jsonStr).HasParseError()) throw runtime_error("未知错误");
-			jdoc["imageId"].SetString(ImageID.ID.data(), ImageID.ID.size(),messages_.GetAllocator());
-			Value v(jdoc, messages_.GetAllocator());
-			messages_.PushBack(v, messages_.GetAllocator());
+			json j;
+			j["type"] = "Image";
+			j["imageId"] = Image.ID;
+			messages_.push_back(j);
 			return *this;
 		}
-		
-		// 通过 JsonDoc 设置对象的值，
-		// 不检查传入 JsonDoc 的值是否符合要求
-		virtual bool Set(JsonVal& json) override
+
+		virtual bool Set(const json& j) override
 		{
-			if (!json.IsArray()) return false;
-			JsonDoc newJsonDoc;
-			messages_.Swap(newJsonDoc);
-			messages_.SetArray();
-			for (rapidjson::SizeType i = 0; i < json.Size(); i++)
-			{
-				messages_.PushBack(json[i], messages_.GetAllocator());
-			}
+			messages_ = j;
+			return true;
 		}
-		virtual JsonDoc& ToJson() override
+		virtual json ToJson() const override
 		{
 			return messages_;
 		}
-		virtual string ToString() override
+		virtual string ToString() const override
 		{
-			return JsonDoc2String(messages_);
+			return messages_.dump();
 		}
+
 	private:
-		JsonDoc messages_;
+		json messages_;
 	};
 
 

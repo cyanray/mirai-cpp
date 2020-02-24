@@ -4,31 +4,19 @@
 #include <cstdint>
 #include <string>
 #include <exception>
+#include <nlohmann/json.hpp>
 #include "serializable.hpp"
-#include <rapidjson/document.h>
 using std::runtime_error;
 using std::string;
+using nlohmann::json;
 namespace Cyan
 {
-
-	string JsonDoc2String(const JsonDoc& jsonDoc)
-	{
-		using namespace rapidjson;
-		StringBuffer buffer;
-		Writer<StringBuffer> writer(buffer);
-		jsonDoc.Accept(writer);
-		return buffer.GetString();
-	}
-
 	// QQ 号码类型
 	typedef int64_t QQ_t;
 	// 群号码类型
 	typedef int64_t GID_t;
 	// 消息源 ID
 	typedef int64_t MessageSourceID;
-	// Document 含义不够清晰，重命名为 JsonDoc 和 JsonVal
-	typedef rapidjson::Document JsonDoc;
-	typedef rapidjson::Value JsonVal;
 
 
 	enum class GroupPermission
@@ -37,6 +25,32 @@ namespace Cyan
 		Administrator,
 		Owner
 	};
+
+	inline string GroupPermissionStr(GroupPermission gp)
+	{
+		string result;
+		switch (gp)
+		{
+		case Cyan::GroupPermission::Member:
+			result = "MEMBER";
+			break;
+		case Cyan::GroupPermission::Administrator:
+			result = "ADMINISTRATOR";
+			break;
+		case Cyan::GroupPermission::Owner:
+			result = "OWNER";
+			break;
+		}
+		return result;
+	}
+
+	inline GroupPermission GroupPermissionStr(const string& gp)
+	{
+		if (gp == "MEMBER") return GroupPermission::Member;
+		if (gp == "ADMINISTRATOR") return GroupPermission::Administrator;
+		if (gp == "OWNER") return GroupPermission::Owner;
+		throw runtime_error("错误的 GroupPermissionStr");
+	}
 
 	// 发给好友的图片类型
 	struct FriendImage
@@ -54,6 +68,10 @@ namespace Cyan
 	class Friend_t : public Serializable
 	{
 	public:
+		QQ_t QQ;
+		string NickName;
+		string Remark;
+
 		Friend_t() = default;
 		Friend_t(const Friend_t& f)
 		{
@@ -61,50 +79,44 @@ namespace Cyan
 			NickName = f.NickName;
 			Remark = f.Remark;
 		}
-		virtual ~Friend_t() = default;
-		QQ_t QQ;
-		string NickName;
-		string Remark;
-		virtual bool Set(JsonVal& json) override
+		Friend_t& operator=(const Friend_t& t)
 		{
-			auto qq_it = json.FindMember("id");
-			auto nickName_it = json.FindMember("nickName");
-			auto remark_it = json.FindMember("remark");
-			if (qq_it == json.MemberEnd() || !qq_it->value.IsNumber())
-				throw runtime_error("解析 JSON 时出错");
-			if (nickName_it == json.MemberEnd() || !nickName_it->value.IsString())
-				throw runtime_error("解析 JSON 时出错");
-			if (remark_it == json.MemberEnd() || !remark_it->value.IsString())
-				throw runtime_error("解析 JSON 时出错");
-			QQ = qq_it->value.GetInt64();
-			NickName = string(nickName_it->value.GetString(), nickName_it->value.GetStringLength());
-			Remark = string(remark_it->value.GetString(), remark_it->value.GetStringLength());
+			Friend_t tmp(t);
+			std::swap(this->QQ, tmp.QQ);
+			std::swap(this->NickName, tmp.NickName);
+			std::swap(this->Remark, tmp.Remark);
+			return *this;
+		}
+		virtual ~Friend_t() = default;
+		virtual bool Set(const json& j) override
+		{
+			QQ = j["id"].get<QQ_t>();
+			NickName = j["nickName"].get<string>();
+			Remark = j["remark"].get<string>();
 			return true;
 		}
-		virtual JsonDoc& ToJson() override
+		virtual json ToJson() const override
 		{
-			using namespace rapidjson;
-			Value v(kObjectType);
-			v.AddMember("id", QQ, jdata_.GetAllocator());
-			Value nn; nn.SetString(NickName.data(), NickName.size(), jdata_.GetAllocator());
-			v.AddMember("nickName", nn, jdata_.GetAllocator());
-			Value r; nn.SetString(Remark.data(), Remark.size(), jdata_.GetAllocator());
-			v.AddMember("remark", r, jdata_.GetAllocator());
-			v.Swap(jdata_);
-			return jdata_;
+			json j = json::object();
+			j["id"] = QQ;
+			j["nickName"] = NickName;
+			j["remark"] = Remark;
+			return j;
 		}
-		virtual string ToString() override
+		virtual string ToString() const override
 		{
-			return JsonDoc2String(ToJson());
+			return ToJson().dump();
 		}
-	private:
-		JsonDoc jdata_;
 	};
 
 	// 群组数据格式
 	class Group_t : public Serializable
 	{
 	public:
+		GID_t GID;
+		string Name;
+		GroupPermission Permission;
+
 		Group_t() = default;
 		Group_t(const Group_t& g)
 		{
@@ -121,67 +133,36 @@ namespace Cyan
 			return *this;
 		}
 		virtual ~Group_t() = default;
-		GID_t GID;
-		string Name;
-		GroupPermission Permission;
-		virtual bool Set(JsonVal& json) override
+		virtual bool Set(const json& j) override
 		{
-			auto gid_it = json.FindMember("id");
-			auto name_it = json.FindMember("name");
-			auto permission_it = json.FindMember("permission");
-			if (gid_it == json.MemberEnd() || !gid_it->value.IsNumber())
-				throw runtime_error("解析 JSON 时出错");
-			if (name_it == json.MemberEnd() || !name_it->value.IsString())
-				throw runtime_error("解析 JSON 时出错");
-			if (permission_it == json.MemberEnd() || !permission_it->value.IsString())
-				throw runtime_error("解析 JSON 时出错");
-			GID = gid_it->value.GetInt64();
-			Name = string(name_it->value.GetString(), name_it->value.GetStringLength());
-			string pStr = string(permission_it->value.GetString(), permission_it->value.GetStringLength());
-			if (pStr == "MEMBER") Permission = GroupPermission::Member;
-			else if (pStr == "ADMINISTRATOR") Permission = GroupPermission::Administrator;
-			else if (pStr == "OWNER") Permission = GroupPermission::Owner;
-			else throw runtime_error("未知的 Permission");
+			GID = j["id"].get<GID_t>();
+			Name = j["name"].get<string>();
+			Permission = GroupPermissionStr(j["permission"].get<string>());
 			return true;
 		}
-		virtual JsonDoc& ToJson() override
+		virtual json ToJson() const override
 		{
-			using namespace rapidjson;
-
-			string pStr;
-			switch (Permission)
-			{
-			case GroupPermission::Member:
-				pStr = "MEMBER";
-				break;
-			case GroupPermission::Administrator:
-				pStr = "ADMINISTRATOR";
-				break;
-			case GroupPermission::Owner:
-				pStr = "OWNER";
-				break;
-			}
-
-			Value v(kObjectType);
-			v.AddMember("id", GID, jdata_.GetAllocator());
-			Value n; n.SetString(Name.data(), Name.size(), jdata_.GetAllocator());
-			v.AddMember("name", n, jdata_.GetAllocator());
-			Value p; p.SetString(pStr.data(), pStr.size(), jdata_.GetAllocator());
-			v.AddMember("permission", p, jdata_.GetAllocator());
-			v.Swap(jdata_);
-			return jdata_;
+			json j = json::object();
+			j["id"] = GID;
+			j["nickName"] = Name;
+			j["remark"] = GroupPermissionStr(Permission);
+			return j;
 		}
-		virtual string ToString() override
+		virtual string ToString() const override
 		{
-			return JsonDoc2String(ToJson());
+			return ToJson().dump();
 		}
-	private:
-		JsonDoc jdata_;
 	};
 
+	// 群组成员格式
 	class GroupMember_t : public Serializable
 	{
 	public:
+		QQ_t QQ;
+		string MemberName;
+		GroupPermission Permission;
+		Group_t Group;
+
 		GroupMember_t() = default;
 		GroupMember_t(const GroupMember_t& gm)
 		{
@@ -190,70 +171,71 @@ namespace Cyan
 			Permission = gm.Permission;
 			Group = gm.Group;
 		}
-		virtual ~GroupMember_t() = default;
-		QQ_t QQ;
-		string MemberName;
-		GroupPermission Permission;
-		Group_t Group;
-		virtual bool Set(JsonVal& json) override
+		GroupMember_t& operator=(const GroupMember_t& t)
 		{
-			auto qq_it = json.FindMember("id");
-			auto memeber_name_it = json.FindMember("memberName");
-			auto permission_it = json.FindMember("permission");
-			auto group_it = json.FindMember("group");
-			if (qq_it == json.MemberEnd() || !qq_it->value.IsNumber())
-				throw runtime_error("解析 JSON 时出错");
-			if (memeber_name_it == json.MemberEnd() || !memeber_name_it->value.IsString())
-				throw runtime_error("解析 JSON 时出错");
-			if (permission_it == json.MemberEnd() || !permission_it->value.IsString())
-				throw runtime_error("解析 JSON 时出错");
-			if (group_it == json.MemberEnd() || !group_it->value.IsObject())
-				throw runtime_error("解析 JSON 时出错");
-			QQ = qq_it->value.GetInt64();
-			MemberName = string(memeber_name_it->value.GetString(), memeber_name_it->value.GetStringLength());
-			string pStr = string(permission_it->value.GetString(), permission_it->value.GetStringLength());
-			if (pStr == "MEMBER") Permission = GroupPermission::Member;
-			else if (pStr == "ADMINISTRATOR") Permission = GroupPermission::Administrator;
-			else if (pStr == "OWNER") Permission = GroupPermission::Owner;
-			else throw runtime_error("未知的 Permission");
-			Group.Set(group_it->value);
+			GroupMember_t tmp(t);
+			std::swap(this->QQ, tmp.QQ);
+			std::swap(this->MemberName, tmp.MemberName);
+			std::swap(this->Permission, tmp.Permission);
+			std::swap(this->Group, tmp.Group);
+			return *this;
+		}
+		virtual ~GroupMember_t() = default;
+		virtual bool Set(const json& j) override
+		{
+			QQ = j["id"].get<GID_t>();
+			MemberName = j["memberName"].get<string>();
+			Permission = GroupPermissionStr(j["permission"].get<string>());
+			Group.Set(j["group"]);
 			return true;
 		}
-		virtual JsonDoc& ToJson() override
+		virtual json ToJson() const override
 		{
-			using namespace rapidjson;
-
-			string pStr;
-			switch (Permission)
-			{
-			case GroupPermission::Member:
-				pStr = "MEMBER";
-				break;
-			case GroupPermission::Administrator:
-				pStr = "ADMINISTRATOR";
-				break;
-			case GroupPermission::Owner:
-				pStr = "OWNER";
-				break;
-			}
-
-			Value v(kObjectType);
-			v.AddMember("id", QQ, jdata_.GetAllocator());
-			Value n; n.SetString(MemberName.data(), MemberName.size(), jdata_.GetAllocator());
-			v.AddMember("memberName", n, jdata_.GetAllocator());
-			Value p; p.SetString(pStr.data(), pStr.size(), jdata_.GetAllocator());
-			v.AddMember("permission", p, jdata_.GetAllocator());
-			v.AddMember("group", Group.ToJson(), jdata_.GetAllocator());
-			v.Swap(jdata_);
-			return jdata_;
+			json j = json::object();
+			j["id"] = QQ;
+			j["memberName"] = MemberName;
+			j["permission"] = GroupPermissionStr(Permission);
+			j["group"] = Group.ToJson();
+			return j;
 		}
-		virtual string ToString() override
+		virtual string ToString() const override
 		{
-			return JsonDoc2String(ToJson());
+			return ToJson().dump();
 		}
-	private:
-		JsonDoc jdata_;
+
 	};
+
+	enum class MiraiEvent
+	{
+		Default,
+		FriendMessage,
+		GroupMessage
+	};
+
+	MiraiEvent MiraiEventStr(const string& miraiEvent)
+	{
+		if (miraiEvent == "FriendMessage") return MiraiEvent::FriendMessage;
+		if (miraiEvent == "GroupMessage") return MiraiEvent::GroupMessage;
+		return MiraiEvent::Default;
+	}
+
+	string MiraiEventStr(MiraiEvent miraiEvent)
+	{
+		string result;
+		switch (miraiEvent)
+		{
+		case Cyan::MiraiEvent::FriendMessage:
+			result = "FriendMessage";
+			break;
+		case Cyan::MiraiEvent::GroupMessage:
+			result = "GroupMessage";
+			break;
+		default:
+			result = "Default";
+			break;
+		}
+		return result;
+	}
 
 }
 
