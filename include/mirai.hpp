@@ -10,9 +10,6 @@
 #include <functional>
 #include <nlohmann/json.hpp>
 #include "typedef.hpp"
-#include "FriendMessage.h"
-#include "GroupMessage.h"
-#include "message_chain.hpp"
 using std::string;
 using std::runtime_error;
 using std::vector;
