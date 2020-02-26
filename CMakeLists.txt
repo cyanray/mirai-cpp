@@ -7,14 +7,13 @@ project (mirai-cpp)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_subdirectory(CURLWrapper)
+find_package(CURL CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
-
 
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(${PROJECT_NAME} INTERFACE include)
-target_link_libraries(${PROJECT_NAME} INTERFACE CURLWrapper)
 target_link_libraries(${PROJECT_NAME} INTERFACE nlohmann_json nlohmann_json::nlohmann_json)
+target_link_libraries(${PROJECT_NAME} INTERFACE CURL::libcurl)
 
 option(MIRAI_CPP_BUILD_EXAMPLES "Build examples" ON)
 if(MIRAI_CPP_BUILD_EXAMPLES)

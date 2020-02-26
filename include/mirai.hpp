@@ -1,7 +1,6 @@
 #pragma once
 #ifndef mirai_cpp__mirai_hpp_H_
 #define mirai_cpp__mirai_hpp_H_
-#include <CURLWrapper.h>
 #include <string>
 #include <vector>
 #include <exception>
@@ -9,6 +8,7 @@
 #include <future>
 #include <functional>
 #include <nlohmann/json.hpp>
+#include "CURLWrapper.h"
 #include "typedef.hpp"
 using std::string;
 using std::runtime_error;
@@ -27,7 +27,10 @@ namespace Cyan
 	public:
 		MiraiBot() = default;
 		MiraiBot(const string& url_prefix) :api_url_prefix_(url_prefix) {}
-		~MiraiBot() = default;
+		~MiraiBot()
+		{
+			Release();
+		}
 		bool Auth(const string& authKey, QQ_t qq)
 		{
 			static const string api_url = api_url_prefix_ + "/auth";
@@ -382,18 +385,6 @@ namespace Cyan
 				throw runtime_error(res.ErrorMsg);
 			return false;
 		}
-		bool Release()
-		{
-			try
-			{
-				return SessionRelease();
-			}
-			catch (const std::exception&)
-			{
-				return false;
-			}
-
-		}
 
 		void OnFriendMessageReceived(FriendMessageProcesser friendMessageProcesser)
 		{
@@ -517,6 +508,19 @@ namespace Cyan
 			else
 				throw runtime_error(res.ErrorMsg);
 			return received_count;
+		}
+
+		bool Release()
+		{
+			try
+			{
+				return SessionRelease();
+			}
+			catch (const std::exception&)
+			{
+				return false;
+			}
+
 		}
 
 		QQ_t qq_;

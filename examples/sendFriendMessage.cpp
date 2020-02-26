@@ -46,6 +46,5 @@ int main()
 		cout << ex.what() << endl;
 	}
 
-	bot.Release();
 	return 0;
 }
