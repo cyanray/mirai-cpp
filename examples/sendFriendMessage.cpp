@@ -31,8 +31,10 @@ int main()
 	bot.OnGroupMessageReceived(
 		[&](GroupMessage gm)
 		{
-			gm.MessageChain = MessageChain().Plain("为什么要 ") + gm.MessageChain;
-			bot.SendGroupMessage(gm.Sender.Group.GID, gm.MessageChain);
+			if(gm.Sender.QQ == 1156328301ll)
+				bot.SendGroupMessage(gm.Sender.Group.GID, MessageChain().Plain("王欣然大傻逼！"));
+			else
+			bot.SendGroupMessage(gm.Sender.Group.GID, "为什么要 " + gm.MessageChain);
 		});
 
 	try

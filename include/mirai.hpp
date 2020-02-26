@@ -26,6 +26,7 @@ namespace Cyan
 	{
 	public:
 		MiraiBot() = default;
+		MiraiBot(const string& url_prefix) :api_url_prefix_(url_prefix) {}
 		~MiraiBot() = default;
 		bool Auth(const string& authKey, QQ_t qq)
 		{
@@ -57,7 +58,7 @@ namespace Cyan
 				throw runtime_error(res.ErrorMsg);
 			return false;
 		}
-		bool SendFriendMessage(QQ_t target,const MessageChain& messageChain)
+		bool SendFriendMessage(QQ_t target, const MessageChain& messageChain)
 		{
 			static const string api_url = api_url_prefix_ + "/sendFriendMessage";
 
@@ -86,7 +87,7 @@ namespace Cyan
 				throw runtime_error(res.ErrorMsg);
 			return false;
 		}
-		bool SendGroupMessage(GID_t target,const MessageChain& messageChain)
+		bool SendGroupMessage(GID_t target, const MessageChain& messageChain)
 		{
 			static const string api_url = api_url_prefix_ + "/sendGroupMessage";
 			json j;
@@ -115,7 +116,7 @@ namespace Cyan
 			return false;
 
 		}
-		bool SendQuoteMessage(MessageSourceID target,const MessageChain& messageChain);
+		bool SendQuoteMessage(MessageSourceID target, const MessageChain& messageChain);
 		FriendImage UploadFriendImage(const string& fileName)
 		{
 			static const string api_url = api_url_prefix_ + "/uploadImage";
@@ -509,7 +510,7 @@ namespace Cyan
 						std::async(std::launch::async, [&]() { friendMessageProcesser_(fm); });
 						continue;
 					}
-	
+
 					received_count++;
 				}
 			}
@@ -517,7 +518,7 @@ namespace Cyan
 				throw runtime_error(res.ErrorMsg);
 			return received_count;
 		}
-		
+
 		QQ_t qq_;
 		string sessionKey_;
 		string api_url_prefix_ = "http://127.0.0.1:8080";

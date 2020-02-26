@@ -235,6 +235,7 @@ namespace Cyan
 	class MessageChain : public Serializable
 	{
 	public:
+		friend MessageChain& operator+(const string& str, MessageChain& mc);
 		MessageChain() :messages_(json::array()) {}
 		MessageChain(const MessageChain& mc)
 		{
@@ -259,6 +260,14 @@ namespace Cyan
 		{
 			messages_.insert(messages_.end(), mc.messages_.begin(), mc.messages_.end());
 			return *this;
+		}
+		MessageChain& operator+(const string& val)
+		{
+			return this->Plain(val);
+		}
+		MessageChain& operator+=(const string& val)
+		{
+			return this->Plain(val);
 		}
 		virtual ~MessageChain() = default;
 		MessageChain& At(const QQ_t qq)
@@ -289,6 +298,14 @@ namespace Cyan
 			j["type"] = "Plain";
 			j["text"] = plainText;
 			messages_.push_back(j);
+			return *this;
+		}
+		template<typename T>
+		MessageChain& Plain(const T&& val)
+		{
+			std::stringstream ss;
+			ss << val;
+			this->Plain(ss.str());
 			return *this;
 		}
 		MessageChain& Image(const FriendImage& Image)
@@ -423,6 +440,14 @@ namespace Cyan
 		}
 	};
 
+
+	MessageChain& operator+(const string& str, MessageChain& mc)
+	{
+		MessageChain tmp;
+		tmp.Plain(str);
+		mc.messages_.insert(mc.messages_.begin(), tmp.messages_.begin(), tmp.messages_.end());
+		return mc;
+	}
 }
 
 #endif // !mirai_cpp__message_chain_hpp_H_
