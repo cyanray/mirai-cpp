@@ -7,6 +7,10 @@ project (mirai-cpp)
 
 set(CMAKE_CXX_STANDARD 11)
 
+if(CMAKE_TOOLCHAIN_FILE)
+    include(${CMAKE_TOOLCHAIN_FILE})
+endif(CMAKE_TOOLCHAIN_FILE)
+
 find_package(CURL CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 
@@ -19,3 +23,13 @@ option(MIRAI_CPP_BUILD_EXAMPLES "Build examples" ON)
 if(MIRAI_CPP_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif(MIRAI_CPP_BUILD_EXAMPLES)
+
+option(MIRAI_CPP_INSTALL "INSTALL_MIRAI_CPP" ON)
+if(MIRAI_CPP_INSTALL)
+
+    install(
+        DIRECTORY include
+        DESTINATION ${CMAKE_INSTALL_PREFIX}
+    )
+
+endif(MIRAI_CPP_INSTALL)
