@@ -59,7 +59,7 @@ cd vcpkg
 这一步稍微复杂，你需要执行：
 
 ```shell
-git clone https://github.com/cyanray/mirai-cpp-vcpkg-port.git
+git clone https://github.com/cyanray/ports.git tmp ; mv tmp/* ports/ ; rm -Recurse -Force tmp
 ./vcpkg install mirai-cpp
 ```
 
