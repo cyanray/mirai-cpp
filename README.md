@@ -14,6 +14,8 @@
 
 3. [**CURLWrapper**](https://github.com/cyanray/CURLWrapper) 对 **libcurl** 的封装。
 
+4. **boost/asio/thread_pool** 异步处理消息。
+
 ## 如何使用
 
 ### 1. 快速尝试
@@ -22,9 +24,9 @@
 
 （以下内容基于 Windows 10 平台，使用 Visual Studio 2019 作为开发软件。）
 
-本项目使用了 3 个第三方项目，其中 **CURLWrapper** 已经嵌入到本项目，而 **libcurl** 以及 **nlohmann/json** 需要额外安装。
+本项目使用了 4 个第三方项目，其中 **CURLWrapper** 已经嵌入到本项目，而 **libcurl** 、**boost/asio** 以及 **nlohmann/json** 需要额外安装。
 
-有很多方法可以在你的电脑上下载并安装 **libcurl** 和 **nlohmann/json** 库，这里介绍一种更不容易出错的方法。
+有很多方法可以在你的电脑上下载并安装这几个库，这里介绍一种更不容易出错的方法。
 
 在这一切开始之前，你需要下载并安装 [**Git for windows**](https://gitforwindows.org/), 如果你已经安装并且很熟悉它，那么可以略过这个步骤。如果你不熟悉，在这之后可以去了解一下什么是 **Git** 。
 
@@ -34,7 +36,7 @@
 
 1. 打开 Powershell ，找到一个合适的位置，执行以下命令：
 
-```shell
+```powershell
 git clone https://github.com/Microsoft/vcpkg.git
 cd vcpkg
 .\bootstrap-vcpkg.bat
@@ -42,25 +44,29 @@ cd vcpkg
 
 2. 如果上面的代码执行无误，那么 **vcpkg** 已经成功编译。执行下面的命令让 **Visual Studio 2019** 与 **vcpkg** 相关联
 
-```shell
+```powershell
 .\vcpkg integrate install
 ```
 
-#### (2) 使用 **vcpkg** 安装 libcurl 和 **nlohmann/json**
+#### (2) 使用 **vcpkg** 安装本项目的依赖库
 
 完成这一步你只需执行：
 
-```shell
-./vcpkg install curl nlohmann-json
+```powershell
+./vcpkg install curl nlohmann-json boost-asio
+# 如果你要构建 x64 平台的程序,需要执行:
+# ./vcpkg install curl:x64-windows nlohmann-json:x64-windows boost-asio:x64-windows
 ```
 
 #### (3) 使用 **vcpkg** 安装 **mirai-cpp**
 
 这一步稍微复杂，你需要执行：
 
-```shell
+```powershell
 git clone https://github.com/cyanray/ports.git tmp ; mv tmp/* ports/ ; rm -Recurse -Force tmp
 ./vcpkg install mirai-cpp
+# 如果你要构建 x64 平台的程序,需要执行:
+# ./vcpkg install mirai-cpp:x64-windows
 ```
 
 #### (4) 在 **Visual Studio** 中创建一个项目，开始使用
@@ -129,3 +135,7 @@ int main()
 ## 代码风格
 
 本项目的代码使用的是我自己喜欢的代码风格，如果你有更好的建议（比如修改为 Google-Style），欢迎提出 issues 或 pull request。
+
+## 其他
+
+未完待续……

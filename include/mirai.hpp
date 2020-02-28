@@ -5,11 +5,12 @@
 #include <vector>
 #include <exception>
 #include <sstream>
-#include <future>
+#include <boost/asio.hpp>
 #include <functional>
 #include <nlohmann/json.hpp>
 #include "CURLWrapper.h"
 #include "typedef.hpp"
+
 using std::string;
 using std::runtime_error;
 using std::vector;
@@ -25,8 +26,8 @@ namespace Cyan
 	class MiraiBot
 	{
 	public:
-		MiraiBot() = default;
-		MiraiBot(const string& url_prefix) :api_url_prefix_(url_prefix) {}
+		MiraiBot() :pool(16) {}
+		MiraiBot(const string& url_prefix) :api_url_prefix_(url_prefix), pool(16) {}
 		~MiraiBot()
 		{
 			Release();
@@ -491,14 +492,18 @@ namespace Cyan
 					{
 						GroupMessage gm;
 						gm.Set(ele);
-						std::async(std::launch::async, [&]() { groupMessageProcesser_(gm); });
+						boost::asio::post(pool, [=]() { groupMessageProcesser_(gm); });
+						//std::thread([=]() { groupMessageProcesser_(gm); }).detach();
+						//std::async(std::launch::async, [&]() { groupMessageProcesser_(gm); });
 						continue;
 					}
 					if (friendMessageProcesser_ && type == MiraiEvent::FriendMessage)
 					{
 						FriendMessage fm;
 						fm.Set(ele);
-						std::async(std::launch::async, [&]() { friendMessageProcesser_(fm); });
+						boost::asio::post(pool, [=]() { friendMessageProcesser_(fm); });
+						//std::thread([=]() { friendMessageProcesser_(fm); }).detach();
+						//std::async(std::launch::async, [&]() { friendMessageProcesser_(fm); });
 						continue;
 					}
 
@@ -528,7 +533,7 @@ namespace Cyan
 		string api_url_prefix_ = "http://127.0.0.1:8080";
 		GroupMessageProcesser groupMessageProcesser_;
 		FriendMessageProcesser friendMessageProcesser_;
-
+		boost::asio::thread_pool pool;
 	};
 } // namespace Cyan
 

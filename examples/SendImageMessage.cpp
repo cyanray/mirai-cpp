@@ -21,28 +21,16 @@ int main()
 	}
 	cout << "成功登录 bot。" << endl;
 
+	FriendImage img = bot.UploadFriendImage("D:\\pic_1.png");
 
 	bot.OnFriendMessageReceived(
 		[&](FriendMessage fm)
 		{
 			try
 			{
-				bot.SendFriendMessage(fm.Sender.QQ, fm.MessageChain);
+				bot.SendFriendMessage(fm.Sender.QQ, MessageChain().Image(img));
 			}
-			catch (const std::exception& ex)
-			{
-				cout << ex.what() << endl;
-			}
-		});
-
-	bot.OnGroupMessageReceived(
-		[&](GroupMessage gm)
-		{
-			try
-			{
-				bot.SendGroupMessage(gm.Sender.Group.GID, "为什么要 " + gm.MessageChain);
-			}
-			catch (const std::exception& ex)
+			catch (const std::exception & ex)
 			{
 				cout << ex.what() << endl;
 			}

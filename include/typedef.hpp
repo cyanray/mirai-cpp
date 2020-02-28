@@ -301,7 +301,7 @@ namespace Cyan
 			return *this;
 		}
 		template<typename T>
-		MessageChain& Plain(const T&& val)
+		MessageChain& Plain(const T& val)
 		{
 			std::stringstream ss;
 			ss << val;

@@ -15,4 +15,5 @@ macro(api_exe target)
     target_link_libraries(${PROJECT_NAME}-${target} mirai-cpp)
 endmacro()
 
-api_exe(sendFriendMessage)
+api_exe(RepeatMessage)
+api_exe(SendImageMessage)
