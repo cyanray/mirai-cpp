@@ -105,7 +105,7 @@ namespace Cyan
 	class Friend_t : public Serializable
 	{
 	public:
-		QQ_t QQ;
+		QQ_t QQ = 0;
 		string NickName;
 		string Remark;
 
@@ -147,7 +147,7 @@ namespace Cyan
 	class Group_t : public Serializable
 	{
 	public:
-		GID_t GID;
+		GID_t GID = 0;
 		string Name;
 		GroupPermission Permission;
 
@@ -188,7 +188,7 @@ namespace Cyan
 	class GroupMember_t : public Serializable
 	{
 	public:
-		QQ_t QQ;
+		QQ_t QQ = 0;
 		string MemberName;
 		GroupPermission Permission;
 		Group_t Group;
@@ -372,7 +372,7 @@ namespace Cyan
 	class FriendMessage : public Serializable
 	{
 	public:
-		MessageChain MessageChain;
+		Cyan::MessageChain MessageChain;
 		Friend_t Sender;
 
 		FriendMessage() = default;
@@ -408,7 +408,7 @@ namespace Cyan
 	class GroupMessage : public Serializable
 	{
 	public:
-		MessageChain MessageChain;
+		Cyan::MessageChain MessageChain;
 		GroupMember_t Sender;
 
 		GroupMessage() = default;
