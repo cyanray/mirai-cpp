@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <string>
 #include <map>
 #include <regex>
@@ -45,9 +45,10 @@ namespace Cyan
 			CookieContainer* cc;
 			string CookieKey;
 			CookieValue(CookieContainer* value, const string& key) :cc(value), CookieKey(key) {}
+			~CookieValue() = default;
 		}; // class CookieValue
 
-		CookieContainer() {}
+		CookieContainer() = default;
 		CookieContainer(const string& cookies)
 		{
 			parse(cookies);
@@ -140,8 +141,17 @@ namespace Cyan
 			accept(DefaultAccept)
 		{
 			errbuf[0] = 0;
+		}
+		void static InitGlobal()
+		{
 			curl_global_init(CURL_GLOBAL_ALL);
 		}
+
+		void static ReleaseGlobal()
+		{
+			curl_global_cleanup();
+		}
+
 		HTTP& FollowRedirect(bool redirect)
 		{
 			followRedirect = redirect;
@@ -348,8 +358,6 @@ namespace Cyan
 
 		~HTTP()
 		{
-			curl_slist_free_all(slist);
-			curl_global_cleanup();
 		}
 
 	private:

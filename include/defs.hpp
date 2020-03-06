@@ -29,7 +29,7 @@ namespace Cyan
 		Owner
 	};
 
-	inline string GroupPermissionStr(GroupPermission gp)
+	static inline string GroupPermissionStr(GroupPermission gp)
 	{
 		string result;
 		switch (gp)
@@ -47,7 +47,7 @@ namespace Cyan
 		return result;
 	}
 
-	inline GroupPermission GroupPermissionStr(const string& gp)
+	static inline GroupPermission GroupPermissionStr(const string& gp)
 	{
 		if (gp == "MEMBER") return GroupPermission::Member;
 		if (gp == "ADMINISTRATOR") return GroupPermission::Administrator;
@@ -63,14 +63,14 @@ namespace Cyan
 		GroupMessage
 	};
 
-	inline MiraiEvent MiraiEventStr(const string& miraiEvent)
+	static inline MiraiEvent MiraiEventStr(const string& miraiEvent)
 	{
 		if (miraiEvent == "FriendMessage") return MiraiEvent::FriendMessage;
 		if (miraiEvent == "GroupMessage") return MiraiEvent::GroupMessage;
 		return MiraiEvent::Default;
 	}
 
-	inline string MiraiEventStr(MiraiEvent miraiEvent)
+	static inline string MiraiEventStr(MiraiEvent miraiEvent)
 	{
 		string result;
 		switch (miraiEvent)
@@ -441,7 +441,7 @@ namespace Cyan
 	};
 
 
-	MessageChain& operator+(const string& str, MessageChain& mc)
+	inline MessageChain& operator+(const string& str, MessageChain& mc)
 	{
 		MessageChain tmp;
 		tmp.Plain(str);
