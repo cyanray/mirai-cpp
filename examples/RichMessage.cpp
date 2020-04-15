@@ -32,7 +32,7 @@ int main()
 			try
 			{
 				fm.Reply(MessageChain().FlashImage(img));
-				fm.Reply(MessageChain().Poke("SixSixSix"));
+				fm.Reply(MessageChain().Poke(Poke::FangDaZhao));
 			}
 			catch (const std::exception& ex)
 			{

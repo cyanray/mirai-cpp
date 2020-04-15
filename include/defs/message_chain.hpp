@@ -9,6 +9,17 @@
 
 namespace Cyan
 {
+
+	enum class Poke
+	{
+		Poke,
+		ShowLove,
+		Like,
+		Heartbroken,
+		SixSixSix,
+		FangDaZhao
+	};
+
 	class MessageChain : public Serializable
 	{
 	public:
@@ -172,11 +183,13 @@ namespace Cyan
 			messages_.push_back(j);
 			return *this;
 		}
-		MessageChain& Poke(const string& poke_name)
+		MessageChain& Poke(Poke poke)
 		{
+			const static string poke_name[] =
+			{ "Poke","ShowLove","Like","Heartbroken","SixSixSix","FangDaZhao" };
 			json j;
 			j["type"] = "Poke";
-			j["name"] = poke_name;
+			j["name"] = poke_name[static_cast<int>(poke)];
 			messages_.push_back(j);
 			return *this;
 		}
