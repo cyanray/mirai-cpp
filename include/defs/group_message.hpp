@@ -22,12 +22,14 @@ namespace Cyan
 		{
 			MessageChain = gm.MessageChain;
 			Sender = gm.Sender;
+			bot_ = gm.bot_;
 		}
 		GroupMessage& operator=(const GroupMessage& t)
 		{
 			GroupMessage tmp(t);
 			std::swap(this->MessageChain, tmp.MessageChain);
 			std::swap(this->Sender, tmp.Sender);
+			std::swap(this->bot_, tmp.bot_);
 			return *this;
 		}
 		MessageId GetMessageId() const
@@ -39,6 +41,14 @@ namespace Cyan
 		{
 			return (this->MessageChain).GetTimestamp();
 		}
+
+		void SetMiraiBot(MiraiBot* bot)
+		{
+			this->bot_ = bot;
+		}
+
+		void Reply(const Cyan::MessageChain& mc) const;
+
 		virtual ~GroupMessage() = default;
 		virtual bool Set(const json& j) override
 		{
@@ -53,6 +63,8 @@ namespace Cyan
 			j["sender"] = this->Sender.ToJson();
 			return j;
 		}
+	private:
+		MiraiBot* bot_;
 	};
 }
 

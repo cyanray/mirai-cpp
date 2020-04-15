@@ -137,6 +137,8 @@ namespace Cyan
 		string Path;
 	};
 
+	// 预先声明 MiraiBot 类
+	class MiraiBot;
 
 }
 

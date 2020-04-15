@@ -73,7 +73,7 @@ namespace Cyan
 			else
 				throw runtime_error(res.ErrorMsg);
 		}
-		MessageId SendMessage(QQ_t target,const MessageChain& messageChain, MessageId msgId = -1)
+		MessageId SendMessage(QQ_t target, const MessageChain& messageChain, MessageId msgId = -1)
 		{
 			static const string api_url = api_url_prefix_ + "/sendFriendMessage";
 
@@ -81,7 +81,7 @@ namespace Cyan
 			j["sessionKey"] = sessionKey_;
 			j["target"] = int64_t(target);
 			j["messageChain"] = messageChain.ToJson();
-			if(msgId != -1) j["quote"] = msgId;
+			if (msgId != -1) j["quote"] = msgId;
 
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");
@@ -555,6 +555,7 @@ namespace Cyan
 					if (groupMessageProcesser_ && type == MiraiEvent::GroupMessage)
 					{
 						GroupMessage gm;
+						gm.SetMiraiBot(this);
 						gm.Set(ele);
 						boost::asio::post(pool_, [=]() { groupMessageProcesser_(gm); });
 						continue;
@@ -562,15 +563,17 @@ namespace Cyan
 					if (friendMessageProcesser_ && type == MiraiEvent::FriendMessage)
 					{
 						FriendMessage fm;
+						fm.SetMiraiBot(this);
 						fm.Set(ele);
 						boost::asio::post(pool_, [=]() { friendMessageProcesser_(fm); });
 						continue;
 					}
 					if (tempMessageProcesser_ && type == MiraiEvent::TempMessage)
 					{
-						TempMessage gm;
-						gm.Set(ele);
-						boost::asio::post(pool_, [=]() { tempMessageProcesser_(gm); });
+						TempMessage tm;
+						tm.SetMiraiBot(this);
+						tm.Set(ele);
+						boost::asio::post(pool_, [=]() { tempMessageProcesser_(tm); });
 						continue;
 					}
 					received_count++;
@@ -602,6 +605,25 @@ namespace Cyan
 		FriendMessageProcesser friendMessageProcesser_;
 		boost::asio::thread_pool pool_;
 	};
+
+	// 便捷函数, 必须定义到这里, 否则编译器找不到
+
+	void TempMessage::Reply(const Cyan::MessageChain& mc) const
+	{
+		bot_->SendMessage(Sender.Group.GID, Sender.QQ, mc);
+	}
+
+	void FriendMessage::Reply(const Cyan::MessageChain& mc) const
+	{
+		bot_->SendMessage(Sender.QQ, mc);
+	}
+
+	void GroupMessage::Reply(const Cyan::MessageChain& mc) const
+	{
+		bot_->SendMessage(Sender.Group.GID, mc);
+	}
+
+
 } // namespace Cyan
 
 

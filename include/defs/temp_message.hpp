@@ -17,17 +17,19 @@ namespace Cyan
 		Cyan::MessageChain MessageChain;
 		GroupMember_t Sender;
 
-		TempMessage() = default;
+		TempMessage() :MessageChain(), Sender(), bot_(nullptr) {}
 		TempMessage(const TempMessage& gm)
 		{
 			MessageChain = gm.MessageChain;
 			Sender = gm.Sender;
+			bot_ = gm.bot_;
 		}
 		TempMessage& operator=(const TempMessage& t)
 		{
 			TempMessage tmp(t);
 			std::swap(this->MessageChain, tmp.MessageChain);
 			std::swap(this->Sender, tmp.Sender);
+			std::swap(this->bot_, tmp.bot_);
 			return *this;
 		}
 		MessageId GetMessageId() const
@@ -39,6 +41,14 @@ namespace Cyan
 		{
 			return (this->MessageChain).GetTimestamp();
 		}
+
+		void SetMiraiBot(MiraiBot* bot)
+		{
+			this->bot_ = bot;
+		}
+
+		void Reply(const Cyan::MessageChain& mc) const;
+
 		virtual ~TempMessage() = default;
 		virtual bool Set(const json& j) override
 		{
@@ -53,7 +63,12 @@ namespace Cyan
 			j["sender"] = this->Sender.ToJson();
 			return j;
 		}
+	private:
+		MiraiBot* bot_;
 	};
+
+
+
 }
 
 #endif // !mirai_cpp_defs_temp_message_hpp_H_
