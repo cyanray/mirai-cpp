@@ -31,9 +31,10 @@ int main()
 		{
 			try
 			{
-				fm.Reply(MessageChain().Image(img));
+				fm.Reply(MessageChain().FlashImage(img));
+				fm.Reply(MessageChain().Poke("SixSixSix"));
 			}
-			catch (const std::exception & ex)
+			catch (const std::exception& ex)
 			{
 				cout << ex.what() << endl;
 			}
@@ -44,7 +45,7 @@ int main()
 		{
 			try
 			{
-				bot.SendMessage(gm.Sender.Group.GID, MessageChain().Image(gImg));
+				gm.Reply(MessageChain().FlashImage(img));
 			}
 			catch (const std::exception& ex)
 			{
@@ -69,7 +70,7 @@ int main()
 	{
 		bot.EventLoop();
 	}
-	catch (const std::exception & ex)
+	catch (const std::exception& ex)
 	{
 		cout << ex.what() << endl;
 	}

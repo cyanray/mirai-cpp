@@ -92,6 +92,14 @@ namespace Cyan
 			this->Plain(ss.str());
 			return *this;
 		}
+		MessageChain& Image(const string& url)
+		{
+			json j;
+			j["type"] = "Image";
+			j["url"] = url;
+			messages_.push_back(j);
+			return *this;
+		}
 		MessageChain& Image(const FriendImage& Image)
 		{
 			json j;
@@ -113,6 +121,62 @@ namespace Cyan
 			json j;
 			j["type"] = "Image";
 			j["imageId"] = Image.ID;
+			messages_.push_back(j);
+			return *this;
+		}
+		MessageChain& FlashImage(const FriendImage& Image)
+		{
+			json j;
+			j["type"] = "FlashImage";
+			j["imageId"] = Image.ID;
+			messages_.push_back(j);
+			return *this;
+		}
+		MessageChain& FlashImage(const GroupImage& Image)
+		{
+			json j;
+			j["type"] = "FlashImage";
+			j["imageId"] = Image.ID;
+			messages_.push_back(j);
+			return *this;
+		}
+		MessageChain& FlashImage(const string& url)
+		{
+			json j;
+			j["type"] = "FlashImage";
+			j["url"] = url;
+			messages_.push_back(j);
+			return *this;
+		}
+		MessageChain& Xml(const string& xml_str)
+		{
+			json j;
+			j["type"] = "Xml";
+			j["xml"] = xml_str;
+			messages_.push_back(j);
+			return *this;
+		}
+		MessageChain& Json(const string& json_str)
+		{
+			json j;
+			j["type"] = "Json";
+			j["json"] = json_str;
+			messages_.push_back(j);
+			return *this;
+		}
+		MessageChain& App(const string& app_str)
+		{
+			json j;
+			j["type"] = "App";
+			j["content"] = app_str;
+			messages_.push_back(j);
+			return *this;
+		}
+		MessageChain& Poke(const string& poke_name)
+		{
+			json j;
+			j["type"] = "Poke";
+			j["name"] = poke_name;
 			messages_.push_back(j);
 			return *this;
 		}
