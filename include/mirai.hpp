@@ -73,7 +73,7 @@ namespace Cyan
 			else
 				throw runtime_error(res.ErrorMsg);
 		}
-		MessageId SendMessage(QQ_t target, const MessageChain& messageChain)
+		MessageId SendMessage(QQ_t target,const MessageChain& messageChain, MessageId msgId = -1)
 		{
 			static const string api_url = api_url_prefix_ + "/sendFriendMessage";
 
@@ -81,6 +81,7 @@ namespace Cyan
 			j["sessionKey"] = sessionKey_;
 			j["target"] = int64_t(target);
 			j["messageChain"] = messageChain.ToJson();
+			if(msgId != -1) j["quote"] = msgId;
 
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");
@@ -104,14 +105,14 @@ namespace Cyan
 			else
 				throw runtime_error(res.ErrorMsg);
 		}
-		MessageId SendMessage(GID_t target, const MessageChain& messageChain)
+		MessageId SendMessage(GID_t target, const MessageChain& messageChain, MessageId msgId = -1)
 		{
 			static const string api_url = api_url_prefix_ + "/sendGroupMessage";
 			json j;
 			j["sessionKey"] = sessionKey_;
 			j["target"] = int64_t(target);
 			j["messageChain"] = messageChain.ToJson();
-
+			if (msgId != -1) j["quote"] = msgId;
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");
 			auto res = http.Post(api_url, pData);
@@ -134,7 +135,7 @@ namespace Cyan
 			else
 				throw runtime_error(res.ErrorMsg);
 		}
-		MessageId SendMessage(GID_t gid, QQ_t qq, const MessageChain& messageChain)
+		MessageId SendMessage(GID_t gid, QQ_t qq, const MessageChain& messageChain, MessageId msgId = -1)
 		{
 			static const string api_url = api_url_prefix_ + "/sendTempMessage";
 			json j;
@@ -142,7 +143,7 @@ namespace Cyan
 			j["qq"] = int64_t(qq);
 			j["group"] = int64_t(gid);
 			j["messageChain"] = messageChain.ToJson();
-
+			if (msgId != -1) j["quote"] = msgId;
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");
 			auto res = http.Post(api_url, pData);

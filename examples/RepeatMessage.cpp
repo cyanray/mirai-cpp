@@ -30,7 +30,7 @@ int main()
 			cout << fm.GetMessageId() << ", " << fm.GetTimestamp() << endl;
 			try
 			{
-				bot.SendMessage(fm.Sender.QQ, fm.MessageChain);
+				bot.SendMessage(fm.Sender.QQ, fm.MessageChain, fm.GetMessageId());
 			}
 			catch (const std::exception& ex)
 			{
@@ -45,7 +45,7 @@ int main()
 			cout << gm.GetMessageId() << ", " << gm.GetTimestamp() << endl;
 			try
 			{
-				bot.SendMessage(gm.Sender.Group.GID, "为什么要 " + gm.MessageChain);
+				bot.SendMessage(gm.Sender.Group.GID, "为什么要 " + gm.MessageChain, gm.GetMessageId());
 			}
 			catch (const std::exception& ex)
 			{
@@ -60,7 +60,7 @@ int main()
 			cout << tm.GetMessageId() << ", " << tm.GetTimestamp() << endl;
 			try
 			{
-				bot.SendMessage(tm.Sender.Group.GID, tm.Sender.QQ, "为什么要 " + tm.MessageChain);
+				bot.SendMessage(tm.Sender.Group.GID, tm.Sender.QQ, "为什么要 " + tm.MessageChain, tm.GetMessageId());
 			}
 			catch (const std::exception& ex)
 			{
