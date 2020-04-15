@@ -46,7 +46,7 @@ namespace Cyan
 	}
 
 	// 消息 ID
-	typedef int64_t MessageID;
+	typedef int64_t MessageId;
 
 	// 群成员权限
 	enum class GroupPermission

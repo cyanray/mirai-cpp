@@ -30,6 +30,15 @@ namespace Cyan
 			std::swap(this->Sender, tmp.Sender);
 			return *this;
 		}
+		MessageId GetMessageId() const
+		{
+			return (this->MessageChain).GetMessageId();
+		}
+
+		int64_t GetTimestamp() const
+		{
+			return (this->MessageChain).GetTimestamp();
+		}
 		virtual ~GroupMessage() = default;
 		virtual bool Set(const json& j) override
 		{

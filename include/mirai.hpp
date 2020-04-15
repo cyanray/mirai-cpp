@@ -73,7 +73,7 @@ namespace Cyan
 			else
 				throw runtime_error(res.ErrorMsg);
 		}
-		MessageID SendMessage(QQ_t target, const MessageChain& messageChain)
+		MessageId SendMessage(QQ_t target, const MessageChain& messageChain)
 		{
 			static const string api_url = api_url_prefix_ + "/sendFriendMessage";
 
@@ -92,7 +92,7 @@ namespace Cyan
 				int code = reJson["code"].get<int>();
 				if (code == 0)
 				{
-					MessageID msgId = reJson["messageId"].get<int>();
+					MessageId msgId = reJson["messageId"].get<int>();
 					return msgId;
 				}
 				else
@@ -104,7 +104,7 @@ namespace Cyan
 			else
 				throw runtime_error(res.ErrorMsg);
 		}
-		MessageID SendMessage(GID_t target, const MessageChain& messageChain)
+		MessageId SendMessage(GID_t target, const MessageChain& messageChain)
 		{
 			static const string api_url = api_url_prefix_ + "/sendGroupMessage";
 			json j;
@@ -122,7 +122,7 @@ namespace Cyan
 				int code = reJson["code"].get<int>();
 				if (code == 0)
 				{
-					MessageID msgId = reJson["messageId"].get<int>();
+					MessageId msgId = reJson["messageId"].get<int>();
 					return msgId;
 				}
 				else

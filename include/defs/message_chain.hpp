@@ -9,7 +9,6 @@
 
 namespace Cyan
 {
-	// MessageChain ÏûÏ¢ÈÝÆ÷
 	class MessageChain : public Serializable
 	{
 	public:
@@ -18,20 +17,28 @@ namespace Cyan
 		MessageChain(const MessageChain& mc)
 		{
 			messages_ = mc.messages_;
+			messageId_ = mc.messageId_;
+			timestamp_ = mc.timestamp_;
 		}
 		MessageChain(MessageChain&& mc) noexcept
 		{
 			std::swap(messages_, mc.messages_);
+			std::swap(messageId_, mc.messageId_);
+			std::swap(timestamp_, mc.timestamp_);
 		}
 		MessageChain& operator=(const MessageChain& mc)
 		{
 			MessageChain tmp(mc);
 			std::swap(messages_, tmp.messages_);
+			std::swap(messageId_, tmp.messageId_);
+			std::swap(timestamp_, tmp.timestamp_);
 			return *this;
 		}
 		MessageChain& operator=(MessageChain&& mc) noexcept
 		{
 			std::swap(messages_, mc.messages_);
+			std::swap(messageId_, mc.messageId_);
+			std::swap(timestamp_, mc.timestamp_);
 			return *this;
 		}
 		MessageChain& operator+(const MessageChain& mc)
@@ -53,7 +60,6 @@ namespace Cyan
 			json j;
 			j["type"] = "At";
 			j["target"] = int64_t(qq);
-			j["display"] = "@@";
 			messages_.push_back(j);
 			return *this;
 		}
@@ -128,9 +134,34 @@ namespace Cyan
 			return string();
 		}
 
+		MessageId GetMessageId() const
+		{
+			return messageId_;
+		}
+
+		int64_t GetTimestamp() const
+		{
+			return timestamp_;
+		}
+
 		virtual bool Set(const json& j) override
 		{
 			messages_ = j;
+			if (j.size() >= 1)
+			{
+				try
+				{
+					if (j[0]["type"].get<string>() == "Source")
+					{
+						this->messageId_ = j[0]["id"].get<int64_t>();
+						this->timestamp_ = j[0]["time"].get<int64_t>();
+					}
+				}
+				catch (const std::exception&)
+				{
+					// do nothing...
+				}
+			}
 			return true;
 		}
 		virtual json ToJson() const override
@@ -144,6 +175,8 @@ namespace Cyan
 
 	private:
 		json messages_;
+		int64_t timestamp_;
+		MessageId messageId_;
 	};
 
 	inline MessageChain& operator+(const string& str, MessageChain& mc)

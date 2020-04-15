@@ -6,7 +6,7 @@ int main()
 	using namespace std;
 	using namespace Cyan;
 	system("chcp 65001");
-	MiraiBot bot("127.0.0.1",539);
+	MiraiBot bot("127.0.0.1", 539);
 	while (true)
 	{
 		try
@@ -14,7 +14,7 @@ int main()
 			bot.Auth("INITKEY7A3O1a9v", 1589588851qq);
 			break;
 		}
-		catch (const std::exception & ex)
+		catch (const std::exception& ex)
 		{
 			cout << ex.what() << endl;
 		}
@@ -25,6 +25,9 @@ int main()
 	bot.OnFriendMessageReceived(
 		[&](FriendMessage fm)
 		{
+			cout << fm.MessageChain.ToString() << endl;
+			cout << fm.MessageChain.GetTimestamp() << endl;
+			cout << fm.GetMessageId() << ", " << fm.GetTimestamp() << endl;
 			try
 			{
 				bot.SendMessage(fm.Sender.QQ, fm.MessageChain);
@@ -39,6 +42,7 @@ int main()
 		[&](GroupMessage gm)
 		{
 			cout << gm.MessageChain.ToString() << endl;
+			cout << gm.GetMessageId() << ", " << gm.GetTimestamp() << endl;
 			try
 			{
 				bot.SendMessage(gm.Sender.Group.GID, "为什么要 " + gm.MessageChain);
@@ -48,12 +52,13 @@ int main()
 				cout << ex.what() << endl;
 			}
 		});
-bot.EventLoop();
+
+	bot.EventLoop();
 	try
 	{
-		
+
 	}
-	catch (const std::exception & ex)
+	catch (const std::exception& ex)
 	{
 		cout << ex.what() << endl;
 	}
