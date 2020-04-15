@@ -48,6 +48,7 @@ namespace Cyan
 		}
 
 		void Reply(const Cyan::MessageChain& mc) const;
+		void QuoteReply(const Cyan::MessageChain& mc) const;
 
 		virtual ~FriendMessage() = default;
 		virtual bool Set(const json& j) override

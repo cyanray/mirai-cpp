@@ -62,6 +62,7 @@ int main()
 			try
 			{
 				tm.Reply(tm.MessageChain);
+				tm.QuoteReply(tm.MessageChain);
 			}
 			catch (const std::exception& ex)
 			{

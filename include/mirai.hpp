@@ -623,6 +623,21 @@ namespace Cyan
 		bot_->SendMessage(Sender.Group.GID, mc);
 	}
 
+	void TempMessage::QuoteReply(const Cyan::MessageChain& mc) const
+	{
+		bot_->SendMessage(Sender.Group.GID, Sender.QQ, mc, GetMessageId());
+	}
+
+	void FriendMessage::QuoteReply(const Cyan::MessageChain& mc) const
+	{
+		bot_->SendMessage(Sender.QQ, mc, GetMessageId());
+	}
+
+	void GroupMessage::QuoteReply(const Cyan::MessageChain& mc) const
+	{
+		bot_->SendMessage(Sender.Group.GID, mc, GetMessageId());
+	}
+
 
 } // namespace Cyan
 
