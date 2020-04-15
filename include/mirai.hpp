@@ -691,6 +691,10 @@ namespace Cyan
 		return bot_->SendMessage(Sender.Group.GID, mc, GetMessageId());
 	}
 
+	bool GroupMessage::Recall()
+	{
+		return bot_->Recall(GetMessageId());
+	}
 
 } // namespace Cyan
 
