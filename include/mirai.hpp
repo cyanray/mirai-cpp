@@ -134,6 +134,37 @@ namespace Cyan
 			else
 				throw runtime_error(res.ErrorMsg);
 		}
+		MessageId SendMessage(GID_t gid, QQ_t qq, const MessageChain& messageChain)
+		{
+			static const string api_url = api_url_prefix_ + "/sendTempMessage";
+			json j;
+			j["sessionKey"] = sessionKey_;
+			j["qq"] = int64_t(qq);
+			j["group"] = int64_t(gid);
+			j["messageChain"] = messageChain.ToJson();
+
+			string pData = j.dump();
+			HTTP http; http.SetContentType("application/json;charset=UTF-8");
+			auto res = http.Post(api_url, pData);
+			if (res.Ready)
+			{
+				json reJson;
+				reJson = reJson.parse(res.Content);
+				int code = reJson["code"].get<int>();
+				if (code == 0)
+				{
+					MessageId msgId = reJson["messageId"].get<int>();
+					return msgId;
+				}
+				else
+				{
+					string msg = reJson["msg"].get<string>();
+					throw runtime_error(msg);
+				}
+			}
+			else
+				throw runtime_error(res.ErrorMsg);
+		}
 		FriendImage UploadFriendImage(const string& fileName)
 		{
 			static const string api_url = api_url_prefix_ + "/uploadImage";
