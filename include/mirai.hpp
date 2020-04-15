@@ -459,6 +459,35 @@ namespace Cyan
 				throw runtime_error(res.ErrorMsg);
 			return false;
 		}
+		bool Recall(MessageId mid)
+		{
+			static const string api_url = api_url_prefix_ + "/recall";
+			json j;
+			j["sessionKey"] = sessionKey_;
+			j["target"] = int64_t(mid);
+
+			string pData = j.dump();
+			HTTP http; http.SetContentType("application/json;charset=UTF-8");
+			auto res = http.Post(api_url, pData);
+			if (res.Ready)
+			{
+				json reJson;
+				reJson = reJson.parse(res.Content);
+				int code = reJson["code"].get<int>();
+				if (code == 0)
+					return true;
+				else
+				{
+					string msg = reJson["msg"].get<string>();
+					throw runtime_error(msg);
+				}
+			}
+			else
+				throw runtime_error(res.ErrorMsg);
+			return false;
+
+		}
+
 
 		void OnFriendMessageReceived(FriendMessageProcesser friendMessageProcesser)
 		{
