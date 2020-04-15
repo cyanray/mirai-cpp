@@ -18,6 +18,7 @@ int main()
 		{
 			cout << ex.what() << endl;
 		}
+		MiraiBot::SleepSeconds(1);
 	}
 	cout << "成功登录 bot。" << endl;
 
