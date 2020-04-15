@@ -661,34 +661,34 @@ namespace Cyan
 
 	// 便捷函数, 必须定义到这里, 否则编译器找不到
 
-	void TempMessage::Reply(const Cyan::MessageChain& mc) const
+	MessageId TempMessage::Reply(const Cyan::MessageChain& mc) const
 	{
-		bot_->SendMessage(Sender.Group.GID, Sender.QQ, mc);
+		return bot_->SendMessage(Sender.Group.GID, Sender.QQ, mc);
 	}
 
-	void FriendMessage::Reply(const Cyan::MessageChain& mc) const
+	MessageId FriendMessage::Reply(const Cyan::MessageChain& mc) const
 	{
-		bot_->SendMessage(Sender.QQ, mc);
+		return bot_->SendMessage(Sender.QQ, mc);
 	}
 
-	void GroupMessage::Reply(const Cyan::MessageChain& mc) const
+	MessageId GroupMessage::Reply(const Cyan::MessageChain& mc) const
 	{
-		bot_->SendMessage(Sender.Group.GID, mc);
+		return bot_->SendMessage(Sender.Group.GID, mc);
 	}
 
-	void TempMessage::QuoteReply(const Cyan::MessageChain& mc) const
+	MessageId TempMessage::QuoteReply(const Cyan::MessageChain& mc) const
 	{
-		bot_->SendMessage(Sender.Group.GID, Sender.QQ, mc, GetMessageId());
+		return bot_->SendMessage(Sender.Group.GID, Sender.QQ, mc, GetMessageId());
 	}
 
-	void FriendMessage::QuoteReply(const Cyan::MessageChain& mc) const
+	MessageId FriendMessage::QuoteReply(const Cyan::MessageChain& mc) const
 	{
-		bot_->SendMessage(Sender.QQ, mc, GetMessageId());
+		return bot_->SendMessage(Sender.QQ, mc, GetMessageId());
 	}
 
-	void GroupMessage::QuoteReply(const Cyan::MessageChain& mc) const
+	MessageId GroupMessage::QuoteReply(const Cyan::MessageChain& mc) const
 	{
-		bot_->SendMessage(Sender.Group.GID, mc, GetMessageId());
+		return bot_->SendMessage(Sender.Group.GID, mc, GetMessageId());
 	}
 
 

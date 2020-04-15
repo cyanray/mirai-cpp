@@ -46,8 +46,8 @@ int main()
 			cout << gm.GetMessageId() << ", " << gm.GetTimestamp() << endl;
 			try
 			{
-				gm.Reply(gm.MessageChain);
-				MessageId id = bot.SendMessage(gm.Sender.Group.GID, "为什么要 " + gm.MessageChain, gm.GetMessageId());
+				MessageId id = gm.Reply(gm.MessageChain);
+				bot.SendMessage(gm.Sender.Group.GID, "为什么要 " + gm.MessageChain, gm.GetMessageId());
 				MiraiBot::SleepSeconds(5);
 				bot.Recall(id);
 			}
