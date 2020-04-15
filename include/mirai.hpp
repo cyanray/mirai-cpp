@@ -26,7 +26,7 @@ namespace Cyan
 {
 	typedef std::function<void(FriendMessage)> FriendMessageProcesser;
 	typedef std::function<void(GroupMessage)> GroupMessageProcesser;
-
+	typedef std::function<void(TempMessage)> TempMessageProcesser;
 
 
 	class MiraiBot
@@ -412,6 +412,11 @@ namespace Cyan
 		{
 			groupMessageProcesser_ = groupMessageProcesser;
 		}
+		void OnTempMessageReceived(TempMessageProcesser tempMessageProcesser)
+		{
+			tempMessageProcesser_ = tempMessageProcesser;
+		}
+
 
 		void inline static SleepSeconds(int sec)
 		{
@@ -425,11 +430,11 @@ namespace Cyan
 
 		void EventLoop()
 		{
-			unsigned count_per_loop = 20;
-			unsigned time_interval = 100;
+			const unsigned count_per_loop = 20;
+			const unsigned time_interval = 100;
 			while (true)
 			{
-				unsigned count = FetchMessagesAndEvents();
+				unsigned count = FetchMessagesAndEvents(count_per_loop);
 				if (count < count_per_loop)
 				{
 					SleepMilliseconds(time_interval);
@@ -529,7 +534,13 @@ namespace Cyan
 						boost::asio::post(pool_, [=]() { friendMessageProcesser_(fm); });
 						continue;
 					}
-
+					if (tempMessageProcesser_ && type == MiraiEvent::TempMessage)
+					{
+						TempMessage gm;
+						gm.Set(ele);
+						boost::asio::post(pool_, [=]() { tempMessageProcesser_(gm); });
+						continue;
+					}
 					received_count++;
 				}
 			}
@@ -555,6 +566,7 @@ namespace Cyan
 		string sessionKey_;
 		string api_url_prefix_ = "http://127.0.0.1:8080";
 		GroupMessageProcesser groupMessageProcesser_;
+		TempMessageProcesser tempMessageProcesser_;
 		FriendMessageProcesser friendMessageProcesser_;
 		boost::asio::thread_pool pool_;
 	};

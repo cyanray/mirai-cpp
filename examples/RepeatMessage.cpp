@@ -53,6 +53,21 @@ int main()
 			}
 		});
 
+	bot.OnTempMessageReceived(
+		[&](TempMessage tm)
+		{
+			cout << tm.MessageChain.ToString() << endl;
+			cout << tm.GetMessageId() << ", " << tm.GetTimestamp() << endl;
+			try
+			{
+				bot.SendMessage(tm.Sender.Group.GID, "为什么要 " + tm.MessageChain);
+			}
+			catch (const std::exception& ex)
+			{
+				cout << ex.what() << endl;
+			}
+		});
+
 	bot.EventLoop();
 	try
 	{

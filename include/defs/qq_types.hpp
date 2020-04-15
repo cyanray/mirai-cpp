@@ -87,13 +87,15 @@ namespace Cyan
 	{
 		Default,
 		FriendMessage,
-		GroupMessage
+		GroupMessage,
+		TempMessage
 	};
 
 	inline MiraiEvent MiraiEventStr(const string& miraiEvent)
 	{
 		if (miraiEvent == "FriendMessage") return MiraiEvent::FriendMessage;
 		if (miraiEvent == "GroupMessage") return MiraiEvent::GroupMessage;
+		if (miraiEvent == "TempMessage") return MiraiEvent::TempMessage;
 		return MiraiEvent::Default;
 	}
 
@@ -107,6 +109,9 @@ namespace Cyan
 			break;
 		case Cyan::MiraiEvent::GroupMessage:
 			result = "GroupMessage";
+			break;
+		case Cyan::MiraiEvent::TempMessage:
+			result = "TempMessage";
 			break;
 		default:
 			result = "Default";
