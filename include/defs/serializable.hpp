@@ -1,6 +1,6 @@
-﻿#pragma once
-#ifndef mirai_cpp__serializable_hpp_H_
-#define mirai_cpp__serializable_hpp_H_
+#pragma once
+#ifndef mirai_cpp_defs_serializable_hpp_H_
+#define mirai_cpp_defs_serializable_hpp_H_
 #include <nlohmann/json.hpp>
 #include <string>
 using std::string;
@@ -25,4 +25,4 @@ namespace Cyan
 
 } // namespace Cyan
 
-#endif // !mirai_cpp__serializable_hpp_H_
+#endif // !mirai_cpp_defs_serializable_hpp_H_

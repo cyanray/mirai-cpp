@@ -9,7 +9,7 @@
 #include <boost/asio.hpp>
 #include <nlohmann/json.hpp>
 #include "CURLWrapper.h"
-#include "defs.hpp"
+#include "defs/defs.hpp"
 
 using std::string;
 using std::runtime_error;
@@ -27,6 +27,12 @@ namespace Cyan
 	{
 	public:
 		MiraiBot() :pool_(4), qq_(0) {}
+		MiraiBot(const string& host, int port) : pool_(4), qq_(0)
+		{
+			stringstream ss;
+			ss << "http://" << host << ":" << port;
+			api_url_prefix_ = ss.str();
+		}
 		MiraiBot(const string& url_prefix) :api_url_prefix_(url_prefix), pool_(4), qq_(0) {}
 		~MiraiBot()
 		{
@@ -60,9 +66,8 @@ namespace Cyan
 			}
 			else
 				throw runtime_error(res.ErrorMsg);
-			return false;
 		}
-		bool SendFriendMessage(QQ_t target, const MessageChain& messageChain)
+		MessageID SendFriendMessage(QQ_t target, const MessageChain& messageChain)
 		{
 			static const string api_url = api_url_prefix_ + "/sendFriendMessage";
 
@@ -80,7 +85,10 @@ namespace Cyan
 				reJson = reJson.parse(res.Content);
 				int code = reJson["code"].get<int>();
 				if (code == 0)
-					return true;
+				{
+					MessageID msgId = reJson["messageId"].get<int>();
+					return msgId;
+				}
 				else
 				{
 					string msg = reJson["msg"].get<string>();
@@ -89,9 +97,8 @@ namespace Cyan
 			}
 			else
 				throw runtime_error(res.ErrorMsg);
-			return false;
 		}
-		bool SendGroupMessage(GID_t target, const MessageChain& messageChain)
+		MessageID SendGroupMessage(GID_t target, const MessageChain& messageChain)
 		{
 			static const string api_url = api_url_prefix_ + "/sendGroupMessage";
 			json j;
@@ -108,7 +115,10 @@ namespace Cyan
 				reJson = reJson.parse(res.Content);
 				int code = reJson["code"].get<int>();
 				if (code == 0)
-					return true;
+				{
+					MessageID msgId = reJson["messageId"].get<int>();
+					return msgId;
+				}
 				else
 				{
 					string msg = reJson["msg"].get<string>();
@@ -117,10 +127,7 @@ namespace Cyan
 			}
 			else
 				throw runtime_error(res.ErrorMsg);
-			return false;
-
 		}
-		bool SendQuoteMessage(MessageSourceID target, const MessageChain& messageChain);
 		FriendImage UploadFriendImage(const string& fileName)
 		{
 			static const string api_url = api_url_prefix_ + "/uploadImage";
@@ -134,10 +141,12 @@ namespace Cyan
 
 			if (res.Ready)
 			{
-				if (!res.Content.empty())
-				{
-					fImg.ID = res.Content;
-				}
+				json reJson;
+				reJson = reJson.parse(res.Content);
+				if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
+				fImg.ID = reJson["imageId"].get<string>();
+				fImg.Url = reJson["url"].get<string>();
+				fImg.Path = reJson["path"].get<string>();
 			}
 			else
 				throw runtime_error(res.ErrorMsg);
@@ -156,10 +165,12 @@ namespace Cyan
 
 			if (res.Ready)
 			{
-				if (!res.Content.empty())
-				{
-					gImg.ID = res.Content;
-				}
+				json reJson;
+				reJson = reJson.parse(res.Content);
+				if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
+				gImg.ID = reJson["imageId"].get<string>();
+				gImg.Url = reJson["url"].get<string>();
+				gImg.Path = reJson["path"].get<string>();
 			}
 			else
 				throw runtime_error(res.ErrorMsg);
@@ -484,8 +495,8 @@ namespace Cyan
 			{
 				json reJson;
 				reJson = reJson.parse(res.Content);
-				if (!reJson.is_array()) throw runtime_error("解析返回 JSON 时出错");
-				for (const auto& ele : reJson)
+				if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
+				for (const auto& ele : reJson["data"])
 				{
 					MiraiEvent type = MiraiEventStr(ele["type"].get<string>());
 					if (groupMessageProcesser_ && type == MiraiEvent::GroupMessage)
@@ -493,8 +504,6 @@ namespace Cyan
 						GroupMessage gm;
 						gm.Set(ele);
 						boost::asio::post(pool_, [=]() { groupMessageProcesser_(gm); });
-						//std::thread([=]() { groupMessageProcesser_(gm); }).detach();
-						//std::async(std::launch::async, [&]() { groupMessageProcesser_(gm); });
 						continue;
 					}
 					if (friendMessageProcesser_ && type == MiraiEvent::FriendMessage)
@@ -502,8 +511,6 @@ namespace Cyan
 						FriendMessage fm;
 						fm.Set(ele);
 						boost::asio::post(pool_, [=]() { friendMessageProcesser_(fm); });
-						//std::thread([=]() { friendMessageProcesser_(fm); }).detach();
-						//std::async(std::launch::async, [&]() { friendMessageProcesser_(fm); });
 						continue;
 					}
 

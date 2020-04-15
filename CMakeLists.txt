@@ -13,10 +13,10 @@ endif(CMAKE_TOOLCHAIN_FILE)
 
 find_package(CURL CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
-find_package(boost REQUIRED COMPONENTS asio)
+#find_package(boost REQUIRED COMPONENTS asio)
 
-find_path(BOOST_INCLUDE_DIR boost)
-include_directories(${BOOST_INCLUDE_DIR})
+#find_path(BOOST_INCLUDE_DIR boost)
+#include_directories(${BOOST_INCLUDE_DIR})
 
 if (WIN32)
 	set(BOOST_LIBRARIES ${Boost_LIBRARY_DIRS}/boost_system-vc140-mt.lib)
@@ -29,7 +29,7 @@ add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(${PROJECT_NAME} INTERFACE include)
 target_link_libraries(${PROJECT_NAME} INTERFACE nlohmann_json nlohmann_json::nlohmann_json)
 target_link_libraries(${PROJECT_NAME} INTERFACE CURL::libcurl)
-target_link_libraries(${PROJECT_NAME} INTERFACE ${BOOST_LIBRARIES})
+#target_link_libraries(${PROJECT_NAME} INTERFACE ${BOOST_LIBRARIES})
 
 option(MIRAI_CPP_BUILD_EXAMPLES "Build examples" ON)
 if(MIRAI_CPP_BUILD_EXAMPLES)
@@ -43,5 +43,4 @@ if(MIRAI_CPP_INSTALL)
         DIRECTORY include
         DESTINATION ${CMAKE_INSTALL_PREFIX}
     )
-
 endif(MIRAI_CPP_INSTALL)

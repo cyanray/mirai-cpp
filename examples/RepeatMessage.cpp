@@ -6,12 +6,12 @@ int main()
 	using namespace std;
 	using namespace Cyan;
 	system("chcp 65001");
-	MiraiBot bot;
+	MiraiBot bot("127.0.0.1",539);
 	while (true)
 	{
 		try
 		{
-			bot.Auth("InitKeyVl0CEUzZ", 211795583ll);
+			bot.Auth("INITKEY7A3O1a9v", 1589588851ll);
 			break;
 		}
 		catch (const std::exception & ex)
@@ -38,6 +38,7 @@ int main()
 	bot.OnGroupMessageReceived(
 		[&](GroupMessage gm)
 		{
+			cout << gm.MessageChain.ToString() << endl;
 			try
 			{
 				bot.SendGroupMessage(gm.Sender.Group.GID, "为什么要 " + gm.MessageChain);
@@ -47,10 +48,10 @@ int main()
 				cout << ex.what() << endl;
 			}
 		});
-
+bot.EventLoop();
 	try
 	{
-		bot.EventLoop();
+		
 	}
 	catch (const std::exception & ex)
 	{

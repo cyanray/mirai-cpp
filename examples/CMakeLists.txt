@@ -9,11 +9,11 @@ if(MSVC)
 endif(MSVC)
 
 macro(api_exe target)
-    add_executable(${PROJECT_NAME}-${target}
-            ${target}.cpp
-            )
-    target_link_libraries(${PROJECT_NAME}-${target} mirai-cpp)
+    add_executable(${target} ${target}.cpp)
+    target_link_libraries(${target} mirai-cpp)
 endmacro()
 
 api_exe(RepeatMessage)
 api_exe(SendImageMessage)
+api_exe(GetFriendList)
+api_exe(GetGroupList)
