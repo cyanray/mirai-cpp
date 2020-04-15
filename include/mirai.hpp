@@ -23,6 +23,8 @@ namespace Cyan
 	typedef std::function<void(FriendMessage)> FriendMessageProcesser;
 	typedef std::function<void(GroupMessage)> GroupMessageProcesser;
 
+
+
 	class MiraiBot
 	{
 	public:
@@ -73,7 +75,7 @@ namespace Cyan
 
 			json j;
 			j["sessionKey"] = sessionKey_;
-			j["target"] = target;
+			j["target"] = int64_t(target);
 			j["messageChain"] = messageChain.ToJson();
 
 			string pData = j.dump();
@@ -103,7 +105,7 @@ namespace Cyan
 			static const string api_url = api_url_prefix_ + "/sendGroupMessage";
 			json j;
 			j["sessionKey"] = sessionKey_;
-			j["target"] = target;
+			j["target"] = int64_t(target);
 			j["messageChain"] = messageChain.ToJson();
 
 			string pData = j.dump();
@@ -259,7 +261,7 @@ namespace Cyan
 			static const string api_url = api_url_prefix_ + "/muteAll";
 			json j;
 			j["sessionKey"] = sessionKey_;
-			j["target"] = target;
+			j["target"] = int64_t(target);
 
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");
@@ -286,7 +288,7 @@ namespace Cyan
 			static const string api_url = api_url_prefix_ + "/unmuteAll";
 			json j;
 			j["sessionKey"] = sessionKey_;
-			j["target"] = target;
+			j["target"] = int64_t(target);
 
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");
@@ -314,8 +316,8 @@ namespace Cyan
 			static const string api_url = api_url_prefix_ + "/mute";
 			json j;
 			j["sessionKey"] = sessionKey_;
-			j["target"] = GID;
-			j["memberId"] = memberID;
+			j["target"] = int64_t(GID);
+			j["memberId"] = int64_t(memberID);
 			j["time"] = time_seconds;
 
 			string pData = j.dump();
@@ -344,8 +346,8 @@ namespace Cyan
 			static const string api_url = api_url_prefix_ + "/unmute";
 			json j;
 			j["sessionKey"] = sessionKey_;
-			j["target"] = GID;
-			j["memberId"] = memberID;
+			j["target"] = int64_t(GID);
+			j["memberId"] = int64_t(memberID);
 
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");
@@ -373,8 +375,8 @@ namespace Cyan
 			static const string api_url = api_url_prefix_ + "/kick";
 			json j;
 			j["sessionKey"] = sessionKey_;
-			j["target"] = GID;
-			j["memberId"] = memberID;
+			j["target"] = int64_t(GID);
+			j["memberId"] = int64_t(memberID);
 			j["msg"] = msg;
 
 			string pData = j.dump();
@@ -437,7 +439,7 @@ namespace Cyan
 			static const string api_url = api_url_prefix_ + "/verify";
 			json j;
 			j["sessionKey"] = sessionKey_;
-			j["qq"] = qq_;
+			j["qq"] = int64_t(qq_);
 
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");
@@ -464,7 +466,7 @@ namespace Cyan
 			static const string api_url = api_url_prefix_ + "/release";
 			json j;
 			j["sessionKey"] = sessionKey_;
-			j["qq"] = qq_;
+			j["qq"] = int64_t(qq_);
 
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");

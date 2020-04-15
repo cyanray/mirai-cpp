@@ -52,7 +52,7 @@ namespace Cyan
 		{
 			json j;
 			j["type"] = "At";
-			j["target"] = qq;
+			j["target"] = int64_t(qq);
 			j["display"] = "@@";
 			messages_.push_back(j);
 			return *this;

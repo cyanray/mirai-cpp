@@ -8,10 +8,40 @@
 namespace Cyan
 {
 	// QQ 号码类型
-	typedef int64_t QQ_t;
+	struct QQ_t
+	{
+		int64_t QQ;
+		QQ_t(int64_t qq) :QQ(qq) {}
+		operator int64_t() const { return QQ; }
+	};
+
+	QQ_t operator "" qq(unsigned long long int v)
+	{
+		return QQ_t(int64_t(v));
+	}
+
+	QQ_t operator "" _qq(unsigned long long int v)
+	{
+		return QQ_t(int64_t(v));
+	}
 
 	// 群号码类型
-	typedef int64_t GID_t;
+	struct GID_t
+	{
+		int64_t GID;
+		GID_t(int64_t gid) :GID(gid) {}
+		operator int64_t() const { return GID; }
+	};
+
+	GID_t operator "" gid(unsigned long long int v)
+	{
+		return GID_t(int64_t(v));
+	}
+
+	GID_t operator "" _gid(unsigned long long int v)
+	{
+		return GID_t(int64_t(v));
+	}
 
 	// 消息 ID
 	typedef int64_t MessageID;

@@ -35,7 +35,7 @@ namespace Cyan
 		virtual ~Group_t() = default;
 		virtual bool Set(const json& j) override
 		{
-			GID = j["id"].get<GID_t>();
+			GID = j["id"].get<int64_t>();
 			Name = j["name"].get<string>();
 			Permission = GroupPermissionStr(j["permission"].get<string>());
 			return true;
@@ -43,7 +43,7 @@ namespace Cyan
 		virtual json ToJson() const override
 		{
 			json j = json::object();
-			j["id"] = GID;
+			j["id"] = int64_t(GID);
 			j["nickname"] = Name;
 			j["remark"] = GroupPermissionStr(Permission);
 			return j;

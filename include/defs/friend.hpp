@@ -35,7 +35,7 @@ namespace Cyan
 		virtual ~Friend_t() = default;
 		virtual bool Set(const json& j) override
 		{
-			QQ = j["id"].get<QQ_t>();
+			QQ = j["id"].get<int64_t>();
 			NickName = j["nickname"].get<string>();
 			Remark = j["remark"].get<string>();
 			return true;
@@ -43,7 +43,7 @@ namespace Cyan
 		virtual json ToJson() const override
 		{
 			json j = json::object();
-			j["id"] = QQ;
+			j["id"] = int64_t(QQ);
 			j["nickname"] = NickName;
 			j["remark"] = Remark;
 			return j;
