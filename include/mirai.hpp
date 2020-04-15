@@ -309,14 +309,14 @@ namespace Cyan
 			return false;
 
 		}
-		bool Mute(GID_t GID, QQ_t memberID, unsigned int time)
+		bool Mute(GID_t GID, QQ_t memberID, unsigned int time_seconds)
 		{
 			static const string api_url = api_url_prefix_ + "/mute";
 			json j;
 			j["sessionKey"] = sessionKey_;
 			j["target"] = GID;
 			j["memberId"] = memberID;
-			j["time"] = time;
+			j["time"] = time_seconds;
 
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");
@@ -407,6 +407,16 @@ namespace Cyan
 			groupMessageProcesser_ = groupMessageProcesser;
 		}
 
+		void inline static SleepSeconds(int sec)
+		{
+			std::this_thread::sleep_for(std::chrono::seconds(sec));
+		}
+
+		void inline static SleepMilliseconds(int ms)
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+		}
+
 		void EventLoop()
 		{
 			unsigned count_per_loop = 20;
@@ -416,7 +426,7 @@ namespace Cyan
 				unsigned count = FetchMessagesAndEvents();
 				if (count < count_per_loop)
 				{
-					std::this_thread::sleep_for(std::chrono::milliseconds(time_interval));
+					SleepMilliseconds(time_interval);
 				}
 			}
 		}

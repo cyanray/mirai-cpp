@@ -19,7 +19,7 @@ int main()
 			cout << ex.what() << endl;
 		}
 	}
-	cout << "�ɹ���¼ bot��" << endl;
+	cout << "³É¹¦µÇÂ¼ bot¡£" << endl;
 
 	auto groups = bot.GetGroupList();
 	int i = 1;
