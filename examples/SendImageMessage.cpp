@@ -24,6 +24,7 @@ int main()
 
 	FriendImage img = bot.UploadFriendImage("D:\\test.png");
 	GroupImage gImg = bot.UploadGroupImage("D:\\test.png");
+	TempImage tImg = bot.UploadTempImage("D:\\test.png");
 
 	bot.OnFriendMessageReceived(
 		[&](FriendMessage fm)
@@ -44,6 +45,19 @@ int main()
 			try
 			{
 				bot.SendMessage(gm.Sender.Group.GID, MessageChain().Image(gImg));
+			}
+			catch (const std::exception& ex)
+			{
+				cout << ex.what() << endl;
+			}
+		});
+
+	bot.OnTempMessageReceived(
+		[&](TempMessage gm)
+		{
+			try
+			{
+				gm.Reply(MessageChain().Image(tImg));
 			}
 			catch (const std::exception& ex)
 			{

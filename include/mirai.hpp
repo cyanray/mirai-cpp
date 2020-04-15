@@ -214,6 +214,30 @@ namespace Cyan
 				throw runtime_error(res.ErrorMsg);
 			return gImg;
 		}
+		TempImage UploadTempImage(const string& fileName)
+		{
+			static const string api_url = api_url_prefix_ + "/uploadImage";
+
+			HTTP http; http.SetContentType("multipart/form-data");
+			http.AddPostData("sessionKey", sessionKey_);
+			http.AddPostData("type", "temp");
+			http.AddFile("img", fileName);
+			auto res = http.Post(api_url);
+			TempImage tImg;
+
+			if (res.Ready)
+			{
+				json reJson;
+				reJson = reJson.parse(res.Content);
+				if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
+				tImg.ID = reJson["imageId"].get<string>();
+				tImg.Url = reJson["url"].get<string>();
+				tImg.Path = reJson["path"].get<string>();
+			}
+			else
+				throw runtime_error(res.ErrorMsg);
+			return tImg;
+		}
 		vector<Friend_t> GetFriendList()
 		{
 			static const string api_url = api_url_prefix_ + "/friendList?sessionKey=" + sessionKey_;

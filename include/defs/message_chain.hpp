@@ -108,6 +108,14 @@ namespace Cyan
 			messages_.push_back(j);
 			return *this;
 		}
+		MessageChain& Image(const TempImage& Image)
+		{
+			json j;
+			j["type"] = "Image";
+			j["imageId"] = Image.ID;
+			messages_.push_back(j);
+			return *this;
+		}
 
 		string GetPlainText() const
 		{

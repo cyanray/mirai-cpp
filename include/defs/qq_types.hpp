@@ -137,6 +137,14 @@ namespace Cyan
 		string Path;
 	};
 
+	// 发给临时消息的图片类型
+	struct TempImage
+	{
+		string ID;
+		string Url;
+		string Path;
+	};
+
 	// 预先声明 MiraiBot 类
 	class MiraiBot;
 
