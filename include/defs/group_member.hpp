@@ -14,7 +14,7 @@ namespace Cyan
 	class GroupMember_t : public Serializable
 	{
 	public:
-		QQ_t QQ = 0;
+		QQ_t QQ;
 		string MemberName;
 		GroupPermission Permission;
 		Group_t Group;
@@ -39,7 +39,7 @@ namespace Cyan
 		virtual ~GroupMember_t() = default;
 		virtual bool Set(const json& j) override
 		{
-			QQ = j["id"].get<int64_t>();
+			QQ = (QQ_t)(j["id"].get<int64_t>());
 			MemberName = j["memberName"].get<string>();
 			Permission = GroupPermissionStr(j["permission"].get<string>());
 			Group.Set(j["group"]);

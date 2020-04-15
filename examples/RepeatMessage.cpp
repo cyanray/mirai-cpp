@@ -27,7 +27,7 @@ int main()
 		{
 			try
 			{
-				bot.SendFriendMessage(fm.Sender.QQ, fm.MessageChain);
+				bot.SendMessage(fm.Sender.QQ, fm.MessageChain);
 			}
 			catch (const std::exception& ex)
 			{
@@ -41,7 +41,7 @@ int main()
 			cout << gm.MessageChain.ToString() << endl;
 			try
 			{
-				bot.SendGroupMessage(gm.Sender.Group.GID, "为什么要 " + gm.MessageChain);
+				bot.SendMessage(gm.Sender.Group.GID, "为什么要 " + gm.MessageChain);
 			}
 			catch (const std::exception& ex)
 			{

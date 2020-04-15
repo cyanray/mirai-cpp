@@ -13,7 +13,7 @@ namespace Cyan
 	class Group_t : public Serializable
 	{
 	public:
-		GID_t GID = 0;
+		GID_t GID;
 		string Name;
 		GroupPermission Permission;
 
@@ -35,7 +35,7 @@ namespace Cyan
 		virtual ~Group_t() = default;
 		virtual bool Set(const json& j) override
 		{
-			GID = j["id"].get<int64_t>();
+			GID = (GID_t)(j["id"].get<int64_t>());
 			Name = j["name"].get<string>();
 			Permission = GroupPermissionStr(j["permission"].get<string>());
 			return true;

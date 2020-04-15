@@ -13,7 +13,7 @@ namespace Cyan
 	class Friend_t : public Serializable
 	{
 	public:
-		QQ_t QQ = 0;
+		QQ_t QQ;
 		string NickName;
 		string Remark;
 
@@ -35,7 +35,7 @@ namespace Cyan
 		virtual ~Friend_t() = default;
 		virtual bool Set(const json& j) override
 		{
-			QQ = j["id"].get<int64_t>();
+			QQ = (QQ_t)(j["id"].get<int64_t>());
 			NickName = j["nickname"].get<string>();
 			Remark = j["remark"].get<string>();
 			return true;

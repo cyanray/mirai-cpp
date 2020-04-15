@@ -19,7 +19,7 @@ int main()
 			cout << ex.what() << endl;
 		}
 	}
-	cout << "³É¹¦µÇÂ¼ bot¡£" << endl;
+	cout << "成功登录 bot。" << endl;
 
 	auto friends = bot.GetFriendList();
 	int i = 1;

@@ -29,7 +29,7 @@ int main()
 		{
 			try
 			{
-				bot.SendFriendMessage(fm.Sender.QQ, MessageChain().Image(img));
+				bot.SendMessage(fm.Sender.QQ, MessageChain().Image(img));
 			}
 			catch (const std::exception & ex)
 			{
@@ -42,7 +42,7 @@ int main()
 		{
 			try
 			{
-				bot.SendGroupMessage(gm.Sender.Group.GID, MessageChain().Image(gImg));
+				bot.SendMessage(gm.Sender.Group.GID, MessageChain().Image(gImg));
 			}
 			catch (const std::exception& ex)
 			{

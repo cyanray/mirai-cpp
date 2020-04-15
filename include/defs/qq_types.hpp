@@ -11,7 +11,8 @@ namespace Cyan
 	struct QQ_t
 	{
 		int64_t QQ;
-		QQ_t(int64_t qq) :QQ(qq) {}
+		QQ_t() :QQ(-1) {}
+		explicit  QQ_t(int64_t qq) :QQ(qq) {}
 		operator int64_t() const { return QQ; }
 	};
 
@@ -29,7 +30,8 @@ namespace Cyan
 	struct GID_t
 	{
 		int64_t GID;
-		GID_t(int64_t gid) :GID(gid) {}
+		GID_t() :GID(-1) {}
+		explicit GID_t(int64_t gid) :GID(gid) {}
 		operator int64_t() const { return GID; }
 	};
 

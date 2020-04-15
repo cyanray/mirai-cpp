@@ -18,6 +18,10 @@ using std::stringstream;
 using std::function;
 using nlohmann::json;
 
+#ifdef SendMessage
+#undef SendMessage
+#endif
+
 namespace Cyan
 {
 	typedef std::function<void(FriendMessage)> FriendMessageProcesser;
@@ -69,7 +73,7 @@ namespace Cyan
 			else
 				throw runtime_error(res.ErrorMsg);
 		}
-		MessageID SendFriendMessage(QQ_t target, const MessageChain& messageChain)
+		MessageID SendMessage(QQ_t target, const MessageChain& messageChain)
 		{
 			static const string api_url = api_url_prefix_ + "/sendFriendMessage";
 
@@ -100,7 +104,7 @@ namespace Cyan
 			else
 				throw runtime_error(res.ErrorMsg);
 		}
-		MessageID SendGroupMessage(GID_t target, const MessageChain& messageChain)
+		MessageID SendMessage(GID_t target, const MessageChain& messageChain)
 		{
 			static const string api_url = api_url_prefix_ + "/sendGroupMessage";
 			json j;
