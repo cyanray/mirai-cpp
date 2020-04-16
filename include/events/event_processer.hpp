@@ -3,15 +3,17 @@
 #define mirai_cpp_events_event_processer_hpp_H_
 
 #include <functional>
-#include "friend_message.hpp"
-#include "group_message.hpp"
-#include "temp_message.hpp"
+#include "defs/serializable.hpp"
 
 namespace Cyan
 {
-	typedef std::function<void(FriendMessage)> FriendMessageProcesser;
-	typedef std::function<void(GroupMessage)> GroupMessageProcesser;
-	typedef std::function<void(TempMessage)> TempMessageProcesser;
+	template<typename T>
+	using EventProcessor = std::function<void(T)>;
+
+	typedef Serializable WeakEvent;
+	//using WeakEvent = std::function<void(Serializable*)>;
+
+
 }
 
 

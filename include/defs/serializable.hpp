@@ -12,8 +12,8 @@ namespace Cyan
 	{
 	public:
 		Serializable() {}
-		virtual bool Set(const json& json) = 0;
-		virtual json ToJson() const = 0;
+		virtual bool Set(const json& json) { return false; }
+		virtual json ToJson() const { return json::object(); }
 		virtual string ToString() const
 		{
 			return ToJson().dump();

@@ -6,6 +6,7 @@
 #include <exception>
 #include <thread>
 #include <sstream>
+#include <unordered_map>
 #include <boost/asio.hpp>
 #include <nlohmann/json.hpp>
 #include "CURLWrapper.h"
@@ -18,6 +19,7 @@ using std::vector;
 using std::stringstream;
 using std::function;
 using nlohmann::json;
+using std::unordered_map;
 
 #ifdef SendMessage
 #undef SendMessage
@@ -484,19 +486,29 @@ namespace Cyan
 
 		}
 
+		template<typename T>
+		void OnEventReceived(const EventProcessor<T>& ep)
+		{
+			processors_.insert({ GetEventName<T>(),
+				[=](WeakEvent* we)
+				{
+					ep(*(dynamic_cast<T*>(we)));
+				}
+				});
+		}
 
-		void OnFriendMessageReceived(FriendMessageProcesser friendMessageProcesser)
-		{
-			friendMessageProcesser_ = friendMessageProcesser;
-		}
-		void OnGroupMessageReceived(GroupMessageProcesser groupMessageProcesser)
-		{
-			groupMessageProcesser_ = groupMessageProcesser;
-		}
-		void OnTempMessageReceived(TempMessageProcesser tempMessageProcesser)
-		{
-			tempMessageProcesser_ = tempMessageProcesser;
-		}
+		/*	void OnFriendMessageReceived(FriendMessageProcesser friendMessageProcesser)
+			{
+				friendMessageProcesser_ = friendMessageProcesser;
+			}
+			void OnGroupMessageReceived(GroupMessageProcesser groupMessageProcesser)
+			{
+				groupMessageProcesser_ = groupMessageProcesser;
+			}
+			void OnTempMessageReceived(TempMessageProcesser tempMessageProcesser)
+			{
+				tempMessageProcesser_ = tempMessageProcesser;
+			}*/
 
 
 		void inline static SleepSeconds(int sec)
@@ -600,30 +612,49 @@ namespace Cyan
 				if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
 				for (const auto& ele : reJson["data"])
 				{
-					MiraiEvent type = MiraiEventStr(ele["type"].get<string>());
-					if (groupMessageProcesser_ && type == MiraiEvent::GroupMessage)
+					string event_name = ele["type"].get<string>();
+					MiraiEvent type = MiraiEventStr(event_name);
+					auto pit = processors_.find(event_name);
+					if (pit != processors_.end())
 					{
-						GroupMessage gm;
-						gm.SetMiraiBot(this);
-						gm.Set(ele);
-						boost::asio::post(pool_, [=]() { groupMessageProcesser_(gm); });
-						continue;
-					}
-					if (friendMessageProcesser_ && type == MiraiEvent::FriendMessage)
-					{
-						FriendMessage fm;
-						fm.SetMiraiBot(this);
-						fm.Set(ele);
-						boost::asio::post(pool_, [=]() { friendMessageProcesser_(fm); });
-						continue;
-					}
-					if (tempMessageProcesser_ && type == MiraiEvent::TempMessage)
-					{
-						TempMessage tm;
-						tm.SetMiraiBot(this);
-						tm.Set(ele);
-						boost::asio::post(pool_, [=]() { tempMessageProcesser_(tm); });
-						continue;
+						auto exector = pit->second;
+
+						auto func = [=]()
+						{
+							Serializable* pevent;
+							if (type == MiraiEvent::GroupMessage)
+							{
+								GroupMessage gm;
+								gm.SetMiraiBot(this);
+								gm.Set(ele);
+								pevent = dynamic_cast<Serializable*>(&gm);
+								exector(pevent);
+								return;
+							}
+							if (type == MiraiEvent::FriendMessage)
+							{
+								FriendMessage fm;
+								fm.SetMiraiBot(this);
+								fm.Set(ele);
+								pevent = dynamic_cast<Serializable*>(&fm);
+								exector(pevent);
+								return;
+							}
+							if (type == MiraiEvent::TempMessage)
+							{
+								TempMessage tm;
+								tm.SetMiraiBot(this);
+								tm.Set(ele);
+								pevent = dynamic_cast<Serializable*>(&tm);
+								exector(pevent);
+								return;
+							}
+
+							
+						};
+
+						boost::asio::post(pool_, func);
+
 					}
 					received_count++;
 				}
@@ -649,9 +680,10 @@ namespace Cyan
 		QQ_t qq_;
 		string sessionKey_;
 		string api_url_prefix_ = "http://127.0.0.1:8080";
-		GroupMessageProcesser groupMessageProcesser_;
-		TempMessageProcesser tempMessageProcesser_;
-		FriendMessageProcesser friendMessageProcesser_;
+		unordered_map<string, function<void(WeakEvent*)> > processors_;
+		//GroupMessageProcesser groupMessageProcesser_;
+		//TempMessageProcesser tempMessageProcesser_;
+		//FriendMessageProcesser friendMessageProcesser_;
 		boost::asio::thread_pool pool_;
 	};
 

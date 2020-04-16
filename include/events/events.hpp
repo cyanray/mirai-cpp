@@ -8,5 +8,6 @@
 #include "temp_message.hpp"
 // 一些定义
 #include "event_processer.hpp"
+#include "events_name.hpp"
 
 #endif // !mirai_cpp_events_events_hpp_H_
