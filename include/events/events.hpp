@@ -6,6 +6,7 @@
 #include "friend_message.hpp"
 #include "group_message.hpp"
 #include "temp_message.hpp"
+// 一些定义
 #include "event_processer.hpp"
 
 #endif // !mirai_cpp_events_events_hpp_H_

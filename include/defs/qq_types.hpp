@@ -85,10 +85,24 @@ namespace Cyan
 	// Mirai 事件类型
 	enum class MiraiEvent
 	{
-		Default,
-		FriendMessage,
-		GroupMessage,
-		TempMessage
+		Default,				// 未知
+		FriendMessage,			// 好友消息
+		GroupMessage,			// 群组消息
+		TempMessage,			// 临时消息
+		GroupRecallEvent,		// 群消息撤回
+		FriendRecallEvent,		// 好友消息撤回
+		BotMuteEvent,			// Bot被禁言
+		BotUnmuteEvent,			// Bot被取消禁言
+		BotJoinGroupEvent,		// Bot加入了一个新群
+		GroupNameChangeEvent,	// 某个群名称改变
+		GroupMuteAllEvent,		// 群全员禁言
+		MemberJoinEvent,		// 新人入群事件
+		MemberLeaveEventKick,	// 成员被踢出群(该成员不是Bot)
+		MemberLeaveEventQuit,	// 成员主动离开群组
+		MemberMuteEvent,		// 群成员被禁言(该成员不是Bot)
+		MemberUnmuteEvent,		// 群成员被取消禁言(该成员不是Bot)
+		NewFriendRequestEvent,	// 添加好友申请
+		MemberJoinRequestEvent	// 用户入群申请
 	};
 
 	inline MiraiEvent MiraiEventStr(const string& miraiEvent)
