@@ -3,10 +3,10 @@
 #define mirai_cpp_defs_temp_message_hpp_H_
 
 #include <nlohmann/json.hpp>
-#include "qq_types.hpp"
-#include "serializable.hpp"
-#include "message_chain.hpp"
-#include "group_member.hpp"
+#include "defs/qq_types.hpp"
+#include "defs/serializable.hpp"
+#include "defs/message_chain.hpp"
+#include "defs/group_member.hpp"
 
 namespace Cyan
 {

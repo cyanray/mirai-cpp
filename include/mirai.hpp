@@ -10,6 +10,7 @@
 #include <nlohmann/json.hpp>
 #include "CURLWrapper.h"
 #include "defs/defs.hpp"
+#include "events/events.hpp"
 
 using std::string;
 using std::runtime_error;
@@ -24,11 +25,6 @@ using nlohmann::json;
 
 namespace Cyan
 {
-	typedef std::function<void(FriendMessage)> FriendMessageProcesser;
-	typedef std::function<void(GroupMessage)> GroupMessageProcesser;
-	typedef std::function<void(TempMessage)> TempMessageProcesser;
-
-
 	class MiraiBot
 	{
 	public:

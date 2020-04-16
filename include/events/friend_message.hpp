@@ -1,32 +1,32 @@
 #pragma once
-#ifndef mirai_cpp_defs_group_message_hpp_H_
-#define mirai_cpp_defs_group_message_hpp_H_
+#ifndef mirai_cpp_defs_friend_message_hpp_H_
+#define mirai_cpp_defs_friend_message_hpp_H_
 
 #include <nlohmann/json.hpp>
-#include "qq_types.hpp"
-#include "serializable.hpp"
-#include "message_chain.hpp"
-#include "group_member.hpp"
+#include "defs/qq_types.hpp"
+#include "defs/serializable.hpp"
+#include "defs/message_chain.hpp"
+#include "defs/friend.hpp"
 
 namespace Cyan
 {
-	// 群组发来的消息
-	class GroupMessage : public Serializable
+	// 好友发来的消息
+	class FriendMessage : public Serializable
 	{
 	public:
 		Cyan::MessageChain MessageChain;
-		GroupMember_t Sender;
+		Friend_t Sender;
 
-		GroupMessage() = default;
-		GroupMessage(const GroupMessage& gm)
+		FriendMessage() = default;
+		FriendMessage(const FriendMessage& gm)
 		{
 			MessageChain = gm.MessageChain;
 			Sender = gm.Sender;
 			bot_ = gm.bot_;
 		}
-		GroupMessage& operator=(const GroupMessage& t)
+		FriendMessage& operator=(const FriendMessage& t)
 		{
-			GroupMessage tmp(t);
+			FriendMessage tmp(t);
 			std::swap(this->MessageChain, tmp.MessageChain);
 			std::swap(this->Sender, tmp.Sender);
 			std::swap(this->bot_, tmp.bot_);
@@ -34,12 +34,12 @@ namespace Cyan
 		}
 		MessageId GetMessageId() const
 		{
-			return (this->MessageChain).GetMessageId();
+			return this->MessageChain.GetMessageId();
 		}
 
 		int64_t GetTimestamp() const
 		{
-			return (this->MessageChain).GetTimestamp();
+			return this->MessageChain.GetTimestamp();
 		}
 
 		void SetMiraiBot(MiraiBot* bot)
@@ -49,13 +49,12 @@ namespace Cyan
 
 		MessageId Reply(const Cyan::MessageChain& mc) const;
 		MessageId QuoteReply(const Cyan::MessageChain& mc) const;
-		bool Recall();
 
-		virtual ~GroupMessage() = default;
+		virtual ~FriendMessage() = default;
 		virtual bool Set(const json& j) override
 		{
 			this->MessageChain.Set(j["messageChain"]);
-			Sender.Set(j["sender"]);
+			this->Sender.Set(j["sender"]);
 			return true;
 		}
 		virtual json ToJson() const override
@@ -65,9 +64,11 @@ namespace Cyan
 			j["sender"] = this->Sender.ToJson();
 			return j;
 		}
+
 	private:
 		MiraiBot* bot_;
 	};
+
 }
 
-#endif // !mirai_cpp_defs_group_message_hpp_H_
+#endif // !mirai_cpp_defs_friend_message_hpp_H_
