@@ -11,27 +11,27 @@
 namespace Cyan
 {
 
-	// Mirai ÊÂ¼şÀàĞÍ
+	// Mirai äº‹ä»¶ç±»å‹
 	enum class MiraiEvent
 	{
-		Default,				// Î´Öª
-		FriendMessage,			// ºÃÓÑÏûÏ¢
-		GroupMessage,			// Èº×éÏûÏ¢
-		TempMessage,			// ÁÙÊ±ÏûÏ¢
-		GroupRecallEvent,		// ÈºÏûÏ¢³·»Ø
-		FriendRecallEvent,		// ºÃÓÑÏûÏ¢³·»Ø
-		BotMuteEvent,			// Bot±»½ûÑÔ
-		BotUnmuteEvent,			// Bot±»È¡Ïû½ûÑÔ
-		BotJoinGroupEvent,		// Bot¼ÓÈëÁËÒ»¸öĞÂÈº
-		GroupNameChangeEvent,	// Ä³¸öÈºÃû³Æ¸Ä±ä
-		GroupMuteAllEvent,		// ÈºÈ«Ô±½ûÑÔ
-		MemberJoinEvent,		// ĞÂÈËÈëÈºÊÂ¼ş
-		MemberLeaveEventKick,	// ³ÉÔ±±»Ìß³öÈº(¸Ã³ÉÔ±²»ÊÇBot)
-		MemberLeaveEventQuit,	// ³ÉÔ±Ö÷¶¯Àë¿ªÈº×é
-		MemberMuteEvent,		// Èº³ÉÔ±±»½ûÑÔ(¸Ã³ÉÔ±²»ÊÇBot)
-		MemberUnmuteEvent,		// Èº³ÉÔ±±»È¡Ïû½ûÑÔ(¸Ã³ÉÔ±²»ÊÇBot)
-		NewFriendRequestEvent,	// Ìí¼ÓºÃÓÑÉêÇë
-		MemberJoinRequestEvent	// ÓÃ»§ÈëÈºÉêÇë
+		Default,				// æœªçŸ¥
+		FriendMessage,			// å¥½å‹æ¶ˆæ¯
+		GroupMessage,			// ç¾¤ç»„æ¶ˆæ¯
+		TempMessage,			// ä¸´æ—¶æ¶ˆæ¯
+		GroupRecallEvent,		// ç¾¤æ¶ˆæ¯æ’¤å›
+		FriendRecallEvent,		// å¥½å‹æ¶ˆæ¯æ’¤å›
+		BotMuteEvent,			// Botè¢«ç¦è¨€
+		BotUnmuteEvent,			// Botè¢«å–æ¶ˆç¦è¨€
+		BotJoinGroupEvent,		// BotåŠ å…¥äº†ä¸€ä¸ªæ–°ç¾¤
+		GroupNameChangeEvent,	// æŸä¸ªç¾¤åç§°æ”¹å˜
+		GroupMuteAllEvent,		// ç¾¤å…¨å‘˜ç¦è¨€
+		MemberJoinEvent,		// æ–°äººå…¥ç¾¤äº‹ä»¶
+		MemberLeaveEventKick,	// æˆå‘˜è¢«è¸¢å‡ºç¾¤(è¯¥æˆå‘˜ä¸æ˜¯Bot)
+		MemberLeaveEventQuit,	// æˆå‘˜ä¸»åŠ¨ç¦»å¼€ç¾¤ç»„
+		MemberMuteEvent,		// ç¾¤æˆå‘˜è¢«ç¦è¨€(è¯¥æˆå‘˜ä¸æ˜¯Bot)
+		MemberUnmuteEvent,		// ç¾¤æˆå‘˜è¢«å–æ¶ˆç¦è¨€(è¯¥æˆå‘˜ä¸æ˜¯Bot)
+		NewFriendRequestEvent,	// æ·»åŠ å¥½å‹ç”³è¯·
+		MemberJoinRequestEvent	// ç”¨æˆ·å…¥ç¾¤ç”³è¯·
 	};
 
 	inline MiraiEvent MiraiEventStr(const string& miraiEvent)
@@ -57,6 +57,9 @@ namespace Cyan
 		case Cyan::MiraiEvent::TempMessage:
 			result = "TempMessage";
 			break;
+		case Cyan::MiraiEvent::NewFriendRequestEvent:
+			result = "NewFriendRequestEvent";
+			break;
 		default:
 			result = "Default";
 			break;
@@ -67,8 +70,8 @@ namespace Cyan
 	template<typename T>
 	MiraiEvent GetEventName()
 	{
-		// ¹ÊÒâ·µ»Ø×Ö·û´®£¬µ¼ÖÂ±àÒëÆÚ³ö´í
-		return "´íÎó:ÄãÊ¹ÓÃÁËÃ»ÓĞ¶¨ÒåµÄEventÀàĞÍ";
+		// æ•…æ„è¿”å›å­—ç¬¦ä¸²ï¼Œå¯¼è‡´ç¼–è¯‘æœŸå‡ºé”™
+		return "é”™è¯¯:ä½ ä½¿ç”¨äº†æ²¡æœ‰å®šä¹‰çš„Eventç±»å‹";
 	}
 
 	template<>
