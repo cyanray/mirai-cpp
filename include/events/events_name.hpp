@@ -3,9 +3,10 @@
 #define mirai_cpp_events_events_name_hpp_H_
 
 #include <functional>
-#include "events/friend_message.hpp"
-#include "events/group_message.hpp"
-#include "events/temp_message.hpp"
+#include "friend_message.hpp"
+#include "group_message.hpp"
+#include "temp_message.hpp"
+#include "new_friend_event.hpp"
 
 namespace Cyan
 {
@@ -38,6 +39,7 @@ namespace Cyan
 		if (miraiEvent == "FriendMessage") return MiraiEvent::FriendMessage;
 		if (miraiEvent == "GroupMessage") return MiraiEvent::GroupMessage;
 		if (miraiEvent == "TempMessage") return MiraiEvent::TempMessage;
+		if (miraiEvent == "NewFriendRequestEvent") return MiraiEvent::NewFriendRequestEvent;
 		return MiraiEvent::Default;
 	}
 
@@ -65,7 +67,8 @@ namespace Cyan
 	template<typename T>
 	MiraiEvent GetEventName()
 	{
-		return "Default";
+		// 故意返回字符串，导致编译期出错
+		return "错误:你使用了没有定义的Event类型";
 	}
 
 	template<>
@@ -84,6 +87,12 @@ namespace Cyan
 	MiraiEvent GetEventName<TempMessage>()
 	{
 		return MiraiEvent::TempMessage;
+	}
+
+	template<>
+	MiraiEvent GetEventName<NewFriendEvent>()
+	{
+		return MiraiEvent::NewFriendRequestEvent;
 	}
 
 }

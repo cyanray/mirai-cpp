@@ -42,6 +42,15 @@ namespace Cyan
 		{
 			Release();
 		}
+		string GetSessionKey() const
+		{
+			return sessionKey_;
+		}
+		string GetApiUrlPrefix() const
+		{
+			return api_url_prefix_;
+		}
+
 		bool Auth(const string& authKey, QQ_t qq)
 		{
 			static const string api_url = api_url_prefix_ + "/auth";
@@ -635,6 +644,15 @@ namespace Cyan
 								exector(pevent);
 								return;
 							}
+							if (mirai_event == MiraiEvent::NewFriendRequestEvent)
+							{
+								NewFriendEvent newFriend;
+								newFriend.SetMiraiBot(this);
+								newFriend.Set(ele);
+								pevent = dynamic_cast<Serializable*>(&newFriend);
+								exector(pevent);
+								return;
+							}
 
 							
 						};
@@ -705,6 +723,31 @@ namespace Cyan
 	bool GroupMessage::Recall()
 	{
 		return bot_->Recall(GetMessageId());
+	}
+
+	bool NewFriendEvent::Respose(int operate, const string& message)
+	{
+		static const string api_url = bot_->GetApiUrlPrefix() + "/resp/newFriendRequestEvent";
+
+		json j;
+		j["sessionKey"] = bot_->GetSessionKey();
+		j["eventId"] = this->EventId;
+		j["fromId"] = (int64_t)this->FromId;
+		j["groupId"] = (int64_t)this->GroupId;
+		j["operate"] = operate;
+		j["message"] = message;
+
+		string pData = j.dump();
+		HTTP http; http.SetContentType("application/json;charset=UTF-8");
+		auto res = http.Post(api_url, pData);
+
+		if (res.Ready)
+		{
+			return true;
+		}
+		else
+			throw runtime_error(res.ErrorMsg);
+
 	}
 
 } // namespace Cyan
