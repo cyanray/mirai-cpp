@@ -50,10 +50,10 @@ cd vcpkg
 
 #### (2) 使用 **vcpkg** 安装 **mirai-cpp**
 
-这一步稍微复杂，你需要执行(一定要在 **Powershell** 里面执行)：
+这一步稍微复杂，你需要执行(这里一定要在 **Powershell** 里面执行)：
 
 ```powershell
-git clone https://github.com/cyanray/mirai-cpp-vcpkg-port.git tmp ; mv tmp/* ports/ ; rm -Recurse -Force tmp
+git clone https://github.com/cyanray/mirai-cpp-vcpkg-port.git tmp ; rm -Recurse -Force ports/mirai-cpp ; mv tmp/* ports/ ; rm -Recurse -Force tmp
 ./vcpkg install mirai-cpp
 # 如果你要构建 x64 平台的程序,需要执行:
 # ./vcpkg install mirai-cpp:x64-windows
@@ -71,48 +71,48 @@ git clone https://github.com/cyanray/mirai-cpp-vcpkg-port.git tmp ; mv tmp/* por
 
 int main()
 {
-	using namespace std;
-	using namespace Cyan;
-	MiraiBot bot;
-	while (true)
-	{
-		try
-		{
+    using namespace std;
+    using namespace Cyan;
+    MiraiBot bot;
+    while (true)
+    {
+        try
+        {
             // InitKeyVl0CEUzZ 改为你的 InitKey，
             // 2110000000 改为你的 bot 的 QQ 号码
-			// 提示: mirai-cpp 不支持隐式地将字面数字转化为 QQ_t 或 GID_t
-			// 你需要给字面数字添加后缀 qq 或 _qq (gid 或 _gid), 将字面数字转化为 QQ_t (GID_t)
-			// 如果想将 QQ_t(GID_t) 转化为数字，可以使用强制类型转换: 
-			// QQ_t qq = 10001_qq;
-			// int64_t qq_num (int64_t)(qq);
-			bot.Auth("InitKeyVl0CEUzZ", 2110000000qq);
-			break;
-		}
-		catch (const std::exception & ex)
-		{
-			cout << ex.what() << endl;
-		}
-	}
-	cout << "成功登录 bot。" << endl;
+            // 提示: mirai-cpp 不支持隐式地将字面数字转化为 QQ_t 或 GID_t
+            // 你需要给字面数字添加后缀 qq 或 _qq (gid 或 _gid), 将字面数字转化为 QQ_t (GID_t)
+            // 如果想将 QQ_t(GID_t) 转化为数字，可以使用强制类型转换: 
+            // QQ_t qq = 10001_qq;
+            // int64_t qq_num = (int64_t)(qq);
+            bot.Auth("InitKeyVl0CEUzZ", 2110000000qq);
+            break;
+        }
+        catch (const std::exception & ex)
+        {
+            cout << ex.what() << endl;
+        }
+    }
+    cout << "成功登录 bot。" << endl;
 
 
-	bot.On<FriendMessage>(
-		[&](FriendMessage fm)
-		{
-			// bot.SendFriendMessage(fm.Sender.QQ, fm.MessageChain);
-			fm.Reply(fm.MessageChain);
-		});
+    bot.On<FriendMessage>(
+        [&](FriendMessage fm)
+        {
+            // bot.SendFriendMessage(fm.Sender.QQ, fm.MessageChain);
+            fm.Reply(fm.MessageChain);
+        });
 
-	bot.On<GroupMessage>(
-		[&](GroupMessage gm)
-		{
-			// bot.SendGroupMessage(gm.Sender.Group.GID, "为什么要 " + gm.MessageChain);
-			gm.QuoteReply("为什么要 " + gm.MessageChain);
-		});
+    bot.On<GroupMessage>(
+        [&](GroupMessage gm)
+        {
+            // bot.SendGroupMessage(gm.Sender.Group.GID, "为什么要 " + gm.MessageChain);
+            gm.QuoteReply("为什么要 " + gm.MessageChain);
+        });
 
-	bot.EventLoop();
+    bot.EventLoop();
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -140,7 +140,23 @@ MSVC 并没有默认启动对 UTF-8 编码的支持。
 
 ### 2. 其他使用方式
 
-未完待续……
+#### (1) 更新 mirai-cpp
+
+在更新 mirai-cpp 之前，需要先删除已经安装的 mirai-cpp
+
+```powershell
+./vcpkg remove mirai-cpp
+./vcpkg remove mirai-cpp:x64-windows # 如果有安装 mirai-cpp:x64-windows
+```
+
+删除之后，重新安装即可:
+
+```powershell
+git clone https://github.com/cyanray/mirai-cpp-vcpkg-port.git tmp ; rm -Recurse -Force ports/mirai-cpp ; mv tmp/* ports/ ; rm -Recurse -Force tmp
+./vcpkg install mirai-cpp
+# 如果你要构建 x64 平台的程序,需要执行:
+# ./vcpkg install mirai-cpp:x64-windows
+```
 
 ## 代码风格
 
