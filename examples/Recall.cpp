@@ -23,7 +23,7 @@ int main()
 	cout << "成功登录 bot。" << endl;
 
 
-	bot.OnGroupMessageReceived(
+	bot.On<GroupMessage>(
 		[&](GroupMessage gm)
 		{
 			try

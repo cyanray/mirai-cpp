@@ -26,7 +26,7 @@ int main()
 	GroupImage gImg = bot.UploadGroupImage("D:\\test.png");
 	TempImage tImg = bot.UploadTempImage("D:\\test.png");
 
-	bot.OnFriendMessageReceived(
+	bot.On<FriendMessage>(
 		[&](FriendMessage fm)
 		{
 			try
@@ -39,7 +39,7 @@ int main()
 			}
 		});
 
-	bot.OnGroupMessageReceived(
+	bot.On<GroupMessage>(
 		[&](GroupMessage gm)
 		{
 			try
@@ -52,7 +52,7 @@ int main()
 			}
 		});
 
-	bot.OnTempMessageReceived(
+	bot.On<TempMessage>(
 		[&](TempMessage gm)
 		{
 			try
