@@ -25,7 +25,7 @@ int main()
 	bot.OnEventReceived<GroupMessage>(
 		[&](GroupMessage gm)
 		{
-			gm.Reply(gm.MessageChain);
+			gm.QuoteReply(gm.MessageChain);
 		});
 
 	bot.OnEventReceived<FriendMessage>(
@@ -34,54 +34,11 @@ int main()
 			fm.Reply("你好呀, " + fm.MessageChain);
 		});
 
-
-	//bot.OnFriendMessageReceived(
-	//	[&](FriendMessage fm)
-	//	{
-	//		cout << fm.MessageChain.ToString() << endl;
-	//		cout << fm.MessageChain.GetTimestamp() << endl;
-	//		cout << fm.GetMessageId() << ", " << fm.GetTimestamp() << endl;
-	//		try
-	//		{
-	//			bot.SendMessage(fm.Sender.QQ, fm.MessageChain, fm.GetMessageId());
-	//		}
-	//		catch (const std::exception& ex)
-	//		{
-	//			cout << ex.what() << endl;
-	//		}
-	//	});
-
-	//bot.OnGroupMessageReceived(
-	//	[&](GroupMessage gm)
-	//	{
-	//		cout << gm.MessageChain.ToString() << endl;
-	//		cout << gm.GetMessageId() << ", " << gm.GetTimestamp() << endl;
-	//		try
-	//		{
-	//			gm.Reply(gm.MessageChain);
-	//			bot.SendMessage(gm.Sender.Group.GID, "为什么要 " + gm.MessageChain, gm.GetMessageId());
-	//		}
-	//		catch (const std::exception& ex)
-	//		{
-	//			cout << ex.what() << endl;
-	//		}
-	//	});
-
-	//bot.OnTempMessageReceived(
-	//	[&](TempMessage tm)
-	//	{
-	//		cout << tm.MessageChain.ToString() << endl;
-	//		cout << tm.GetMessageId() << ", " << tm.GetTimestamp() << endl;
-	//		try
-	//		{
-	//			tm.Reply(tm.MessageChain);
-	//			tm.QuoteReply(tm.MessageChain);
-	//		}
-	//		catch (const std::exception& ex)
-	//		{
-	//			cout << ex.what() << endl;
-	//		}
-	//	});
+	bot.OnEventReceived<TempMessage>(
+		[&](TempMessage tm)
+		{
+			tm.Reply(tm.MessageChain);
+		});
 
 	bot.EventLoop();
 	try

@@ -497,20 +497,6 @@ namespace Cyan
 				});
 		}
 
-		/*	void OnFriendMessageReceived(FriendMessageProcesser friendMessageProcesser)
-			{
-				friendMessageProcesser_ = friendMessageProcesser;
-			}
-			void OnGroupMessageReceived(GroupMessageProcesser groupMessageProcesser)
-			{
-				groupMessageProcesser_ = groupMessageProcesser;
-			}
-			void OnTempMessageReceived(TempMessageProcesser tempMessageProcesser)
-			{
-				tempMessageProcesser_ = tempMessageProcesser;
-			}*/
-
-
 		void inline static SleepSeconds(int sec)
 		{
 			std::this_thread::sleep_for(std::chrono::seconds(sec));
@@ -613,8 +599,8 @@ namespace Cyan
 				for (const auto& ele : reJson["data"])
 				{
 					string event_name = ele["type"].get<string>();
-					MiraiEvent type = MiraiEventStr(event_name);
-					auto pit = processors_.find(event_name);
+					MiraiEvent mirai_event = MiraiEventStr(event_name);
+					auto pit = processors_.find(mirai_event);
 					if (pit != processors_.end())
 					{
 						auto exector = pit->second;
@@ -622,7 +608,7 @@ namespace Cyan
 						auto func = [=]()
 						{
 							Serializable* pevent;
-							if (type == MiraiEvent::GroupMessage)
+							if (mirai_event == MiraiEvent::GroupMessage)
 							{
 								GroupMessage gm;
 								gm.SetMiraiBot(this);
@@ -631,7 +617,7 @@ namespace Cyan
 								exector(pevent);
 								return;
 							}
-							if (type == MiraiEvent::FriendMessage)
+							if (mirai_event == MiraiEvent::FriendMessage)
 							{
 								FriendMessage fm;
 								fm.SetMiraiBot(this);
@@ -640,7 +626,7 @@ namespace Cyan
 								exector(pevent);
 								return;
 							}
-							if (type == MiraiEvent::TempMessage)
+							if (mirai_event == MiraiEvent::TempMessage)
 							{
 								TempMessage tm;
 								tm.SetMiraiBot(this);
@@ -680,10 +666,7 @@ namespace Cyan
 		QQ_t qq_;
 		string sessionKey_;
 		string api_url_prefix_ = "http://127.0.0.1:8080";
-		unordered_map<string, function<void(WeakEvent*)> > processors_;
-		//GroupMessageProcesser groupMessageProcesser_;
-		//TempMessageProcesser tempMessageProcesser_;
-		//FriendMessageProcesser friendMessageProcesser_;
+		unordered_map<MiraiEvent, function<void(WeakEvent*)> > processors_;
 		boost::asio::thread_pool pool_;
 	};
 
