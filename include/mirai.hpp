@@ -7,6 +7,7 @@
 #include <thread>
 #include <sstream>
 #include <unordered_map>
+#include <memory>
 #include <boost/asio.hpp>
 #include <nlohmann/json.hpp>
 #include "CURLWrapper.h"
@@ -21,8 +22,13 @@ using std::function;
 using nlohmann::json;
 using std::unordered_map;
 
+
 #ifdef SendMessage
 #undef SendMessage
+#endif
+
+#ifdef CreateEvent
+#undef CreateEvent
 #endif
 
 namespace Cyan
@@ -499,9 +505,9 @@ namespace Cyan
 		void OnEventReceived(const EventProcessor<T>& ep)
 		{
 			processors_.insert({ GetEventName<T>(),
-				[=](WeakEvent* we)
+				[=](WeakEvent we)
 				{
-					ep(*(dynamic_cast<T*>(we)));
+					ep(*(std::dynamic_pointer_cast<T>(we)));
 				}
 				});
 		}
@@ -609,55 +615,16 @@ namespace Cyan
 				{
 					string event_name = ele["type"].get<string>();
 					MiraiEvent mirai_event = MiraiEventStr(event_name);
+					// 寻找能处理事件的 Processor
 					auto pit = processors_.find(mirai_event);
 					if (pit != processors_.end())
 					{
 						auto exector = pit->second;
-
-						auto func = [=]()
-						{
-							Serializable* pevent;
-							if (mirai_event == MiraiEvent::GroupMessage)
+						WeakEvent pevent = CreateEvent(mirai_event, ele);
+						boost::asio::post(pool_, [=]() 
 							{
-								GroupMessage gm;
-								gm.SetMiraiBot(this);
-								gm.Set(ele);
-								pevent = dynamic_cast<Serializable*>(&gm);
 								exector(pevent);
-								return;
-							}
-							if (mirai_event == MiraiEvent::FriendMessage)
-							{
-								FriendMessage fm;
-								fm.SetMiraiBot(this);
-								fm.Set(ele);
-								pevent = dynamic_cast<Serializable*>(&fm);
-								exector(pevent);
-								return;
-							}
-							if (mirai_event == MiraiEvent::TempMessage)
-							{
-								TempMessage tm;
-								tm.SetMiraiBot(this);
-								tm.Set(ele);
-								pevent = dynamic_cast<Serializable*>(&tm);
-								exector(pevent);
-								return;
-							}
-							if (mirai_event == MiraiEvent::NewFriendRequestEvent)
-							{
-								NewFriendEvent newFriend;
-								newFriend.SetMiraiBot(this);
-								newFriend.Set(ele);
-								pevent = dynamic_cast<Serializable*>(&newFriend);
-								exector(pevent);
-								return;
-							}
-
-							
-						};
-
-						boost::asio::post(pool_, func);
+							});
 
 					}
 					received_count++;
@@ -681,10 +648,42 @@ namespace Cyan
 
 		}
 
+		WeakEvent CreateEvent(MiraiEvent mirai_event, const json& json_)
+		{
+			if (mirai_event == MiraiEvent::GroupMessage)
+			{
+				std::shared_ptr<GroupMessage> gm = std::make_shared<GroupMessage>();
+				gm->SetMiraiBot(this);
+				gm->Set(json_);
+				return std::dynamic_pointer_cast<Serializable>(gm);
+			}
+			if (mirai_event == MiraiEvent::FriendMessage)
+			{
+				std::shared_ptr<FriendMessage> fm = std::make_shared<FriendMessage>();
+				fm->SetMiraiBot(this);
+				fm->Set(json_);
+				return std::dynamic_pointer_cast<Serializable>(fm);
+			}
+			if (mirai_event == MiraiEvent::TempMessage)
+			{
+				std::shared_ptr<TempMessage> tm = std::make_shared<TempMessage>();
+				tm->SetMiraiBot(this);
+				tm->Set(json_);
+				return std::dynamic_pointer_cast<Serializable>(tm);
+			}
+			if (mirai_event == MiraiEvent::NewFriendRequestEvent)
+			{
+				std::shared_ptr<NewFriendEvent> tm = std::make_shared<NewFriendEvent>();
+				tm->SetMiraiBot(this);
+				tm->Set(json_);
+				return std::dynamic_pointer_cast<Serializable>(tm);
+			}
+		}
+
 		QQ_t qq_;
 		string sessionKey_;
 		string api_url_prefix_ = "http://127.0.0.1:8080";
-		unordered_map<MiraiEvent, function<void(WeakEvent*)> > processors_;
+		unordered_map<MiraiEvent, function<void(WeakEvent)> > processors_;
 		boost::asio::thread_pool pool_;
 	};
 
