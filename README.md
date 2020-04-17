@@ -48,28 +48,20 @@ cd vcpkg
 .\vcpkg integrate install
 ```
 
-#### (2) 使用 **vcpkg** 安装本项目的依赖库
-
-完成这一步你只需执行：
-
-```powershell
-./vcpkg install curl nlohmann-json boost-asio
-# 如果你要构建 x64 平台的程序,需要执行:
-# ./vcpkg install curl:x64-windows nlohmann-json:x64-windows boost-asio:x64-windows
-```
-
-#### (3) 使用 **vcpkg** 安装 **mirai-cpp**
+#### (2) 使用 **vcpkg** 安装 **mirai-cpp**
 
 这一步稍微复杂，你需要执行：
 
 ```powershell
-git clone https://github.com/cyanray/ports.git tmp ; mv tmp/* ports/ ; rm -Recurse -Force tmp
+git clone https://github.com/cyanray/mirai-cpp-vcpkg-port.git tmp ; mv tmp/* ports/ ; rm -Recurse -Force tmp
 ./vcpkg install mirai-cpp
 # 如果你要构建 x64 平台的程序,需要执行:
 # ./vcpkg install mirai-cpp:x64-windows
 ```
 
-#### (4) 在 **Visual Studio** 中创建一个项目，开始使用
+耐心等待，上面的代码会帮你安装 mirai-cpp 以及它的依赖项目。
+
+#### (3) 在 **Visual Studio** 中创建一个项目，开始使用
 
 尝试以下代码：
 
@@ -99,26 +91,21 @@ int main()
 	cout << "成功登录 bot。" << endl;
 
 
-	bot.OnFriendMessageReceived(
+	bot.On<FriendMessage>(
 		[&](FriendMessage fm)
 		{
-			bot.SendFriendMessage(fm.Sender.QQ, fm.MessageChain);
+			// bot.SendFriendMessage(fm.Sender.QQ, fm.MessageChain);
+			fm.Reply(fm.MessageChain);
 		});
 
-	bot.OnGroupMessageReceived(
+	bot.On<GroupMessage>(
 		[&](GroupMessage gm)
 		{
-			bot.SendGroupMessage(gm.Sender.Group.GID, "为什么要 " + gm.MessageChain);
+			// bot.SendGroupMessage(gm.Sender.Group.GID, "为什么要 " + gm.MessageChain);
+			gm.QuoteReply("为什么要 " + gm.MessageChain);
 		});
 
-	try
-	{
-		bot.EventLoop();
-	}
-	catch (const std::exception & ex)
-	{
-		cout << ex.what() << endl;
-	}
+	bot.EventLoop();
 
 	return 0;
 }
