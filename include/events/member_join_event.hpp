@@ -1,6 +1,6 @@
 #pragma once
-#ifndef mirai_cpp_events_new_friend_event_hpp_H_
-#define mirai_cpp_events_new_friend_event_hpp_H_
+#ifndef mirai_cpp_events_member_join_event_hpp_H_
+#define mirai_cpp_events_member_join_event_hpp_H_
 
 #include <nlohmann/json.hpp>
 #include "CURLWrapper.h"
@@ -11,32 +11,35 @@
 
 namespace Cyan
 {
-	// 新好友请求事件
-	class NewFriendRequestEvent : public Serializable
+	// 新成员入群请求
+	class MemberJoinRequestEvent : public Serializable
 	{
 	public:
 		int64_t EventId;
 		QQ_t FromId;
 		GID_t GroupId;
+		string GroupName;
 		string Nick;
 		string Message;
 
-		NewFriendRequestEvent() = default;
-		NewFriendRequestEvent(const NewFriendRequestEvent& gm)
+		MemberJoinRequestEvent() = default;
+		MemberJoinRequestEvent(const MemberJoinRequestEvent& gm)
 		{
 			EventId = gm.EventId;
 			FromId = gm.FromId;
 			GroupId = gm.GroupId;
 			Nick = gm.Nick;
+			GroupName = gm.GroupName;
 			Message = gm.Message;
 			bot_ = gm.bot_;
 		}
-		NewFriendRequestEvent& operator=(const NewFriendRequestEvent& t)
+		MemberJoinRequestEvent& operator=(const MemberJoinRequestEvent& t)
 		{
-			NewFriendRequestEvent tmp(t);
+			MemberJoinRequestEvent tmp(t);
 			std::swap(this->EventId, tmp.EventId);
 			std::swap(this->FromId, tmp.FromId);
 			std::swap(this->GroupId, tmp.GroupId);
+			std::swap(this->GroupName, tmp.GroupName);
 			std::swap(this->Nick, tmp.Nick);
 			std::swap(this->Message, tmp.Message);
 			std::swap(this->bot_, tmp.bot_);
@@ -58,16 +61,28 @@ namespace Cyan
 			return Respose(1, message);
 		}
 
-		bool RejectAndBlock(const string& message = "")
+		bool Ignore(const string& message = "")
 		{
 			return Respose(2, message);
 		}
 
-		virtual ~NewFriendRequestEvent() = default;
+		bool RejectAndBlock(const string& message = "")
+		{
+			return Respose(3, message);
+		}
+
+		bool IgnoreAndBlock(const string& message = "")
+		{
+			return Respose(4, message);
+		}
+
+
+		virtual ~MemberJoinRequestEvent() = default;
 		virtual bool Set(const json& j) override
 		{
 			this->EventId = j["eventId"].get<int64_t>();
 			this->FromId = (QQ_t)j["fromId"].get<int64_t>();
+			this->GroupName = (GID_t)j["groupName"].get<int64_t>();
 			this->GroupId = (GID_t)j["groupId"].get<int64_t>();
 			this->Nick = j["nick"].get<string>();
 			this->Message = j["message"].get<string>();
@@ -76,10 +91,11 @@ namespace Cyan
 		virtual json ToJson() const override
 		{
 			json j = json::object();
-			j["type"] = "NewFriendRequestEvent";
+			j["type"] = "MemberJoinRequestEvent";
 			j["eventId"] = this->EventId;
 			j["fromId"] = (int64_t)this->FromId;
 			j["groupId"] = (int64_t)this->GroupId;
+			j["groupName"] = this->GroupName;
 			j["nick"] = this->Nick;
 			j["message"] = this->Message;
 			return j;
@@ -92,4 +108,4 @@ namespace Cyan
 
 }
 
-#endif // !mirai_cpp_events_new_friend_event_hpp_H_
+#endif // !mirai_cpp_events_member_join_event_hpp_H_

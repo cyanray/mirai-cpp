@@ -20,12 +20,18 @@ int main()
 		}
 		MiraiBot::SleepSeconds(1);
 	}
-	cout << "³É¹¦µÇÂ¼ bot¡£" << endl;
+	cout << "æˆåŠŸç™»å½• botã€‚" << endl;
 
-	bot.OnEventReceived<NewFriendEvent>(
-		[&](NewFriendEvent newFriend)
+	bot.OnEventReceived<NewFriendRequestEvent>(
+		[&](NewFriendRequestEvent newFriend)
 		{
 			newFriend.Accept();
+		});
+
+	bot.OnEventReceived<MemberJoinRequestEvent>(
+		[&](MemberJoinRequestEvent newMember)
+		{
+			newMember.Reject("sorry!");
 		});
 
 

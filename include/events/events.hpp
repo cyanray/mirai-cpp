@@ -8,6 +8,7 @@
 #include "temp_message.hpp"
 // 其他事件
 #include "new_friend_event.hpp"
+#include "member_join_event.hpp"
 // 一些定义
 #include "event_processer.hpp"
 #include "events_name.hpp"

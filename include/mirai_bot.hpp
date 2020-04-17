@@ -673,7 +673,14 @@ namespace Cyan
 			}
 			if (mirai_event == MiraiEvent::NewFriendRequestEvent)
 			{
-				std::shared_ptr<NewFriendEvent> tm = std::make_shared<NewFriendEvent>();
+				std::shared_ptr<NewFriendRequestEvent> tm = std::make_shared<NewFriendRequestEvent>();
+				tm->SetMiraiBot(this);
+				tm->Set(json_);
+				return std::dynamic_pointer_cast<Serializable>(tm);
+			}
+			if (mirai_event == MiraiEvent::MemberJoinRequestEvent)
+			{
+				std::shared_ptr<MemberJoinRequestEvent> tm = std::make_shared<MemberJoinRequestEvent>();
 				tm->SetMiraiBot(this);
 				tm->Set(json_);
 				return std::dynamic_pointer_cast<Serializable>(tm);

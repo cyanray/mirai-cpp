@@ -7,6 +7,7 @@
 #include "group_message.hpp"
 #include "temp_message.hpp"
 #include "new_friend_event.hpp"
+#include "member_join_event.hpp"
 
 namespace Cyan
 {
@@ -40,6 +41,7 @@ namespace Cyan
 		if (miraiEvent == "GroupMessage") return MiraiEvent::GroupMessage;
 		if (miraiEvent == "TempMessage") return MiraiEvent::TempMessage;
 		if (miraiEvent == "NewFriendRequestEvent") return MiraiEvent::NewFriendRequestEvent;
+		if (miraiEvent == "MemberJoinRequestEvent") return MiraiEvent::MemberJoinRequestEvent;
 		return MiraiEvent::Default;
 	}
 
@@ -59,6 +61,9 @@ namespace Cyan
 			break;
 		case Cyan::MiraiEvent::NewFriendRequestEvent:
 			result = "NewFriendRequestEvent";
+			break;
+		case Cyan::MiraiEvent::MemberJoinRequestEvent:
+			result = "MemberJoinRequestEvent";
 			break;
 		default:
 			result = "Default";
@@ -93,9 +98,15 @@ namespace Cyan
 	}
 
 	template<>
-	MiraiEvent GetEventName<NewFriendEvent>()
+	MiraiEvent GetEventName<NewFriendRequestEvent>()
 	{
 		return MiraiEvent::NewFriendRequestEvent;
+	}
+
+	template<>
+	MiraiEvent GetEventName<MemberJoinRequestEvent>()
+	{
+		return MiraiEvent::MemberJoinRequestEvent;
 	}
 
 }
