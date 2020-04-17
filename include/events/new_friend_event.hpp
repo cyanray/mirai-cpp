@@ -19,6 +19,7 @@ namespace Cyan
 		QQ_t FromId;
 		GID_t GroupId;
 		string Nick;
+		string Message;
 
 		NewFriendEvent() = default;
 		NewFriendEvent(const NewFriendEvent& gm)
@@ -27,6 +28,7 @@ namespace Cyan
 			FromId = gm.FromId;
 			GroupId = gm.GroupId;
 			Nick = gm.Nick;
+			Message = gm.Message;
 			bot_ = gm.bot_;
 		}
 		NewFriendEvent& operator=(const NewFriendEvent& t)
@@ -36,6 +38,7 @@ namespace Cyan
 			std::swap(this->FromId, tmp.FromId);
 			std::swap(this->GroupId, tmp.GroupId);
 			std::swap(this->Nick, tmp.Nick);
+			std::swap(this->Message, tmp.Message);
 			std::swap(this->bot_, tmp.bot_);
 			return *this;
 		}
@@ -67,6 +70,7 @@ namespace Cyan
 			this->FromId = (QQ_t)j["fromId"].get<int64_t>();
 			this->GroupId = (GID_t)j["groupId"].get<int64_t>();
 			this->Nick = j["nick"].get<string>();
+			this->Message = j["message"].get<string>();
 			return true;
 		}
 		virtual json ToJson() const override
@@ -77,6 +81,7 @@ namespace Cyan
 			j["fromId"] = (int64_t)this->FromId;
 			j["groupId"] = (int64_t)this->GroupId;
 			j["nick"] = this->Nick;
+			j["message"] = this->Message;
 			return j;
 		}
 
