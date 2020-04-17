@@ -50,7 +50,7 @@ cd vcpkg
 
 #### (2) 使用 **vcpkg** 安装 **mirai-cpp**
 
-这一步稍微复杂，你需要执行：
+这一步稍微复杂，你需要执行(一定要在 **Powershell** 里面执行)：
 
 ```powershell
 git clone https://github.com/cyanray/mirai-cpp-vcpkg-port.git tmp ; mv tmp/* ports/ ; rm -Recurse -Force tmp
@@ -80,7 +80,12 @@ int main()
 		{
             // InitKeyVl0CEUzZ 改为你的 InitKey，
             // 2110000000 改为你的 bot 的 QQ 号码
-			bot.Auth("InitKeyVl0CEUzZ", 2110000000ll);
+			// 提示: mirai-cpp 不支持隐式地将字面数字转化为 QQ_t 或 GID_t
+			// 你需要给字面数字添加后缀 qq 或 _qq (gid 或 _gid), 将字面数字转化为 QQ_t (GID_t)
+			// 如果想将 QQ_t(GID_t) 转化为数字，可以使用强制类型转换: 
+			// QQ_t qq = 10001_qq;
+			// int64_t qq_num (int64_t)(qq);
+			bot.Auth("InitKeyVl0CEUzZ", 2110000000qq);
 			break;
 		}
 		catch (const std::exception & ex)
@@ -110,6 +115,24 @@ int main()
 	return 0;
 }
 ```
+
+以上代码你很可能会编译错误，因为 mirai-cpp 的源文件采用了 UTF-8 格式保存。
+
+MSVC 并没有默认启动对 UTF-8 编码的支持。
+
+要想成功通过编译，需要在 C++ 编译器的命令行中添加 **/utf-8** 参数。
+
+1. 在 Visual Studio 开发环境中设置此编译器选项
+2. 打开项目“属性页” 对话框。 
+3. 展开 "配置属性, C/C++ ,命令行" 文件夹。
+4. 在 "其他选项" 中, 添加 /utf-8选项以指定首选编码。
+5. 选择“确定”以保存更改。
+
+如图:
+
+![操作过程截图](./doc/pic/pic_1.png)
+
+更多信息可以参考: [https://docs.microsoft.com/zh-cn/cpp/build/reference/utf-8-set-source-and-executable-character-sets-to-utf-8?view=vs-2019](https://docs.microsoft.com/zh-cn/cpp/build/reference/utf-8-set-source-and-executable-character-sets-to-utf-8?view=vs-2019) 
 
 如果一切正常，给你的机器人发消息，他会回复同样的消息给你！
 
