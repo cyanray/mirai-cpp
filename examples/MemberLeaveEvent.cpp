@@ -29,6 +29,12 @@ int main()
 			bot.SendMessage(e.Member.Group.GID, mc);
 		});
 
+	bot.OnEventReceived<MemberLeaveEventQuit>(
+		[&](MemberLeaveEventQuit e)
+		{
+			auto mc = MessageChain().Plain("老哥 " + e.Member.MemberName + " 主动离开了群聊!");
+			bot.SendMessage(e.Member.Group.GID, mc);
+		});
 
 
 
