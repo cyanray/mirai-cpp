@@ -6,8 +6,10 @@
 #include "friend_message.hpp"
 #include "group_message.hpp"
 #include "temp_message.hpp"
-// 其他事件
+// 好友相关事件
 #include "new_friend_event.hpp"
+// 群组相关事件
+#include "join_request_event.hpp"
 #include "member_join_event.hpp"
 // 一些定义
 #include "event_processer.hpp"
