@@ -29,6 +29,13 @@ int main()
 			bot.SendMessage(e.Member.Group.GID, mc);
 		});
 
+	bot.On<MemberUnmuteEvent>([&](MemberUnmuteEvent e)
+		{
+			auto mc = MessageChain()
+				.Plain("恭喜老哥 " + e.Member.MemberName + " 提前出狱!");
+			bot.SendMessage(e.Member.Group.GID, mc);
+		});
+
 	bool res = false;
 	res = bot.MuteAll(1029259687gid);
 	if (res)
@@ -74,14 +81,9 @@ int main()
 		cout << "解除禁言群员失败" << endl;
 	}
 
-	try
-	{
-		bot.EventLoop();
-	}
-	catch (const std::exception& ex)
-	{
-		cout << ex.what() << endl;
-	}
+
+	bot.EventLoop();
+
 
 	return 0;
 }

@@ -12,6 +12,7 @@
 #include "join_request_event.hpp"
 #include "member_join_event.hpp"
 #include "member_mute_event.hpp"
+#include "member_unmute_event.hpp"
 #include "bot_mute_event.hpp"
 #include "bot_unmute_event.hpp"
 // 一些定义
