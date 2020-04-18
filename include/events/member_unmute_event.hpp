@@ -10,7 +10,7 @@
 
 namespace Cyan
 {
-	// 群成员被取消禁言事件
+	// 缇ゆ垚鍛樿鍙栨秷绂佽█浜嬩欢
 	class MemberUnmuteEvent : public Serializable
 	{
 	public:

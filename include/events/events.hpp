@@ -11,6 +11,7 @@
 // 群组相关事件
 #include "join_request_event.hpp"
 #include "member_join_event.hpp"
+#include "member_leave_kick.hpp"
 #include "member_mute_event.hpp"
 #include "member_unmute_event.hpp"
 #include "bot_mute_event.hpp"

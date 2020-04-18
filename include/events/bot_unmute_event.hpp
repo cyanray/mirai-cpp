@@ -11,7 +11,7 @@
 
 namespace Cyan
 {
-	// bot 被解除禁言事件
+	// bot 琚В闄ょ瑷�浜嬩欢
 	class BotUnmuteEvent : public Serializable
 	{
 	public:

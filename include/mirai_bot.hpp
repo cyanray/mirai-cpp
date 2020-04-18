@@ -741,6 +741,13 @@ namespace Cyan
 				tm->Set(json_);
 				return std::dynamic_pointer_cast<Serializable>(tm);
 			}
+			if (mirai_event == MiraiEvent::MemberLeaveEventKick)
+			{
+				std::shared_ptr<MemberLeaveEventKick> tm = std::make_shared<MemberLeaveEventKick>();
+				tm->SetMiraiBot(this);
+				tm->Set(json_);
+				return std::dynamic_pointer_cast<Serializable>(tm);
+			}
 		}
 
 		QQ_t qq_;

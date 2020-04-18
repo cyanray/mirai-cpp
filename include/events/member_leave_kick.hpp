@@ -1,6 +1,6 @@
 #pragma once
-#ifndef mirai_cpp_events_member_mute_event_hpp_H_
-#define mirai_cpp_events_member_mute_event_hpp_H_
+#ifndef mirai_cpp_events_member_leave_kick_event_hpp_H_
+#define mirai_cpp_events_member_leave_kick_event_hpp_H_
 
 #include <nlohmann/json.hpp>
 #include "CURLWrapper.h"
@@ -10,25 +10,22 @@
 
 namespace Cyan
 {
-	// 群成员被禁言事件
-	class MemberMuteEvent : public Serializable
+	// 群成员被踢出群事件
+	class MemberLeaveEventKick : public Serializable
 	{
 	public:
-		int DurationSeconds = 0;
 		GroupMember_t Member;
 		GroupMember_t Operator;
 
-		MemberMuteEvent() = default;
-		MemberMuteEvent(const MemberMuteEvent& gm)
+		MemberLeaveEventKick() = default;
+		MemberLeaveEventKick(const MemberLeaveEventKick& gm)
 		{
-			DurationSeconds = gm.DurationSeconds;
 			Member = gm.Member;
 			Operator = gm.Operator;
 		}
-		MemberMuteEvent& operator=(const MemberMuteEvent& t)
+		MemberLeaveEventKick& operator=(const MemberLeaveEventKick& t)
 		{
-			MemberMuteEvent tmp(t);
-			std::swap(this->DurationSeconds, tmp.DurationSeconds);
+			MemberLeaveEventKick tmp(t);
 			std::swap(this->Member, tmp.Member);
 			std::swap(this->Operator, tmp.Operator);
 			return *this;
@@ -39,10 +36,9 @@ namespace Cyan
 			this->bot_ = bot;
 		}
 
-		virtual ~MemberMuteEvent() = default;
+		virtual ~MemberLeaveEventKick() = default;
 		virtual bool Set(const json& j) override
 		{
-			this->DurationSeconds = j["durationSeconds"].get<int>();
 			this->Member.Set(j["member"]);
 			this->Operator.Set(j["operator"]);
 			return true;
@@ -50,8 +46,7 @@ namespace Cyan
 		virtual json ToJson() const override
 		{
 			json j = json::object();
-			j["type"] = "MemberMuteEvent";
-			j["durationSeconds"] = this->DurationSeconds;
+			j["type"] = "MemberLeaveEventKick";
 			j["member"] = this->Member.ToJson();
 			j["operator"] = this->Operator.ToJson();
 			return j;
@@ -63,4 +58,4 @@ namespace Cyan
 
 }
 
-#endif // !mirai_cpp_events_member_mute_event_hpp_H_
+#endif // !mirai_cpp_events_member_leave_kick_event_hpp_H_

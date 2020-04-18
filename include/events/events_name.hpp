@@ -47,6 +47,7 @@ namespace Cyan
 		if (miraiEvent == "BotUnmuteEvent") return MiraiEvent::BotUnmuteEvent;
 		if (miraiEvent == "MemberMuteEvent") return MiraiEvent::MemberMuteEvent;
 		if (miraiEvent == "MemberUnmuteEvent") return MiraiEvent::MemberUnmuteEvent;
+		if (miraiEvent == "MemberLeaveEventKick") return MiraiEvent::MemberLeaveEventKick;
 		return MiraiEvent::Default;
 	}
 
@@ -84,6 +85,9 @@ namespace Cyan
 			break;
 		case Cyan::MiraiEvent::MemberUnmuteEvent:
 			result = "MemberUnmuteEvent";
+			break;
+		case Cyan::MiraiEvent::MemberLeaveEventKick:
+			result = "MemberLeaveEventKick";
 			break;
 		default:
 			result = "Default";
@@ -157,6 +161,12 @@ namespace Cyan
 	MiraiEvent GetEventType<MemberUnmuteEvent>()
 	{
 		return MiraiEvent::MemberUnmuteEvent;
+	}
+
+	template<>
+	MiraiEvent GetEventType<MemberLeaveEventKick>()
+	{
+		return MiraiEvent::MemberLeaveEventKick;
 	}
 
 }

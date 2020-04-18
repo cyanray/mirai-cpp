@@ -11,7 +11,7 @@
 
 namespace Cyan
 {
-	// bot ±»½ûÑÔÊÂ¼ş
+	// bot è¢«ç¦è¨€äº‹ä»¶
 	class BotMuteEvent : public Serializable
 	{
 	public:
