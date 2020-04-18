@@ -22,6 +22,13 @@ int main()
 	}
 	cout << "成功登录 bot。" << endl;
 
+	bot.On<MemberMuteEvent>([&](MemberMuteEvent e)
+		{
+			auto mc = MessageChain()
+				.Plain("恭喜老哥 " + e.Member.MemberName + " 喜提禁言套餐!");
+			bot.SendMessage(e.Member.Group.GID, mc);
+		});
+
 	bool res = false;
 	res = bot.MuteAll(1029259687gid);
 	if (res)

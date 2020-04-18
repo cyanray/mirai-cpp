@@ -1,6 +1,7 @@
 #pragma once
 #ifndef mirai_cpp__mirai_bot_hpp_H_
 #define mirai_cpp__mirai_bot_hpp_H_
+#include <iostream>
 #include <string>
 #include <vector>
 #include <exception>
@@ -539,7 +540,16 @@ namespace Cyan
 			const unsigned time_interval = 100;
 			while (true)
 			{
-				unsigned count = FetchMessagesAndEvents(count_per_loop);
+				unsigned count = 0;
+				try
+				{
+					count = FetchMessagesAndEvents(count_per_loop);
+				}
+				catch (const std::exception& ex)
+				{
+					std::cerr << ex.what() << std::endl;
+				}
+
 				if (count < count_per_loop)
 				{
 					SleepMilliseconds(time_interval);
@@ -713,6 +723,13 @@ namespace Cyan
 			if (mirai_event == MiraiEvent::BotUnmuteEvent)
 			{
 				std::shared_ptr<BotUnmuteEvent> tm = std::make_shared<BotUnmuteEvent>();
+				tm->SetMiraiBot(this);
+				tm->Set(json_);
+				return std::dynamic_pointer_cast<Serializable>(tm);
+			}
+			if (mirai_event == MiraiEvent::MemberMuteEvent)
+			{
+				std::shared_ptr<MemberMuteEvent> tm = std::make_shared<MemberMuteEvent>();
 				tm->SetMiraiBot(this);
 				tm->Set(json_);
 				return std::dynamic_pointer_cast<Serializable>(tm);
