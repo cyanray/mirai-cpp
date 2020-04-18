@@ -22,6 +22,11 @@ int main()
 	}
 	cout << "成功登录 bot。" << endl;
 
+	bot.On<BotMuteEvent>(
+		[&](BotMuteEvent e)
+		{
+			cout << "爷被禁言了!" << endl;
+		});
 
 	bot.On<BotUnmuteEvent>(
 		[&](BotUnmuteEvent e)

@@ -43,6 +43,7 @@ namespace Cyan
 		if (miraiEvent == "NewFriendRequestEvent") return MiraiEvent::NewFriendRequestEvent;
 		if (miraiEvent == "MemberJoinRequestEvent") return MiraiEvent::MemberJoinRequestEvent;
 		if (miraiEvent == "MemberJoinEvent") return MiraiEvent::MemberJoinEvent;
+		if (miraiEvent == "BotMuteEvent") return MiraiEvent::BotMuteEvent;
 		if (miraiEvent == "BotUnmuteEvent") return MiraiEvent::BotUnmuteEvent;
 		return MiraiEvent::Default;
 	}
@@ -69,6 +70,9 @@ namespace Cyan
 			break;
 		case Cyan::MiraiEvent::MemberJoinEvent:
 			result = "MemberJoinEvent";
+			break;
+		case Cyan::MiraiEvent::BotMuteEvent:
+			result = "BotMuteEvent";
 			break;
 		case Cyan::MiraiEvent::BotUnmuteEvent:
 			result = "BotUnmuteEvent";
@@ -121,6 +125,12 @@ namespace Cyan
 	MiraiEvent GetEventName<MemberJoinEvent>()
 	{
 		return MiraiEvent::MemberJoinEvent;
+	}
+
+	template<>
+	MiraiEvent GetEventName<BotMuteEvent>()
+	{
+		return MiraiEvent::BotMuteEvent;
 	}
 
 	template<>
