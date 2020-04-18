@@ -505,7 +505,7 @@ namespace Cyan
 		template<typename T>
 		void On(const EventProcessor<T>& ep)
 		{
-			processors_.insert({ GetEventName<T>(),
+			processors_.insert({ GetEventType<T>(),
 				[=](WeakEvent we)
 				{
 					ep(*(std::dynamic_pointer_cast<T>(we)));
@@ -516,7 +516,7 @@ namespace Cyan
 		template<typename T>
 		void OnEventReceived(const EventProcessor<T>& ep)
 		{
-			processors_.insert({ GetEventName<T>(),
+			processors_.insert({ GetEventType<T>(),
 				[=](WeakEvent we)
 				{
 					ep(*(std::dynamic_pointer_cast<T>(we)));

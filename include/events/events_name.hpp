@@ -89,62 +89,62 @@ namespace Cyan
 	}
 
 	template<typename T>
-	MiraiEvent GetEventName()
+	MiraiEvent GetEventType()
 	{
 		// 故意返回字符串，导致编译期出错
 		return "错误:你使用了没有定义的Event类型";
 	}
 
 	template<>
-	MiraiEvent GetEventName<FriendMessage>()
+	MiraiEvent GetEventType<FriendMessage>()
 	{
 		return MiraiEvent::FriendMessage;
 	}
 
 	template<>
-	MiraiEvent GetEventName<GroupMessage>()
+	MiraiEvent GetEventType<GroupMessage>()
 	{
 		return MiraiEvent::GroupMessage;
 	}
 
 	template<>
-	MiraiEvent GetEventName<TempMessage>()
+	MiraiEvent GetEventType<TempMessage>()
 	{
 		return MiraiEvent::TempMessage;
 	}
 
 	template<>
-	MiraiEvent GetEventName<NewFriendRequestEvent>()
+	MiraiEvent GetEventType<NewFriendRequestEvent>()
 	{
 		return MiraiEvent::NewFriendRequestEvent;
 	}
 
 	template<>
-	MiraiEvent GetEventName<MemberJoinRequestEvent>()
+	MiraiEvent GetEventType<MemberJoinRequestEvent>()
 	{
 		return MiraiEvent::MemberJoinRequestEvent;
 	}
 
 	template<>
-	MiraiEvent GetEventName<MemberJoinEvent>()
+	MiraiEvent GetEventType<MemberJoinEvent>()
 	{
 		return MiraiEvent::MemberJoinEvent;
 	}
 
 	template<>
-	MiraiEvent GetEventName<BotMuteEvent>()
+	MiraiEvent GetEventType<BotMuteEvent>()
 	{
 		return MiraiEvent::BotMuteEvent;
 	}
 
 	template<>
-	MiraiEvent GetEventName<BotUnmuteEvent>()
+	MiraiEvent GetEventType<BotUnmuteEvent>()
 	{
 		return MiraiEvent::BotUnmuteEvent;
 	}
 
 	template<>
-	MiraiEvent GetEventName<MemberMuteEvent>()
+	MiraiEvent GetEventType<MemberMuteEvent>()
 	{
 		return MiraiEvent::MemberMuteEvent;
 	}
