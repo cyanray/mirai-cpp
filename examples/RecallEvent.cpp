@@ -37,6 +37,20 @@ int main()
 			}
 		});
 
+	bot.On<FriendRecallEvent>(
+		[&](FriendRecallEvent gm)
+		{
+			try
+			{
+				auto mc = "刚刚有人撤回了: " + bot.GetFriendMessageFromId(gm.MessageId).MessageChain;
+				bot.SendMessage(gm.AuthorQQ, mc);
+			}
+			catch (const std::exception& ex)
+			{
+				cout << ex.what() << endl;
+			}
+		});
+
 
 	bot.EventLoop();
 	try

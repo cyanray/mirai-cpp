@@ -8,6 +8,7 @@
 #include "temp_message.hpp"
 // 好友相关事件
 #include "new_friend_event.hpp"
+#include "friend_recall_event.hpp"
 // 群组相关事件
 #include "group_recall_event.hpp"
 #include "join_request_event.hpp"
