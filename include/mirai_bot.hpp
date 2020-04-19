@@ -526,6 +526,30 @@ namespace Cyan
 				throw runtime_error(res.ErrorMsg);
 		}
 
+		GroupMessage GetGroupMessageFromId(MessageId mid)
+		{
+			stringstream api_url;
+			api_url
+				<< api_url_prefix_
+				<< "/messageFromId?sessionKey="
+				<< sessionKey_
+				<< "&id="
+				<< mid;
+			GroupMessage result;
+			HTTP http;
+			auto res = http.Get(api_url.str());
+			if (res.Ready)
+			{
+				json reJson;
+				reJson = reJson.parse(res.Content);
+				if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
+				result.Set(reJson["data"]);
+				return result;
+			}
+			else
+				throw runtime_error(res.ErrorMsg);
+		}
+
 		template<typename T>
 		void On(const EventProcessor<T>& ep)
 		{
