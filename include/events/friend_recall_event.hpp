@@ -10,7 +10,7 @@
 
 namespace Cyan
 {
-	// 好友消息撤回事件
+	// 濂藉弸娑堟伅鎾ゅ洖浜嬩欢
 	class FriendRecallEvent : public Serializable
 	{
 	public:
