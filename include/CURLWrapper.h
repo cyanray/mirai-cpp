@@ -109,7 +109,7 @@ namespace Cyan
 			s.erase(s.find_last_not_of(" ") + 1);
 		}
 	}; // class CookieContainer
-	std::ostream& operator <<(std::ostream& os, const CookieContainer::CookieValue& v)
+	inline std::ostream& operator <<(std::ostream& os, const CookieContainer::CookieValue& v)
 	{
 		os << static_cast<string>(v);
 		return os;
@@ -120,6 +120,7 @@ namespace Cyan
 		struct Response
 		{
 			bool Ready = false;
+			long StatusCode = 0;
 			CURLcode CURLCode;
 			string ErrorMsg;
 			string Content;
@@ -226,7 +227,6 @@ namespace Cyan
 
 		const Response Get(const string& URL)
 		{
-			Response resp;
 			if (curl == NULL)
 			{
 				curl = curl_easy_init();
@@ -235,38 +235,18 @@ namespace Cyan
 			// 初始化CURL失败，获得错误描述、清理CURL、返回
 			if (!curl)
 			{
+				Response resp;
 				resp.Ready = false;
-				resp.ErrorMsg = GetErrorStr();
-				resp.CURLCode = curlCode;
-				resp.Content = "";
+				resp.ErrorMsg = resp.ErrorMsg = "初始化 CURL 出错";
 				CURLCleanup();
 				return resp;
 			}
 
-			string tStr = execute(URL);
-
-			if (curlCode == CURLcode::CURLE_OK)
-			{
-				resp.Ready = true;
-				resp.CURLCode = curlCode;
-				resp.ErrorMsg = "";
-				resp.Content = tStr;
-			}
-			else
-			{
-				resp.Ready = false;
-				resp.ErrorMsg = GetErrorStr();
-				resp.CURLCode = curlCode;
-				resp.Content = "";
-			}
-
-			CURLCleanup();
-			return resp;
+			return execute(URL);
 		}
 
 		const Response Post(const string& URL, const string& Data)
 		{
-			Response resp;
 			if (curl == NULL)
 			{
 				curl = curl_easy_init();
@@ -275,44 +255,22 @@ namespace Cyan
 			// 初始化CURL失败，获得错误描述、清理CURL、返回
 			if (!curl)
 			{
+				Response resp;
 				resp.Ready = false;
-				resp.ErrorMsg = GetErrorStr();
-				resp.CURLCode = curlCode;
-				resp.Content = "";
+				resp.ErrorMsg = resp.ErrorMsg = "初始化 CURL 出错";
 				CURLCleanup();
 				return resp;
 			}
 
 			// Post只是在Get的基础上增加几项设置
-			if (!contentType.empty())
-				slist = curl_slist_append(slist, ("Content-Type: " + contentType).data());
 			curl_easy_setopt(curl, CURLOPT_POST, 1L);
 			curl_easy_setopt(curl, CURLOPT_POSTFIELDS, Data.data());
 
-			string tStr = execute(URL);
-
-			if (curlCode == CURLcode::CURLE_OK)
-			{
-				resp.Ready = true;
-				resp.CURLCode = curlCode;
-				resp.ErrorMsg = "";
-				resp.Content = tStr;
-			}
-			else
-			{
-				resp.Ready = false;
-				resp.ErrorMsg = GetErrorStr();
-				resp.CURLCode = curlCode;
-				resp.Content = "";
-			}
-
-			CURLCleanup();
-			return resp;
+			return execute(URL);
 		}
 
 		const Response Post(const string& URL)
 		{
-			Response resp;
 			if (curl == NULL)
 			{
 				curl = curl_easy_init();
@@ -321,48 +279,25 @@ namespace Cyan
 			// 初始化CURL失败，获得错误描述、清理CURL、返回
 			if (!curl)
 			{
+				Response resp;
 				resp.Ready = false;
-				resp.ErrorMsg = GetErrorStr();
-				resp.CURLCode = curlCode;
-				resp.Content = "";
+				resp.ErrorMsg = "初始化 CURL 出错";
 				CURLCleanup();
 				return resp;
 			}
 
 			// Post只是在Get的基础上增加几项设置
-			if (!contentType.empty())
-				slist = curl_slist_append(slist, ("Content-Type: " + contentType).data());
 			curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "POST");
 			curl_easy_setopt(curl, CURLOPT_MIMEPOST, form);
 
-			string tStr = execute(URL);
+			return execute(URL);
 
-			if (curlCode == CURLcode::CURLE_OK)
-			{
-				resp.Ready = true;
-				resp.CURLCode = curlCode;
-				resp.ErrorMsg = "";
-				resp.Content = tStr;
-			}
-			else
-			{
-				resp.Ready = false;
-				resp.ErrorMsg = GetErrorStr();
-				resp.CURLCode = curlCode;
-				resp.Content = "";
-			}
-
-			CURLCleanup();
-			return resp;
 		}
 
-		~HTTP()
-		{
-		}
+		~HTTP() = default;
 
 	private:
 		CURL* curl;
-		CURLcode curlCode;
 		char errbuf[CURL_ERROR_SIZE];
 		struct curl_slist* slist;
 		curl_mime* form = nullptr;
@@ -376,14 +311,14 @@ namespace Cyan
 		string accept;
 		string userAgent;
 
-		string GetErrorStr()
+		string GetErrorStr(CURLcode code)
 		{
 			string errorMsg;
 			size_t len = strlen(errbuf);
 			if (len)
 				errorMsg = errbuf;
 			else
-				errorMsg = curl_easy_strerror(curlCode);
+				errorMsg = curl_easy_strerror(code);
 			return errorMsg;
 		}
 
@@ -436,13 +371,16 @@ namespace Cyan
 			}
 		}
 
-		string execute(const string& URL)
+		Response execute(const string& URL)
 		{
-			string reStr;
+
+			Response resp;
 			string reHeader;
 			// 自定义HTTP头
 			slist = curl_slist_append(slist, ("User-Agent: " + userAgent).data());
 			slist = curl_slist_append(slist, ("Accept: " + accept).data());
+			if (!contentType.empty())
+				slist = curl_slist_append(slist, ("Content-Type: " + contentType).data());
 			// curl基础设置
 			curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
 			curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, errbuf);
@@ -460,18 +398,28 @@ namespace Cyan
 			curl_easy_setopt(curl, CURLOPT_TCP_KEEPINTVL, 60L);
 			// curl 数据处理函数
 			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, reWriter);
-			curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)&reStr);
+			curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)&(resp.Content));
 			// 设置处理HTTP头部的功能函数
 			curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, heWriter);
 			curl_easy_setopt(curl, CURLOPT_HEADERDATA, (void*)&reHeader);
 			curl_easy_setopt(curl, CURLOPT_URL, URL.data());
-			curlCode = curl_easy_perform(curl);
+			resp.CURLCode = curl_easy_perform(curl);
 			// 从HTTP头部读取新的Cookie并加入到CookieContainer中
 			AutoCookies(reHeader);
-
-			return reStr;
+			if (resp.CURLCode == CURLcode::CURLE_OK)
+			{
+				resp.Ready = true;
+				// 获取状态码
+				curl_easy_getinfo(curl, CURLINFO_HTTP_CODE, &resp.StatusCode);
+			}
+			else
+			{
+				resp.Ready = false;
+				resp.ErrorMsg = GetErrorStr(resp.CURLCode);
+			}
+			CURLCleanup();
+			return resp;
 		}
-
 
 	};
 }// namespace Cyan

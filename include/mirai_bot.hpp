@@ -67,7 +67,7 @@ namespace Cyan
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");
 			auto res = http.Post(api_url, pData);
-
+			if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 			if (res.Ready)
 			{
 				json reJson;
@@ -100,6 +100,7 @@ namespace Cyan
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");
 			auto res = http.Post(api_url, pData);
+			if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 			if (res.Ready)
 			{
 				json reJson;
@@ -130,6 +131,7 @@ namespace Cyan
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");
 			auto res = http.Post(api_url, pData);
+			if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 			if (res.Ready)
 			{
 				json reJson;
@@ -161,6 +163,7 @@ namespace Cyan
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");
 			auto res = http.Post(api_url, pData);
+			if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 			if (res.Ready)
 			{
 				json reJson;
@@ -189,6 +192,7 @@ namespace Cyan
 			http.AddPostData("type", "friend");
 			http.AddFile("img", fileName);
 			auto res = http.Post(api_url);
+			if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 			FriendImage fImg;
 
 			if (res.Ready)
@@ -213,6 +217,7 @@ namespace Cyan
 			http.AddPostData("type", "group");
 			http.AddFile("img", fileName);
 			auto res = http.Post(api_url);
+			if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 			GroupImage gImg;
 
 			if (res.Ready)
@@ -237,6 +242,7 @@ namespace Cyan
 			http.AddPostData("type", "temp");
 			http.AddFile("img", fileName);
 			auto res = http.Post(api_url);
+			if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 			TempImage tImg;
 
 			if (res.Ready)
@@ -259,6 +265,7 @@ namespace Cyan
 
 			HTTP http;
 			auto res = http.Get(api_url);
+			if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 			if (res.Ready)
 			{
 				json reJson;
@@ -283,6 +290,7 @@ namespace Cyan
 
 			HTTP http;
 			auto res = http.Get(api_url);
+			if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 			if (res.Ready)
 			{
 				json reJson;
@@ -313,6 +321,7 @@ namespace Cyan
 
 			HTTP http;
 			auto res = http.Get(api_url.str());
+			if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 			if (res.Ready)
 			{
 				json reJson;
@@ -340,6 +349,7 @@ namespace Cyan
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");
 			auto res = http.Post(api_url, pData);
+			if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 			if (res.Ready)
 			{
 				json reJson;
@@ -367,6 +377,7 @@ namespace Cyan
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");
 			auto res = http.Post(api_url, pData);
+			if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 			if (res.Ready)
 			{
 				json reJson;
@@ -397,6 +408,7 @@ namespace Cyan
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");
 			auto res = http.Post(api_url, pData);
+			if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 			if (res.Ready)
 			{
 				json reJson;
@@ -426,6 +438,7 @@ namespace Cyan
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");
 			auto res = http.Post(api_url, pData);
+			if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 			if (res.Ready)
 			{
 				json reJson;
@@ -456,6 +469,7 @@ namespace Cyan
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");
 			auto res = http.Post(api_url, pData);
+			if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 			if (res.Ready)
 			{
 				json reJson;
@@ -483,6 +497,7 @@ namespace Cyan
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");
 			auto res = http.Post(api_url, pData);
+			if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 			if (res.Ready)
 			{
 				json reJson;
@@ -514,6 +529,7 @@ namespace Cyan
 			FriendMessage result;
 			HTTP http;
 			auto res = http.Get(api_url.str());
+			if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 			if (res.Ready)
 			{
 				json reJson;
@@ -538,6 +554,7 @@ namespace Cyan
 			GroupMessage result;
 			HTTP http;
 			auto res = http.Get(api_url.str());
+			if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 			if (res.Ready)
 			{
 				json reJson;
@@ -616,6 +633,7 @@ namespace Cyan
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");
 			auto res = http.Post(api_url, pData);
+			if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 			if (res.Ready)
 			{
 				json reJson;
@@ -643,6 +661,7 @@ namespace Cyan
 			string pData = j.dump();
 			HTTP http; http.SetContentType("application/json;charset=UTF-8");
 			auto res = http.Post(api_url, pData);
+			if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 			if (res.Ready)
 			{
 				json reJson;
@@ -675,6 +694,7 @@ namespace Cyan
 
 			HTTP http;
 			auto res = http.Get(api_url.str());
+			if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 			if (res.Ready)
 			{
 				json reJson;
