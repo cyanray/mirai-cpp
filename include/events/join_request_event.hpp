@@ -81,9 +81,9 @@ namespace Cyan
 		virtual bool Set(const json& j) override
 		{
 			this->EventId = j["eventId"].get<int64_t>();
-			this->FromId = (QQ_t)j["fromId"].get<int64_t>();
-			this->GroupName = (GID_t)j["groupName"].get<int64_t>();
-			this->GroupId = (GID_t)j["groupId"].get<int64_t>();
+			this->FromId = QQ_t(j["fromId"].get<int64_t>());
+			this->GroupName = j["groupName"].get<string>();
+			this->GroupId = GID_t(j["groupId"].get<int64_t>());
 			this->Nick = j["nick"].get<string>();
 			this->Message = j["message"].get<string>();
 			return true;

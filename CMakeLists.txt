@@ -31,9 +31,16 @@ if(MSVC)
     message(STATUS "optional: /UTF-8")   
 endif(MSVC)
 
+option(BUILD_SHARED_LIBS "Build ${PROJECT_NAME} as a shared library." ON)
+if(BUILD_SHARED_LIBS)
+  set(LIBRARY_TYPE SHARED)
+else()
+  set(LIBRARY_TYPE STATIC)
+endif()
+
 aux_source_directory(./src SRCS)
 
-add_library(${PROJECT_NAME} STATIC ${SRCS})
+add_library(${PROJECT_NAME} ${LIBRARY_TYPE} ${SRCS})
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_link_libraries(${PROJECT_NAME} nlohmann_json nlohmann_json::nlohmann_json)
 target_link_libraries(${PROJECT_NAME} CURL::libcurl)
