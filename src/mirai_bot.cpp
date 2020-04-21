@@ -32,7 +32,7 @@ namespace Cyan
 		else
 			throw runtime_error(res.ErrorMsg);
 	}
-	
+
 
 	MessageId MiraiBot::SendMessage(QQ_t target, const MessageChain& messageChain, MessageId msgId)
 	{
@@ -47,10 +47,11 @@ namespace Cyan
 		string pData = j.dump();
 		HTTP http; http.SetContentType("application/json;charset=UTF-8");
 		auto res = http.Post(api_url, pData);
-		if (res.StatusCode != 200)
-			throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 		if (res.Ready)
 		{
+			if (res.StatusCode != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			int code = reJson["code"].get<int>();
@@ -81,9 +82,10 @@ namespace Cyan
 		string pData = j.dump();
 		HTTP http; http.SetContentType("application/json;charset=UTF-8");
 		auto res = http.Post(api_url, pData);
-		if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 		if (res.Ready)
 		{
+			if (res.StatusCode != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			int code = reJson["code"].get<int>();
@@ -115,9 +117,10 @@ namespace Cyan
 		string pData = j.dump();
 		HTTP http; http.SetContentType("application/json;charset=UTF-8");
 		auto res = http.Post(api_url, pData);
-		if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 		if (res.Ready)
 		{
+			if (res.StatusCode != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			int code = reJson["code"].get<int>();
@@ -146,11 +149,12 @@ namespace Cyan
 		http.AddPostData("type", "friend");
 		http.AddFile("img", fileName);
 		auto res = http.Post(api_url);
-		if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 		FriendImage fImg;
 
 		if (res.Ready)
 		{
+			if (res.StatusCode != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
@@ -173,11 +177,12 @@ namespace Cyan
 		http.AddPostData("type", "group");
 		http.AddFile("img", fileName);
 		auto res = http.Post(api_url);
-		if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 		GroupImage gImg;
 
 		if (res.Ready)
 		{
+			if (res.StatusCode != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
@@ -200,11 +205,12 @@ namespace Cyan
 		http.AddPostData("type", "temp");
 		http.AddFile("img", fileName);
 		auto res = http.Post(api_url);
-		if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 		TempImage tImg;
 
 		if (res.Ready)
 		{
+			if (res.StatusCode != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
@@ -225,9 +231,11 @@ namespace Cyan
 
 		HTTP http;
 		auto res = http.Get(api_url);
-		if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
+
 		if (res.Ready)
 		{
+			if (res.StatusCode != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			if (!reJson.is_array()) throw runtime_error("解析返回 JSON 时出错");
@@ -252,9 +260,10 @@ namespace Cyan
 
 		HTTP http;
 		auto res = http.Get(api_url);
-		if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 		if (res.Ready)
 		{
+			if (res.StatusCode != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			if (!reJson.is_array()) throw runtime_error("解析返回 JSON 时出错");
@@ -285,9 +294,10 @@ namespace Cyan
 
 		HTTP http;
 		auto res = http.Get(api_url.str());
-		if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 		if (res.Ready)
 		{
+			if (res.StatusCode != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			if (!reJson.is_array()) throw runtime_error("解析返回 JSON 时出错");
@@ -315,9 +325,10 @@ namespace Cyan
 		string pData = j.dump();
 		HTTP http; http.SetContentType("application/json;charset=UTF-8");
 		auto res = http.Post(api_url, pData);
-		if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 		if (res.Ready)
 		{
+			if (res.StatusCode != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			int code = reJson["code"].get<int>();
@@ -345,9 +356,10 @@ namespace Cyan
 		string pData = j.dump();
 		HTTP http; http.SetContentType("application/json;charset=UTF-8");
 		auto res = http.Post(api_url, pData);
-		if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 		if (res.Ready)
 		{
+			if (res.StatusCode != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			int code = reJson["code"].get<int>();
@@ -378,9 +390,10 @@ namespace Cyan
 		string pData = j.dump();
 		HTTP http; http.SetContentType("application/json;charset=UTF-8");
 		auto res = http.Post(api_url, pData);
-		if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 		if (res.Ready)
 		{
+			if (res.StatusCode != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			int code = reJson["code"].get<int>();
@@ -410,9 +423,10 @@ namespace Cyan
 		string pData = j.dump();
 		HTTP http; http.SetContentType("application/json;charset=UTF-8");
 		auto res = http.Post(api_url, pData);
-		if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 		if (res.Ready)
 		{
+			if (res.StatusCode != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			int code = reJson["code"].get<int>();
@@ -443,9 +457,10 @@ namespace Cyan
 		string pData = j.dump();
 		HTTP http; http.SetContentType("application/json;charset=UTF-8");
 		auto res = http.Post(api_url, pData);
-		if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 		if (res.Ready)
 		{
+			if (res.StatusCode != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			int code = reJson["code"].get<int>();
@@ -473,9 +488,10 @@ namespace Cyan
 		string pData = j.dump();
 		HTTP http; http.SetContentType("application/json;charset=UTF-8");
 		auto res = http.Post(api_url, pData);
-		if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 		if (res.Ready)
 		{
+			if (res.StatusCode != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			int code = reJson["code"].get<int>();
@@ -506,9 +522,10 @@ namespace Cyan
 		FriendMessage result;
 		HTTP http;
 		auto res = http.Get(api_url.str());
-		if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 		if (res.Ready)
 		{
+			if (res.StatusCode != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
@@ -532,9 +549,10 @@ namespace Cyan
 		GroupMessage result;
 		HTTP http;
 		auto res = http.Get(api_url.str());
-		if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 		if (res.Ready)
 		{
+			if (res.StatusCode != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
@@ -581,9 +599,10 @@ namespace Cyan
 		string pData = j.dump();
 		HTTP http; http.SetContentType("application/json;charset=UTF-8");
 		auto res = http.Post(api_url, pData);
-		if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 		if (res.Ready)
 		{
+			if (res.StatusCode != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			int code = reJson["code"].get<int>();
@@ -611,9 +630,10 @@ namespace Cyan
 		string pData = j.dump();
 		HTTP http; http.SetContentType("application/json;charset=UTF-8");
 		auto res = http.Post(api_url, pData);
-		if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 		if (res.Ready)
 		{
+			if (res.StatusCode != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			int code = reJson["code"].get<int>();
@@ -645,9 +665,10 @@ namespace Cyan
 
 		HTTP http;
 		auto res = http.Get(api_url.str());
-		if (res.StatusCode != 200) throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 		if (res.Ready)
 		{
+			if (res.StatusCode != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
