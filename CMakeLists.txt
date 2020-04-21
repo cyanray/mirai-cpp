@@ -31,7 +31,7 @@ if(MSVC)
     message(STATUS "optional: /UTF-8")   
 endif(MSVC)
 
-option(BUILD_SHARED_LIBS "Build ${PROJECT_NAME} as a shared library." ON)
+option(BUILD_SHARED_LIBS "Build ${PROJECT_NAME} as a shared library." OFF)
 if(BUILD_SHARED_LIBS)
   set(LIBRARY_TYPE SHARED)
 else()
@@ -51,11 +51,19 @@ if(MIRAI_CPP_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif(MIRAI_CPP_BUILD_EXAMPLES)
 
+
 option(MIRAI_CPP_INSTALL "INSTALL_MIRAI_CPP" ON)
 if(MIRAI_CPP_INSTALL)
 
     install(
         DIRECTORY include
         DESTINATION ${CMAKE_INSTALL_PREFIX}
+        )
+    
+    install(
+        TARGETS ${PROJECT_NAME}
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
     )
+
 endif(MIRAI_CPP_INSTALL)
