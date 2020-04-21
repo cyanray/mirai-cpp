@@ -11,10 +11,10 @@ namespace Cyan
 		string pData = j.dump();
 		HTTP http; http.SetContentType("application/json;charset=UTF-8");
 		auto res = http.Post(api_url, pData);
-		if (res.StatusCode != 200)
-			throw std::runtime_error("mirai-http-api 出现了异常，请检查日志");
 		if (res.Ready)
 		{
+			if (res.StatusCode != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			int code = reJson["code"].get<int>();
