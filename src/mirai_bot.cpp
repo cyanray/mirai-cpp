@@ -431,7 +431,7 @@ namespace Cyan
 	}
 
 
-	bool MiraiBot::Kick(GID_t GID, QQ_t memberID, const string& msg = "")
+	bool MiraiBot::Kick(GID_t GID, QQ_t memberID, const string& msg)
 	{
 		static const string api_url = api_url_prefix_ + "/kick";
 		json j;

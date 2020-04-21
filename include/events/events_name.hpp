@@ -109,92 +109,92 @@ namespace Cyan
 	}
 
 	template<typename T>
-	MiraiEvent GetEventType()
+	inline MiraiEvent GetEventType()
 	{
-		// 故意返回字符串，导致编译期出错
-		return "错误:你使用了没有定义的Event类型";
+		throw std::runtime_error("未定义的事件!");
+		return MiraiEvent::Default;
 	}
 
 	template<>
-	MiraiEvent GetEventType<FriendMessage>()
+	inline MiraiEvent GetEventType<FriendMessage>()
 	{
 		return MiraiEvent::FriendMessage;
 	}
 
 	template<>
-	MiraiEvent GetEventType<GroupMessage>()
+	inline MiraiEvent GetEventType<GroupMessage>()
 	{
 		return MiraiEvent::GroupMessage;
 	}
 
 	template<>
-	MiraiEvent GetEventType<TempMessage>()
+	inline MiraiEvent GetEventType<TempMessage>()
 	{
 		return MiraiEvent::TempMessage;
 	}
 
 	template<>
-	MiraiEvent GetEventType<NewFriendRequestEvent>()
+	inline MiraiEvent GetEventType<NewFriendRequestEvent>()
 	{
 		return MiraiEvent::NewFriendRequestEvent;
 	}
 
 	template<>
-	MiraiEvent GetEventType<MemberJoinRequestEvent>()
+	inline MiraiEvent GetEventType<MemberJoinRequestEvent>()
 	{
 		return MiraiEvent::MemberJoinRequestEvent;
 	}
 
 	template<>
-	MiraiEvent GetEventType<MemberJoinEvent>()
+	inline MiraiEvent GetEventType<MemberJoinEvent>()
 	{
 		return MiraiEvent::MemberJoinEvent;
 	}
 
 	template<>
-	MiraiEvent GetEventType<BotMuteEvent>()
+	inline MiraiEvent GetEventType<BotMuteEvent>()
 	{
 		return MiraiEvent::BotMuteEvent;
 	}
 
 	template<>
-	MiraiEvent GetEventType<BotUnmuteEvent>()
+	inline MiraiEvent GetEventType<BotUnmuteEvent>()
 	{
 		return MiraiEvent::BotUnmuteEvent;
 	}
 
 	template<>
-	MiraiEvent GetEventType<MemberMuteEvent>()
+	inline MiraiEvent GetEventType<MemberMuteEvent>()
 	{
 		return MiraiEvent::MemberMuteEvent;
 	}
 
 	template<>
-	MiraiEvent GetEventType<MemberUnmuteEvent>()
+	inline MiraiEvent GetEventType<MemberUnmuteEvent>()
 	{
 		return MiraiEvent::MemberUnmuteEvent;
 	}
 
 	template<>
-	MiraiEvent GetEventType<MemberLeaveEventKick>()
+	inline MiraiEvent GetEventType<MemberLeaveEventKick>()
 	{
 		return MiraiEvent::MemberLeaveEventKick;
 	}
 
 	template<>
-	MiraiEvent GetEventType<MemberLeaveEventQuit>()
+	inline MiraiEvent GetEventType<MemberLeaveEventQuit>()
 	{
 		return MiraiEvent::MemberLeaveEventQuit;
 	}
 
 	template<>
-	MiraiEvent GetEventType<GroupRecallEvent>()
+	inline MiraiEvent GetEventType<GroupRecallEvent>()
 	{
 		return MiraiEvent::GroupRecallEvent;
 	}
 
 	template<>
-	MiraiEvent GetEventType<FriendRecallEvent>()
+	inline MiraiEvent GetEventType<FriendRecallEvent>()
 	{
 		return MiraiEvent::FriendRecallEvent;
 	}

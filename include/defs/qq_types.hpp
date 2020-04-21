@@ -16,12 +16,12 @@ namespace Cyan
 		operator int64_t() const { return QQ; }
 	};
 
-	QQ_t operator "" qq(unsigned long long int v)
+	inline QQ_t operator "" qq(unsigned long long int v)
 	{
 		return QQ_t(int64_t(v));
 	}
 
-	QQ_t operator "" _qq(unsigned long long int v)
+	inline QQ_t operator "" _qq(unsigned long long int v)
 	{
 		return QQ_t(int64_t(v));
 	}
@@ -35,12 +35,12 @@ namespace Cyan
 		operator int64_t() const { return GID; }
 	};
 
-	GID_t operator "" gid(unsigned long long int v)
+	inline GID_t operator "" gid(unsigned long long int v)
 	{
 		return GID_t(int64_t(v));
 	}
 
-	GID_t operator "" _gid(unsigned long long int v)
+	inline GID_t operator "" _gid(unsigned long long int v)
 	{
 		return GID_t(int64_t(v));
 	}

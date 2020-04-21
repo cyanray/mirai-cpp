@@ -1,9 +1,8 @@
 #include "mirai_bot.hpp"
-#include "events.hpp"
+#include "events/events.hpp"
 
 namespace Cyan
 {
-	// 便捷函数, 必须定义到这里, 否则编译器找不到
 
 	MessageId TempMessage::Reply(const Cyan::MessageChain& mc) const
 	{
@@ -89,3 +88,5 @@ namespace Cyan
 			throw runtime_error(res.ErrorMsg);
 
 	}
+
+}
