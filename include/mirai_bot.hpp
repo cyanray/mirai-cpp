@@ -110,6 +110,16 @@ namespace Cyan
 		bool SessionVerify() const;
 		bool SessionRelease() const;
 		unsigned int FetchMessagesAndEvents(unsigned int count = 10);
+
+		template<typename T>
+		inline WeakEvent MakeWeakEvent(const json& json_)
+		{
+			std::shared_ptr<T> e = std::make_shared<T>();
+			e->SetMiraiBot(this);
+			e->Set(json_);
+			return std::dynamic_pointer_cast<Serializable>(e);
+		}
+
 		WeakEvent CreateEvent(MiraiEvent mirai_event, const json& json_);
 		bool Release() noexcept
 		{

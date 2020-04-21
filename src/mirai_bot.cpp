@@ -680,101 +680,59 @@ namespace Cyan
 	{
 		if (mirai_event == MiraiEvent::GroupMessage)
 		{
-			std::shared_ptr<GroupMessage> gm = std::make_shared<GroupMessage>();
-			gm->SetMiraiBot(this);
-			gm->Set(json_);
-			return std::dynamic_pointer_cast<Serializable>(gm);
+			return MakeWeakEvent<GroupMessage>(json_);
 		}
 		if (mirai_event == MiraiEvent::FriendMessage)
 		{
-			std::shared_ptr<FriendMessage> fm = std::make_shared<FriendMessage>();
-			fm->SetMiraiBot(this);
-			fm->Set(json_);
-			return std::dynamic_pointer_cast<Serializable>(fm);
+			return MakeWeakEvent<FriendMessage>(json_);
 		}
 		if (mirai_event == MiraiEvent::TempMessage)
 		{
-			std::shared_ptr<TempMessage> tm = std::make_shared<TempMessage>();
-			tm->SetMiraiBot(this);
-			tm->Set(json_);
-			return std::dynamic_pointer_cast<Serializable>(tm);
+			return MakeWeakEvent<TempMessage>(json_);
 		}
 		if (mirai_event == MiraiEvent::NewFriendRequestEvent)
 		{
-			std::shared_ptr<NewFriendRequestEvent> tm = std::make_shared<NewFriendRequestEvent>();
-			tm->SetMiraiBot(this);
-			tm->Set(json_);
-			return std::dynamic_pointer_cast<Serializable>(tm);
+			return MakeWeakEvent<NewFriendRequestEvent>(json_);
 		}
 		if (mirai_event == MiraiEvent::MemberJoinRequestEvent)
 		{
-			std::shared_ptr<MemberJoinRequestEvent> tm = std::make_shared<MemberJoinRequestEvent>();
-			tm->SetMiraiBot(this);
-			tm->Set(json_);
-			return std::dynamic_pointer_cast<Serializable>(tm);
+			return MakeWeakEvent<MemberJoinRequestEvent>(json_);
 		}
 		if (mirai_event == MiraiEvent::MemberJoinEvent)
 		{
-			std::shared_ptr<MemberJoinEvent> tm = std::make_shared<MemberJoinEvent>();
-			tm->SetMiraiBot(this);
-			tm->Set(json_);
-			return std::dynamic_pointer_cast<Serializable>(tm);
+			return MakeWeakEvent<MemberJoinEvent>(json_);
 		}
 		if (mirai_event == MiraiEvent::BotMuteEvent)
 		{
-			std::shared_ptr<BotMuteEvent> tm = std::make_shared<BotMuteEvent>();
-			tm->SetMiraiBot(this);
-			tm->Set(json_);
-			return std::dynamic_pointer_cast<Serializable>(tm);
+			return MakeWeakEvent<BotMuteEvent>(json_);
 		}
 		if (mirai_event == MiraiEvent::BotUnmuteEvent)
 		{
-			std::shared_ptr<BotUnmuteEvent> tm = std::make_shared<BotUnmuteEvent>();
-			tm->SetMiraiBot(this);
-			tm->Set(json_);
-			return std::dynamic_pointer_cast<Serializable>(tm);
+			return MakeWeakEvent<BotUnmuteEvent>(json_);
 		}
 		if (mirai_event == MiraiEvent::MemberMuteEvent)
 		{
-			std::shared_ptr<MemberMuteEvent> tm = std::make_shared<MemberMuteEvent>();
-			tm->SetMiraiBot(this);
-			tm->Set(json_);
-			return std::dynamic_pointer_cast<Serializable>(tm);
+			return MakeWeakEvent<MemberMuteEvent>(json_);
 		}
 		if (mirai_event == MiraiEvent::MemberUnmuteEvent)
 		{
-			std::shared_ptr<MemberUnmuteEvent> tm = std::make_shared<MemberUnmuteEvent>();
-			tm->SetMiraiBot(this);
-			tm->Set(json_);
-			return std::dynamic_pointer_cast<Serializable>(tm);
+			return MakeWeakEvent<MemberUnmuteEvent>(json_);
 		}
 		if (mirai_event == MiraiEvent::MemberLeaveEventKick)
 		{
-			std::shared_ptr<MemberLeaveEventKick> tm = std::make_shared<MemberLeaveEventKick>();
-			tm->SetMiraiBot(this);
-			tm->Set(json_);
-			return std::dynamic_pointer_cast<Serializable>(tm);
+			return MakeWeakEvent<MemberLeaveEventKick>(json_);
 		}
 		if (mirai_event == MiraiEvent::MemberLeaveEventQuit)
 		{
-			std::shared_ptr<MemberLeaveEventQuit> tm = std::make_shared<MemberLeaveEventQuit>();
-			tm->SetMiraiBot(this);
-			tm->Set(json_);
-			return std::dynamic_pointer_cast<Serializable>(tm);
+			return MakeWeakEvent<MemberLeaveEventQuit>(json_);
 		}
 		if (mirai_event == MiraiEvent::GroupRecallEvent)
 		{
-			std::shared_ptr<GroupRecallEvent> tm = std::make_shared<GroupRecallEvent>();
-			tm->SetMiraiBot(this);
-			tm->Set(json_);
-			return std::dynamic_pointer_cast<Serializable>(tm);
+			return MakeWeakEvent<GroupRecallEvent>(json_);
 		}
 		if (mirai_event == MiraiEvent::FriendRecallEvent)
 		{
-			std::shared_ptr<FriendRecallEvent> tm = std::make_shared<FriendRecallEvent>();
-			tm->SetMiraiBot(this);
-			tm->Set(json_);
-			return std::dynamic_pointer_cast<Serializable>(tm);
+			return MakeWeakEvent<FriendRecallEvent>(json_);
 		}
 	}
 
