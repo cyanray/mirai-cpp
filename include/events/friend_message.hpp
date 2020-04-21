@@ -7,11 +7,12 @@
 #include "defs/serializable.hpp"
 #include "defs/message_chain.hpp"
 #include "defs/friend.hpp"
+#include "exported.h"
 
 namespace Cyan
 {
 	// 好友发来的消息
-	class FriendMessage : public Serializable
+	class EXPORTED FriendMessage : public Serializable
 	{
 	public:
 		Cyan::MessageChain MessageChain;

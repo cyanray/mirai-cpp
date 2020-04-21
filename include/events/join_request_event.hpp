@@ -8,11 +8,12 @@
 #include "defs/serializable.hpp"
 #include "defs/message_chain.hpp"
 #include "defs/friend.hpp"
+#include "exported.h"
 
 namespace Cyan
 {
 	// 新成员入群请求
-	class MemberJoinRequestEvent : public Serializable
+	class EXPORTED MemberJoinRequestEvent : public Serializable
 	{
 	public:
 		int64_t EventId;

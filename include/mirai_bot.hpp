@@ -14,6 +14,7 @@
 #include "CURLWrapper.h"
 #include "defs/defs.hpp"
 #include "events/events.hpp"
+#include "exported.h"
 
 using std::string;
 using std::runtime_error;
@@ -34,7 +35,7 @@ using std::unordered_map;
 
 namespace Cyan
 {
-	class MiraiBot
+	class EXPORTED MiraiBot
 	{
 	public:
 		MiraiBot() :pool_(4), qq_(0) {}

@@ -7,11 +7,11 @@
 #include "defs/serializable.hpp"
 #include "defs/message_chain.hpp"
 #include "defs/group_member.hpp"
-
+#include "exported.h"
 namespace Cyan
 {
 	// 由群组发来的临时消息
-	class TempMessage : public Serializable
+	class EXPORTED TempMessage : public Serializable
 	{
 	public:
 		Cyan::MessageChain MessageChain;

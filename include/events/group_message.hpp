@@ -7,11 +7,12 @@
 #include "defs/serializable.hpp"
 #include "defs/message_chain.hpp"
 #include "defs/group_member.hpp"
+#include "exported.h"
 
 namespace Cyan
 {
 	// 群组发来的消息
-	class GroupMessage : public Serializable
+	class EXPORTED GroupMessage : public Serializable
 	{
 	public:
 		Cyan::MessageChain MessageChain;

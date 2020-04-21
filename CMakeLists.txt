@@ -31,6 +31,8 @@ if(MSVC)
     message(STATUS "optional: /UTF-8")   
 endif(MSVC)
 
+
+
 option(BUILD_SHARED_LIBS "Build ${PROJECT_NAME} as a shared library." OFF)
 if(BUILD_SHARED_LIBS)
   set(LIBRARY_TYPE SHARED)
@@ -45,6 +47,14 @@ target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_link_libraries(${PROJECT_NAME} nlohmann_json nlohmann_json::nlohmann_json)
 target_link_libraries(${PROJECT_NAME} CURL::libcurl)
 #target_link_libraries(${PROJECT_NAME} INTERFACE ${BOOST_LIBRARIES})
+
+if(MSVC)
+    if(BUILD_SHARED_LIBS)
+        target_compile_definitions(${PROJECT_NAME} PRIVATE WIN_EXPORT)
+        target_compile_definitions(${PROJECT_NAME} PRIVATE SHARED_LIB)
+    endif()
+ endif(MSVC)
+
 
 option(MIRAI_CPP_BUILD_EXAMPLES "Build examples" ON)
 if(MIRAI_CPP_BUILD_EXAMPLES)
@@ -63,6 +73,7 @@ if(MIRAI_CPP_INSTALL)
     install(
         TARGETS ${PROJECT_NAME}
         RUNTIME DESTINATION bin
+        ARCHIVE DESTINATION lib
         LIBRARY DESTINATION lib
     )
 
