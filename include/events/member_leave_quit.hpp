@@ -10,7 +10,7 @@
 
 namespace Cyan
 {
-	// Èº³ÉÔ±Ö÷¶¯ÀëÈºÊÂ¼ş
+	// ç¾¤æˆå‘˜ä¸»åŠ¨ç¦»ç¾¤äº‹ä»¶
 	class MemberLeaveEventQuit : public Serializable
 	{
 	public:

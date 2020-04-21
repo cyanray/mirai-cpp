@@ -1,12 +1,9 @@
-#pragma once
-#ifndef mirai_cpp__event_func_hpp_H_
-#define mirai_cpp__event_func_hpp_H_
-
 #include "mirai_bot.hpp"
+#include "events.hpp"
 
 namespace Cyan
 {
-	// ä¾¿æ·å‡½æ•°, å¿…é¡»å®šä¹‰åˆ°è¿™é‡Œ, å¦åˆ™ç¼–è¯‘å™¨æ‰¾ä¸åˆ°
+	// ±ã½İº¯Êı, ±ØĞë¶¨Òåµ½ÕâÀï, ·ñÔò±àÒëÆ÷ÕÒ²»µ½
 
 	MessageId TempMessage::Reply(const Cyan::MessageChain& mc) const
 	{
@@ -92,7 +89,3 @@ namespace Cyan
 			throw runtime_error(res.ErrorMsg);
 
 	}
-
-
-}
-#endif // !mirai_cpp__event_func_hpp_H_

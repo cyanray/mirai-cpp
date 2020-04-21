@@ -25,10 +25,18 @@ if (WIN32)
 	endif()
 endif()
 
-add_library(${PROJECT_NAME} INTERFACE)
-target_include_directories(${PROJECT_NAME} INTERFACE include)
-target_link_libraries(${PROJECT_NAME} INTERFACE nlohmann_json nlohmann_json::nlohmann_json)
-target_link_libraries(${PROJECT_NAME} INTERFACE CURL::libcurl)
+if(MSVC)
+    add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
+    add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+    message(STATUS "optional: /UTF-8")   
+endif(MSVC)
+
+aux_source_directory(./src SRCS)
+
+add_library(${PROJECT_NAME} STATIC ${SRCS})
+target_include_directories(${PROJECT_NAME} PUBLIC include)
+target_link_libraries(${PROJECT_NAME} nlohmann_json nlohmann_json::nlohmann_json)
+target_link_libraries(${PROJECT_NAME} CURL::libcurl)
 #target_link_libraries(${PROJECT_NAME} INTERFACE ${BOOST_LIBRARIES})
 
 option(MIRAI_CPP_BUILD_EXAMPLES "Build examples" ON)
