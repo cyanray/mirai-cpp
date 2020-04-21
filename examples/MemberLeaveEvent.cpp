@@ -1,5 +1,5 @@
 #include <iostream>
-#include <mirai.hpp>
+#include <mirai.h>
 
 int main()
 {
