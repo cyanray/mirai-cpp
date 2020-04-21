@@ -1,8 +1,8 @@
 #pragma once
 
 // Define EXPORTED for any platform
-#if defined(_WIN32) && defined(SHARED_LIB)
-# ifdef WIN_EXPORT
+#if defined(_WIN32) 
+# if defined(WIN_EXPORT) && defined(SHARED_LIB)
 #   define EXPORTED  __declspec( dllexport )
 # else
 #   define EXPORTED  __declspec( dllimport )
