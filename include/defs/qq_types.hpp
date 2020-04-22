@@ -4,6 +4,7 @@
 
 #include <exception>
 #include "serializable.hpp"
+#include "exported.h"
 
 namespace Cyan
 {
@@ -107,7 +108,7 @@ namespace Cyan
 	};
 
 	// 预先声明 MiraiBot 类
-	class MiraiBot;
+	class EXPORTED MiraiBot;
 
 }
 

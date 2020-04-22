@@ -1,8 +1,9 @@
 #pragma once
 
-// Define EXPORTED for any platform
-#if defined(_WIN32) 
-# if defined(WIN_EXPORT) && defined(SHARED_LIB)
+#if defined(MIRAICPP_STATICLIB)
+#  define EXPORTED
+#elif defined(_WIN32) 
+# if defined(WIN_EXPORT)
 #   define EXPORTED  __declspec( dllexport )
 # else
 #   define EXPORTED  __declspec( dllimport )

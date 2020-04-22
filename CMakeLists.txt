@@ -48,12 +48,14 @@ target_link_libraries(${PROJECT_NAME} nlohmann_json nlohmann_json::nlohmann_json
 target_link_libraries(${PROJECT_NAME} CURL::libcurl)
 #target_link_libraries(${PROJECT_NAME} INTERFACE ${BOOST_LIBRARIES})
 
-if(MSVC)
-    if(BUILD_SHARED_LIBS)
-        target_compile_definitions(${PROJECT_NAME} PRIVATE WIN_EXPORT)
-        target_compile_definitions(${PROJECT_NAME} PRIVATE SHARED_LIB)
+if(BUILD_SHARED_LIBS)
+    if(WIN32)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE WIN_EXPORT)
     endif()
- endif(MSVC)
+else()
+    target_compile_definitions(${PROJECT_NAME} PRIVATE MIRAICPP_STATICLIB)
+endif()
+
 
 
 option(MIRAI_CPP_BUILD_EXAMPLES "Build examples" ON)
