@@ -54,12 +54,10 @@ cd vcpkg
 
 ```powershell
 git clone https://github.com/cyanray/mirai-cpp-vcpkg-port.git tmp ; rm -Recurse -Force ports/mirai-cpp ; mv tmp/* ports/ ; rm -Recurse -Force tmp
-./vcpkg install mirai-cpp
-# 如果你要构建 x64 平台的程序,需要执行:
-# ./vcpkg install mirai-cpp:x64-windows
+./vcpkg install mirai-cpp mirai-cpp:x64-windows
 ```
 
-耐心等待，上面的代码会帮你安装 mirai-cpp 以及它的依赖项目。
+耐心等待，上面的指令会帮你安装 mirai-cpp 以及它的依赖项目。
 
 #### (3) 在 **Visual Studio** 中创建一个项目，开始使用
 
@@ -67,25 +65,21 @@ git clone https://github.com/cyanray/mirai-cpp-vcpkg-port.git tmp ; rm -Recurse 
 
 ```c++
 #include <iostream>
-#include <mirai.hpp>
+#include <mirai.h>
 
 int main()
 {
     using namespace std;
     using namespace Cyan;
-    MiraiBot bot;
+    MiraiBot bot("127.0.0.1",8080);
     while (true)
     {
         try
         {
             // InitKeyVl0CEUzZ 改为你的 InitKey，
             // 2110000000 改为你的 bot 的 QQ 号码
-            // 提示: mirai-cpp 不支持隐式地将字面数字转化为 QQ_t 或 GID_t
-            // 你需要给字面数字添加后缀 qq 或 _qq (gid 或 _gid), 将字面数字转化为 QQ_t (GID_t)
-            // 如果想将 QQ_t(GID_t) 转化为数字，可以使用强制类型转换: 
-            // QQ_t qq = 10001_qq;
-            // int64_t qq_num = (int64_t)(qq);
-            bot.Auth("InitKeyVl0CEUzZ", 2110000000qq);
+            // 提示: mirai-cpp 中，数字后面加上 _qq 表示 qq 号码，数字后面加上 _gid 表示群号码。
+            bot.Auth("InitKeyVl0CEUzZ", 2110000000_qq);
             break;
         }
         catch (const std::exception & ex)
@@ -97,17 +91,17 @@ int main()
 
 
     bot.On<FriendMessage>(
-        [&](FriendMessage fm)
+        [&](FriendMessage m)
         {
             // bot.SendFriendMessage(fm.Sender.QQ, fm.MessageChain);
-            fm.Reply(fm.MessageChain);
+            m.Reply(m.MessageChain);
         });
 
     bot.On<GroupMessage>(
-        [&](GroupMessage gm)
+        [&](GroupMessage m)
         {
             // bot.SendGroupMessage(gm.Sender.Group.GID, "为什么要 " + gm.MessageChain);
-            gm.QuoteReply("为什么要 " + gm.MessageChain);
+            m.QuoteReply("为什么要 " + m.MessageChain);
         });
 
     bot.EventLoop();
@@ -138,24 +132,75 @@ MSVC 并没有默认启动对 UTF-8 编码的支持。
 
 </details>
 
-### 2. 其他使用方式
+
+
+### 2. 快速尝试2
+
+<details>
+
+#### (1) 安装 **vcpkg** (如果你已经安装则可以略过)
+
+1. 打开 Powershell ，找到一个合适的位置，执行以下命令：
+
+```powershell
+git clone https://github.com/Microsoft/vcpkg.git
+cd vcpkg
+.\bootstrap-vcpkg.bat
+```
+
+2. 如果上面的代码执行无误，那么 **vcpkg** 已经成功编译。执行下面的命令让 **Visual Studio 2019** 与 **vcpkg** 相关联
+
+```powershell
+.\vcpkg integrate install
+```
+
+#### (2) 使用 **vcpkg** 安装 **mirai-cpp** 的依赖项目
+
+```powershell
+./vcpkg install nlohmann-json curl boost-asio
+```
+
+耐心等待，上面的指令会帮你安装 mirai-cpp 的依赖项目。
+
+#### (3) 直接开始体验 mirai-cpp
+
+将本仓库克隆到合适的位置
+
+```powershell
+git clone https://github.com/cyanray/mirai-cpp.git
+```
+
+如果一切顺利，你已经将本仓库的所有内容克隆到了 mirai-cpp 文件夹里。
+
+如图所示，使用 Visual Studio 2019 直接打开这个文件夹。
+
+![使用 VS 直接打开 mirai-cpp 文件夹](./doc/pic/vs.png)
+
+之后，需要设置一下 CMake Toolchain File，按照图中的步骤操作。
+
+![设置 CMake](./doc/pic/vs2.png)
+
+如果一切顺利，你就可以直接运行我写好的示例。
+
+![开始运行 examples](./doc/pic/vs3.png)
+
+</details>
+
+### 3. 其他使用方式
 
 #### (1) 更新 mirai-cpp
 
 在更新 mirai-cpp 之前，需要先删除已经安装的 mirai-cpp
 
 ```powershell
-./vcpkg remove mirai-cpp
-./vcpkg remove mirai-cpp:x64-windows # 如果有安装 mirai-cpp:x64-windows
+./vcpkg remove mirai-cpp mirai-cpp:x64-windows
 ```
 
 删除之后，重新安装即可:
 
 ```powershell
 git clone https://github.com/cyanray/mirai-cpp-vcpkg-port.git tmp ; rm -Recurse -Force ports/mirai-cpp ; mv tmp/* ports/ ; rm -Recurse -Force tmp
-./vcpkg install mirai-cpp
-# 如果你要构建 x64 平台的程序,需要执行:
-# ./vcpkg install mirai-cpp:x64-windows
+./vcpkg install mirai-cpp mirai-cpp:x64-windows
 ```
 
 ## 代码风格
