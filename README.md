@@ -178,6 +178,8 @@ git clone https://github.com/cyanray/mirai-cpp.git
 
 之后，需要设置一下 CMake Toolchain File，按照图中的步骤操作。
 
+> 提示: 把图中 `E:/OpenSource/vcpkg/` 替换为你的 vcpkg 文件夹的路径。比如替换成 `D:/vcpkg/scripts/buildsystems/vcpkg.cmake`
+
 ![设置 CMake](./doc/pic/vs2.png)
 
 如果一切顺利，你就可以直接运行我写好的示例。
