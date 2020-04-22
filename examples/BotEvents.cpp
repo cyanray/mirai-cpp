@@ -1,4 +1,6 @@
 ﻿#include <iostream>
+// 使用静态库必须要在引入 mirai.h 前定义这个宏
+#define MIRAICPP_STATICLIB
 #include <mirai.h>
 
 int main()
