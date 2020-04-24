@@ -529,7 +529,14 @@ namespace Cyan
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
-			result.Set(reJson["data"]);
+			int code = reJson["code"].get<int>();
+			if (code == 0)
+				result.Set(reJson["data"]);
+			else
+			{
+				string msg = reJson["msg"].get<string>();
+				throw runtime_error(msg);
+			}
 			return result;
 		}
 		else
@@ -556,7 +563,14 @@ namespace Cyan
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
-			result.Set(reJson["data"]);
+			int code = reJson["code"].get<int>();
+			if (code == 0)
+				result.Set(reJson["data"]);
+			else
+			{
+				string msg = reJson["msg"].get<string>();
+				throw runtime_error(msg);
+			}
 			return result;
 		}
 		else
