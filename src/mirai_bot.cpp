@@ -42,7 +42,7 @@ namespace Cyan
 		j["sessionKey"] = sessionKey_;
 		j["target"] = int64_t(target);
 		j["messageChain"] = messageChain.ToJson();
-		if (msgId != -1) j["quote"] = msgId;
+		if (msgId != 0) j["quote"] = msgId;
 
 		string pData = j.dump();
 		HTTP http; http.SetContentType("application/json;charset=UTF-8");
@@ -78,7 +78,7 @@ namespace Cyan
 		j["sessionKey"] = sessionKey_;
 		j["target"] = int64_t(target);
 		j["messageChain"] = messageChain.ToJson();
-		if (msgId != -1) j["quote"] = msgId;
+		if (msgId != 0) j["quote"] = msgId;
 		string pData = j.dump();
 		HTTP http; http.SetContentType("application/json;charset=UTF-8");
 		auto res = http.Post(api_url, pData);
@@ -113,7 +113,7 @@ namespace Cyan
 		j["qq"] = int64_t(qq);
 		j["group"] = int64_t(gid);
 		j["messageChain"] = messageChain.ToJson();
-		if (msgId != -1) j["quote"] = msgId;
+		if (msgId != 0) j["quote"] = msgId;
 		string pData = j.dump();
 		HTTP http; http.SetContentType("application/json;charset=UTF-8");
 		auto res = http.Post(api_url, pData);

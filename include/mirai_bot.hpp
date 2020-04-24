@@ -60,9 +60,9 @@ namespace Cyan
 		}
 
 		bool Auth(const string& authKey, QQ_t qq);
-		MessageId SendMessage(QQ_t target, const MessageChain& messageChain, MessageId msgId = -1);
-		MessageId SendMessage(GID_t target, const MessageChain& messageChain, MessageId msgId = -1);
-		MessageId SendMessage(GID_t gid, QQ_t qq, const MessageChain& messageChain, MessageId msgId = -1);
+		MessageId SendMessage(QQ_t target, const MessageChain& messageChain, MessageId msgId = 0);
+		MessageId SendMessage(GID_t target, const MessageChain& messageChain, MessageId msgId = 0);
+		MessageId SendMessage(GID_t gid, QQ_t qq, const MessageChain& messageChain, MessageId msgId = 0);
 		FriendImage UploadFriendImage(const string& fileName);
 		GroupImage UploadGroupImage(const string& fileName);
 		TempImage UploadTempImage(const string& fileName);
