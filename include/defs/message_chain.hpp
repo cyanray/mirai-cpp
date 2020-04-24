@@ -24,6 +24,8 @@ namespace Cyan
 	{
 	public:
 		friend MessageChain& operator+(const string& str, MessageChain& mc);
+		template<int N>
+		friend MessageChain& operator+(const char(&str)[N], MessageChain& mc);
 		MessageChain() :messages_(json::array()) {}
 		MessageChain(const MessageChain& mc)
 		{
@@ -263,6 +265,15 @@ namespace Cyan
 		int64_t timestamp_;
 		MessageId messageId_;
 	};
+
+	template<int N>
+	inline MessageChain& operator+(const char (&str)[N], MessageChain& mc)
+	{
+		MessageChain tmp;
+		tmp.Plain(str);
+		mc.messages_.insert(mc.messages_.begin(), tmp.messages_.begin(), tmp.messages_.end());
+		return mc;
+	}
 
 	inline MessageChain& operator+(const string& str, MessageChain& mc)
 	{
