@@ -21,6 +21,7 @@ namespace Cyan
 			if (code == 0)
 			{
 				this->sessionKey_ = reJson["session"].get<string>();
+				this->authKey_ = authKey;
 				this->qq_ = qq;
 				// 启动消息循环
 				//std::async(std::launch::async, [&]() { EventLoop(); });
@@ -677,7 +678,7 @@ namespace Cyan
 
 		int received_count = 0;
 
-		HTTP http;
+		HTTP http; http.SetTimeout(5);
 		auto res = http.Get(api_url.str());
 		if (res.Ready)
 		{
@@ -686,6 +687,18 @@ namespace Cyan
 			json reJson;
 			reJson = reJson.parse(res.Content);
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
+			int code = reJson["code"].get<int>();
+			if (code != 0)
+			{
+				// 特判，code=3为session失效，releas后重新auth
+				if (code == 3)
+				{
+					Release();
+					Auth(authKey_, qq_);
+				}
+				string msg = reJson["msg"].get<string>();
+				throw runtime_error(msg);
+			}
 			for (const auto& ele : reJson["data"])
 			{
 				string event_name = ele["type"].get<string>();

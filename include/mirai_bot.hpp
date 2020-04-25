@@ -134,7 +134,7 @@ namespace Cyan
 			}
 
 		}
-
+		string authKey_;
 		QQ_t qq_;
 		string sessionKey_;
 		string api_url_prefix_ = "http://127.0.0.1:8080";
