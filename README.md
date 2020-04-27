@@ -48,13 +48,22 @@ cd vcpkg
 .\vcpkg integrate install
 ```
 
+3. 如果你使用的中文 Visual Studio，因为没有安装英文语言包，vcpkg 可能会无法正常工作。请打开 Visual Studio Installer 安装英文语言包(只需要安装英文语言包，不需要把 Visual Studio 切换为英文)
+
+![通过 Visual Studio Install 安装英文语言包](./doc/pic/install_vs_eng_pkg.png)
+
+
 #### (2) 使用 **vcpkg** 安装 **mirai-cpp**
 
 这一步稍微复杂，你需要执行(这里一定要在 **Powershell** 里面执行)：
 
 ```powershell
-git clone https://github.com/cyanray/mirai-cpp-vcpkg-port.git tmp ; rm -Recurse -Force ports/mirai-cpp ; mv tmp/* ports/ ; rm -Recurse -Force tmp
-./vcpkg install mirai-cpp mirai-cpp:x64-windows
+git clone https://github.com/cyanray/mirai-cpp-vcpkg-port.git tmp ;  mv tmp/* ports/ ; rm -Recurse -Force tmp
+
+./vcpkg install mirai-cpp
+
+# 对于 x64 的项目，还需要执行: 
+#./vcpkg mirai-cpp:x64-windows
 ```
 
 耐心等待，上面的指令会帮你安装 mirai-cpp 以及它的依赖项目。
@@ -71,14 +80,12 @@ int main()
 {
     using namespace std;
     using namespace Cyan;
+    system("chcp 65001");
     MiraiBot bot("127.0.0.1",8080);
     while (true)
     {
         try
         {
-            // InitKeyVl0CEUzZ 改为你的 InitKey，
-            // 2110000000 改为你的 bot 的 QQ 号码
-            // 提示: mirai-cpp 中，数字后面加上 _qq 表示 qq 号码，数字后面加上 _gid 表示群号码。
             bot.Auth("InitKeyVl0CEUzZ", 2110000000_qq);
             break;
         }
@@ -87,21 +94,20 @@ int main()
             cout << ex.what() << endl;
         }
     }
-    cout << "成功登录 bot。" << endl;
-
+    cout << "Bot Working..." << endl;
 
     bot.On<FriendMessage>(
         [&](FriendMessage m)
         {
-            // bot.SendFriendMessage(fm.Sender.QQ, fm.MessageChain);
+            // bot.SendMessage(fm.Sender.QQ, fm.MessageChain);
             m.Reply(m.MessageChain);
         });
 
     bot.On<GroupMessage>(
         [&](GroupMessage m)
         {
-            // bot.SendGroupMessage(gm.Sender.Group.GID, "为什么要 " + gm.MessageChain);
-            m.QuoteReply("为什么要 " + m.MessageChain);
+            // bot.SendMessage(gm.Sender.Group.GID, "What is " + gm.MessageChain);
+            m.QuoteReply("What is " + m.MessageChain);
         });
 
     bot.EventLoop();
@@ -130,6 +136,9 @@ MSVC 并没有默认启动对 UTF-8 编码的支持。
 
 如果一切正常，给你的机器人发消息，他会回复同样的消息给你！
 
+> 提示: 添加了编译参数 **/utf-8** 后，**你的项目**的**源文件的编码**也必须是 **UTF-8** 编码，不然会出现编译错误。中文操作系统下，Visual Studio 创建的源文件默认为 **GB2312** 编码。所以你需要手动地修改**你的项目**的源文件为 **UTF-8** 编码。
+
+
 </details>
 
 
@@ -153,6 +162,11 @@ cd vcpkg
 ```powershell
 .\vcpkg integrate install
 ```
+
+3. 如果你使用的中文 Visual Studio，因为没有安装英文语言包，vcpkg 可能会无法正常工作。请打开 Visual Studio Installer 安装英文语言包(只需要安装英文语言包，不需要把 Visual Studio 切换为英文)
+
+![通过 Visual Studio Install 安装英文语言包](./doc/pic/install_vs_eng_pkg.png)
+
 
 #### (2) 使用 **vcpkg** 安装 **mirai-cpp** 的依赖项目
 
@@ -194,16 +208,93 @@ git clone https://github.com/cyanray/mirai-cpp.git
 
 在更新 mirai-cpp 之前，需要先删除已经安装的 mirai-cpp
 
+Windows:
+
 ```powershell
 ./vcpkg remove mirai-cpp mirai-cpp:x64-windows
 ```
 
+Linux:
+
+```bash
+./vcpkg remove mirai-cpp
+```
+
 删除之后，重新安装即可:
+
+Windows:
 
 ```powershell
 git clone https://github.com/cyanray/mirai-cpp-vcpkg-port.git tmp ; rm -Recurse -Force ports/mirai-cpp ; mv tmp/* ports/ ; rm -Recurse -Force tmp
+
 ./vcpkg install mirai-cpp mirai-cpp:x64-windows
 ```
+
+Linux:
+```bash
+git clone https://github.com/cyanray/mirai-cpp-vcpkg-port.git tmp ; rm -rf ports/mirai-cpp ; mv tmp/* ports/ ; rm -rf tmp
+./vcpkg install mirai-cpp
+```
+
+#### (2) 将程序轻松移植、部署到 Linux 上
+
+<details>
+
+(以下内容基于 “快速尝试2”，请先完成“快速尝试2”。)
+
+上面的内容介绍了如何在 Windows 上开发使用 mirai-cpp 的程序，下面来介绍如何将你的程序移植到 Linux 平台，以便将程序部署到 Linux 服务器上。
+
+为了易于讲解与操作，以下内容在 **WSL** (**W**indows **S**ubsystem for **L**inux) 上进行。这里不对如何安装 WSL 进行说明，关于如何安装 WSL 还请自行查阅资料。
+
+1. 在 WSL 上安装 vcpkg
+
+步骤与上文类似，但是略有不同:
+
+```bash
+git clone https://github.com/Microsoft/vcpkg.git
+cd vcpkg
+./bootstrap-vcpkg.sh
+```
+
+![在 WSL 上安装 vcpkg](./doc/pic/install_vcpkg_on_linux.png)
+
+耐心等待，其结果如图所示。
+注意，如果执行 ls 发现没有生成 vcpkg 的可执行文件，请尝试重新执行上述的安装指令。(这似乎是个bug)
+
+![在 WSL 上安装 vcpkg2](./doc/pic/install_vcpkg_on_linux2.png)
+
+2. 使用 vcpkg 安装 mirai-cpp 
+
+
+```bash
+git clone https://github.com/cyanray/mirai-cpp-vcpkg-port.git tmp ;  mv tmp/* ports/ ; rm -rf tmp
+
+./vcpkg install mirai-cpp
+```
+
+![在 WSL 上安装 mirai-cpp](./doc/pic/install_mirai_cpp_on_linux.png)
+
+3. 创建针对 WSL 的配置
+
+打开在 “快速尝试2” 中用到的项目。按照如图所示步骤，创建一个针对 WSL 平台的配置。因为我的 WSL 安装了 GCC 编译器，所以这里选择 **WSL-GCC-Releas**。
+
+![创建WSL-GCC平台配置1](./doc/pic/vs_configure_linux_project.png)
+
+和 “快速尝试2” 一样的操作，配置 CMake Toolchain File。但是这次的路径要填写 WSL 上的路径。
+
+![创建WSL-GCC平台配置2](./doc/pic/vs_configure_linux_project2.png)
+
+Enjoy it;
+
+</details>
+
+## 常见问题
+
+### 1. 使用 vcpkg 安装 mirai-cpp 时出错
+
+首先检查是不是网络错误导致下载文件失败。这种错误只要重新执行 `./vcpkg install mirai-cpp` 。如果你有可以加速网络的代理服务器，可以添加 **HTTP_PROXY** 和 **HTTPS_PROXY** 环境变量，以加速 **vcpkg** 的下载。
+
+![配置环境变量](./doc/pic/env.png)
 
 ## 代码风格
 

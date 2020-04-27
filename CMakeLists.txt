@@ -1,9 +1,6 @@
-# CMakeList.txt: 顶层 CMake 项目文件，在此处执行全局配置
-# 并包含子项目。
-#
 cmake_minimum_required (VERSION 3.1)
 
-project (mirai-cpp)
+project (mirai-cpp VERSION 0.4.4)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -43,7 +40,10 @@ endif()
 aux_source_directory(./src SRCS)
 
 add_library(${PROJECT_NAME} ${LIBRARY_TYPE} ${SRCS})
-target_include_directories(${PROJECT_NAME} PUBLIC include)
+target_include_directories(${PROJECT_NAME} PUBLIC 
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+    )
 target_link_libraries(${PROJECT_NAME} nlohmann_json nlohmann_json::nlohmann_json)
 target_link_libraries(${PROJECT_NAME} CURL::libcurl)
 #target_link_libraries(${PROJECT_NAME} INTERFACE ${BOOST_LIBRARIES})
@@ -67,6 +67,13 @@ endif(MIRAI_CPP_BUILD_EXAMPLES)
 option(MIRAI_CPP_INSTALL "INSTALL_MIRAI_CPP" ON)
 if(MIRAI_CPP_INSTALL)
 
+    include(CMakePackageConfigHelpers)
+    write_basic_package_version_file(
+            mirai-cppConfigVersion.cmake
+            VERSION ${PACKAGE_VERSION}
+            COMPATIBILITY AnyNewerVersion
+            )
+
     install(
         DIRECTORY include
         DESTINATION ${CMAKE_INSTALL_PREFIX}
@@ -74,9 +81,23 @@ if(MIRAI_CPP_INSTALL)
     
     install(
         TARGETS ${PROJECT_NAME}
+        EXPORT  ${PROJECT_NAME}Targets
         RUNTIME DESTINATION bin
         ARCHIVE DESTINATION lib
         LIBRARY DESTINATION lib
     )
 
+    install(
+        EXPORT ${PROJECT_NAME}Targets
+        FILE mirai-cppTargets.cmake
+ #       NAMESPACE MIRAICPP::
+        DESTINATION lib/cmake/${PROJECT_NAME}
+    )
+
+    configure_file(mirai-cppConfig.cmake.in mirai-cppConfig.cmake @ONLY)
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/mirai-cppConfig.cmake"
+                  "${CMAKE_CURRENT_BINARY_DIR}/mirai-cppConfigVersion.cmake"
+            DESTINATION lib/cmake/mirai-cpp
+            )
+        
 endif(MIRAI_CPP_INSTALL)
