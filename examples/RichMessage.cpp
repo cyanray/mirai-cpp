@@ -47,7 +47,7 @@ int main()
 		{
 			try
 			{
-				gm.Reply(MessageChain().FlashImage(img));
+				gm.Reply(MessageChain().FlashImage(gImg));
 			}
 			catch (const std::exception& ex)
 			{
