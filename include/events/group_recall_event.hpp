@@ -3,7 +3,6 @@
 #define mirai_cpp_events_group_recall_event_hpp_H_
 
 #include <nlohmann/json.hpp>
-#include "CURLWrapper.h"
 #include "defs/qq_types.hpp"
 #include "defs/serializable.hpp"
 #include "defs/group_member.hpp"
