@@ -4,19 +4,12 @@ project (mirai-cpp VERSION 0.4.4)
 
 set(CMAKE_CXX_STANDARD 11)
 
-if(CMAKE_TOOLCHAIN_FILE)
-    include(${CMAKE_TOOLCHAIN_FILE})
-endif(CMAKE_TOOLCHAIN_FILE)
-
-find_package(CURL CONFIG REQUIRED)
-
 
 if(MSVC)
     add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
     add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
     message(STATUS "optional: /UTF-8")   
 endif(MSVC)
-
 
 
 option(BUILD_SHARED_LIBS "Build ${PROJECT_NAME} as a shared library." OFF)
@@ -37,7 +30,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third-party>
     $<INSTALL_INTERFACE:third-party>
     )
-target_link_libraries(${PROJECT_NAME} CURL::libcurl)
 
 if(BUILD_SHARED_LIBS)
     if(WIN32)
