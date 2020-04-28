@@ -9,12 +9,14 @@
 #include <sstream>
 #include <unordered_map>
 #include <memory>
-#include <boost/asio.hpp>
-#include <nlohmann/json.hpp>
+
+#include "ThreadPool.h"
+#include "nlohmann/json.hpp"
 #include "CURLWrapper.h"
 #include "defs/defs.hpp"
 #include "events/events.hpp"
 #include "exported.h"
+
 
 using std::string;
 using std::runtime_error;
@@ -139,7 +141,7 @@ namespace Cyan
 		string sessionKey_;
 		string api_url_prefix_ = "http://127.0.0.1:8080";
 		unordered_map<MiraiEvent, function<void(WeakEvent)> > processors_;
-		boost::asio::thread_pool pool_;
+		ThreadPool pool_;
 	};
 
 } // namespace Cyan

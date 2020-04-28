@@ -38,7 +38,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     $<INSTALL_INTERFACE:third-party>
     )
 target_link_libraries(${PROJECT_NAME} CURL::libcurl)
-#target_link_libraries(${PROJECT_NAME} INTERFACE ${BOOST_LIBRARIES})
 
 if(BUILD_SHARED_LIBS)
     if(WIN32)

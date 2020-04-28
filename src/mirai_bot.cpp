@@ -709,7 +709,7 @@ namespace Cyan
 				{
 					auto exector = pit->second;
 					WeakEvent pevent = CreateEvent(mirai_event, ele);
-					boost::asio::post(pool_, [=]()
+					pool_.enqueue([=]()
 						{
 							exector(pevent);
 						});
