@@ -24,6 +24,7 @@ namespace Cyan
 			DurationSeconds = gm.DurationSeconds;
 			Member = gm.Member;
 			Operator = gm.Operator;
+			operator_is_null_ = gm.operator_is_null_;
 		}
 		MemberMuteEvent& operator=(const MemberMuteEvent& t)
 		{
@@ -31,6 +32,7 @@ namespace Cyan
 			std::swap(this->DurationSeconds, tmp.DurationSeconds);
 			std::swap(this->Member, tmp.Member);
 			std::swap(this->Operator, tmp.Operator);
+			std::swap(this->operator_is_null_, tmp.operator_is_null_);
 			return *this;
 		}
 
@@ -39,12 +41,21 @@ namespace Cyan
 			this->bot_ = bot;
 		}
 
+		bool OperatorIsBot() const
+		{
+			return operator_is_null_;
+		}
+
 		virtual ~MemberMuteEvent() = default;
 		virtual bool Set(const json& j) override
 		{
 			this->DurationSeconds = j["durationSeconds"].get<int>();
 			this->Member.Set(j["member"]);
-			this->Operator.Set(j["operator"]);
+			if (!j["operator"].is_null())
+			{
+				this->Operator.Set(j["operator"]);
+				this->operator_is_null_ = false;
+			}
 			return true;
 		}
 		virtual json ToJson() const override
@@ -59,6 +70,7 @@ namespace Cyan
 
 	private:
 		MiraiBot* bot_;
+		bool operator_is_null_ = true;
 	};
 
 }
