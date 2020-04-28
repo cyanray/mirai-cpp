@@ -24,23 +24,29 @@
 
 ### 1. 快速尝试
 
-将本仓库克隆到合适的位置
+1. 使用 Visual Studio
 
-```powershell
-git clone https://github.com/cyanray/mirai-cpp.git
-```
-
-如果一切顺利，你已经将本仓库的所有内容克隆到了 mirai-cpp 文件夹里。
+完整克隆/下载本仓库。
 
 如图所示，使用 Visual Studio 2019 直接打开这个文件夹。
 
-![使用 VS 直接打开 mirai-cpp 文件夹](./doc/pic/vs.png)
+![使用 VS 直接打开 mirai-cpp 文件夹](./doc/pic/vs_1.png)
 
-如果一切顺利，你可以直接运行我写好的示例。
+如果一切顺利，你可以直接运行我写好的示例，或者进行修改编写自己的机器人。
 
-在我的示例的基础上进行修改，即可编写你自己的插件。
+![开始运行 examples](./doc/pic/vs_2.png)
 
-![开始运行 examples](./doc/pic/vs3.png)
+2. 使用 Visual Studio Code
+
+完整克隆/下载本仓库。
+
+使用 VS Code 直接打开这个文件夹。
+
+安装 CMake Tools 扩展。
+
+直接开始调试: 
+
+![vsc 开始调试](./doc/pic/vsc.png)
 
 
 ### 3. 其他使用方式
@@ -58,18 +64,17 @@ git clone https://github.com/cyanray/mirai-cpp.git
 
 打开在 “快速尝试” 中用到的项目。按照如图所示步骤，创建一个针对 WSL 平台的配置。因为我的 WSL 安装了 GCC 编译器，所以这里选择 **WSL-GCC-Releas**。
 
-![创建WSL-GCC平台配置1](./doc/pic/vs_configure_linux_project.png)
+![创建WSL-GCC平台配置1](./doc/pic/vs_3.png)
+
+![创建WSL-GCC平台配置2](./doc/pic/vs_configure_linux_project.png)
 
 如果一切顺利，等待 CMake 缓存生成成功后，即可编译出 Linux 平台的可执行文件。
 
-## 常见问题
+
+#### (2) 使用 CMake-GUI 编译
 
 未完待续……
 
 ## 代码风格
 
 本项目的代码使用的是我自己喜欢的代码风格，如果你有更好的建议（比如修改为 Google-Style），欢迎提出 issues 或 pull request。
-
-## 其他
-
-未完待续……
