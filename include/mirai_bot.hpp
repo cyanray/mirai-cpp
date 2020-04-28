@@ -12,7 +12,14 @@
 
 #include "ThreadPool.h"
 #include "nlohmann/json.hpp"
-#include "CURLWrapper.h"
+
+// fuck windows.h
+#ifdef max
+#undef max
+#endif
+#include "httplib.h"
+
+
 #include "defs/defs.hpp"
 #include "events/events.hpp"
 #include "exported.h"
@@ -40,14 +47,8 @@ namespace Cyan
 	class EXPORTED MiraiBot
 	{
 	public:
-		MiraiBot() :pool_(4), qq_(0) {}
-		MiraiBot(const string& host, int port) : pool_(4), qq_(0)
-		{
-			stringstream ss;
-			ss << "http://" << host << ":" << port;
-			api_url_prefix_ = ss.str();
-		}
-		MiraiBot(const string& url_prefix) :api_url_prefix_(url_prefix), pool_(4), qq_(0) {}
+		MiraiBot() :qq_(0), pool_(4), http_client_("localhost", 8080) {}
+		MiraiBot(const string& host, int port) : qq_(0), pool_(4), http_client_(host, port) {}
 		~MiraiBot()
 		{
 			Release();
@@ -56,9 +57,10 @@ namespace Cyan
 		{
 			return sessionKey_;
 		}
-		string GetApiUrlPrefix() const
+
+		httplib::Client* GetHttpClient()
 		{
-			return api_url_prefix_;
+			return &(this->http_client_);
 		}
 
 		bool Auth(const string& authKey, QQ_t qq);
@@ -110,10 +112,9 @@ namespace Cyan
 		void EventLoop();
 
 	private:
-		bool SessionVerify() const;
-		bool SessionRelease() const;
+		bool SessionVerify();
+		bool SessionRelease();
 		unsigned int FetchMessagesAndEvents(unsigned int count = 10);
-
 		template<typename T>
 		inline WeakEvent MakeWeakEvent(const json& json_)
 		{
@@ -122,7 +123,6 @@ namespace Cyan
 			e->Set(json_);
 			return std::dynamic_pointer_cast<Serializable>(e);
 		}
-
 		WeakEvent CreateEvent(MiraiEvent mirai_event, const json& json_);
 		bool Release() noexcept
 		{
@@ -136,10 +136,23 @@ namespace Cyan
 			}
 
 		}
+		
+		inline vector<char> ReadFile(const string& filename)
+		{
+			std::ifstream ifs(filename, std::ifstream::binary);
+			std::filebuf* pbuf = ifs.rdbuf();
+			std::size_t size = pbuf->pubseekoff(0, ifs.end, ifs.in);
+			pbuf->pubseekpos(0, ifs.in);
+			vector<char> result(size, 0);
+			pbuf->sgetn(&result[0], size);
+			ifs.close();
+			return result;
+		}
+
 		string authKey_;
 		QQ_t qq_;
 		string sessionKey_;
-		string api_url_prefix_ = "http://127.0.0.1:8080";
+		httplib::Client http_client_;
 		unordered_map<MiraiEvent, function<void(WeakEvent)> > processors_;
 		ThreadPool pool_;
 	};

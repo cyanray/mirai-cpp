@@ -4,57 +4,51 @@ namespace Cyan
 {
 	bool MiraiBot::Auth(const string& authKey, QQ_t qq)
 	{
-		static const string api_url = api_url_prefix_ + "/auth";
-
-		json j;
-		j["authKey"] = authKey;
-		string pData = j.dump();
-		HTTP http; http.SetContentType("application/json;charset=UTF-8");
-		auto res = http.Post(api_url, pData);
-		if (res.Ready)
+		json data =
 		{
-			if (res.StatusCode != 200)
-				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+			{ "authKey", authKey }
+		};
+
+		auto res = http_client_.Post("/auth", data.dump(), "application/json;charset=UTF-8");
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
 			json reJson;
-			reJson = reJson.parse(res.Content);
+			reJson = reJson.parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 			{
 				this->sessionKey_ = reJson["session"].get<string>();
 				this->authKey_ = authKey;
 				this->qq_ = qq;
-				// 启动消息循环
-				//std::async(std::launch::async, [&]() { EventLoop(); });
 				return SessionVerify();
 			}
 			else
 				throw runtime_error("Auth Key 不正确");
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
+			throw std::runtime_error("网络错误");
 	}
 
 
 	MessageId MiraiBot::SendMessage(QQ_t target, const MessageChain& messageChain, MessageId msgId)
 	{
-		static const string api_url = api_url_prefix_ + "/sendFriendMessage";
-
-		json j;
-		j["sessionKey"] = sessionKey_;
-		j["target"] = int64_t(target);
-		j["messageChain"] = messageChain.ToJson();
-		if (msgId != 0) j["quote"] = msgId;
-
-		string pData = j.dump();
-		HTTP http; http.SetContentType("application/json;charset=UTF-8");
-		auto res = http.Post(api_url, pData);
-		if (res.Ready)
+		json data =
 		{
-			if (res.StatusCode != 200)
-				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+			{ "sessionKey", sessionKey_ },
+			{"target",int64_t(target)}
+		};
+		data["messageChain"] = messageChain.ToJson();
+		if (msgId != 0) data["quote"] = msgId;
 
+		auto res = http_client_.Post("/sendFriendMessage", data.dump(), "application/json;charset=UTF-8");
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
 			json reJson;
-			reJson = reJson.parse(res.Content);
+			reJson = reJson.parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 			{
@@ -66,29 +60,30 @@ namespace Cyan
 				string msg = reJson["msg"].get<string>();
 				throw runtime_error(msg);
 			}
+
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
+			throw std::runtime_error("网络错误");
 	}
 
 
 	MessageId MiraiBot::SendMessage(GID_t target, const MessageChain& messageChain, MessageId msgId)
 	{
-		static const string api_url = api_url_prefix_ + "/sendGroupMessage";
-		json j;
-		j["sessionKey"] = sessionKey_;
-		j["target"] = int64_t(target);
-		j["messageChain"] = messageChain.ToJson();
-		if (msgId != 0) j["quote"] = msgId;
-		string pData = j.dump();
-		HTTP http; http.SetContentType("application/json;charset=UTF-8");
-		auto res = http.Post(api_url, pData);
-		if (res.Ready)
+		json data =
 		{
-			if (res.StatusCode != 200)
-				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+			{ "sessionKey", sessionKey_ },
+			{"target",int64_t(target)}
+		};
+		data["messageChain"] = messageChain.ToJson();
+		if (msgId != 0) data["quote"] = msgId;
+
+		auto res = http_client_.Post("/sendGroupMessage", data.dump(), "application/json;charset=UTF-8");
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
 			json reJson;
-			reJson = reJson.parse(res.Content);
+			reJson = reJson.parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 			{
@@ -100,30 +95,31 @@ namespace Cyan
 				string msg = reJson["msg"].get<string>();
 				throw runtime_error(msg);
 			}
+
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
+			throw std::runtime_error("网络错误");
 	}
 
 
 	MessageId MiraiBot::SendMessage(GID_t gid, QQ_t qq, const MessageChain& messageChain, MessageId msgId)
 	{
-		static const string api_url = api_url_prefix_ + "/sendTempMessage";
-		json j;
-		j["sessionKey"] = sessionKey_;
-		j["qq"] = int64_t(qq);
-		j["group"] = int64_t(gid);
-		j["messageChain"] = messageChain.ToJson();
-		if (msgId != 0) j["quote"] = msgId;
-		string pData = j.dump();
-		HTTP http; http.SetContentType("application/json;charset=UTF-8");
-		auto res = http.Post(api_url, pData);
-		if (res.Ready)
+		json data =
 		{
-			if (res.StatusCode != 200)
-				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+			{ "sessionKey", sessionKey_ },
+			{"group",int64_t(gid)},
+			{"qq",int64_t(qq)}
+		};
+		data["messageChain"] = messageChain.ToJson();
+		if (msgId != 0) data["quote"] = msgId;
+
+		auto res = http_client_.Post("/sendTempMessage", data.dump(), "application/json;charset=UTF-8");
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
 			json reJson;
-			reJson = reJson.parse(res.Content);
+			reJson = reJson.parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 			{
@@ -135,149 +131,148 @@ namespace Cyan
 				string msg = reJson["msg"].get<string>();
 				throw runtime_error(msg);
 			}
+
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
+			throw std::runtime_error("网络错误");
 	}
 
 
 	FriendImage MiraiBot::UploadFriendImage(const string& fileName)
 	{
-		static const string api_url = api_url_prefix_ + "/uploadImage";
-
-		HTTP http; http.SetContentType("multipart/form-data");
-		http.AddPostData("sessionKey", sessionKey_);
-		http.AddPostData("type", "friend");
-		http.AddFile("img", fileName);
-		auto res = http.Post(api_url);
-		FriendImage fImg;
-
-		if (res.Ready)
+		srand(time(0));
+		vector<char> img_data = ReadFile(fileName);
+		httplib::MultipartFormDataItems items =
 		{
-			if (res.StatusCode != 200)
-				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+		  { "sessionKey", sessionKey_, "", "" },
+		  { "type", "friend", "", "" },
+		  { "img", img_data.data(), std::to_string( rand() ), "text/plain" }
+		};
+
+		auto res = http_client_.Post("/uploadImage", items);
+		FriendImage fImg;
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res->body);
 			json reJson;
-			reJson = reJson.parse(res.Content);
+			reJson = reJson.parse(res->body);
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
 			fImg.ID = reJson["imageId"].get<string>();
 			fImg.Url = reJson["url"].get<string>();
 			fImg.Path = reJson["path"].get<string>();
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
+			throw runtime_error("网络错误");
 		return fImg;
 	}
 
 
 	GroupImage MiraiBot::UploadGroupImage(const string& fileName)
 	{
-		static const string api_url = api_url_prefix_ + "/uploadImage";
-
-		HTTP http; http.SetContentType("multipart/form-data");
-		http.AddPostData("sessionKey", sessionKey_);
-		http.AddPostData("type", "group");
-		http.AddFile("img", fileName);
-		auto res = http.Post(api_url);
-		GroupImage gImg;
-
-		if (res.Ready)
+		srand(time(0));
+		vector<char> img_data = ReadFile(fileName);
+		httplib::MultipartFormDataItems items =
 		{
-			if (res.StatusCode != 200)
-				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+		  { "sessionKey", sessionKey_, "", "" },
+		  { "type", "group", "", "" },
+		  { "img", img_data.data(), std::to_string(rand()), "text/plain" }
+		};
+
+		auto res = http_client_.Post("/uploadImage", items);
+		GroupImage gImg;
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res->body);
 			json reJson;
-			reJson = reJson.parse(res.Content);
+			reJson = reJson.parse(res->body);
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
 			gImg.ID = reJson["imageId"].get<string>();
 			gImg.Url = reJson["url"].get<string>();
 			gImg.Path = reJson["path"].get<string>();
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
+			throw runtime_error("网络错误");
 		return gImg;
 	}
 
 
 	TempImage MiraiBot::UploadTempImage(const string& fileName)
 	{
-		static const string api_url = api_url_prefix_ + "/uploadImage";
-
-		HTTP http; http.SetContentType("multipart/form-data");
-		http.AddPostData("sessionKey", sessionKey_);
-		http.AddPostData("type", "temp");
-		http.AddFile("img", fileName);
-		auto res = http.Post(api_url);
-		TempImage tImg;
-
-		if (res.Ready)
+		srand(time(0));
+		vector<char> img_data = ReadFile(fileName);
+		httplib::MultipartFormDataItems items =
 		{
-			if (res.StatusCode != 200)
-				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+		  { "sessionKey", sessionKey_, "", "" },
+		  { "type", "temp", "", "" },
+		  { "img", img_data.data(), std::to_string(rand()), "text/plain" }
+		};
+
+		auto res = http_client_.Post("/uploadImage", items);
+		TempImage tImg;
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res->body);
 			json reJson;
-			reJson = reJson.parse(res.Content);
+			reJson = reJson.parse(res->body);
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
 			tImg.ID = reJson["imageId"].get<string>();
 			tImg.Url = reJson["url"].get<string>();
 			tImg.Path = reJson["path"].get<string>();
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
+			throw runtime_error("网络错误");
 		return tImg;
 	}
 
 
 	vector<Friend_t> MiraiBot::GetFriendList()
 	{
-		static const string api_url = api_url_prefix_ + "/friendList?sessionKey=" + sessionKey_;
-		vector<Friend_t> result;
-
-		HTTP http;
-		auto res = http.Get(api_url);
-
-		if (res.Ready)
+		auto res = http_client_.Get(("/friendList?sessionKey=" + sessionKey_).data());
+		if (res)
 		{
-			if (res.StatusCode != 200)
-				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
+			vector<Friend_t> result;
 			json reJson;
-			reJson = reJson.parse(res.Content);
+			reJson = reJson.parse(res->body);
 			if (!reJson.is_array()) throw runtime_error("解析返回 JSON 时出错");
 			for (const auto& ele : reJson)
 			{
 				Friend_t f;
 				f.Set(ele);
-				result.push_back(f);
+				result.emplace_back(f);
 			}
+			return result;
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
-		return result;
-
+			throw std::runtime_error("网络错误");
 	}
 
 
 	vector<Group_t> MiraiBot::GetGroupList()
 	{
-		static const string api_url = api_url_prefix_ + "/groupList?sessionKey=" + sessionKey_;
-		vector<Group_t> result;
-
-		HTTP http;
-		auto res = http.Get(api_url);
-		if (res.Ready)
+		auto res = http_client_.Get(("/groupList?sessionKey=" + sessionKey_).data());
+		if (res)
 		{
-			if (res.StatusCode != 200)
-				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
+			vector<Group_t> result;
 			json reJson;
-			reJson = reJson.parse(res.Content);
+			reJson = reJson.parse(res->body);
 			if (!reJson.is_array()) throw runtime_error("解析返回 JSON 时出错");
 			for (const auto& ele : reJson)
 			{
 				Group_t f;
 				f.Set(ele);
-				result.push_back(f);
+				result.emplace_back(f);
 			}
+			return result;
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
-		return result;
+			throw std::runtime_error("网络错误");
 	}
 
 
@@ -285,22 +280,19 @@ namespace Cyan
 	{
 		stringstream api_url;
 		api_url
-			<< api_url_prefix_
 			<< "/memberList?sessionKey="
 			<< sessionKey_
 			<< "&target="
 			<< target;
-
-		vector<GroupMember_t> result;
-
-		HTTP http;
-		auto res = http.Get(api_url.str());
-		if (res.Ready)
+		auto res = http_client_.Get(api_url.str().data());
+		if (res)
 		{
-			if (res.StatusCode != 200)
-				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
+			vector<GroupMember_t> result;
+
 			json reJson;
-			reJson = reJson.parse(res.Content);
+			reJson = reJson.parse(res->body);
 			if (!reJson.is_array()) throw runtime_error("解析返回 JSON 时出错");
 			for (const auto& ele : reJson)
 			{
@@ -308,30 +300,28 @@ namespace Cyan
 				f.Set(ele);
 				result.push_back(f);
 			}
+			return result;
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
-		return result;
-
+			throw std::runtime_error("网络错误");
 	}
 
 
 	bool MiraiBot::MuteAll(GID_t target)
 	{
-		static const string api_url = api_url_prefix_ + "/muteAll";
-		json j;
-		j["sessionKey"] = sessionKey_;
-		j["target"] = int64_t(target);
-
-		string pData = j.dump();
-		HTTP http; http.SetContentType("application/json;charset=UTF-8");
-		auto res = http.Post(api_url, pData);
-		if (res.Ready)
+		json data =
 		{
-			if (res.StatusCode != 200)
-				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+			{ "sessionKey", sessionKey_ },
+			{ "target", int64_t(target)}
+		};
+
+		auto res = http_client_.Post("/muteAll", data.dump(), "application/json;charset=UTF-8");
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
 			json reJson;
-			reJson = reJson.parse(res.Content);
+			reJson = reJson.parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 				return true;
@@ -340,29 +330,29 @@ namespace Cyan
 				string msg = reJson["msg"].get<string>();
 				throw runtime_error(msg);
 			}
+
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
+			throw std::runtime_error("网络错误");
 		return false;
 	}
 
 
 	bool MiraiBot::UnMuteAll(GID_t target)
 	{
-		static const string api_url = api_url_prefix_ + "/unmuteAll";
-		json j;
-		j["sessionKey"] = sessionKey_;
-		j["target"] = int64_t(target);
-
-		string pData = j.dump();
-		HTTP http; http.SetContentType("application/json;charset=UTF-8");
-		auto res = http.Post(api_url, pData);
-		if (res.Ready)
+		json data =
 		{
-			if (res.StatusCode != 200)
-				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+			{ "sessionKey", sessionKey_ },
+			{ "target", int64_t(target)}
+		};
+
+		auto res = http_client_.Post("/unmuteAll", data.dump(), "application/json;charset=UTF-8");
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
 			json reJson;
-			reJson = reJson.parse(res.Content);
+			reJson = reJson.parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 				return true;
@@ -371,32 +361,31 @@ namespace Cyan
 				string msg = reJson["msg"].get<string>();
 				throw runtime_error(msg);
 			}
+
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
+			throw std::runtime_error("网络错误");
 		return false;
-
 	}
 
 
 	bool MiraiBot::Mute(GID_t GID, QQ_t memberID, unsigned int time_seconds)
 	{
-		static const string api_url = api_url_prefix_ + "/mute";
-		json j;
-		j["sessionKey"] = sessionKey_;
-		j["target"] = int64_t(GID);
-		j["memberId"] = int64_t(memberID);
-		j["time"] = time_seconds;
-
-		string pData = j.dump();
-		HTTP http; http.SetContentType("application/json;charset=UTF-8");
-		auto res = http.Post(api_url, pData);
-		if (res.Ready)
+		json data =
 		{
-			if (res.StatusCode != 200)
-				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+			{ "sessionKey", sessionKey_ },
+			{ "target", int64_t(GID)},
+			{ "memberId", int64_t(memberID)},
+			{ "time", time_seconds}
+		};
+
+		auto res = http_client_.Post("/mute", data.dump(), "application/json;charset=UTF-8");
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
 			json reJson;
-			reJson = reJson.parse(res.Content);
+			reJson = reJson.parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 				return true;
@@ -405,31 +394,30 @@ namespace Cyan
 				string msg = reJson["msg"].get<string>();
 				throw runtime_error(msg);
 			}
+
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
+			throw std::runtime_error("网络错误");
 		return false;
-
 	}
 
 
 	bool MiraiBot::UnMute(GID_t GID, QQ_t memberID)
 	{
-		static const string api_url = api_url_prefix_ + "/unmute";
-		json j;
-		j["sessionKey"] = sessionKey_;
-		j["target"] = int64_t(GID);
-		j["memberId"] = int64_t(memberID);
-
-		string pData = j.dump();
-		HTTP http; http.SetContentType("application/json;charset=UTF-8");
-		auto res = http.Post(api_url, pData);
-		if (res.Ready)
+		json data =
 		{
-			if (res.StatusCode != 200)
-				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+			{ "sessionKey", sessionKey_ },
+			{ "target", int64_t(GID)},
+			{ "memberId", int64_t(memberID)}
+		};
+
+		auto res = http_client_.Post("/unmute", data.dump(), "application/json;charset=UTF-8");
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
 			json reJson;
-			reJson = reJson.parse(res.Content);
+			reJson = reJson.parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 				return true;
@@ -438,32 +426,31 @@ namespace Cyan
 				string msg = reJson["msg"].get<string>();
 				throw runtime_error(msg);
 			}
+
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
+			throw std::runtime_error("网络错误");
 		return false;
-
 	}
 
 
 	bool MiraiBot::Kick(GID_t GID, QQ_t memberID, const string& msg)
 	{
-		static const string api_url = api_url_prefix_ + "/kick";
-		json j;
-		j["sessionKey"] = sessionKey_;
-		j["target"] = int64_t(GID);
-		j["memberId"] = int64_t(memberID);
-		j["msg"] = msg;
-
-		string pData = j.dump();
-		HTTP http; http.SetContentType("application/json;charset=UTF-8");
-		auto res = http.Post(api_url, pData);
-		if (res.Ready)
+		json data =
 		{
-			if (res.StatusCode != 200)
-				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+			{ "sessionKey", sessionKey_ },
+			{ "target", int64_t(GID)},
+			{ "memberId", int64_t(memberID)},
+			{ "msg" , msg}
+		};
+
+		auto res = http_client_.Post("/kick", data.dump(), "application/json;charset=UTF-8");
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
 			json reJson;
-			reJson = reJson.parse(res.Content);
+			reJson = reJson.parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 				return true;
@@ -472,29 +459,29 @@ namespace Cyan
 				string msg = reJson["msg"].get<string>();
 				throw runtime_error(msg);
 			}
+
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
+			throw std::runtime_error("网络错误");
 		return false;
 	}
 
 
 	bool MiraiBot::Recall(MessageId mid)
 	{
-		static const string api_url = api_url_prefix_ + "/recall";
-		json j;
-		j["sessionKey"] = sessionKey_;
-		j["target"] = int64_t(mid);
-
-		string pData = j.dump();
-		HTTP http; http.SetContentType("application/json;charset=UTF-8");
-		auto res = http.Post(api_url, pData);
-		if (res.Ready)
+		json data =
 		{
-			if (res.StatusCode != 200)
-				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+			{ "sessionKey", sessionKey_ },
+			{ "target", int64_t(mid)}
+		};
+
+		auto res = http_client_.Post("/recall", data.dump(), "application/json;charset=UTF-8");
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
 			json reJson;
-			reJson = reJson.parse(res.Content);
+			reJson = reJson.parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 				return true;
@@ -503,11 +490,11 @@ namespace Cyan
 				string msg = reJson["msg"].get<string>();
 				throw runtime_error(msg);
 			}
+
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
+			throw std::runtime_error("网络错误");
 		return false;
-
 	}
 
 
@@ -515,20 +502,18 @@ namespace Cyan
 	{
 		stringstream api_url;
 		api_url
-			<< api_url_prefix_
 			<< "/messageFromId?sessionKey="
 			<< sessionKey_
 			<< "&id="
 			<< mid;
 		FriendMessage result;
-		HTTP http;
-		auto res = http.Get(api_url.str());
-		if (res.Ready)
+		auto res = http_client_.Get(api_url.str().data());
+		if (res)
 		{
-			if (res.StatusCode != 200)
-				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res->body);
 			json reJson;
-			reJson = reJson.parse(res.Content);
+			reJson = reJson.parse(res->body);
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
 			int code = reJson["code"].get<int>();
 			if (code == 0)
@@ -541,7 +526,7 @@ namespace Cyan
 			return result;
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
+			throw runtime_error("网络错误");
 	}
 
 
@@ -549,20 +534,18 @@ namespace Cyan
 	{
 		stringstream api_url;
 		api_url
-			<< api_url_prefix_
 			<< "/messageFromId?sessionKey="
 			<< sessionKey_
 			<< "&id="
 			<< mid;
 		GroupMessage result;
-		HTTP http;
-		auto res = http.Get(api_url.str());
-		if (res.Ready)
+		auto res = http_client_.Get(api_url.str().data());
+		if (res)
 		{
-			if (res.StatusCode != 200)
-				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res->body);
 			json reJson;
-			reJson = reJson.parse(res.Content);
+			reJson = reJson.parse(res->body);
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
 			int code = reJson["code"].get<int>();
 			if (code == 0)
@@ -575,7 +558,7 @@ namespace Cyan
 			return result;
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
+			throw runtime_error("网络错误");
 	}
 
 
@@ -604,22 +587,21 @@ namespace Cyan
 	}
 
 
-	bool MiraiBot::SessionVerify() const
+	bool MiraiBot::SessionVerify()
 	{
-		static const string api_url = api_url_prefix_ + "/verify";
-		json j;
-		j["sessionKey"] = sessionKey_;
-		j["qq"] = int64_t(qq_);
-
-		string pData = j.dump();
-		HTTP http; http.SetContentType("application/json;charset=UTF-8");
-		auto res = http.Post(api_url, pData);
-		if (res.Ready)
+		json data =
 		{
-			if (res.StatusCode != 200)
-				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+			{ "sessionKey", sessionKey_ },
+			{ "qq", int64_t(qq_)}
+		};
+
+		auto res = http_client_.Post("/verify", data.dump(), "application/json;charset=UTF-8");
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
 			json reJson;
-			reJson = reJson.parse(res.Content);
+			reJson = reJson.parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 				return true;
@@ -628,29 +610,29 @@ namespace Cyan
 				string msg = reJson["msg"].get<string>();
 				throw runtime_error(msg);
 			}
+
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
+			throw std::runtime_error("网络错误");
 		return false;
 	}
 
 
-	bool MiraiBot::SessionRelease() const
+	bool MiraiBot::SessionRelease()
 	{
-		static const string api_url = api_url_prefix_ + "/release";
-		json j;
-		j["sessionKey"] = sessionKey_;
-		j["qq"] = int64_t(qq_);
-
-		string pData = j.dump();
-		HTTP http; http.SetContentType("application/json;charset=UTF-8");
-		auto res = http.Post(api_url, pData);
-		if (res.Ready)
+		json data =
 		{
-			if (res.StatusCode != 200)
-				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+			{ "sessionKey", sessionKey_ },
+			{ "qq", int64_t(qq_)}
+		};
+
+		auto res = http_client_.Post("/release", data.dump(), "application/json;charset=UTF-8");
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
 			json reJson;
-			reJson = reJson.parse(res.Content);
+			reJson = reJson.parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 				return true;
@@ -659,33 +641,32 @@ namespace Cyan
 				string msg = reJson["msg"].get<string>();
 				throw runtime_error(msg);
 			}
+
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
+			throw std::runtime_error("网络错误");
 		return false;
 	}
 
 
 	unsigned int MiraiBot::FetchMessagesAndEvents(unsigned int count)
 	{
+		int received_count = 0;
 		stringstream api_url;
 		api_url
-			<< api_url_prefix_
 			<< "/fetchMessage?sessionKey="
 			<< sessionKey_
 			<< "&count="
 			<< count;
-
-		int received_count = 0;
-
-		HTTP http; http.SetTimeout(5);
-		auto res = http.Get(api_url.str());
-		if (res.Ready)
+		http_client_.set_timeout_sec(10);
+		auto res = http_client_.Get(api_url.str().data());
+		if (res)
 		{
-			if (res.StatusCode != 200)
-				throw std::runtime_error("[mirai-http-api error]: " + res.Content);
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
+
 			json reJson;
-			reJson = reJson.parse(res.Content);
+			reJson = reJson.parse(res->body);
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
 			int code = reJson["code"].get<int>();
 			if (code != 0)
@@ -717,10 +698,13 @@ namespace Cyan
 				}
 				received_count++;
 			}
+
+
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
+			throw std::runtime_error("网络错误");
 		return received_count;
+
 	}
 
 

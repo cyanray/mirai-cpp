@@ -1,5 +1,6 @@
 #include "mirai_bot.hpp"
 #include "events/events.hpp"
+#include "httplib.h"
 
 namespace Cyan
 {
@@ -41,51 +42,52 @@ namespace Cyan
 
 	bool NewFriendRequestEvent::Respose(int operate, const string& message)
 	{
-		static const string api_url = bot_->GetApiUrlPrefix() + "/resp/newFriendRequestEvent";
-
-		json j;
-		j["sessionKey"] = bot_->GetSessionKey();
-		j["eventId"] = this->EventId;
-		j["fromId"] = (int64_t)this->FromId;
-		j["groupId"] = (int64_t)this->GroupId;
-		j["operate"] = operate;
-		j["message"] = message;
-
-		string pData = j.dump();
-		HTTP http; http.SetContentType("application/json;charset=UTF-8");
-		auto res = http.Post(api_url, pData);
-
-		if (res.Ready)
+		json data =
 		{
+			{ "sessionKey",  bot_->GetSessionKey() },
+			{ "eventId", this->EventId},
+			{ "fromId",  (int64_t)this->FromId},
+			{ "groupId", (int64_t)this->GroupId},
+			{ "operate", operate},
+			{ "message", message},
+		};
+
+		httplib::Client& http_client = *(bot_->GetHttpClient());
+		auto res = http_client.Post("/resp/newFriendRequestEvent", data.dump(), "application/json;charset=UTF-8");
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
 			return true;
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
+			throw runtime_error("网络错误");
 
 	}
 
 	bool MemberJoinRequestEvent::Respose(int operate, const string& message)
 	{
-		static const string api_url = bot_->GetApiUrlPrefix() + "/resp/memberJoinRequestEvent";
 
-		json j;
-		j["sessionKey"] = bot_->GetSessionKey();
-		j["eventId"] = this->EventId;
-		j["fromId"] = (int64_t)this->FromId;
-		j["groupId"] = (int64_t)this->GroupId;
-		j["operate"] = operate;
-		j["message"] = message;
-
-		string pData = j.dump();
-		HTTP http; http.SetContentType("application/json;charset=UTF-8");
-		auto res = http.Post(api_url, pData);
-
-		if (res.Ready)
+		json data =
 		{
+			{ "sessionKey",  bot_->GetSessionKey() },
+			{ "eventId", this->EventId},
+			{ "fromId",  (int64_t)this->FromId},
+			{ "groupId", (int64_t)this->GroupId},
+			{ "operate", operate},
+			{ "message", message},
+		};
+
+		httplib::Client& http_client = *(bot_->GetHttpClient());
+		auto res = http_client.Post("/resp/memberJoinRequestEvent", data.dump(), "application/json;charset=UTF-8");
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
 			return true;
 		}
 		else
-			throw runtime_error(res.ErrorMsg);
+			throw runtime_error("网络错误");
 
 	}
 
