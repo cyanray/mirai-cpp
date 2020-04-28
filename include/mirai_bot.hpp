@@ -137,13 +137,14 @@ namespace Cyan
 
 		}
 		
-		inline vector<char> ReadFile(const string& filename)
+		// 因为 httplib 使用 string 来保存文件内容，这里适配一下
+		inline string ReadFile(const string& filename)
 		{
 			std::ifstream ifs(filename, std::ifstream::binary);
 			std::filebuf* pbuf = ifs.rdbuf();
 			std::size_t size = pbuf->pubseekoff(0, ifs.end, ifs.in);
 			pbuf->pubseekpos(0, ifs.in);
-			vector<char> result(size, 0);
+			string result(size, '\0');
 			pbuf->sgetn(&result[0], size);
 			ifs.close();
 			return result;

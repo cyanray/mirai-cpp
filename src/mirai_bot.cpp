@@ -141,12 +141,12 @@ namespace Cyan
 	FriendImage MiraiBot::UploadFriendImage(const string& fileName)
 	{
 		srand(time(0));
-		vector<char> img_data = ReadFile(fileName);
+		string img_data = ReadFile(fileName);
 		httplib::MultipartFormDataItems items =
 		{
 		  { "sessionKey", sessionKey_, "", "" },
 		  { "type", "friend", "", "" },
-		  { "img", img_data.data(), std::to_string( rand() ), "text/plain" }
+		  { "img", img_data,std::to_string(rand()) + ".png", "image/png" }
 		};
 
 		auto res = http_client_.Post("/uploadImage", items);
@@ -171,12 +171,12 @@ namespace Cyan
 	GroupImage MiraiBot::UploadGroupImage(const string& fileName)
 	{
 		srand(time(0));
-		vector<char> img_data = ReadFile(fileName);
+		string img_data = ReadFile(fileName);
 		httplib::MultipartFormDataItems items =
 		{
 		  { "sessionKey", sessionKey_, "", "" },
 		  { "type", "group", "", "" },
-		  { "img", img_data.data(), std::to_string(rand()), "text/plain" }
+		  { "img", img_data, std::to_string(rand()) + ".png", "image/png"  }
 		};
 
 		auto res = http_client_.Post("/uploadImage", items);
@@ -201,12 +201,12 @@ namespace Cyan
 	TempImage MiraiBot::UploadTempImage(const string& fileName)
 	{
 		srand(time(0));
-		vector<char> img_data = ReadFile(fileName);
+		string img_data = ReadFile(fileName);
 		httplib::MultipartFormDataItems items =
 		{
 		  { "sessionKey", sessionKey_, "", "" },
 		  { "type", "temp", "", "" },
-		  { "img", img_data.data(), std::to_string(rand()), "text/plain" }
+		  { "img", img_data, std::to_string(rand()) + ".png", "image/png"  }
 		};
 
 		auto res = http_client_.Post("/uploadImage", items);
