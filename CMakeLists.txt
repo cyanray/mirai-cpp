@@ -9,18 +9,7 @@ if(CMAKE_TOOLCHAIN_FILE)
 endif(CMAKE_TOOLCHAIN_FILE)
 
 find_package(CURL CONFIG REQUIRED)
-find_package(nlohmann_json CONFIG REQUIRED)
-#find_package(boost REQUIRED COMPONENTS asio)
 
-#find_path(BOOST_INCLUDE_DIR boost)
-#include_directories(${BOOST_INCLUDE_DIR})
-
-if (WIN32)
-	set(BOOST_LIBRARIES ${Boost_LIBRARY_DIRS}/boost_system-vc140-mt.lib)
-	if (CMAKE_BUILD_TYPE MATCHES "Debug")
-		set(BOOST_LIBRARIES ${Boost_LIBRARY_DIRS}/../debug/lib/boost_system-vc140-mt-gd.lib)
-	endif()
-endif()
 
 if(MSVC)
     add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
@@ -44,7 +33,10 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
     )
-target_link_libraries(${PROJECT_NAME} nlohmann_json nlohmann_json::nlohmann_json)
+target_include_directories(${PROJECT_NAME} PUBLIC 
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third-party>
+    $<INSTALL_INTERFACE:third-party>
+    )
 target_link_libraries(${PROJECT_NAME} CURL::libcurl)
 #target_link_libraries(${PROJECT_NAME} INTERFACE ${BOOST_LIBRARIES})
 
@@ -79,6 +71,11 @@ if(MIRAI_CPP_INSTALL)
         DESTINATION ${CMAKE_INSTALL_PREFIX}
         )
     
+        install(
+        DIRECTORY third-party
+        DESTINATION ${CMAKE_INSTALL_PREFIX}
+        )
+
     install(
         TARGETS ${PROJECT_NAME}
         EXPORT  ${PROJECT_NAME}Targets
