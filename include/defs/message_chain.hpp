@@ -4,8 +4,11 @@
 
 #include <nlohmann/json.hpp>
 #include <sstream>
+#include <vector>
 #include "qq_types.hpp"
 #include "serializable.hpp"
+
+using std::vector;
 
 namespace Cyan
 {
@@ -196,6 +199,7 @@ namespace Cyan
 			}
 			return string();
 		}
+
 		vector<string> GetPlain() const
 		{
 			vector<string> res;
@@ -208,6 +212,7 @@ namespace Cyan
 			}
 			return res;
 		}
+
 		vector<MiraiImage> GetImage() const
 		{
 			vector<MiraiImage> res;
