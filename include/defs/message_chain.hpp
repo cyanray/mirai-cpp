@@ -172,7 +172,7 @@ namespace Cyan
 			return *this;
 		}
 
-		string GetPlainTextAll() const
+		string GetPlainText() const
 		{
 			using std::stringstream;
 			stringstream ss;
@@ -197,7 +197,7 @@ namespace Cyan
 			return string();
 		}
 
-		vector<MiraiImage> GetImageAll() const
+		vector<MiraiImage> GetImage() const
 		{
 			vector<MiraiImage> res;
 			for (const auto& ele : messages_)
@@ -211,6 +211,21 @@ namespace Cyan
 					img.Url = ele["url"].get<string>();
 					img.ID = ele["imageId"].get<string>();
 					res.emplace_back(img);
+				}
+			}
+			return res;
+		}
+
+		vector<QQ_t> GetAt()
+		{
+			vector<QQ_t> res;
+			for (const auto& ele : messages_)
+			{
+				string type_name = ele["type"].get<string>();
+				if (type_name == "At")
+				{
+					QQ_t qq = (QQ_t)(ele["target"].get<int64_t>());
+					res.emplace_back(qq);
 				}
 			}
 			return res;
