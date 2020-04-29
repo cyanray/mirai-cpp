@@ -242,6 +242,21 @@ namespace Cyan
 			return res;
 		}
 
+		vector<int> GetFace()
+		{
+			vector<int> res;
+			for (const auto& ele : messages_)
+			{
+				string type_name = ele["type"].get<string>();
+				if (type_name == "Face")
+				{
+					int faceId = ele["faceId"].get<int>();
+					res.emplace_back(faceId);
+				}
+			}
+			return res;
+		}
+
 		MessageId GetMessageId() const
 		{
 			return messageId_;
