@@ -26,7 +26,7 @@ namespace Cyan
 		friend MessageChain& operator+(const string& str, MessageChain& mc);
 		template<int N>
 		friend MessageChain& operator+(const char(&str)[N], MessageChain& mc);
-		MessageChain() :messages_(json::array()) {}
+		MessageChain() :messages_(json::array()),messageId_(0),timestamp_(0) {}
 		MessageChain(const MessageChain& mc)
 		{
 			messages_ = mc.messages_;
