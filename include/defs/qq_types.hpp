@@ -83,29 +83,18 @@ namespace Cyan
 		throw std::runtime_error("错误的 GroupPermissionStr");
 	}
 
-	// 发给好友的图片类型
-	struct FriendImage
+	struct MiraiImage
 	{
 		string ID;
 		string Url;
 		string Path;
 	};
 
-	// 发给群组的图片类型
-	struct GroupImage
-	{
-		string ID;
-		string Url;
-		string Path;
-	};
+	typedef MiraiImage FriendImage;
 
-	// 发给临时消息的图片类型
-	struct TempImage
-	{
-		string ID;
-		string Url;
-		string Path;
-	};
+	typedef MiraiImage GroupImage;
+
+	typedef MiraiImage TempImage;
 
 	// 预先声明 MiraiBot 类
 	class EXPORTED MiraiBot;
