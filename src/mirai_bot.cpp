@@ -1,5 +1,5 @@
 #include "mirai_bot.hpp"
-
+#include "magic_enum.hpp"
 namespace Cyan
 {
 	bool MiraiBot::Auth(const string& authKey, QQ_t qq)
@@ -683,18 +683,22 @@ namespace Cyan
 			for (const auto& ele : reJson["data"])
 			{
 				string event_name = ele["type"].get<string>();
-				MiraiEvent mirai_event = MiraiEventStr(event_name);
-				// 寻找能处理事件的 Processor
-				auto pit = processors_.find(mirai_event);
-				if (pit != processors_.end())
+				auto mirai_event = magic_enum::enum_cast<MiraiEvent>(event_name);
+				if (mirai_event.has_value())
 				{
-					auto exector = pit->second;
-					WeakEvent pevent = CreateEvent(mirai_event, ele);
-					pool_.enqueue([=]()
-						{
-							exector(pevent);
-						});
+					// MiraiEvent mirai_event = MiraiEventStr(event_name);
+					// 寻找能处理事件的 Processor
+					auto pit = processors_.find(mirai_event.value());
+					if (pit != processors_.end())
+					{
+						auto exector = pit->second;
+						WeakEvent pevent = CreateEvent(mirai_event.value(), ele);
+						pool_.enqueue([=]()
+							{
+								exector(pevent);
+							});
 
+					}
 				}
 				received_count++;
 			}

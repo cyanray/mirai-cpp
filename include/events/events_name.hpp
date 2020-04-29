@@ -35,78 +35,78 @@ namespace Cyan
 		MemberJoinRequestEvent	// 用户入群申请
 	};
 
-	inline MiraiEvent MiraiEventStr(const string& miraiEvent)
-	{
-		if (miraiEvent == "FriendMessage") return MiraiEvent::FriendMessage;
-		if (miraiEvent == "GroupMessage") return MiraiEvent::GroupMessage;
-		if (miraiEvent == "TempMessage") return MiraiEvent::TempMessage;
-		if (miraiEvent == "NewFriendRequestEvent") return MiraiEvent::NewFriendRequestEvent;
-		if (miraiEvent == "MemberJoinRequestEvent") return MiraiEvent::MemberJoinRequestEvent;
-		if (miraiEvent == "MemberJoinEvent") return MiraiEvent::MemberJoinEvent;
-		if (miraiEvent == "BotMuteEvent") return MiraiEvent::BotMuteEvent;
-		if (miraiEvent == "BotUnmuteEvent") return MiraiEvent::BotUnmuteEvent;
-		if (miraiEvent == "MemberMuteEvent") return MiraiEvent::MemberMuteEvent;
-		if (miraiEvent == "MemberUnmuteEvent") return MiraiEvent::MemberUnmuteEvent;
-		if (miraiEvent == "MemberLeaveEventKick") return MiraiEvent::MemberLeaveEventKick;
-		if (miraiEvent == "MemberLeaveEventQuit") return MiraiEvent::MemberLeaveEventQuit;
-		if (miraiEvent == "GroupRecallEvent") return MiraiEvent::GroupRecallEvent;
-		if (miraiEvent == "FriendRecallEvent") return MiraiEvent::FriendRecallEvent;
-		return MiraiEvent::Default;
-	}
+	//inline MiraiEvent MiraiEventStr(const string& miraiEvent)
+	//{
+	//	if (miraiEvent == "FriendMessage") return MiraiEvent::FriendMessage;
+	//	if (miraiEvent == "GroupMessage") return MiraiEvent::GroupMessage;
+	//	if (miraiEvent == "TempMessage") return MiraiEvent::TempMessage;
+	//	if (miraiEvent == "NewFriendRequestEvent") return MiraiEvent::NewFriendRequestEvent;
+	//	if (miraiEvent == "MemberJoinRequestEvent") return MiraiEvent::MemberJoinRequestEvent;
+	//	if (miraiEvent == "MemberJoinEvent") return MiraiEvent::MemberJoinEvent;
+	//	if (miraiEvent == "BotMuteEvent") return MiraiEvent::BotMuteEvent;
+	//	if (miraiEvent == "BotUnmuteEvent") return MiraiEvent::BotUnmuteEvent;
+	//	if (miraiEvent == "MemberMuteEvent") return MiraiEvent::MemberMuteEvent;
+	//	if (miraiEvent == "MemberUnmuteEvent") return MiraiEvent::MemberUnmuteEvent;
+	//	if (miraiEvent == "MemberLeaveEventKick") return MiraiEvent::MemberLeaveEventKick;
+	//	if (miraiEvent == "MemberLeaveEventQuit") return MiraiEvent::MemberLeaveEventQuit;
+	//	if (miraiEvent == "GroupRecallEvent") return MiraiEvent::GroupRecallEvent;
+	//	if (miraiEvent == "FriendRecallEvent") return MiraiEvent::FriendRecallEvent;
+	//	return MiraiEvent::Default;
+	//}
 
-	inline string MiraiEventStr(MiraiEvent miraiEvent)
-	{
-		string result;
-		switch (miraiEvent)
-		{
-		case Cyan::MiraiEvent::FriendMessage:
-			result = "FriendMessage";
-			break;
-		case Cyan::MiraiEvent::GroupMessage:
-			result = "GroupMessage";
-			break;
-		case Cyan::MiraiEvent::TempMessage:
-			result = "TempMessage";
-			break;
-		case Cyan::MiraiEvent::NewFriendRequestEvent:
-			result = "NewFriendRequestEvent";
-			break;
-		case Cyan::MiraiEvent::MemberJoinRequestEvent:
-			result = "MemberJoinRequestEvent";
-			break;
-		case Cyan::MiraiEvent::MemberJoinEvent:
-			result = "MemberJoinEvent";
-			break;
-		case Cyan::MiraiEvent::BotMuteEvent:
-			result = "BotMuteEvent";
-			break;
-		case Cyan::MiraiEvent::BotUnmuteEvent:
-			result = "BotUnmuteEvent";
-			break;
-		case Cyan::MiraiEvent::MemberMuteEvent:
-			result = "MemberMuteEvent";
-			break;
-		case Cyan::MiraiEvent::MemberUnmuteEvent:
-			result = "MemberUnmuteEvent";
-			break;
-		case Cyan::MiraiEvent::MemberLeaveEventKick:
-			result = "MemberLeaveEventKick";
-			break;
-		case Cyan::MiraiEvent::MemberLeaveEventQuit:
-			result = "MemberLeaveEventQuit";
-			break;
-		case Cyan::MiraiEvent::GroupRecallEvent:
-			result = "GroupRecallEvent";
-			break;
-		case Cyan::MiraiEvent::FriendRecallEvent:
-			result = "FriendRecallEvent";
-			break;
-		default:
-			result = "Default";
-			break;
-		}
-		return result;
-	}
+	//inline string MiraiEventStr(MiraiEvent miraiEvent)
+	//{
+	//	string result;
+	//	switch (miraiEvent)
+	//	{
+	//	case Cyan::MiraiEvent::FriendMessage:
+	//		result = "FriendMessage";
+	//		break;
+	//	case Cyan::MiraiEvent::GroupMessage:
+	//		result = "GroupMessage";
+	//		break;
+	//	case Cyan::MiraiEvent::TempMessage:
+	//		result = "TempMessage";
+	//		break;
+	//	case Cyan::MiraiEvent::NewFriendRequestEvent:
+	//		result = "NewFriendRequestEvent";
+	//		break;
+	//	case Cyan::MiraiEvent::MemberJoinRequestEvent:
+	//		result = "MemberJoinRequestEvent";
+	//		break;
+	//	case Cyan::MiraiEvent::MemberJoinEvent:
+	//		result = "MemberJoinEvent";
+	//		break;
+	//	case Cyan::MiraiEvent::BotMuteEvent:
+	//		result = "BotMuteEvent";
+	//		break;
+	//	case Cyan::MiraiEvent::BotUnmuteEvent:
+	//		result = "BotUnmuteEvent";
+	//		break;
+	//	case Cyan::MiraiEvent::MemberMuteEvent:
+	//		result = "MemberMuteEvent";
+	//		break;
+	//	case Cyan::MiraiEvent::MemberUnmuteEvent:
+	//		result = "MemberUnmuteEvent";
+	//		break;
+	//	case Cyan::MiraiEvent::MemberLeaveEventKick:
+	//		result = "MemberLeaveEventKick";
+	//		break;
+	//	case Cyan::MiraiEvent::MemberLeaveEventQuit:
+	//		result = "MemberLeaveEventQuit";
+	//		break;
+	//	case Cyan::MiraiEvent::GroupRecallEvent:
+	//		result = "GroupRecallEvent";
+	//		break;
+	//	case Cyan::MiraiEvent::FriendRecallEvent:
+	//		result = "FriendRecallEvent";
+	//		break;
+	//	default:
+	//		result = "Default";
+	//		break;
+	//	}
+	//	return result;
+	//}
 
 	template<typename T>
 	inline MiraiEvent GetEventType()
