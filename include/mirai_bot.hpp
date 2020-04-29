@@ -57,7 +57,10 @@ namespace Cyan
 		{
 			return sessionKey_;
 		}
-
+		QQ_t GetBotQQ() const
+		{
+			return qq_;
+		}
 		httplib::Client* GetHttpClient()
 		{
 			return &(this->http_client_);
