@@ -20,7 +20,9 @@
 
 项目文档: [使用说明](doc/使用说明.md)
 
-更加推荐阅读完 examples 后，“按照直觉” 来使用 mirai-cpp。
+对于刚入门的 C++ 用户，推荐使用 [mirai-cpp-template](https://github.com/cyanray/mirai-cpp-template) 这个模板项目来降低使用难度。
+
+因为文档不够全面，推荐阅读各个 examples 。阅读完 examples 后，应该就可以按照“直觉”来使用 mirai-cpp 了。
 
 | 文件名               | 说明                         |
 |----------------------|------------------------------|
@@ -70,6 +72,11 @@
 
 ![vsc 开始调试](./doc/pic/vsc.png)
 
+### 2. 创建自己的机器人项目
+
+推荐使用 [mirai-cpp-template](https://github.com/cyanray/mirai-cpp-template) 这个模板项目来降低使用难度。
+
+未完待续……
 
 ### 3. 其他使用方式
 
