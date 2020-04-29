@@ -121,7 +121,7 @@ namespace Cyan
 			messages_.push_back(j);
 			return *this;
 		}
-		MessageChain& FlashImage(const FriendImage& Image)
+		MessageChain& FlashImage(const MiraiImage& Image)
 		{
 			json j;
 			j["type"] = "FlashImage";
