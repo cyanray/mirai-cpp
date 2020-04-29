@@ -113,23 +113,7 @@ namespace Cyan
 			messages_.push_back(j);
 			return *this;
 		}
-		MessageChain& Image(const FriendImage& Image)
-		{
-			json j;
-			j["type"] = "Image";
-			j["imageId"] = Image.ID;
-			messages_.push_back(j);
-			return *this;
-		}
-		MessageChain& Image(const GroupImage& Image)
-		{
-			json j;
-			j["type"] = "Image";
-			j["imageId"] = Image.ID;
-			messages_.push_back(j);
-			return *this;
-		}
-		MessageChain& Image(const TempImage& Image)
+		MessageChain& Image(const MiraiImage& Image)
 		{
 			json j;
 			j["type"] = "Image";
@@ -138,14 +122,6 @@ namespace Cyan
 			return *this;
 		}
 		MessageChain& FlashImage(const FriendImage& Image)
-		{
-			json j;
-			j["type"] = "FlashImage";
-			j["imageId"] = Image.ID;
-			messages_.push_back(j);
-			return *this;
-		}
-		MessageChain& FlashImage(const GroupImage& Image)
 		{
 			json j;
 			j["type"] = "FlashImage";
