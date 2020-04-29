@@ -196,7 +196,18 @@ namespace Cyan
 			}
 			return string();
 		}
-
+		vector<string> GetPlain() const
+		{
+			vector<string> res;
+			for (const auto& ele : messages_)
+			{
+				if (ele["type"].get<string>() == "Plain")
+				{
+					res.emplace_back(ele["text"].get<string>());
+				}
+			}
+			return res;
+		}
 		vector<MiraiImage> GetImage() const
 		{
 			vector<MiraiImage> res;
