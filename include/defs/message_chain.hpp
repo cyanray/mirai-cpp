@@ -172,7 +172,7 @@ namespace Cyan
 			return *this;
 		}
 
-		string GetPlainText() const
+		string GetPlainTextAll() const
 		{
 			using std::stringstream;
 			stringstream ss;
@@ -195,6 +195,25 @@ namespace Cyan
 				}
 			}
 			return string();
+		}
+
+		vector<MiraiImage> GetImageAll() const
+		{
+			vector<MiraiImage> res;
+			for (const auto& ele : messages_)
+			{
+				string type_name = ele["type"].get<string>();
+				if (type_name == "FlashImage" || type_name == "Image")
+				{
+					MiraiImage img;
+					img.IsFlashImage = (type_name == "FlashImage");
+					img.Path = "";
+					img.Url = ele["url"].get<string>();
+					img.ID = ele["imageId"].get<string>();
+					res.emplace_back(img);
+				}
+			}
+			return res;
 		}
 
 		MessageId GetMessageId() const
