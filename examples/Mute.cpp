@@ -13,7 +13,7 @@ int main()
 	{
 		try
 		{
-			bot.Auth("INITKEY7A3O1a9v", 1589588851qq);
+			bot.Auth("INITKEY7A3O1a9v", 1589588851_qq);
 			break;
 		}
 		catch (const std::exception& ex)
@@ -39,7 +39,7 @@ int main()
 		});
 
 	bool res = false;
-	res = bot.MuteAll(1029259687gid);
+	res = bot.MuteAll(1029259687_gid);
 	if (res)
 	{
 		cout << "全体禁言成功！" << endl;
@@ -51,7 +51,7 @@ int main()
 
 	MiraiBot::SleepSeconds(5);
 
-	res = bot.UnMuteAll(1029259687gid);
+	res = bot.UnMuteAll(1029259687_gid);
 	if (res)
 	{
 		cout << "解除全体禁言成功！" << endl;
@@ -61,7 +61,7 @@ int main()
 		cout << "解除全体禁言失败" << endl;
 	}
 
-	res = bot.Mute(1029259687gid, 211795583qq, 60);
+	res = bot.Mute(1029259687_gid, 211795583_qq, 60);
 	if (res)
 	{
 		cout << "禁言群员成功！" << endl;
@@ -73,7 +73,7 @@ int main()
 
 	MiraiBot::SleepSeconds(5);
 
-	res = bot.UnMute(1029259687gid, 211795583qq);
+	res = bot.UnMute(1029259687_gid, 211795583_qq);
 	if (res)
 	{
 		cout << "解除禁言群员成功！" << endl;

@@ -13,7 +13,7 @@ int main()
 	{
 		try
 		{
-			bot.Auth("INITKEY7A3O1a9v", 1589588851qq);
+			bot.Auth("INITKEY7A3O1a9v", 1589588851_qq);
 			break;
 		}
 		catch (const std::exception& ex)
@@ -24,21 +24,21 @@ int main()
 	}
 	cout << "成功登录 bot。" << endl;
 
-	auto friends = bot.GetFriendList();
-	int i = 1;
-	for (const auto& f : friends)
-	{
-		cout << (i++) << ". " << f.QQ << ", " << f.NickName << ", " << f.Remark << endl;
-	}
-
 	try
 	{
-		bot.EventLoop();
+		auto friends = bot.GetFriendList();
+		int i = 1;
+		for (const auto& f : friends)
+		{
+			cout << (i++) << ". " << f.QQ << ", " << f.NickName << ", " << f.Remark << endl;
+		}
 	}
 	catch (const std::exception& ex)
 	{
-		cout << ex.what() << endl;
+		cerr << ex.what() << endl;
 	}
+
+	bot.EventLoop();
 
 	return 0;
 }

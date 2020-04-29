@@ -13,7 +13,7 @@ int main()
 	{
 		try
 		{
-			bot.Auth("INITKEY7A3O1a9v", 1589588851qq);
+			bot.Auth("INITKEY7A3O1a9v", 1589588851_qq);
 			break;
 		}
 		catch (const std::exception& ex)
@@ -34,6 +34,7 @@ int main()
 				MiraiBot::SleepSeconds(5);
 				bot.Recall(id);
 				MiraiBot::SleepSeconds(2);
+				// TODO: 不要撤回群主的消息，如果是BOT不是群主，撤回了群主的消息，会抛出异常
 				gm.Recall();
 			}
 			catch (const std::exception& ex)
@@ -44,14 +45,6 @@ int main()
 
 
 	bot.EventLoop();
-	try
-	{
-
-	}
-	catch (const std::exception& ex)
-	{
-		cout << ex.what() << endl;
-	}
 
 	return 0;
 }

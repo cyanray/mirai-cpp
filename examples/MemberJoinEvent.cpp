@@ -13,7 +13,7 @@ int main()
 	{
 		try
 		{
-			bot.Auth("INITKEY7A3O1a9v", 1589588851qq);
+			bot.Auth("INITKEY7A3O1a9v", 1589588851_qq);
 			break;
 		}
 		catch (const std::exception& ex)
@@ -24,7 +24,7 @@ int main()
 	}
 	cout << "成功登录 bot。" << endl;
 
-	bot.OnEventReceived<MemberJoinRequestEvent>(
+	bot.On<MemberJoinRequestEvent>(
 		[&](MemberJoinRequestEvent newMember)
 		{
 			cout << newMember.Message << endl;
@@ -36,20 +36,14 @@ int main()
 		{
 			string memberName = e.NewMember.MemberName;
 			cout << memberName << endl;
-			bot.SendMessage(e.NewMember.Group.GID, 
+			bot.SendMessage(e.NewMember.Group.GID,
 				MessageChain().Plain("欢迎 " + memberName + " 加入本群!"));
 		});
 
 
 
-	try
-	{
-		bot.EventLoop();
-	}
-	catch (const std::exception& ex)
-	{
-		cout << ex.what() << endl;
-	}
+
+	bot.EventLoop();
 
 	return 0;
 }

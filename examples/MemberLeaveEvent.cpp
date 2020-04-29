@@ -13,7 +13,7 @@ int main()
 	{
 		try
 		{
-			bot.Auth("INITKEY7A3O1a9v", 1589588851qq);
+			bot.Auth("INITKEY7A3O1a9v", 1589588851_qq);
 			break;
 		}
 		catch (const std::exception& ex)
@@ -24,14 +24,14 @@ int main()
 	}
 	cout << "成功登录 bot。" << endl;
 
-	bot.OnEventReceived<MemberLeaveEventKick>(
+	bot.On<MemberLeaveEventKick>(
 		[&](MemberLeaveEventKick e)
 		{
 			auto mc = MessageChain().Plain("恭喜老哥 " + e.Member.MemberName + " 喜提飞机票!");
 			bot.SendMessage(e.Member.Group.GID, mc);
 		});
 
-	bot.OnEventReceived<MemberLeaveEventQuit>(
+	bot.On<MemberLeaveEventQuit>(
 		[&](MemberLeaveEventQuit e)
 		{
 			auto mc = MessageChain().Plain("老哥 " + e.Member.MemberName + " 主动离开了群聊!");
@@ -41,14 +41,9 @@ int main()
 
 
 
-	try
-	{
-		bot.EventLoop();
-	}
-	catch (const std::exception& ex)
-	{
-		cout << ex.what() << endl;
-	}
+
+	bot.EventLoop();
+
 
 	return 0;
 }

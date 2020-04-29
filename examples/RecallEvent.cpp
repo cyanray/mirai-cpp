@@ -13,7 +13,7 @@ int main()
 	{
 		try
 		{
-			bot.Auth("INITKEY7A3O1a9v", 1589588851qq);
+			bot.Auth("INITKEY7A3O1a9v", 1589588851_qq);
 			break;
 		}
 		catch (const std::exception& ex)
@@ -55,14 +55,6 @@ int main()
 
 
 	bot.EventLoop();
-	try
-	{
-
-	}
-	catch (const std::exception& ex)
-	{
-		cout << ex.what() << endl;
-	}
 
 	return 0;
 }

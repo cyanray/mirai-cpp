@@ -13,7 +13,7 @@ int main()
 	{
 		try
 		{
-			bot.Auth("INITKEY7A3O1a9v", 1589588851qq);
+			bot.Auth("INITKEY7A3O1a9v", 1589588851_qq);
 			break;
 		}
 		catch (const std::exception& ex)
@@ -35,7 +35,7 @@ int main()
 			{
 				fm.Reply(MessageChain().Image(img));
 			}
-			catch (const std::exception & ex)
+			catch (const std::exception& ex)
 			{
 				cout << ex.what() << endl;
 			}
@@ -67,14 +67,8 @@ int main()
 			}
 		});
 
-	try
-	{
-		bot.EventLoop();
-	}
-	catch (const std::exception & ex)
-	{
-		cout << ex.what() << endl;
-	}
+	bot.EventLoop();
+
 
 	return 0;
 }
