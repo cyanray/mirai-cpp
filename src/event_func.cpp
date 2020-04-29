@@ -1,6 +1,7 @@
 #include "mirai_bot.hpp"
 #include "events/events.hpp"
 #include "httplib.h"
+#include <algorithm>
 
 namespace Cyan
 {
@@ -38,6 +39,14 @@ namespace Cyan
 	bool GroupMessage::Recall()
 	{
 		return bot_->Recall(GetMessageId());
+	}
+
+	bool GroupMessage::AtMe()
+	{
+		auto at = MessageChain.GetAt();
+		auto it = std::find(at.begin(), at.end(), bot_->GetBotQQ());
+		if (it != at.end()) return true;
+		else return false;
 	}
 
 	bool NewFriendRequestEvent::Respose(int operate, const string& message)

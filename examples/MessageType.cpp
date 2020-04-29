@@ -51,6 +51,13 @@ int main()
 				gm.QuoteReply(MessageChain().Face(14));
 			}
 
+			// 如果有人At我，就问候对方
+			if (gm.AtMe())
+			{
+				gm.QuoteReply(MessageChain().Face(14));
+			}
+
+
 		});
 
 	bot.EventLoop();

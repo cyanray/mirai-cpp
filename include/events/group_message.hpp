@@ -51,6 +51,7 @@ namespace Cyan
 		MessageId Reply(const Cyan::MessageChain& mc) const;
 		MessageId QuoteReply(const Cyan::MessageChain& mc) const;
 		bool Recall();
+		bool AtMe();
 
 		virtual ~GroupMessage() = default;
 		virtual bool Set(const json& j) override
