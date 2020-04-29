@@ -112,7 +112,7 @@ namespace Cyan
 			std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 		}
 
-		void EventLoop();
+		void EventLoop(function<void(const char*)> errLogger = nullptr);
 
 	private:
 		bool SessionVerify();

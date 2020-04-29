@@ -562,7 +562,7 @@ namespace Cyan
 	}
 
 
-	void MiraiBot::EventLoop()
+	void MiraiBot::EventLoop(function<void(const char*)> errLogger)
 	{
 		const unsigned count_per_loop = 20;
 		const unsigned time_interval = 100;
@@ -575,7 +575,14 @@ namespace Cyan
 			}
 			catch (const std::exception& ex)
 			{
-				std::cerr << ex.what() << std::endl;
+				if (errLogger == nullptr)
+				{
+					std::cerr << ex.what() << std::endl;
+				}
+				else
+				{
+					errLogger(ex.what());
+				}
 			}
 
 			if (count < count_per_loop)

@@ -42,7 +42,15 @@ int main()
 			tm.Reply(tm.MessageChain);
 		});
 
-	bot.EventLoop();
+
+	// 记录轮询事件时的错误
+	bot.EventLoop([](const char* errMsg) 
+		{
+			cout << "轮询事件时出错: " << errMsg << endl;
+		});
+
+	// 默认参数是在 cerr 输出错误
+	// bot.EventLoop();
 
 	return 0;
 }
