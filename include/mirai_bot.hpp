@@ -54,7 +54,7 @@ namespace Cyan
 			host_("localhost"),
 			port_(8080),
 			cacheSize_(4096), 
-			ws_enabled_(false) {}
+			ws_enabled_(true) {}
 		MiraiBot(const string& host, int port) :
 			qq_(0),
 			pool_(4),
@@ -62,7 +62,7 @@ namespace Cyan
 			host_(host),
 			port_(port),
 			cacheSize_(4096),
-			ws_enabled_(false) {}
+			ws_enabled_(true) {}
 		~MiraiBot()
 		{
 			Release();

@@ -60,7 +60,7 @@ int main()
 
 		});
 
-	bot.UseWebSocket().EventLoop();
+	bot.EventLoop();
 
 	return 0;
 }
