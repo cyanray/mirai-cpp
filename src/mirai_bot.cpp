@@ -1,4 +1,7 @@
 #include "mirai_bot.hpp"
+#include "easywsclient.hpp"
+#define _SSIZE_T_DEFINED
+#include "easywsclient.cpp"
 
 namespace Cyan
 {
@@ -571,7 +574,8 @@ namespace Cyan
 			unsigned count = 0;
 			try
 			{
-				count = FetchEvents(count_per_loop);
+				FetchEvents_WS();
+				count = FetchEvents_HTTP(count_per_loop);
 			}
 			catch (const std::exception& ex)
 			{
@@ -656,7 +660,7 @@ namespace Cyan
 	}
 
 
-	unsigned int MiraiBot::FetchEvents(unsigned int count)
+	unsigned int MiraiBot::FetchEvents_HTTP(unsigned int count)
 	{
 		int received_count = 0;
 		stringstream api_url;
@@ -697,6 +701,29 @@ namespace Cyan
 			throw std::runtime_error("网络错误");
 		return received_count;
 
+	}
+
+	void MiraiBot::FetchEvents_WS()
+	{
+		using namespace easywsclient;
+		stringstream url;
+		url << "ws://" << host_ << ":" << port_ << "/all?sessionKey=" << sessionKey_;
+		std::shared_ptr<WebSocket> ws(WebSocket::from_url(url.str()));
+		if (!ws)
+		{
+			throw std::runtime_error("无法建立 WebSocket 连接!");
+		}
+		while (ws->getReadyState() != WebSocket::CLOSED)
+		{
+			ws->poll();
+			string eventJsonStr;
+			ws->dispatch([&](const std::string& message)
+				{
+					eventJsonStr = message;
+				});
+			json j = json::parse(eventJsonStr);
+			ProcessEvents(j);
+		}
 	}
 
 	void MiraiBot::ProcessEvents(const nlohmann::json& ele)

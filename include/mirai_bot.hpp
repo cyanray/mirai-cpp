@@ -47,8 +47,18 @@ namespace Cyan
 	class EXPORTED MiraiBot
 	{
 	public:
-		MiraiBot() :qq_(0), pool_(4), http_client_("localhost", 8080) {}
-		MiraiBot(const string& host, int port) : qq_(0), pool_(4), http_client_(host, port) {}
+		MiraiBot() :
+			qq_(0), 
+			pool_(4), 
+			http_client_("localhost", 8080),
+			host_("localhost"),
+			port_(8080) {}
+		MiraiBot(const string& host, int port) : 
+			qq_(0), 
+			pool_(4), 
+			http_client_(host, port), 
+			host_(host),
+			port_(port) {}
 		~MiraiBot()
 		{
 			Release();
@@ -117,7 +127,8 @@ namespace Cyan
 	private:
 		bool SessionVerify();
 		bool SessionRelease();
-		unsigned int FetchEvents(unsigned int count = 10);
+		unsigned int FetchEvents_HTTP(unsigned int count = 10);
+		void FetchEvents_WS();
 		void ProcessEvents(const nlohmann::json& ele);
 		template<typename T>
 		inline WeakEvent MakeWeakEvent(const json& json_)
@@ -157,6 +168,8 @@ namespace Cyan
 		string authKey_;
 		QQ_t qq_;
 		string sessionKey_;
+		string host_;
+		int port_;
 		httplib::Client http_client_;
 		unordered_map<MiraiEvent, function<void(WeakEvent)> > processors_;
 		ThreadPool pool_;
