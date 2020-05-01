@@ -8,13 +8,15 @@
 
 ## 项目依赖
 
-> 本项目所有依赖都为 Header-Only 库，已经内置到本项目的 third-party 文件夹中。
+> 本项目所有依赖都为 Header-Only 库，已经内置到本项目的 mirai-third-party 文件夹中。
 
-1. [**cpp-httplib**](https://github.com/yhirose/cpp-httplib) A C++ header-only HTTP/HTTPS server and client library.
+1. [**yhirose/cpp-httplib**](https://github.com/yhirose/cpp-httplib) A C++ header-only HTTP/HTTPS server and client library.
 
-2. [**nlohmann/json**](https://github.com/nlohmann/json) 解析 JSON 数据。
+2. [**nlohmann/json**](https://github.com/nlohmann/json) JSON for Modern C++.
 
-3. [**ThreadPool**](https://github.com/cyanray/CURLWrapper) 线程池库，用于异步处理消息。
+3. [**progschj/ThreadPool**](https://github.com/progschj/ThreadPool) A simple C++11 Thread Pool implementation.
+
+4. [**dhbaird/EasyWSClient**](https://github.com/dhbaird/easywsclient) A short and sweet WebSocket client for C++.
 
 ## 项目文档
 
