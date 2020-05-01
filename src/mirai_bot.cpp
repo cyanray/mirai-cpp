@@ -1,4 +1,7 @@
 #include "mirai_bot.hpp"
+#include "easywsclient.hpp"
+#define _SSIZE_T_DEFINED
+#include "easywsclient.cpp"
 
 namespace Cyan
 {
@@ -566,12 +569,16 @@ namespace Cyan
 	{
 		const unsigned count_per_loop = 20;
 		const unsigned time_interval = 100;
+		SessionConfigure(cacheSize_, ws_enabled_);
 		while (true)
 		{
 			unsigned count = 0;
 			try
 			{
-				count = FetchMessagesAndEvents(count_per_loop);
+				if (ws_enabled_)
+					FetchEvents_WS();
+				else
+					count = FetchEvents_HTTP(count_per_loop);
 			}
 			catch (const std::exception& ex)
 			{
@@ -655,8 +662,40 @@ namespace Cyan
 		return false;
 	}
 
+	bool MiraiBot::SessionConfigure(int cacheSize, bool enableWebsocket)
+	{
+		json data =
+		{
+			{ "sessionKey", sessionKey_ },
+			{ "cacheSize", cacheSize },
+			{ "enableWebsocket", enableWebsocket }
+		};
 
-	unsigned int MiraiBot::FetchMessagesAndEvents(unsigned int count)
+		auto res = http_client_.Post("/config", data.dump(), "application/json;charset=UTF-8");
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
+			json reJson;
+			reJson = reJson.parse(res->body);
+			int code = reJson["code"].get<int>();
+			if (code == 0)
+				return true;
+			else
+			{
+				string msg = reJson["msg"].get<string>();
+				throw runtime_error(msg);
+			}
+
+		}
+		else
+			throw std::runtime_error("网络错误");
+		return false;
+
+	}
+
+
+	unsigned int MiraiBot::FetchEvents_HTTP(unsigned int count)
 	{
 		int received_count = 0;
 		stringstream api_url;
@@ -689,29 +728,60 @@ namespace Cyan
 			}
 			for (const auto& ele : reJson["data"])
 			{
-				string event_name = ele["type"].get<string>();
-				MiraiEvent mirai_event = MiraiEventStr(event_name);
-				// 寻找能处理事件的 Processor
-				auto pit = processors_.find(mirai_event);
-				if (pit != processors_.end())
-				{
-					auto exector = pit->second;
-					WeakEvent pevent = CreateEvent(mirai_event, ele);
-					pool_.enqueue([=]()
-						{
-							exector(pevent);
-						});
-
-				}
+				ProcessEvents(ele);
 				received_count++;
 			}
-
-
 		}
 		else
 			throw std::runtime_error("网络错误");
 		return received_count;
 
+	}
+
+	void MiraiBot::FetchEvents_WS()
+	{
+		using namespace easywsclient;
+		stringstream url;
+		url << "ws://" << host_ << ":" << port_ << "/all?sessionKey=" << sessionKey_;
+		std::shared_ptr<WebSocket> ws(WebSocket::from_url(url.str()));
+		if (!ws)
+		{
+			throw std::runtime_error("无法建立 WebSocket 连接!");
+		}
+		string eventJsonStr;
+		while (ws->getReadyState() != WebSocket::CLOSED && this->ws_enabled_)
+		{
+			
+			ws->poll(20);
+			ws->dispatch([&](const std::string& message)
+				{
+					eventJsonStr = message;
+				});
+			// 这部分不能在lambda表示中，否则异常无法被EventLoop捕捉
+			if (!eventJsonStr.empty())
+			{
+				json j = json::parse(eventJsonStr);
+				ProcessEvents(j);
+				eventJsonStr.resize(0);
+			}
+		}
+	}
+
+	void MiraiBot::ProcessEvents(const nlohmann::json& ele)
+	{
+		string event_name = ele["type"].get<string>();
+		MiraiEvent mirai_event = MiraiEventStr(event_name);
+		// 寻找能处理事件的 Processor
+		auto pit = processors_.find(mirai_event);
+		if (pit != processors_.end())
+		{
+			auto exector = pit->second;
+			WeakEvent pevent = CreateEvent(mirai_event, ele);
+			pool_.enqueue([=]()
+				{
+					exector(pevent);
+				});
+		}
 	}
 
 
