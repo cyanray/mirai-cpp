@@ -48,17 +48,21 @@ namespace Cyan
 	{
 	public:
 		MiraiBot() :
-			qq_(0), 
-			pool_(4), 
+			qq_(0),
+			pool_(4),
 			http_client_("localhost", 8080),
 			host_("localhost"),
-			port_(8080) {}
-		MiraiBot(const string& host, int port) : 
-			qq_(0), 
-			pool_(4), 
-			http_client_(host, port), 
+			port_(8080),
+			cacheSize_(4096), 
+			ws_enabled_(false) {}
+		MiraiBot(const string& host, int port) :
+			qq_(0),
+			pool_(4),
+			http_client_(host, port),
 			host_(host),
-			port_(port) {}
+			port_(port),
+			cacheSize_(4096),
+			ws_enabled_(false) {}
 		~MiraiBot()
 		{
 			Release();
@@ -122,11 +126,26 @@ namespace Cyan
 			std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 		}
 
+		MiraiBot& UseWebSocket()
+		{
+			this->ws_enabled_ = true;
+			SessionConfigure(cacheSize_, ws_enabled_);
+			return *this;
+		}
+
+		MiraiBot& UseHTTP()
+		{
+			this->ws_enabled_ = false;
+			SessionConfigure(cacheSize_, ws_enabled_);
+			return *this;
+		}
+
 		void EventLoop(function<void(const char*)> errLogger = nullptr);
 
 	private:
 		bool SessionVerify();
 		bool SessionRelease();
+		bool SessionConfigure(int cacheSize, bool enableWebsocket);
 		unsigned int FetchEvents_HTTP(unsigned int count = 10);
 		void FetchEvents_WS();
 		void ProcessEvents(const nlohmann::json& ele);
@@ -151,7 +170,7 @@ namespace Cyan
 			}
 
 		}
-		
+
 		// 因为 httplib 使用 string 来保存文件内容，这里适配一下
 		inline string ReadFile(const string& filename)
 		{
@@ -170,6 +189,8 @@ namespace Cyan
 		string sessionKey_;
 		string host_;
 		int port_;
+		int cacheSize_;
+		bool ws_enabled_;
 		httplib::Client http_client_;
 		unordered_map<MiraiEvent, function<void(WeakEvent)> > processors_;
 		ThreadPool pool_;

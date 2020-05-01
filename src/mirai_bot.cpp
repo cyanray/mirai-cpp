@@ -569,13 +569,16 @@ namespace Cyan
 	{
 		const unsigned count_per_loop = 20;
 		const unsigned time_interval = 100;
+		SessionConfigure(cacheSize_, ws_enabled_);
 		while (true)
 		{
 			unsigned count = 0;
 			try
 			{
-				FetchEvents_WS();
-				count = FetchEvents_HTTP(count_per_loop);
+				if (ws_enabled_)
+					FetchEvents_WS();
+				else
+					count = FetchEvents_HTTP(count_per_loop);
 			}
 			catch (const std::exception& ex)
 			{
@@ -659,6 +662,38 @@ namespace Cyan
 		return false;
 	}
 
+	bool MiraiBot::SessionConfigure(int cacheSize, bool enableWebsocket)
+	{
+		json data =
+		{
+			{ "sessionKey", sessionKey_ },
+			{ "cacheSize", cacheSize },
+			{ "enableWebsocket", enableWebsocket }
+		};
+
+		auto res = http_client_.Post("/config", data.dump(), "application/json;charset=UTF-8");
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
+			json reJson;
+			reJson = reJson.parse(res->body);
+			int code = reJson["code"].get<int>();
+			if (code == 0)
+				return true;
+			else
+			{
+				string msg = reJson["msg"].get<string>();
+				throw runtime_error(msg);
+			}
+
+		}
+		else
+			throw std::runtime_error("网络错误");
+		return false;
+
+	}
+
 
 	unsigned int MiraiBot::FetchEvents_HTTP(unsigned int count)
 	{
@@ -713,16 +748,20 @@ namespace Cyan
 		{
 			throw std::runtime_error("无法建立 WebSocket 连接!");
 		}
-		while (ws->getReadyState() != WebSocket::CLOSED)
+		string eventJsonStr;
+		while (ws->getReadyState() != WebSocket::CLOSED && this->ws_enabled_)
 		{
+			
 			ws->poll();
-			string eventJsonStr;
 			ws->dispatch([&](const std::string& message)
 				{
-					eventJsonStr = message;
+					eventJsonStr = std::move(message);
 				});
-			json j = json::parse(eventJsonStr);
-			ProcessEvents(j);
+			if (!eventJsonStr.empty())
+			{
+				json j = json::parse(eventJsonStr);
+				ProcessEvents(j);
+			}
 		}
 	}
 
