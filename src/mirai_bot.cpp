@@ -571,7 +571,7 @@ namespace Cyan
 			unsigned count = 0;
 			try
 			{
-				count = FetchMessagesAndEvents(count_per_loop);
+				count = FetchEvents(count_per_loop);
 			}
 			catch (const std::exception& ex)
 			{
@@ -656,7 +656,7 @@ namespace Cyan
 	}
 
 
-	unsigned int MiraiBot::FetchMessagesAndEvents(unsigned int count)
+	unsigned int MiraiBot::FetchEvents(unsigned int count)
 	{
 		int received_count = 0;
 		stringstream api_url;
@@ -689,29 +689,31 @@ namespace Cyan
 			}
 			for (const auto& ele : reJson["data"])
 			{
-				string event_name = ele["type"].get<string>();
-				MiraiEvent mirai_event = MiraiEventStr(event_name);
-				// 寻找能处理事件的 Processor
-				auto pit = processors_.find(mirai_event);
-				if (pit != processors_.end())
-				{
-					auto exector = pit->second;
-					WeakEvent pevent = CreateEvent(mirai_event, ele);
-					pool_.enqueue([=]()
-						{
-							exector(pevent);
-						});
-
-				}
+				ProcessEvents(ele);
 				received_count++;
 			}
-
-
 		}
 		else
 			throw std::runtime_error("网络错误");
 		return received_count;
 
+	}
+
+	void MiraiBot::ProcessEvents(const nlohmann::json& ele)
+	{
+		string event_name = ele["type"].get<string>();
+		MiraiEvent mirai_event = MiraiEventStr(event_name);
+		// 寻找能处理事件的 Processor
+		auto pit = processors_.find(mirai_event);
+		if (pit != processors_.end())
+		{
+			auto exector = pit->second;
+			WeakEvent pevent = CreateEvent(mirai_event, ele);
+			pool_.enqueue([=]()
+				{
+					exector(pevent);
+				});
+		}
 	}
 
 

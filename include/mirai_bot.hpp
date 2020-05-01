@@ -117,7 +117,8 @@ namespace Cyan
 	private:
 		bool SessionVerify();
 		bool SessionRelease();
-		unsigned int FetchMessagesAndEvents(unsigned int count = 10);
+		unsigned int FetchEvents(unsigned int count = 10);
+		void ProcessEvents(const nlohmann::json& ele);
 		template<typename T>
 		inline WeakEvent MakeWeakEvent(const json& json_)
 		{
