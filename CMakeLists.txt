@@ -27,7 +27,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     $<INSTALL_INTERFACE:include>
     )
 target_include_directories(${PROJECT_NAME} PUBLIC 
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third-party>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/mirai-third-party>
     $<INSTALL_INTERFACE:third-party>
     )
 
@@ -63,7 +63,7 @@ if(MIRAI_CPP_INSTALL)
         )
     
         install(
-        DIRECTORY third-party
+        DIRECTORY mirai-third-party
         DESTINATION ${CMAKE_INSTALL_PREFIX}
         )
 
