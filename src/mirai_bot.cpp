@@ -752,15 +752,17 @@ namespace Cyan
 		while (ws->getReadyState() != WebSocket::CLOSED && this->ws_enabled_)
 		{
 			
-			ws->poll();
+			ws->poll(20);
 			ws->dispatch([&](const std::string& message)
 				{
-					eventJsonStr = std::move(message);
+					eventJsonStr = message;
 				});
+			// 这部分不能在lambda表示中，否则异常无法被EventLoop捕捉
 			if (!eventJsonStr.empty())
 			{
 				json j = json::parse(eventJsonStr);
 				ProcessEvents(j);
+				eventJsonStr.resize(0);
 			}
 		}
 	}
