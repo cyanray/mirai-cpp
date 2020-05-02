@@ -77,6 +77,7 @@ namespace Cyan
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 		}
+		MiraiBot& SetCacheSize(int cacheSize);
 		MiraiBot& UseWebSocket();
 		MiraiBot& UseHTTP();
 		void EventLoop(function<void(const char*)> errLogger = nullptr);

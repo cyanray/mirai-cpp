@@ -583,6 +583,13 @@ namespace Cyan
 	}
 
 
+	MiraiBot& MiraiBot::SetCacheSize(int cacheSize)
+	{
+		cacheSize_ = cacheSize;
+		SessionConfigure(cacheSize_, ws_enabled_);
+		return *this;
+	}
+
 	inline MiraiBot& MiraiBot::UseWebSocket()
 	{
 		this->ws_enabled_ = true;
@@ -885,8 +892,7 @@ namespace Cyan
 
 	}
 
-	// 因为 httplib 使用 string 来保存文件内容，这里适配一下
-
+	// 因为 httplib 使用 string 来保存文件内容，这里返回值也跟着适配
 	inline string MiraiBot::ReadFile(const string& filename)
 	{
 		std::ifstream ifs(filename, std::ifstream::binary);
