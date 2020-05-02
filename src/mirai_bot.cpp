@@ -54,8 +54,7 @@ namespace Cyan
 		{
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-api-http error]: " + res->body);
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 			{
@@ -87,8 +86,7 @@ namespace Cyan
 		{
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-api-http error]: " + res->body);
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 			{
@@ -122,8 +120,7 @@ namespace Cyan
 		{
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-api-http error]: " + res->body);
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 			{
@@ -158,8 +155,7 @@ namespace Cyan
 		{
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-api-http error]: " + res->body);
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 			{
@@ -195,8 +191,7 @@ namespace Cyan
 		{
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-http-api error]: " + res->body);
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
 			fImg.ID = reJson["imageId"].get<string>();
 			fImg.Url = reJson["url"].get<string>();
@@ -225,8 +220,7 @@ namespace Cyan
 		{
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-http-api error]: " + res->body);
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
 			gImg.ID = reJson["imageId"].get<string>();
 			gImg.Url = reJson["url"].get<string>();
@@ -255,8 +249,7 @@ namespace Cyan
 		{
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-http-api error]: " + res->body);
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
 			tImg.ID = reJson["imageId"].get<string>();
 			tImg.Url = reJson["url"].get<string>();
@@ -276,8 +269,7 @@ namespace Cyan
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-api-http error]: " + res->body);
 			vector<Friend_t> result;
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			if (!reJson.is_array()) throw runtime_error("解析返回 JSON 时出错");
 			for (const auto& ele : reJson)
 			{
@@ -300,8 +292,7 @@ namespace Cyan
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-api-http error]: " + res->body);
 			vector<Group_t> result;
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			if (!reJson.is_array()) throw runtime_error("解析返回 JSON 时出错");
 			for (const auto& ele : reJson)
 			{
@@ -330,9 +321,7 @@ namespace Cyan
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-api-http error]: " + res->body);
 			vector<GroupMember_t> result;
-
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			if (!reJson.is_array()) throw runtime_error("解析返回 JSON 时出错");
 			for (const auto& ele : reJson)
 			{
@@ -360,8 +349,7 @@ namespace Cyan
 		{
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-api-http error]: " + res->body);
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 				return true;
@@ -391,8 +379,7 @@ namespace Cyan
 		{
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-api-http error]: " + res->body);
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 				return true;
@@ -424,8 +411,7 @@ namespace Cyan
 		{
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-api-http error]: " + res->body);
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 				return true;
@@ -456,8 +442,7 @@ namespace Cyan
 		{
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-api-http error]: " + res->body);
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 				return true;
@@ -489,8 +474,7 @@ namespace Cyan
 		{
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-api-http error]: " + res->body);
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 				return true;
@@ -520,8 +504,7 @@ namespace Cyan
 		{
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-api-http error]: " + res->body);
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 				return true;
@@ -552,8 +535,7 @@ namespace Cyan
 		{
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-http-api error]: " + res->body);
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
 			int code = reJson["code"].get<int>();
 			if (code == 0)
@@ -584,8 +566,7 @@ namespace Cyan
 		{
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-http-api error]: " + res->body);
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
 			int code = reJson["code"].get<int>();
 			if (code == 0)
@@ -665,8 +646,7 @@ namespace Cyan
 		{
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-api-http error]: " + res->body);
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 				return true;
@@ -696,8 +676,7 @@ namespace Cyan
 		{
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-api-http error]: " + res->body);
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 				return true;
@@ -727,8 +706,7 @@ namespace Cyan
 		{
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-api-http error]: " + res->body);
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 				return true;
@@ -761,9 +739,7 @@ namespace Cyan
 		{
 			if (res->status != 200)
 				throw std::runtime_error("[mirai-api-http error]: " + res->body);
-
-			json reJson;
-			reJson = reJson.parse(res->body);
+			json reJson = json::parse(res->body);
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
 			int code = reJson["code"].get<int>();
 			if (code != 0)
