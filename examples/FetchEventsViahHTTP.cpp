@@ -24,19 +24,17 @@ int main()
 	}
 	cout << "成功登录 bot。" << endl;
 
-	bot.OnEventReceived<GroupMessage>(
+	bot.On<GroupMessage>(
 		[&](GroupMessage gm)
 		{
 			gm.QuoteReply(gm.MessageChain);
-		});
-
-	bot.OnEventReceived<FriendMessage>(
+		})
+		.On<FriendMessage>(
 		[&](FriendMessage fm)
 		{
 			fm.Reply("你好呀, " + fm.MessageChain);
-		});
-
-	bot.OnEventReceived<TempMessage>(
+		})
+		.On<TempMessage>(
 		[&](TempMessage tm)
 		{
 			tm.Reply(tm.MessageChain);
@@ -50,7 +48,7 @@ int main()
 			cout << "轮询事件时出错: " << errMsg << endl;
 		});
 
-	// 默认参数是在 cerr 输出错误
+	// 无参数则会在 cerr 输出错误
 	// bot.EventLoop();
 
 	return 0;

@@ -63,12 +63,12 @@ namespace Cyan
 		FriendMessage GetFriendMessageFromId(MessageId mid);
 		GroupMessage GetGroupMessageFromId(MessageId mid);
 		template<typename T>
-		void On(const EventProcessor<T>& ep)
+		MiraiBot& On(const EventProcessor<T>& ep)
 		{
-			OnEventReceived<T>(ep);
+			return OnEventReceived<T>(ep);
 		}
 		template<typename T>
-		void OnEventReceived(const EventProcessor<T>& ep);
+		MiraiBot& OnEventReceived(const EventProcessor<T>& ep);
 		void inline static SleepSeconds(int sec)
 		{
 			std::this_thread::sleep_for(std::chrono::seconds(sec));
@@ -107,7 +107,7 @@ namespace Cyan
 	};
 
 	template<typename T>
-	inline void MiraiBot::OnEventReceived(const EventProcessor<T>& ep)
+	inline MiraiBot& MiraiBot::OnEventReceived(const EventProcessor<T>& ep)
 	{
 		processors_.insert({ GetEventType<T>(),
 			[=](WeakEvent we)
@@ -115,6 +115,7 @@ namespace Cyan
 				ep(*(std::dynamic_pointer_cast<T>(we)));
 			}
 			});
+		return *this;
 	}
 
 	template<typename T>
