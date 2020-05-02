@@ -1,7 +1,8 @@
+#include <exception>
+#include <algorithm>
 #include "mirai_bot.hpp"
 #include "events/events.hpp"
 #include "httplib.h"
-#include <algorithm>
 
 namespace Cyan
 {
@@ -70,7 +71,7 @@ namespace Cyan
 			return true;
 		}
 		else
-			throw runtime_error("网络错误");
+			throw std::runtime_error("网络错误");
 
 	}
 
@@ -96,7 +97,7 @@ namespace Cyan
 			return true;
 		}
 		else
-			throw runtime_error("网络错误");
+			throw std::runtime_error("网络错误");
 
 	}
 

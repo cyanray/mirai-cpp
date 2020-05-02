@@ -10,7 +10,7 @@ using std::stringstream;
 
 namespace Cyan
 {
-	inline MiraiBot::MiraiBot() :
+	MiraiBot::MiraiBot() :
 		qq_(0),
 		pool_(4),
 		http_client_("localhost", 8080),
@@ -18,7 +18,7 @@ namespace Cyan
 		port_(8080),
 		cacheSize_(4096),
 		ws_enabled_(true) {}
-	inline MiraiBot::MiraiBot(const string& host, int port) :
+	MiraiBot::MiraiBot(const string& host, int port) :
 		qq_(0),
 		pool_(4),
 		http_client_(host, port),
@@ -26,19 +26,19 @@ namespace Cyan
 		port_(port),
 		cacheSize_(4096),
 		ws_enabled_(true) {}
-	inline MiraiBot::~MiraiBot()
+	MiraiBot::~MiraiBot()
 	{
 		Release();
 	}
-	inline string MiraiBot::GetSessionKey() const
+	string MiraiBot::GetSessionKey() const
 	{
 		return sessionKey_;
 	}
-	inline QQ_t MiraiBot::GetBotQQ() const
+	QQ_t MiraiBot::GetBotQQ() const
 	{
 		return qq_;
 	}
-	inline httplib::Client* MiraiBot::GetHttpClient()
+	httplib::Client* MiraiBot::GetHttpClient()
 	{
 		return &(this->http_client_);
 	}
@@ -590,14 +590,14 @@ namespace Cyan
 		return *this;
 	}
 
-	inline MiraiBot& MiraiBot::UseWebSocket()
+	MiraiBot& MiraiBot::UseWebSocket()
 	{
 		this->ws_enabled_ = true;
 		SessionConfigure(cacheSize_, ws_enabled_);
 		return *this;
 	}
 
-	inline MiraiBot& MiraiBot::UseHTTP()
+	MiraiBot& MiraiBot::UseHTTP()
 	{
 		this->ws_enabled_ = false;
 		SessionConfigure(cacheSize_, ws_enabled_);
@@ -785,7 +785,7 @@ namespace Cyan
 		string eventJsonStr;
 		while (ws->getReadyState() != WebSocket::CLOSED && this->ws_enabled_)
 		{
-			
+
 			ws->poll(20);
 			ws->dispatch([&](const std::string& message)
 				{
@@ -879,7 +879,7 @@ namespace Cyan
 		}
 	}
 
-	inline bool MiraiBot::Release() noexcept
+	bool MiraiBot::Release() noexcept
 	{
 		try
 		{
@@ -893,7 +893,7 @@ namespace Cyan
 	}
 
 	// 因为 httplib 使用 string 来保存文件内容，这里返回值也跟着适配
-	inline string MiraiBot::ReadFile(const string& filename)
+	string MiraiBot::ReadFile(const string& filename)
 	{
 		std::ifstream ifs(filename, std::ifstream::binary);
 		std::filebuf* pbuf = ifs.rdbuf();
