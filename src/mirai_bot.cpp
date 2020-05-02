@@ -1,10 +1,47 @@
 #include "mirai_bot.hpp"
+#include <iostream>
+#include <exception>
 #include "easywsclient.hpp"
 #define _SSIZE_T_DEFINED
 #include "easywsclient.cpp"
 
+using std::runtime_error;
+using std::stringstream;
+
 namespace Cyan
 {
+	inline MiraiBot::MiraiBot() :
+		qq_(0),
+		pool_(4),
+		http_client_("localhost", 8080),
+		host_("localhost"),
+		port_(8080),
+		cacheSize_(4096),
+		ws_enabled_(true) {}
+	inline MiraiBot::MiraiBot(const string& host, int port) :
+		qq_(0),
+		pool_(4),
+		http_client_(host, port),
+		host_(host),
+		port_(port),
+		cacheSize_(4096),
+		ws_enabled_(true) {}
+	inline MiraiBot::~MiraiBot()
+	{
+		Release();
+	}
+	inline string MiraiBot::GetSessionKey() const
+	{
+		return sessionKey_;
+	}
+	inline QQ_t MiraiBot::GetBotQQ() const
+	{
+		return qq_;
+	}
+	inline httplib::Client* MiraiBot::GetHttpClient()
+	{
+		return &(this->http_client_);
+	}
 	bool MiraiBot::Auth(const string& authKey, QQ_t qq)
 	{
 		json data =
@@ -565,6 +602,20 @@ namespace Cyan
 	}
 
 
+	inline MiraiBot& MiraiBot::UseWebSocket()
+	{
+		this->ws_enabled_ = true;
+		SessionConfigure(cacheSize_, ws_enabled_);
+		return *this;
+	}
+
+	inline MiraiBot& MiraiBot::UseHTTP()
+	{
+		this->ws_enabled_ = false;
+		SessionConfigure(cacheSize_, ws_enabled_);
+		return *this;
+	}
+
 	void MiraiBot::EventLoop(function<void(const char*)> errLogger)
 	{
 		const unsigned count_per_loop = 20;
@@ -843,6 +894,33 @@ namespace Cyan
 		{
 			return MakeWeakEvent<FriendRecallEvent>(json_);
 		}
+	}
+
+	inline bool MiraiBot::Release() noexcept
+	{
+		try
+		{
+			return SessionRelease();
+		}
+		catch (const std::exception&)
+		{
+			return false;
+		}
+
+	}
+
+	// 因为 httplib 使用 string 来保存文件内容，这里适配一下
+
+	inline string MiraiBot::ReadFile(const string& filename)
+	{
+		std::ifstream ifs(filename, std::ifstream::binary);
+		std::filebuf* pbuf = ifs.rdbuf();
+		std::size_t size = pbuf->pubseekoff(0, ifs.end, ifs.in);
+		pbuf->pubseekpos(0, ifs.in);
+		string result(size, '\0');
+		pbuf->sgetn(&result[0], size);
+		ifs.close();
+		return result;
 	}
 
 } // namespace Cyan

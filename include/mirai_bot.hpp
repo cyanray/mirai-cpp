@@ -1,43 +1,34 @@
 #pragma once
 #ifndef mirai_cpp__mirai_bot_hpp_H_
 #define mirai_cpp__mirai_bot_hpp_H_
-#include <iostream>
 #include <string>
 #include <vector>
-#include <exception>
 #include <thread>
 #include <sstream>
 #include <unordered_map>
 #include <memory>
-
+// third-party
 #include "ThreadPool.h"
 #include "nlohmann/json.hpp"
-
-// fuck windows.h
-#ifdef max
-#undef max
-#endif
 #include "httplib.h"
-
-
+// mirai header files
 #include "defs/defs.hpp"
 #include "events/events.hpp"
 #include "exported.h"
 
-
 using std::string;
-using std::runtime_error;
 using std::vector;
-using std::stringstream;
 using std::function;
 using nlohmann::json;
 using std::unordered_map;
 
-
+// fu*k windows.h
+#ifdef max
+#undef max
+#endif
 #ifdef SendMessage
 #undef SendMessage
 #endif
-
 #ifdef CreateEvent
 #undef CreateEvent
 #endif
@@ -47,39 +38,12 @@ namespace Cyan
 	class EXPORTED MiraiBot
 	{
 	public:
-		MiraiBot() :
-			qq_(0),
-			pool_(4),
-			http_client_("localhost", 8080),
-			host_("localhost"),
-			port_(8080),
-			cacheSize_(4096), 
-			ws_enabled_(true) {}
-		MiraiBot(const string& host, int port) :
-			qq_(0),
-			pool_(4),
-			http_client_(host, port),
-			host_(host),
-			port_(port),
-			cacheSize_(4096),
-			ws_enabled_(true) {}
-		~MiraiBot()
-		{
-			Release();
-		}
-		string GetSessionKey() const
-		{
-			return sessionKey_;
-		}
-		QQ_t GetBotQQ() const
-		{
-			return qq_;
-		}
-		httplib::Client* GetHttpClient()
-		{
-			return &(this->http_client_);
-		}
-
+		MiraiBot();
+		MiraiBot(const string& host, int port);
+		~MiraiBot();
+		string GetSessionKey() const;
+		QQ_t GetBotQQ() const;
+		httplib::Client* GetHttpClient();
 		bool Auth(const string& authKey, QQ_t qq);
 		MessageId SendMessage(QQ_t target, const MessageChain& messageChain, MessageId msgId = 0);
 		MessageId SendMessage(GID_t target, const MessageChain& messageChain, MessageId msgId = 0);
@@ -98,50 +62,24 @@ namespace Cyan
 		bool Recall(MessageId mid);
 		FriendMessage GetFriendMessageFromId(MessageId mid);
 		GroupMessage GetGroupMessageFromId(MessageId mid);
-
 		template<typename T>
 		void On(const EventProcessor<T>& ep)
 		{
 			OnEventReceived<T>(ep);
 		}
-
 		template<typename T>
-		void OnEventReceived(const EventProcessor<T>& ep)
-		{
-			processors_.insert({ GetEventType<T>(),
-				[=](WeakEvent we)
-				{
-					ep(*(std::dynamic_pointer_cast<T>(we)));
-				}
-				});
-		}
-
+		void OnEventReceived(const EventProcessor<T>& ep);
 		void inline static SleepSeconds(int sec)
 		{
 			std::this_thread::sleep_for(std::chrono::seconds(sec));
 		}
-
 		void inline static SleepMilliseconds(int ms)
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 		}
-
-		MiraiBot& UseWebSocket()
-		{
-			this->ws_enabled_ = true;
-			SessionConfigure(cacheSize_, ws_enabled_);
-			return *this;
-		}
-
-		MiraiBot& UseHTTP()
-		{
-			this->ws_enabled_ = false;
-			SessionConfigure(cacheSize_, ws_enabled_);
-			return *this;
-		}
-
+		MiraiBot& UseWebSocket();
+		MiraiBot& UseHTTP();
 		void EventLoop(function<void(const char*)> errLogger = nullptr);
-
 	private:
 		bool SessionVerify();
 		bool SessionRelease();
@@ -150,39 +88,10 @@ namespace Cyan
 		void FetchEvents_WS();
 		void ProcessEvents(const nlohmann::json& ele);
 		template<typename T>
-		inline WeakEvent MakeWeakEvent(const json& json_)
-		{
-			std::shared_ptr<T> e = std::make_shared<T>();
-			e->SetMiraiBot(this);
-			e->Set(json_);
-			return std::dynamic_pointer_cast<Serializable>(e);
-		}
-		WeakEvent CreateEvent(MiraiEvent mirai_event, const json& json_);
-		bool Release() noexcept
-		{
-			try
-			{
-				return SessionRelease();
-			}
-			catch (const std::exception&)
-			{
-				return false;
-			}
-
-		}
-
-		// 因为 httplib 使用 string 来保存文件内容，这里适配一下
-		inline string ReadFile(const string& filename)
-		{
-			std::ifstream ifs(filename, std::ifstream::binary);
-			std::filebuf* pbuf = ifs.rdbuf();
-			std::size_t size = pbuf->pubseekoff(0, ifs.end, ifs.in);
-			pbuf->pubseekpos(0, ifs.in);
-			string result(size, '\0');
-			pbuf->sgetn(&result[0], size);
-			ifs.close();
-			return result;
-		}
+		inline WeakEvent MakeWeakEvent(const nlohmann::json& json_);
+		WeakEvent CreateEvent(MiraiEvent mirai_event, const nlohmann::json& json_);
+		bool Release() noexcept;
+		inline string ReadFile(const string& filename);
 
 		string authKey_;
 		QQ_t qq_;
@@ -195,6 +104,26 @@ namespace Cyan
 		unordered_map<MiraiEvent, function<void(WeakEvent)> > processors_;
 		ThreadPool pool_;
 	};
+
+	template<typename T>
+	inline void MiraiBot::OnEventReceived(const EventProcessor<T>& ep)
+	{
+		processors_.insert({ GetEventType<T>(),
+			[=](WeakEvent we)
+			{
+				ep(*(std::dynamic_pointer_cast<T>(we)));
+			}
+			});
+	}
+
+	template<typename T>
+	inline WeakEvent MiraiBot::MakeWeakEvent(const nlohmann::json& json_)
+	{
+		std::shared_ptr<T> e = std::make_shared<T>();
+		e->SetMiraiBot(this);
+		e->Set(json_);
+		return std::dynamic_pointer_cast<Serializable>(e);
+	}
 
 } // namespace Cyan
 
