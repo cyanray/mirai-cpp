@@ -70,6 +70,41 @@ namespace Cyan
 		{
 			return this->Plain(val);
 		}
+		bool operator==(const MessageChain& mc) const
+		{
+			auto it1 = mc.messages_.begin();
+			auto it2 = messages_.begin();
+
+			for (; it1 != mc.messages_.end() && it2 != messages_.end(); ++it1, ++it2)
+			{
+				if (it1.value()["type"] != it2.value()["type"]) return false;
+				if (it1.value()["type"] == "At")
+				{
+					if (it1.value()["target"] != it2.value()["target"]) return false;
+				}
+				if (it1.value()["type"] == "Face")
+				{
+					if (it1.value()["faceId"] != it2.value()["faceId"]) return false;
+				}
+				if (it1.value()["type"] == "Plain")
+				{
+					if (it1.value()["text"] != it2.value()["text"]) return false;
+				}
+				if (it1.value()["type"] == "Image")
+				{
+					if (it1.value()["imageId"] != it2.value()["imageId"]) return false;
+				}
+				if (it1.value()["type"] == "FlashImage")
+				{
+					if (it1.value()["imageId"] != it2.value()["imageId"]) return false;
+				}
+				if (it1.value()["type"] == "Poke")
+				{
+					if (it1.value()["name"] != it2.value()["name"]) return false;
+				}
+			}
+			return true;
+		}
 		virtual ~MessageChain() = default;
 		MessageChain& At(const QQ_t qq)
 		{
