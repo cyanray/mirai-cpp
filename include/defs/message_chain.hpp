@@ -92,6 +92,14 @@ namespace Cyan
 			messages_.push_back(j);
 			return *this;
 		}
+		MessageChain& Face(const string& name)
+		{
+			json j;
+			j["type"] = "Face";
+			j["name"] = name;
+			messages_.push_back(j);
+			return *this;
+		}
 		MessageChain& Plain(const string& plainText)
 		{
 			json j;
