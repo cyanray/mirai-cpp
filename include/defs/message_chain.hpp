@@ -105,6 +105,10 @@ namespace Cyan
 			}
 			return true;
 		}
+		bool operator!=(const MessageChain& mc) const
+		{
+			return !this->operator==(mc);
+		}
 		virtual ~MessageChain() = default;
 		MessageChain& At(const QQ_t qq)
 		{
