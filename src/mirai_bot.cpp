@@ -756,6 +756,7 @@ namespace Cyan
 				{
 					Release();
 					Auth(authKey_, qq_);
+					throw std::runtime_error("失去与mirai的连接，尝试重新验证...");
 				}
 				string msg = reJson["msg"].get<string>();
 				throw runtime_error(msg);
@@ -795,6 +796,13 @@ namespace Cyan
 			if (!eventJsonStr.empty())
 			{
 				json j = json::parse(eventJsonStr);
+				if (j.find("code") != j.end() && j["code"].get<int>() == 3)
+				{
+					Release();
+					Auth(authKey_, qq_);
+					SessionConfigure(cacheSize_, ws_enabled_);
+					throw std::runtime_error("失去与mirai的连接，尝试重新验证...");
+				}
 				ProcessEvents(j);
 				eventJsonStr.resize(0);
 			}
