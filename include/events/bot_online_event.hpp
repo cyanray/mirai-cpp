@@ -8,7 +8,7 @@
 
 namespace Cyan
 {
-	// bot 登录成功事件
+	// bot 鐧诲綍鎴愬姛浜嬩欢
 	class BotOnlineEvent : public Serializable
 	{
 	public:

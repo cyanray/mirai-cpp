@@ -8,7 +8,7 @@
 
 namespace Cyan
 {
-	// bot ÒòÍøÂçÔ­ÒòµôÏß
+	// bot å› ç½‘ç»œåŸå› æ‰çº¿
 	class BotOfflineEventDropped : public Serializable
 	{
 	public:

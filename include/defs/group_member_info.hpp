@@ -10,7 +10,7 @@
 namespace Cyan
 {
 
-	// 群组成员信息
+	// 缇ょ粍鎴愬憳淇℃伅
 	class GroupMemberInfo : public Serializable
 	{
 	public:

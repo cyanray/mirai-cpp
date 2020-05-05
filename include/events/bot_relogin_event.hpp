@@ -8,7 +8,7 @@
 
 namespace Cyan
 {
-	// bot 主动重新登录事件
+	// bot 涓诲姩閲嶆柊鐧诲綍浜嬩欢
 	class BotReloginEvent : public Serializable
 	{
 	public:

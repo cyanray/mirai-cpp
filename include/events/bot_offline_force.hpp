@@ -8,7 +8,7 @@
 
 namespace Cyan
 {
-	// bot 被挤下线事件
+	// bot 琚尋涓嬬嚎浜嬩欢
 	class BotOfflineEventForce : public Serializable
 	{
 	public:

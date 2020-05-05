@@ -8,7 +8,7 @@
 
 namespace Cyan
 {
-	// bot 主动离线事件
+	// bot 涓诲姩绂荤嚎浜嬩欢
 	class BotOfflineEventActive : public Serializable
 	{
 	public:
