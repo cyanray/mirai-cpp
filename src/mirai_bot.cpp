@@ -115,8 +115,8 @@ namespace Cyan
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 			{
-				MessageId msgId = reJson["messageId"].get<int>();
-				return msgId;
+				MessageId msg_id = reJson["messageId"].get<int>();
+				return msg_id;
 			}
 			else
 			{
@@ -149,8 +149,8 @@ namespace Cyan
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 			{
-				MessageId msgId = reJson["messageId"].get<int>();
-				return msgId;
+				MessageId msg_id = reJson["messageId"].get<int>();
+				return msg_id;
 			}
 			else
 			{
@@ -184,8 +184,8 @@ namespace Cyan
 			int code = reJson["code"].get<int>();
 			if (code == 0)
 			{
-				MessageId msgId = reJson["messageId"].get<int>();
-				return msgId;
+				MessageId msg_id = reJson["messageId"].get<int>();
+				return msg_id;
 			}
 			else
 			{
