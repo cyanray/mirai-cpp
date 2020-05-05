@@ -55,7 +55,7 @@ namespace Cyan
 			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
 			int code = reJson["code"].get<int>();
 			if (code == 0)
-				version =  reJson["data"]["version"].get<string>();
+				version = reJson["data"]["version"].get<string>();
 			else
 			{
 				string msg = reJson["errorMessage"].get<string>();
@@ -360,6 +360,30 @@ namespace Cyan
 			throw std::runtime_error("网络错误");
 	}
 
+	GroupMemberInfo MiraiBot::GetGroupMemberInfo(GID_t gid, QQ_t memberId)
+	{
+		GroupMemberInfo result;
+		stringstream api_url;
+		api_url
+			<< "/memberInfo?sessionKey="
+			<< sessionKey_
+			<< "&target="
+			<< (int64_t)(gid)
+			<< "&memberId="
+			<< (int64_t)(memberId);
+		auto res = http_client_.Get(api_url.str().data());
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
+			json reJson = json::parse(res->body);
+			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
+			result.Set(reJson);
+		}
+		else
+			throw std::runtime_error("网络错误");
+		return result;
+	}
 
 	bool MiraiBot::MuteAll(GID_t target)
 	{
