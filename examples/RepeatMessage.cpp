@@ -7,11 +7,20 @@ int main()
 {
 	using namespace std;
 	using namespace Cyan;
-	system("chcp 65001");
+
+	// 源文件使用 UTF-8 编码保存，在 Windows 上需要切换代码页才不会显示乱码
+#if defined(WIN32) || defined(_WIN32)
+system("chcp 65001");
+#endif	
+
 	MiraiBot bot("127.0.0.1", 539);
+	
+	// 检查一下版本
 	try
 	{
+		// 获取 mirai-api-http 插件地版本
 		string current_version = bot.GetApiVersion();
+		// 获取 mirai-cpp 适配的版本
 		string required_version = bot.GetRequiredApiVersion();
 		cout << "! 需要的 API 版本: " << required_version
 			<< "; 当前 API 版本: " << current_version << "; " << endl;
@@ -20,7 +29,12 @@ int main()
 			cout << "! 警告: 你的 mirai-api-http 插件的版本与 mirai-cpp 适配的版本不同，可能存在潜在的异常。" << endl;
 		}
 	}
-	catch (const std::exception&) {}
+	catch (const std::exception&ex)
+	{
+		cout << ex.what() << endl;
+	}
+
+	// 自动重试地进行 Auth
 	while (true)
 	{
 		try
@@ -34,24 +48,25 @@ int main()
 		}
 		MiraiBot::SleepSeconds(1);
 	}
-	cout << "成功登录 bot。" << endl;
+	cout << "Bot Working..." << endl;
 
+	// 监听各类事件
 	bot.OnEventReceived<GroupMessage>(
-		[&](GroupMessage gm)
+		[&](GroupMessage m)
 		{
-			gm.QuoteReply(gm.MessageChain);
+			m.QuoteReply(m.MessageChain);
 		});
 
 	bot.OnEventReceived<FriendMessage>(
-		[&](FriendMessage fm)
+		[&](FriendMessage m)
 		{
-			fm.Reply("你好呀, " + fm.MessageChain);
+			m.Reply("你好呀, " + m.MessageChain);
 		});
 
 	bot.OnEventReceived<TempMessage>(
-		[&](TempMessage tm)
+		[&](TempMessage m)
 		{
-			tm.Reply(tm.MessageChain);
+			m.Reply(m.MessageChain);
 		});
 
 
@@ -60,9 +75,6 @@ int main()
 		{
 			cout << "轮询事件时出错: " << errMsg << endl;
 		});
-
-	// 默认参数是在 cerr 输出错误
-	// bot.EventLoop();
 
 	return 0;
 }
