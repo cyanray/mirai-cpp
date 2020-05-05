@@ -97,6 +97,7 @@ namespace Cyan
 		MiraiBot& UseHttp();
 		void EventLoop(function<void(const char*)> errLogger = nullptr);
 	private:
+		// 私有成员函数
 		bool SessionVerify();
 		bool SessionRelease();
 		bool SessionConfigure(int cacheSize, bool enableWebsocket);
@@ -107,18 +108,18 @@ namespace Cyan
 		inline WeakEvent MakeWeakEvent(const nlohmann::json& json);
 		WeakEvent CreateEvent(MiraiEvent miraiEvent, const nlohmann::json& json);
 		bool Release() noexcept;
-		inline string ReadFile(const string& filename);
-
+		static inline string ReadFile(const string& filename);
+		// 私有成员变量
+		string host_;
+		int port_;
 		string authKey_;
 		QQ_t qq_;
 		string sessionKey_;
-		string host_;
-		int port_;
 		int cacheSize_;
 		bool ws_enabled_;
 		httplib::Client http_client_;
-		unordered_map<MiraiEvent, function<void(WeakEvent)> > processors_;
 		ThreadPool pool_;
+		unordered_map<MiraiEvent, function<void(WeakEvent)> > processors_;
 	};
 
 	template<typename T>
