@@ -43,7 +43,7 @@ int main()
 	// 默认使用 WebSocket 拉取事件、消息
 	// 如果要使用 HTTP 可以在 EventLoop 前执行 UseHTTP
 	// 记录轮询事件时的错误
-	bot.UseHTTP().EventLoop([](const char* errMsg)
+	bot.UseHttp().EventLoop([](const char* errMsg)
 		{
 			cout << "轮询事件时出错: " << errMsg << endl;
 		});

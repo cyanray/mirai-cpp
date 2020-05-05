@@ -67,11 +67,11 @@ namespace Cyan
 		return version;
 	}
 
-	bool MiraiBot::Auth(const string& authKey, QQ_t qq)
+	bool MiraiBot::Auth(const string& auth_key, QQ_t qq)
 	{
 		json data =
 		{
-			{ "authKey", authKey }
+			{ "authKey", auth_key }
 		};
 
 		auto res = http_client_.Post("/auth", data.dump(), "application/json;charset=UTF-8");
@@ -84,7 +84,7 @@ namespace Cyan
 			if (code == 0)
 			{
 				this->sessionKey_ = reJson["session"].get<string>();
-				this->authKey_ = authKey;
+				this->authKey_ = auth_key;
 				this->qq_ = qq;
 				return SessionVerify();
 			}
@@ -489,13 +489,13 @@ namespace Cyan
 	}
 
 
-	bool MiraiBot::Mute(GID_t GID, QQ_t memberID, unsigned int time_seconds)
+	bool MiraiBot::Mute(GID_t gid, QQ_t memberId, unsigned int time_seconds)
 	{
 		json data =
 		{
 			{ "sessionKey", sessionKey_ },
-			{ "target", int64_t(GID)},
-			{ "memberId", int64_t(memberID)},
+			{ "target", int64_t(gid)},
+			{ "memberId", int64_t(memberId)},
 			{ "time", time_seconds}
 		};
 
@@ -521,13 +521,13 @@ namespace Cyan
 	}
 
 
-	bool MiraiBot::UnMute(GID_t GID, QQ_t memberID)
+	bool MiraiBot::UnMute(GID_t gid, QQ_t memberId)
 	{
 		json data =
 		{
 			{ "sessionKey", sessionKey_ },
-			{ "target", int64_t(GID)},
-			{ "memberId", int64_t(memberID)}
+			{ "target", int64_t(gid)},
+			{ "memberId", int64_t(memberId)}
 		};
 
 		auto res = http_client_.Post("/unmute", data.dump(), "application/json;charset=UTF-8");
@@ -552,13 +552,13 @@ namespace Cyan
 	}
 
 
-	bool MiraiBot::Kick(GID_t GID, QQ_t memberID, const string& msg)
+	bool MiraiBot::Kick(GID_t gid, QQ_t memberId, const string& msg)
 	{
 		json data =
 		{
 			{ "sessionKey", sessionKey_ },
-			{ "target", int64_t(GID)},
-			{ "memberId", int64_t(memberID)},
+			{ "target", int64_t(gid)},
+			{ "memberId", int64_t(memberId)},
 			{ "msg" , msg}
 		};
 
@@ -690,7 +690,7 @@ namespace Cyan
 		return *this;
 	}
 
-	MiraiBot& MiraiBot::UseHTTP()
+	MiraiBot& MiraiBot::UseHttp()
 	{
 		this->ws_enabled_ = false;
 		SessionConfigure(cacheSize_, ws_enabled_);
@@ -708,9 +708,9 @@ namespace Cyan
 			try
 			{
 				if (ws_enabled_)
-					FetchEvents_WS();
+					FetchEventsWs();
 				else
-					count = FetchEvents_HTTP(count_per_loop);
+					count = FetchEventsHttp(count_per_loop);
 			}
 			catch (const std::exception& ex)
 			{
@@ -824,7 +824,7 @@ namespace Cyan
 	}
 
 
-	unsigned int MiraiBot::FetchEvents_HTTP(unsigned int count)
+	unsigned int MiraiBot::FetchEventsHttp(unsigned int count)
 	{
 		int received_count = 0;
 		stringstream api_url;
@@ -866,7 +866,7 @@ namespace Cyan
 
 	}
 
-	void MiraiBot::FetchEvents_WS()
+	void MiraiBot::FetchEventsWs()
 	{
 		using namespace easywsclient;
 		stringstream url;
@@ -920,83 +920,83 @@ namespace Cyan
 	}
 
 
-	WeakEvent MiraiBot::CreateEvent(MiraiEvent mirai_event, const json& json_)
+	WeakEvent MiraiBot::CreateEvent(MiraiEvent miraiEvent, const json& json)
 	{
-		if (mirai_event == MiraiEvent::GroupMessage)
+		if (miraiEvent == MiraiEvent::GroupMessage)
 		{
-			return MakeWeakEvent<GroupMessage>(json_);
+			return MakeWeakEvent<GroupMessage>(json);
 		}
-		if (mirai_event == MiraiEvent::FriendMessage)
+		if (miraiEvent == MiraiEvent::FriendMessage)
 		{
-			return MakeWeakEvent<FriendMessage>(json_);
+			return MakeWeakEvent<FriendMessage>(json);
 		}
-		if (mirai_event == MiraiEvent::TempMessage)
+		if (miraiEvent == MiraiEvent::TempMessage)
 		{
-			return MakeWeakEvent<TempMessage>(json_);
+			return MakeWeakEvent<TempMessage>(json);
 		}
-		if (mirai_event == MiraiEvent::NewFriendRequestEvent)
+		if (miraiEvent == MiraiEvent::NewFriendRequestEvent)
 		{
-			return MakeWeakEvent<NewFriendRequestEvent>(json_);
+			return MakeWeakEvent<NewFriendRequestEvent>(json);
 		}
-		if (mirai_event == MiraiEvent::MemberJoinRequestEvent)
+		if (miraiEvent == MiraiEvent::MemberJoinRequestEvent)
 		{
-			return MakeWeakEvent<MemberJoinRequestEvent>(json_);
+			return MakeWeakEvent<MemberJoinRequestEvent>(json);
 		}
-		if (mirai_event == MiraiEvent::MemberJoinEvent)
+		if (miraiEvent == MiraiEvent::MemberJoinEvent)
 		{
-			return MakeWeakEvent<MemberJoinEvent>(json_);
+			return MakeWeakEvent<MemberJoinEvent>(json);
 		}
-		if (mirai_event == MiraiEvent::BotMuteEvent)
+		if (miraiEvent == MiraiEvent::BotMuteEvent)
 		{
-			return MakeWeakEvent<BotMuteEvent>(json_);
+			return MakeWeakEvent<BotMuteEvent>(json);
 		}
-		if (mirai_event == MiraiEvent::BotUnmuteEvent)
+		if (miraiEvent == MiraiEvent::BotUnmuteEvent)
 		{
-			return MakeWeakEvent<BotUnmuteEvent>(json_);
+			return MakeWeakEvent<BotUnmuteEvent>(json);
 		}
-		if (mirai_event == MiraiEvent::MemberMuteEvent)
+		if (miraiEvent == MiraiEvent::MemberMuteEvent)
 		{
-			return MakeWeakEvent<MemberMuteEvent>(json_);
+			return MakeWeakEvent<MemberMuteEvent>(json);
 		}
-		if (mirai_event == MiraiEvent::MemberUnmuteEvent)
+		if (miraiEvent == MiraiEvent::MemberUnmuteEvent)
 		{
-			return MakeWeakEvent<MemberUnmuteEvent>(json_);
+			return MakeWeakEvent<MemberUnmuteEvent>(json);
 		}
-		if (mirai_event == MiraiEvent::MemberLeaveEventKick)
+		if (miraiEvent == MiraiEvent::MemberLeaveEventKick)
 		{
-			return MakeWeakEvent<MemberLeaveEventKick>(json_);
+			return MakeWeakEvent<MemberLeaveEventKick>(json);
 		}
-		if (mirai_event == MiraiEvent::MemberLeaveEventQuit)
+		if (miraiEvent == MiraiEvent::MemberLeaveEventQuit)
 		{
-			return MakeWeakEvent<MemberLeaveEventQuit>(json_);
+			return MakeWeakEvent<MemberLeaveEventQuit>(json);
 		}
-		if (mirai_event == MiraiEvent::GroupRecallEvent)
+		if (miraiEvent == MiraiEvent::GroupRecallEvent)
 		{
-			return MakeWeakEvent<GroupRecallEvent>(json_);
+			return MakeWeakEvent<GroupRecallEvent>(json);
 		}
-		if (mirai_event == MiraiEvent::FriendRecallEvent)
+		if (miraiEvent == MiraiEvent::FriendRecallEvent)
 		{
-			return MakeWeakEvent<FriendRecallEvent>(json_);
+			return MakeWeakEvent<FriendRecallEvent>(json);
 		}
-		if (mirai_event == MiraiEvent::BotOnlineEvent)
+		if (miraiEvent == MiraiEvent::BotOnlineEvent)
 		{
-			return MakeWeakEvent<BotOnlineEvent>(json_);
+			return MakeWeakEvent<BotOnlineEvent>(json);
 		}
-		if (mirai_event == MiraiEvent::BotOfflineEventActive)
+		if (miraiEvent == MiraiEvent::BotOfflineEventActive)
 		{
-			return MakeWeakEvent<BotOfflineEventActive>(json_);
+			return MakeWeakEvent<BotOfflineEventActive>(json);
 		}
-		if (mirai_event == MiraiEvent::BotOfflineEventForce)
+		if (miraiEvent == MiraiEvent::BotOfflineEventForce)
 		{
-			return MakeWeakEvent<BotOfflineEventForce>(json_);
+			return MakeWeakEvent<BotOfflineEventForce>(json);
 		}
-		if (mirai_event == MiraiEvent::BotOfflineEventDropped)
+		if (miraiEvent == MiraiEvent::BotOfflineEventDropped)
 		{
-			return MakeWeakEvent<BotOfflineEventDropped>(json_);
+			return MakeWeakEvent<BotOfflineEventDropped>(json);
 		}
-		if (mirai_event == MiraiEvent::BotReloginEvent)
+		if (miraiEvent == MiraiEvent::BotReloginEvent)
 		{
-			return MakeWeakEvent<BotReloginEvent>(json_);
+			return MakeWeakEvent<BotReloginEvent>(json);
 		}
 	}
 

@@ -71,9 +71,9 @@ namespace Cyan
 		bool SetGroupMemberSpecialTitle(GID_t gid, QQ_t memberId, const string& title);
 		bool MuteAll(GID_t target);
 		bool UnMuteAll(GID_t target);
-		bool Mute(GID_t GID, QQ_t memberID, unsigned int time_seconds);
-		bool UnMute(GID_t GID, QQ_t memberID);
-		bool Kick(GID_t GID, QQ_t memberID, const string& msg = "");
+		bool Mute(GID_t gid, QQ_t memberId, unsigned int time_seconds);
+		bool UnMute(GID_t gid, QQ_t memberId);
+		bool Kick(GID_t gid, QQ_t memberId, const string& msg = "");
 		bool Recall(MessageId mid);
 		FriendMessage GetFriendMessageFromId(MessageId mid);
 		GroupMessage GetGroupMessageFromId(MessageId mid);
@@ -94,18 +94,18 @@ namespace Cyan
 		}
 		MiraiBot& SetCacheSize(int cacheSize);
 		MiraiBot& UseWebSocket();
-		MiraiBot& UseHTTP();
+		MiraiBot& UseHttp();
 		void EventLoop(function<void(const char*)> errLogger = nullptr);
 	private:
 		bool SessionVerify();
 		bool SessionRelease();
 		bool SessionConfigure(int cacheSize, bool enableWebsocket);
-		unsigned int FetchEvents_HTTP(unsigned int count = 10);
-		void FetchEvents_WS();
+		unsigned int FetchEventsHttp(unsigned int count = 10);
+		void FetchEventsWs();
 		void ProcessEvents(const nlohmann::json& ele);
 		template<typename T>
-		inline WeakEvent MakeWeakEvent(const nlohmann::json& json_);
-		WeakEvent CreateEvent(MiraiEvent mirai_event, const nlohmann::json& json_);
+		inline WeakEvent MakeWeakEvent(const nlohmann::json& json);
+		WeakEvent CreateEvent(MiraiEvent miraiEvent, const nlohmann::json& json);
 		bool Release() noexcept;
 		inline string ReadFile(const string& filename);
 
@@ -134,11 +134,11 @@ namespace Cyan
 	}
 
 	template<typename T>
-	inline WeakEvent MiraiBot::MakeWeakEvent(const nlohmann::json& json_)
+	inline WeakEvent MiraiBot::MakeWeakEvent(const nlohmann::json& json)
 	{
 		std::shared_ptr<T> e = std::make_shared<T>();
 		e->SetMiraiBot(this);
-		e->Set(json_);
+		e->Set(json);
 		return std::dynamic_pointer_cast<Serializable>(e);
 	}
 
