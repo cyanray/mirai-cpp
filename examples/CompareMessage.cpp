@@ -1,5 +1,5 @@
 #include <iostream>
-// 使用静态库必须要在引入 mirai.h 前定义这个宏
+// 浣跨敤闈欐�佸簱蹇呴』瑕佸湪寮曞叆 mirai.h 鍓嶅畾涔夎繖涓畯
 #define MIRAICPP_STATICLIB
 #include <mirai.h>
 
