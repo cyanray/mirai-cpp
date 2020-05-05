@@ -20,7 +20,7 @@ namespace Cyan
 		pool_(4) {}
 	MiraiBot::MiraiBot(const string& host, int port) :
 		host_(host),
-		port_(8080),
+		port_(port),
 		qq_(0),
 		cacheSize_(4096),
 		ws_enabled_(true),
@@ -513,14 +513,14 @@ namespace Cyan
 	}
 
 
-	bool MiraiBot::Kick(GID_t gid, QQ_t memberId, const string& msg)
+	bool MiraiBot::Kick(GID_t gid, QQ_t memberId, const string& reason_msg)
 	{
 		json data =
 		{
 			{ "sessionKey", sessionKey_ },
 			{ "target", int64_t(gid)},
 			{ "memberId", int64_t(memberId)},
-			{ "msg" , msg}
+			{ "reason_msg" , reason_msg}
 		};
 
 		auto res = http_client_.Post("/kick", data.dump(), "application/json;charset=UTF-8");

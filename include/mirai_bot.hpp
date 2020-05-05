@@ -215,10 +215,10 @@ namespace Cyan
 		 * \brief 将群成员踢出群组
 		 * \param gid 群组(GID_t)
 		 * \param memberId 群成员(QQ_t)
-		 * \param msg 可选, 填写踢人理由, 默认为空
+		 * \param reason_msg 可选, 填写踢人理由, 默认为空
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		bool Kick(GID_t gid, QQ_t memberId, const string& msg = "");
+		bool Kick(GID_t gid, QQ_t memberId, const string& reason_msg = "");
 		/**
 		 * \brief 撤回一条消息
 		 * \param mid 消息ID(MessageId)
