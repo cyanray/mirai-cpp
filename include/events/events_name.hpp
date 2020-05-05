@@ -17,6 +17,8 @@ namespace Cyan
 	{
 		Default,					// 未知
 		BotOnlineEvent,			// Bot 登录成功
+		BotOfflineEventActive,	// Bot 主动离线
+		BotOfflineEventForce,	// Bot 被挤下线
 		FriendMessage,			// 好友消息
 		GroupMessage,			// 群组消息
 		TempMessage,				// 临时消息
@@ -53,6 +55,8 @@ namespace Cyan
 		if (miraiEvent == "GroupRecallEvent") return MiraiEvent::GroupRecallEvent;
 		if (miraiEvent == "FriendRecallEvent") return MiraiEvent::FriendRecallEvent;
 		if (miraiEvent == "BotOnlineEvent") return MiraiEvent::BotOnlineEvent;
+		if (miraiEvent == "BotOfflineEventActive") return MiraiEvent::BotOfflineEventActive;
+		if (miraiEvent == "BotOfflineEventForce") return MiraiEvent::BotOfflineEventForce;
 		return MiraiEvent::Default;
 	}
 
@@ -105,6 +109,12 @@ namespace Cyan
 			break;
 		case Cyan::MiraiEvent::BotOnlineEvent:
 			result = "BotOnlineEvent";
+			break;
+		case Cyan::MiraiEvent::BotOfflineEventActive:
+			result = "BotOfflineEventActive";
+			break;
+		case Cyan::MiraiEvent::BotOfflineEventForce:
+			result = "BotOfflineEventForce";
 			break;
 		default:
 			result = "Default";
@@ -208,6 +218,18 @@ namespace Cyan
 	inline MiraiEvent GetEventType<BotOnlineEvent>()
 	{
 		return MiraiEvent::BotOnlineEvent;
+	}
+
+	template<>
+	inline MiraiEvent GetEventType<BotOfflineEventActive>()
+	{
+		return MiraiEvent::BotOfflineEventActive;
+	}
+
+	template<>
+	inline MiraiEvent GetEventType<BotOfflineEventForce>()
+	{
+		return MiraiEvent::BotOfflineEventForce;
 	}
 
 }

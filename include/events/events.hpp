@@ -8,6 +8,8 @@
 #include "temp_message.hpp"
 // 机器人相关事件
 #include "bot_online_event.hpp"
+#include "bot_offline_active.hpp"
+#include "bot_offline_force.hpp"
 // 好友相关事件
 #include "new_friend_event.hpp"
 #include "friend_recall_event.hpp"
