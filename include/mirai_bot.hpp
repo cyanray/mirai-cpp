@@ -66,6 +66,9 @@ namespace Cyan
 		vector<Group_t> GetGroupList();
 		vector<GroupMember_t> GetGroupMembers(GID_t target);
 		GroupMemberInfo GetGroupMemberInfo(GID_t gid, QQ_t memberId);
+		bool SetGroupMemberInfo(GID_t gid, QQ_t memberId, const GroupMemberInfo& memberInfo);
+		bool SetGroupMemberName(GID_t gid, QQ_t memberId, const string& name);
+		bool SetGroupMemberSpecialTitle(GID_t gid, QQ_t memberId, const string& title);
 		bool MuteAll(GID_t target);
 		bool UnMuteAll(GID_t target);
 		bool Mute(GID_t GID, QQ_t memberID, unsigned int time_seconds);

@@ -385,6 +385,50 @@ namespace Cyan
 		return result;
 	}
 
+	bool MiraiBot::SetGroupMemberInfo(GID_t gid, QQ_t memberId, const GroupMemberInfo& memberInfo)
+	{
+		json data =
+		{
+			{ "sessionKey", sessionKey_ },
+			{ "target", int64_t(gid)},
+			{ "memberId", int64_t(memberId)}
+		};
+		data["info"] = memberInfo.ToJson();
+
+		auto res = http_client_.Post("/memberInfo", data.dump(), "application/json;charset=UTF-8");
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-api-http error]: " + res->body);
+			json reJson = json::parse(res->body);
+			int code = reJson["code"].get<int>();
+			if (code == 0)
+				return true;
+			else
+			{
+				string msg = reJson["msg"].get<string>();
+				throw runtime_error(msg);
+			}
+		}
+		else
+			throw std::runtime_error("网络错误");
+		return false;
+	}
+
+	bool MiraiBot::SetGroupMemberName(GID_t gid, QQ_t memberId, const string& name)
+	{
+		auto memberInfo = this->GetGroupMemberInfo(gid, memberId);
+		memberInfo.Name = name;
+		return this->SetGroupMemberInfo(gid, memberId, memberInfo);
+	}
+
+	bool MiraiBot::SetGroupMemberSpecialTitle(GID_t gid, QQ_t memberId, const string& title)
+	{
+		auto memberInfo = this->GetGroupMemberInfo(gid, memberId);
+		memberInfo.SpecialTitle = title;
+		return this->SetGroupMemberInfo(gid, memberId, memberInfo);
+	}
+
 	bool MiraiBot::MuteAll(GID_t target)
 	{
 		json data =
