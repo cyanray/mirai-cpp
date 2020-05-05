@@ -20,6 +20,7 @@ namespace Cyan
 		BotOfflineEventActive,	// Bot 主动离线
 		BotOfflineEventForce,	// Bot 被挤下线
 		BotOfflineEventDropped,	// Bot 被挤下线
+		BotReloginEvent,			// Bot 主动重新登录
 		FriendMessage,			// 好友消息
 		GroupMessage,			// 群组消息
 		TempMessage,				// 临时消息
@@ -59,6 +60,7 @@ namespace Cyan
 		if (miraiEvent == "BotOfflineEventActive") return MiraiEvent::BotOfflineEventActive;
 		if (miraiEvent == "BotOfflineEventForce") return MiraiEvent::BotOfflineEventForce;
 		if (miraiEvent == "BotOfflineEventDropped") return MiraiEvent::BotOfflineEventDropped;
+		if (miraiEvent == "BotReloginEvent") return MiraiEvent::BotReloginEvent;
 		return MiraiEvent::Default;
 	}
 
@@ -120,6 +122,9 @@ namespace Cyan
 			break;
 		case Cyan::MiraiEvent::BotOfflineEventDropped:
 			result = "BotOfflineEventDropped";
+			break;
+		case Cyan::MiraiEvent::BotReloginEvent:
+			result = "BotReloginEvent";
 			break;
 		default:
 			result = "Default";
@@ -241,6 +246,12 @@ namespace Cyan
 	inline MiraiEvent GetEventType<BotOfflineEventDropped>()
 	{
 		return MiraiEvent::BotOfflineEventDropped;
+	}
+
+	template<>
+	inline MiraiEvent GetEventType<BotReloginEvent>()
+	{
+		return MiraiEvent::BotReloginEvent;
 	}
 
 }
