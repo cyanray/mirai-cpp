@@ -910,6 +910,10 @@ namespace Cyan
 		{
 			return MakeWeakEvent<FriendRecallEvent>(json_);
 		}
+		if (mirai_event == MiraiEvent::BotOnlineEvent)
+		{
+			return MakeWeakEvent<BotOnlineEvent>(json_);
+		}
 	}
 
 	bool MiraiBot::Release() noexcept

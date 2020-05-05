@@ -6,6 +6,8 @@
 #include "friend_message.hpp"
 #include "group_message.hpp"
 #include "temp_message.hpp"
+// 机器人相关事件
+#include "bot_online_event.hpp"
 // 好友相关事件
 #include "new_friend_event.hpp"
 #include "friend_recall_event.hpp"
