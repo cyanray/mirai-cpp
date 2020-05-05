@@ -37,7 +37,35 @@ int main()
 				MessageChain().Plain("👴 出狱了!"));
 		});
 
+	bot.On<BotOnlineEvent>(
+		[&](BotOnlineEvent e)
+		{
+			cout << "Bot "<< (int64_t)e.QQ <<" 主动登录事件" << endl;
+		});
 
+	bot.On<BotOfflineEventActive>(
+		[&](BotOfflineEventActive e)
+		{
+			cout << "Bot " << (int64_t)e.QQ << " 主动下线事件" << endl;
+		});
+
+	bot.On<BotOfflineEventForce>(
+		[&](BotOfflineEventForce e)
+		{
+			cout << "Bot " << (int64_t)e.QQ << " 被挤下线事件" << endl;
+		});
+
+	bot.On<BotOfflineEventDropped>(
+		[&](BotOfflineEventDropped e)
+		{
+			cout << "Bot " << (int64_t)e.QQ << " 因网络原掉线事件" << endl;
+		});
+
+	bot.On<BotReloginEvent>(
+		[&](BotReloginEvent e)
+		{
+			cout << "Bot " << (int64_t)e.QQ << " 重新登录事件" << endl;
+		});
 
 	bot.EventLoop();
 
