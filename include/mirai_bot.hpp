@@ -41,6 +41,17 @@ namespace Cyan
 		MiraiBot();
 		MiraiBot(const string& host, int port);
 		~MiraiBot();
+		int GetRequiredApiVersionInt() const
+		{
+			// mirai-api-http v1.6.5
+			return 10605;
+		}
+		string GetRequiredApiVersion() const
+		{
+			// mirai-api-http v1.6.5
+			return "v1.6.5";
+		}
+		string GetApiVersion();
 		string GetSessionKey() const;
 		QQ_t GetBotQQ() const;
 		httplib::Client* GetHttpClient();

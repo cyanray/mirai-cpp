@@ -9,6 +9,18 @@ int main()
 	using namespace Cyan;
 	system("chcp 65001");
 	MiraiBot bot("127.0.0.1", 539);
+	try
+	{
+		string current_version = bot.GetApiVersion();
+		string required_version = bot.GetRequiredApiVersion();
+		cout << "! 需要的 API 版本: " << required_version
+			<< "; 当前 API 版本: " << current_version << "; " << endl;
+		if (current_version != required_version)
+		{
+			cout << "! 警告: 你的 mirai-api-http 插件的版本与 mirai-cpp 适配的版本不同，可能存在潜在的异常。" << endl;
+		}
+	}
+	catch (const std::exception&) {}
 	while (true)
 	{
 		try
@@ -44,7 +56,7 @@ int main()
 
 
 	// 记录轮询事件时的错误
-	bot.EventLoop([](const char* errMsg) 
+	bot.EventLoop([](const char* errMsg)
 		{
 			cout << "轮询事件时出错: " << errMsg << endl;
 		});

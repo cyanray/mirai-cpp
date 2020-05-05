@@ -42,6 +42,31 @@ namespace Cyan
 	{
 		return &(this->http_client_);
 	}
+
+	string MiraiBot::GetApiVersion()
+	{
+		string version;
+		auto res = http_client_.Get("/about");
+		if (res)
+		{
+			if (res->status != 200)
+				throw std::runtime_error("[mirai-http-api error]: " + res->body);
+			json reJson = json::parse(res->body);
+			if (!reJson.is_object()) throw runtime_error("解析返回 JSON 时出错");
+			int code = reJson["code"].get<int>();
+			if (code == 0)
+				version =  reJson["data"]["version"].get<string>();
+			else
+			{
+				string msg = reJson["errorMessage"].get<string>();
+				throw runtime_error(msg);
+			}
+		}
+		else
+			throw runtime_error("网络错误");
+		return version;
+	}
+
 	bool MiraiBot::Auth(const string& authKey, QQ_t qq)
 	{
 		json data =
