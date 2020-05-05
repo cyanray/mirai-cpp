@@ -20,11 +20,13 @@
 
 ## 项目文档
 
+> 项目文档没有详细介绍各 API 函数的用法，mirai_bot.hpp 中的注释已经比较详细，如有疑惑，建议浏览。
+
 项目文档: [使用说明](doc/使用说明.md)
 
 对于刚入门的 C++ 用户，推荐使用 [mirai-cpp-template](https://github.com/cyanray/mirai-cpp-template) 这个模板项目来降低使用难度。
 
-因为文档不够全面，推荐阅读各个 examples 。阅读完 examples 后，应该就可以按照“直觉”来使用 mirai-cpp 了。
+推荐阅读 examples 目录下的示例。
 
 | 文件名               | 说明                         |
 |----------------------|------------------------------|
@@ -41,6 +43,9 @@
 | RecallEvent.cpp      | 处理其他人撤回消息的事件     |
 | Mute.cpp             | 和禁言有关的操作             |
 | RichMessage.cpp      | 发送 JSON、闪照等类型的消息  |
+| CompareMessage.cpp   | 对比 MessageChain 是否相同   |
+| FetchEventsViaHTTP.cpp| 设置通过 HTTP 短轮询获取事件和消息 |
+| GroupMemberInfo.cpp  | 获取/设置群成员的群名片与群头衔 |
 
 ## 如何使用
 
