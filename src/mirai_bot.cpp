@@ -922,6 +922,10 @@ namespace Cyan
 		{
 			return MakeWeakEvent<BotOfflineEventForce>(json_);
 		}
+		if (mirai_event == MiraiEvent::BotOfflineEventDropped)
+		{
+			return MakeWeakEvent<BotOfflineEventDropped>(json_);
+		}
 	}
 
 	bool MiraiBot::Release() noexcept

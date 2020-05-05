@@ -41,7 +41,7 @@ namespace Cyan
 		{
 			json j = json::object();
 			j["type"] = "BotOfflineEventForce";
-			j["qq"] = (int64_t)this->DurationSeconds;
+			j["qq"] = (int64_t)this->QQ;
 			return j;
 		}
 

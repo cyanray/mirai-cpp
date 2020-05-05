@@ -10,6 +10,7 @@
 #include "bot_online_event.hpp"
 #include "bot_offline_active.hpp"
 #include "bot_offline_force.hpp"
+#include "bot_offline_dropped.hpp"
 // 好友相关事件
 #include "new_friend_event.hpp"
 #include "friend_recall_event.hpp"

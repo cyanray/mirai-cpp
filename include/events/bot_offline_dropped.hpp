@@ -1,6 +1,6 @@
 #pragma once
-#ifndef mirai_cpp_events_bot_online_event_hpp_H_
-#define mirai_cpp_events_bot_online_event_hpp_H_
+#ifndef mirai_cpp_events_bot_offline_dropped_hpp_H_
+#define mirai_cpp_events_bot_offline_dropped_hpp_H_
 
 #include <nlohmann/json.hpp>
 #include "defs/qq_types.hpp"
@@ -8,20 +8,20 @@
 
 namespace Cyan
 {
-	// bot 登录成功事件
-	class BotOnlineEvent : public Serializable
+	// bot 因网络原因掉线
+	class BotOfflineEventDropped : public Serializable
 	{
 	public:
 		QQ_t QQ;
 
-		BotOnlineEvent() = default;
-		BotOnlineEvent(const BotOnlineEvent& gm)
+		BotOfflineEventDropped() = default;
+		BotOfflineEventDropped(const BotOfflineEventDropped& gm)
 		{
 			QQ = gm.QQ;
 		}
-		BotOnlineEvent& operator=(const BotOnlineEvent& t)
+		BotOfflineEventDropped& operator=(const BotOfflineEventDropped& t)
 		{
-			BotOnlineEvent tmp(t);
+			BotOfflineEventDropped tmp(t);
 			std::swap(this->QQ, tmp.QQ);
 			return *this;
 		}
@@ -31,7 +31,7 @@ namespace Cyan
 			this->bot_ = bot;
 		}
 
-		virtual ~BotOnlineEvent() = default;
+		virtual ~BotOfflineEventDropped() = default;
 		virtual bool Set(const json& j) override
 		{
 			this->QQ = (QQ_t)(j["qq"].get<int64_t>());
@@ -40,7 +40,7 @@ namespace Cyan
 		virtual json ToJson() const override
 		{
 			json j = json::object();
-			j["type"] = "BotOnlineEvent";
+			j["type"] = "BotOfflineEventDropped";
 			j["qq"] = (int64_t)this->QQ;
 			return j;
 		}
@@ -51,4 +51,4 @@ namespace Cyan
 
 }
 
-#endif // !mirai_cpp_events_bot_online_event_hpp_H_
+#endif // !mirai_cpp_events_bot_offline_dropped_hpp_H_
