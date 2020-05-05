@@ -67,11 +67,11 @@ namespace Cyan
 		return version;
 	}
 
-	bool MiraiBot::Auth(const string& auth_key, QQ_t qq)
+	bool MiraiBot::Auth(const string& authKey, QQ_t qq)
 	{
 		json data =
 		{
-			{ "authKey", auth_key }
+			{ "authKey", authKey }
 		};
 
 		auto res = http_client_.Post("/auth", data.dump(), "application/json;charset=UTF-8");
@@ -84,7 +84,7 @@ namespace Cyan
 			if (code == 0)
 			{
 				this->sessionKey_ = reJson["session"].get<string>();
-				this->authKey_ = auth_key;
+				this->authKey_ = authKey;
 				this->qq_ = qq;
 				return SessionVerify();
 			}
