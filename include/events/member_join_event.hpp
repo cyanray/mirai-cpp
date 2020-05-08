@@ -7,6 +7,7 @@
 #include "defs/serializable.hpp"
 #include "defs/message_chain.hpp"
 #include "defs/group_member.hpp"
+#include "event_interface.hpp"
 
 namespace Cyan
 {

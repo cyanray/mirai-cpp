@@ -5,6 +5,7 @@
 #include <nlohmann/json.hpp>
 #include "defs/qq_types.hpp"
 #include "defs/serializable.hpp"
+#include "event_interface.hpp"
 
 namespace Cyan
 {

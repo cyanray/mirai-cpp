@@ -306,9 +306,6 @@ namespace Cyan
 		unsigned int FetchEventsHttp(unsigned int count = 10);
 		void FetchEventsWs();
 		void ProcessEvents(const json& ele);
-		template <typename T>
-		WeakEvent MakeWeakEvent(const json& json);
-		WeakEvent CreateEvent(MiraiEvent miraiEvent, const json& json);
 		bool Release() noexcept;
 		static inline string ReadFile(const string& filename);
 		// 私有成员变量
@@ -338,7 +335,7 @@ namespace Cyan
 				if (we == nullptr)
 				{
 					std::shared_ptr<T> e = std::make_shared<T>();
-					return std::dynamic_pointer_cast<Serializable>(e);
+					return std::dynamic_pointer_cast<EventBase>(e);
 				}
 				else
 				{
@@ -349,14 +346,6 @@ namespace Cyan
 		return *this;
 		}
 
-		template <typename T>
-		WeakEvent MiraiBot::MakeWeakEvent(const json& json)
-		{
-			std::shared_ptr<T> e = std::make_shared<T>();
-			e->SetMiraiBot(this);
-			e->Set(json);
-			return std::dynamic_pointer_cast<Serializable>(e);
-		}
 	} // namespace Cyan
 
 #endif // !mirai_cpp__mirai_bot_hpp_H_

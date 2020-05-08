@@ -6,6 +6,7 @@
 #include "defs/qq_types.hpp"
 #include "defs/serializable.hpp"
 #include "defs/group_member.hpp"
+#include "event_interface.hpp"
 
 namespace Cyan
 {

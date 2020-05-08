@@ -8,6 +8,7 @@
 #include "defs/message_chain.hpp"
 #include "defs/friend.hpp"
 #include "exported.h"
+#include "event_interface.hpp"
 
 namespace Cyan
 {

@@ -8,6 +8,8 @@
 #include "defs/message_chain.hpp"
 #include "defs/group_member.hpp"
 #include "exported.h"
+#include "event_interface.hpp"
+
 namespace Cyan
 {
 	// 由群组发来的临时消息

@@ -5,7 +5,7 @@
 #include "defs/serializable.hpp"
 namespace Cyan
 {
-	// Ç°ÖÃÉùÃ÷ MiraiBot Àà
+	// å‰ç½®å£°æ˜ MiraiBot ç±»
 	class MiraiBot;
 
 	class EventBase : public Serializable
