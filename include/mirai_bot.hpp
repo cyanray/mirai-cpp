@@ -321,7 +321,7 @@ namespace Cyan
 		bool ws_enabled_;
 		httplib::Client http_client_;
 		ThreadPool pool_;
-		unordered_map<MiraiEvent, function<void(WeakEvent)>> processors_;
+		unordered_map<MiraiEvent, function<WeakEvent(WeakEvent)>> processors_;
 	};
 
 	template <typename T>
@@ -331,20 +331,32 @@ namespace Cyan
 			GetEventType<T>(),
 			[=](WeakEvent we)
 			{
-				ep(*(std::dynamic_pointer_cast<T>(we)));
-			}
-		});
+				// 这个lambda函数有两个作用
+				// 1.创建类型为T的WeakEvent
+				// 2.将传入的WeakEvent转化为类型T
+				//   然后给 EventProcessor 使用
+				if (we == nullptr)
+				{
+					std::shared_ptr<T> e = std::make_shared<T>();
+					return std::dynamic_pointer_cast<Serializable>(e);
+				}
+				else
+				{
+					ep(*(std::dynamic_pointer_cast<T>(we)));
+					return we;
+				}
+			});
 		return *this;
-	}
+		}
 
-	template <typename T>
-	WeakEvent MiraiBot::MakeWeakEvent(const json& json)
-	{
-		std::shared_ptr<T> e = std::make_shared<T>();
-		e->SetMiraiBot(this);
-		e->Set(json);
-		return std::dynamic_pointer_cast<Serializable>(e);
-	}
-} // namespace Cyan
+		template <typename T>
+		WeakEvent MiraiBot::MakeWeakEvent(const json& json)
+		{
+			std::shared_ptr<T> e = std::make_shared<T>();
+			e->SetMiraiBot(this);
+			e->Set(json);
+			return std::dynamic_pointer_cast<Serializable>(e);
+		}
+	} // namespace Cyan
 
 #endif // !mirai_cpp__mirai_bot_hpp_H_
