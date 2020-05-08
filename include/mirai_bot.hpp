@@ -342,10 +342,10 @@ namespace Cyan
 					ep(*(std::dynamic_pointer_cast<T>(we)));
 					return we;
 				}
-			});
+			} });
 		return *this;
-		}
+	}
 
-	} // namespace Cyan
+} // namespace Cyan
 
 #endif // !mirai_cpp__mirai_bot_hpp_H_

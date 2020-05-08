@@ -21,7 +21,7 @@ namespace Cyan
 
 		static MiraiEvent GetMiraiEvent()
 		{
-			return MiraiEvent::FriendRecallEvent;
+			return MiraiEvent::TempMessage;
 		}
 
 		virtual void SetMiraiBot(MiraiBot* bot) override

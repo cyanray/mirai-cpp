@@ -8,32 +8,32 @@
 namespace Cyan
 {
 
-	MessageId TempMessage::Reply(const MessageChain& mc) const
+	MessageId TempMessage::Reply(const Cyan::MessageChain& mc) const
 	{
 		return bot_->SendMessage(Sender.Group.GID, Sender.QQ, mc);
 	}
 
-	MessageId FriendMessage::Reply(const MessageChain& mc) const
+	MessageId FriendMessage::Reply(const Cyan::MessageChain& mc) const
 	{
 		return bot_->SendMessage(Sender.QQ, mc);
 	}
 
-	MessageId GroupMessage::Reply(const MessageChain& mc) const
+	MessageId GroupMessage::Reply(const Cyan::MessageChain& mc) const
 	{
 		return bot_->SendMessage(Sender.Group.GID, mc);
 	}
 
-	MessageId TempMessage::QuoteReply(const MessageChain& mc) const
+	MessageId TempMessage::QuoteReply(const Cyan::MessageChain& mc) const
 	{
 		return bot_->SendMessage(Sender.Group.GID, Sender.QQ, mc, GetMessageId());
 	}
 
-	MessageId FriendMessage::QuoteReply(const MessageChain& mc) const
+	MessageId FriendMessage::QuoteReply(const Cyan::MessageChain& mc) const
 	{
 		return bot_->SendMessage(Sender.QQ, mc, GetMessageId());
 	}
 
-	MessageId GroupMessage::QuoteReply(const MessageChain& mc) const
+	MessageId GroupMessage::QuoteReply(const Cyan::MessageChain& mc) const
 	{
 		return bot_->SendMessage(Sender.Group.GID, mc, GetMessageId());
 	}

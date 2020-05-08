@@ -828,8 +828,8 @@ namespace Cyan
 			auto executor = pit->second;
 			// 给 executor 传入 nullptr 可以创建一个 WeakEvent
 			WeakEvent pevent = executor(nullptr);
-			pevent.SetMiraiBot(this);
-			pevent.Set(ele);
+			pevent->SetMiraiBot(this);
+			pevent->Set(ele);
 
 			pool_.enqueue([=]()
 				{
