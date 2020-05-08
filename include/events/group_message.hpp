@@ -13,13 +13,13 @@
 namespace Cyan
 {
 	// 群组发来的消息
-	class EXPORTED GroupMessage : public Serializable, public EventBase
+	class EXPORTED GroupMessage : public EventBase
 	{
 	public:
 		Cyan::MessageChain MessageChain;
 		GroupMember_t Sender;
 
-		static MiraiEvent GetMiraiEvent() 
+		static MiraiEvent GetMiraiEvent()
 		{
 			return MiraiEvent::GroupMessage;
 		}

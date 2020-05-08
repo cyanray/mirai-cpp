@@ -10,7 +10,7 @@
 namespace Cyan
 {
 	// 好友消息撤回事件
-	class FriendRecallEvent : public Serializable
+	class FriendRecallEvent : public EventBase
 	{
 	public:
 		int64_t Time = 0;
@@ -18,30 +18,18 @@ namespace Cyan
 		Cyan::MessageId MessageId;
 		QQ_t Operator;
 
-		FriendRecallEvent() = default;
-		FriendRecallEvent(const FriendRecallEvent& gm)
+
+		static MiraiEvent GetMiraiEvent()
 		{
-			Time = gm.Time;
-			AuthorQQ = gm.AuthorQQ;
-			MessageId = gm.MessageId;
-			Operator = gm.Operator;
-		}
-		FriendRecallEvent& operator=(const FriendRecallEvent& t)
-		{
-			FriendRecallEvent tmp(t);
-			std::swap(this->Time, tmp.Time);
-			std::swap(this->AuthorQQ, tmp.AuthorQQ);
-			std::swap(this->MessageId, tmp.MessageId);
-			std::swap(this->Operator, tmp.Operator);
-			return *this;
+			return MiraiEvent::FriendRecallEvent;
 		}
 
-		void SetMiraiBot(MiraiBot* bot)
+
+		virtual void SetMiraiBot(MiraiBot* bot) override
 		{
 			this->bot_ = bot;
 		}
 
-		virtual ~FriendRecallEvent() = default;
 		virtual bool Set(const json& j) override
 		{
 			this->Time = j["time"].get<int64_t>();

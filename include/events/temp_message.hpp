@@ -11,27 +11,22 @@
 namespace Cyan
 {
 	// 由群组发来的临时消息
-	class EXPORTED TempMessage : public Serializable
+	class EXPORTED TempMessage : public EventBase
 	{
 	public:
 		Cyan::MessageChain MessageChain;
 		GroupMember_t Sender;
 
-		TempMessage() :MessageChain(), Sender(), bot_(nullptr) {}
-		TempMessage(const TempMessage& gm)
+		static MiraiEvent GetMiraiEvent()
 		{
-			MessageChain = gm.MessageChain;
-			Sender = gm.Sender;
-			bot_ = gm.bot_;
+			return MiraiEvent::FriendRecallEvent;
 		}
-		TempMessage& operator=(const TempMessage& t)
+
+		virtual void SetMiraiBot(MiraiBot* bot) override
 		{
-			TempMessage tmp(t);
-			std::swap(this->MessageChain, tmp.MessageChain);
-			std::swap(this->Sender, tmp.Sender);
-			std::swap(this->bot_, tmp.bot_);
-			return *this;
+			this->bot_ = bot;
 		}
+
 		MessageId GetMessageId() const
 		{
 			return (this->MessageChain).GetMessageId();
@@ -42,15 +37,9 @@ namespace Cyan
 			return (this->MessageChain).GetTimestamp();
 		}
 
-		void SetMiraiBot(MiraiBot* bot)
-		{
-			this->bot_ = bot;
-		}
-
 		MessageId Reply(const Cyan::MessageChain& mc) const;
 		MessageId QuoteReply(const Cyan::MessageChain& mc) const;
 
-		virtual ~TempMessage() = default;
 		virtual bool Set(const json& j) override
 		{
 			this->MessageChain.Set(j["messageChain"]);

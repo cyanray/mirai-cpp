@@ -12,7 +12,7 @@
 namespace Cyan
 {
 	// 新好友请求事件
-	class EXPORTED NewFriendRequestEvent : public Serializable
+	class EXPORTED NewFriendRequestEvent : public EventBase
 	{
 	public:
 		int64_t EventId;
@@ -21,29 +21,12 @@ namespace Cyan
 		string Nick;
 		string Message;
 
-		NewFriendRequestEvent() = default;
-		NewFriendRequestEvent(const NewFriendRequestEvent& gm)
+		static MiraiEvent GetMiraiEvent()
 		{
-			EventId = gm.EventId;
-			FromId = gm.FromId;
-			GroupId = gm.GroupId;
-			Nick = gm.Nick;
-			Message = gm.Message;
-			bot_ = gm.bot_;
-		}
-		NewFriendRequestEvent& operator=(const NewFriendRequestEvent& t)
-		{
-			NewFriendRequestEvent tmp(t);
-			std::swap(this->EventId, tmp.EventId);
-			std::swap(this->FromId, tmp.FromId);
-			std::swap(this->GroupId, tmp.GroupId);
-			std::swap(this->Nick, tmp.Nick);
-			std::swap(this->Message, tmp.Message);
-			std::swap(this->bot_, tmp.bot_);
-			return *this;
+			return MiraiEvent::FriendRecallEvent;
 		}
 
-		void SetMiraiBot(MiraiBot* bot)
+		virtual void SetMiraiBot(MiraiBot* bot) override
 		{
 			this->bot_ = bot;
 		}
@@ -63,7 +46,6 @@ namespace Cyan
 			return Respose(2, message);
 		}
 
-		virtual ~NewFriendRequestEvent() = default;
 		virtual bool Set(const json& j) override
 		{
 			this->EventId = j["eventId"].get<int64_t>();

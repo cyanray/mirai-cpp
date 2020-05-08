@@ -12,27 +12,17 @@
 namespace Cyan
 {
 	// 好友发来的消息
-	class EXPORTED FriendMessage : public Serializable
+	class EXPORTED FriendMessage : public EventBase
 	{
 	public:
 		Cyan::MessageChain MessageChain;
 		Friend_t Sender;
 
-		FriendMessage() = default;
-		FriendMessage(const FriendMessage& gm)
+		static MiraiEvent GetMiraiEvent()
 		{
-			MessageChain = gm.MessageChain;
-			Sender = gm.Sender;
-			bot_ = gm.bot_;
+			return MiraiEvent::FriendMessage;
 		}
-		FriendMessage& operator=(const FriendMessage& t)
-		{
-			FriendMessage tmp(t);
-			std::swap(this->MessageChain, tmp.MessageChain);
-			std::swap(this->Sender, tmp.Sender);
-			std::swap(this->bot_, tmp.bot_);
-			return *this;
-		}
+
 		MessageId GetMessageId() const
 		{
 			return this->MessageChain.GetMessageId();
@@ -43,7 +33,7 @@ namespace Cyan
 			return this->MessageChain.GetTimestamp();
 		}
 
-		void SetMiraiBot(MiraiBot* bot)
+		virtual void SetMiraiBot(MiraiBot* bot) override
 		{
 			this->bot_ = bot;
 		}
@@ -51,13 +41,13 @@ namespace Cyan
 		MessageId Reply(const Cyan::MessageChain& mc) const;
 		MessageId QuoteReply(const Cyan::MessageChain& mc) const;
 
-		virtual ~FriendMessage() = default;
 		virtual bool Set(const json& j) override
 		{
 			this->MessageChain.Set(j["messageChain"]);
 			this->Sender.Set(j["sender"]);
 			return true;
 		}
+
 		virtual json ToJson() const override
 		{
 			json j = json::object();

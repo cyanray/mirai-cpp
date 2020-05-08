@@ -10,32 +10,19 @@
 namespace Cyan
 {
 	// 群成员被禁言事件
-	class MemberMuteEvent : public Serializable
+	class MemberMuteEvent : public EventBase
 	{
 	public:
 		int DurationSeconds = 0;
 		GroupMember_t Member;
 		GroupMember_t Operator;
 
-		MemberMuteEvent() = default;
-		MemberMuteEvent(const MemberMuteEvent& gm)
+		static MiraiEvent GetMiraiEvent()
 		{
-			DurationSeconds = gm.DurationSeconds;
-			Member = gm.Member;
-			Operator = gm.Operator;
-			operator_is_null_ = gm.operator_is_null_;
-		}
-		MemberMuteEvent& operator=(const MemberMuteEvent& t)
-		{
-			MemberMuteEvent tmp(t);
-			std::swap(this->DurationSeconds, tmp.DurationSeconds);
-			std::swap(this->Member, tmp.Member);
-			std::swap(this->Operator, tmp.Operator);
-			std::swap(this->operator_is_null_, tmp.operator_is_null_);
-			return *this;
+			return MiraiEvent::MemberMuteEvent;
 		}
 
-		void SetMiraiBot(MiraiBot* bot)
+		virtual void SetMiraiBot(MiraiBot* bot) override
 		{
 			this->bot_ = bot;
 		}
@@ -45,7 +32,6 @@ namespace Cyan
 			return operator_is_null_;
 		}
 
-		virtual ~MemberMuteEvent() = default;
 		virtual bool Set(const json& j) override
 		{
 			this->DurationSeconds = j["durationSeconds"].get<int>();

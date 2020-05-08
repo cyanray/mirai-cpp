@@ -4,14 +4,14 @@
 
 #include <functional>
 #include <memory>
-#include "defs/serializable.hpp"
+#include "event_interface.hpp"
 
 namespace Cyan
 {
 	template<typename T>
 	using EventProcessor = std::function<void(T)>;
 
-	typedef std::shared_ptr<Serializable> WeakEvent;
+	typedef std::shared_ptr<EventBase> WeakEvent;
 	//using WeakEvent = std::function<void(Serializable*)>;
 
 

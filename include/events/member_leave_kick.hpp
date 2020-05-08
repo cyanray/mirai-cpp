@@ -10,32 +10,22 @@
 namespace Cyan
 {
 	// 群成员被踢出群事件
-	class MemberLeaveEventKick : public Serializable
+	class MemberLeaveEventKick : public EventBase
 	{
 	public:
 		GroupMember_t Member;
 		GroupMember_t Operator;
 
-		MemberLeaveEventKick() = default;
-		MemberLeaveEventKick(const MemberLeaveEventKick& gm)
+		static MiraiEvent GetMiraiEvent()
 		{
-			Member = gm.Member;
-			Operator = gm.Operator;
-		}
-		MemberLeaveEventKick& operator=(const MemberLeaveEventKick& t)
-		{
-			MemberLeaveEventKick tmp(t);
-			std::swap(this->Member, tmp.Member);
-			std::swap(this->Operator, tmp.Operator);
-			return *this;
+			return MiraiEvent::MemberLeaveEventKick;
 		}
 
-		void SetMiraiBot(MiraiBot* bot)
+		virtual void SetMiraiBot(MiraiBot* bot) override
 		{
 			this->bot_ = bot;
 		}
 
-		virtual ~MemberLeaveEventKick() = default;
 		virtual bool Set(const json& j) override
 		{
 			this->Member.Set(j["member"]);

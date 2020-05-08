@@ -14,24 +14,16 @@ namespace Cyan
 	public:
 		QQ_t QQ;
 
-		BotOnlineEvent() = default;
-		BotOnlineEvent(const BotOnlineEvent& gm)
+		static MiraiEvent GetMiraiEvent()
 		{
-			QQ = gm.QQ;
-		}
-		BotOnlineEvent& operator=(const BotOnlineEvent& t)
-		{
-			BotOnlineEvent tmp(t);
-			std::swap(this->QQ, tmp.QQ);
-			return *this;
+			return MiraiEvent::BotOnlineEvent;
 		}
 
-		void SetMiraiBot(MiraiBot* bot)
+		virtual void SetMiraiBot(MiraiBot* bot) override
 		{
 			this->bot_ = bot;
 		}
 
-		virtual ~BotOnlineEvent() = default;
 		virtual bool Set(const json& j) override
 		{
 			this->QQ = (QQ_t)(j["qq"].get<int64_t>());

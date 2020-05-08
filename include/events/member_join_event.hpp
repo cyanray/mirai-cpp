@@ -11,29 +11,22 @@
 namespace Cyan
 {
 	// 新成员入群事件
-	class MemberJoinEvent : public Serializable
+	class MemberJoinEvent : public EventBase
 	{
 	public:
 		GroupMember_t NewMember;
 
-		MemberJoinEvent() = default;
-		MemberJoinEvent(const MemberJoinEvent& gm)
+		static MiraiEvent GetMiraiEvent()
 		{
-			NewMember = gm.NewMember;
-		}
-		MemberJoinEvent& operator=(const MemberJoinEvent& t)
-		{
-			MemberJoinEvent tmp(t);
-			std::swap(this->NewMember, tmp.NewMember);
-			return *this;
+			return MiraiEvent::MemberJoinEvent;
 		}
 
-		void SetMiraiBot(MiraiBot* bot)
+
+		virtual void SetMiraiBot(MiraiBot* bot) override
 		{
 			this->bot_ = bot;
 		}
 
-		virtual ~MemberJoinEvent() = default;
 		virtual bool Set(const json& j) override
 		{
 			this->NewMember.Set(j["member"]);

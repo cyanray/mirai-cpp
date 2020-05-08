@@ -10,29 +10,21 @@
 namespace Cyan
 {
 	// 群成员主动离群事件
-	class MemberLeaveEventQuit : public Serializable
+	class MemberLeaveEventQuit : public EventBase
 	{
 	public:
 		GroupMember_t Member;
 
-		MemberLeaveEventQuit() = default;
-		MemberLeaveEventQuit(const MemberLeaveEventQuit& gm)
+		static MiraiEvent GetMiraiEvent()
 		{
-			Member = gm.Member;
-		}
-		MemberLeaveEventQuit& operator=(const MemberLeaveEventQuit& t)
-		{
-			MemberLeaveEventQuit tmp(t);
-			std::swap(this->Member, tmp.Member);
-			return *this;
+			return MiraiEvent::MemberLeaveEventQuit;
 		}
 
-		void SetMiraiBot(MiraiBot* bot)
+		virtual void SetMiraiBot(MiraiBot* bot) override
 		{
 			this->bot_ = bot;
 		}
 
-		virtual ~MemberLeaveEventQuit() = default;
 		virtual bool Set(const json& j) override
 		{
 			this->Member.Set(j["member"]);

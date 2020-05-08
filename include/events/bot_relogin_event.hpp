@@ -9,29 +9,21 @@
 namespace Cyan
 {
 	// bot 主动重新登录事件
-	class BotReloginEvent : public Serializable
+	class BotReloginEvent : public EventBase
 	{
 	public:
 		QQ_t QQ;
 
-		BotReloginEvent() = default;
-		BotReloginEvent(const BotReloginEvent& gm)
+		static MiraiEvent GetMiraiEvent()
 		{
-			QQ = gm.QQ;
-		}
-		BotReloginEvent& operator=(const BotReloginEvent& t)
-		{
-			BotReloginEvent tmp(t);
-			std::swap(this->QQ, tmp.QQ);
-			return *this;
+			return MiraiEvent::BotReloginEvent;
 		}
 
-		void SetMiraiBot(MiraiBot* bot)
+		virtual void SetMiraiBot(MiraiBot* bot) override
 		{
 			this->bot_ = bot;
 		}
 
-		virtual ~BotReloginEvent() = default;
 		virtual bool Set(const json& j) override
 		{
 			this->QQ = (QQ_t)(j["qq"].get<int64_t>());
