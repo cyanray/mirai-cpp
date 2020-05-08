@@ -7,32 +7,23 @@
 #include "defs/serializable.hpp"
 #include "defs/message_chain.hpp"
 #include "defs/group_member.hpp"
+#include "event_interface.hpp"
 #include "exported.h"
 
 namespace Cyan
 {
 	// 群组发来的消息
-	class EXPORTED GroupMessage : public Serializable
+	class EXPORTED GroupMessage : public Serializable, public EventBase
 	{
 	public:
 		Cyan::MessageChain MessageChain;
 		GroupMember_t Sender;
 
-		GroupMessage() = default;
-		GroupMessage(const GroupMessage& gm)
+		static MiraiEvent GetMiraiEvent() 
 		{
-			MessageChain = gm.MessageChain;
-			Sender = gm.Sender;
-			bot_ = gm.bot_;
+			return MiraiEvent::GroupMessage;
 		}
-		GroupMessage& operator=(const GroupMessage& t)
-		{
-			GroupMessage tmp(t);
-			std::swap(this->MessageChain, tmp.MessageChain);
-			std::swap(this->Sender, tmp.Sender);
-			std::swap(this->bot_, tmp.bot_);
-			return *this;
-		}
+
 		MessageId GetMessageId() const
 		{
 			return (this->MessageChain).GetMessageId();
@@ -43,7 +34,7 @@ namespace Cyan
 			return (this->MessageChain).GetTimestamp();
 		}
 
-		void SetMiraiBot(MiraiBot* bot)
+		virtual void SetMiraiBot(MiraiBot* bot) override
 		{
 			this->bot_ = bot;
 		}
@@ -53,7 +44,6 @@ namespace Cyan
 		bool Recall();
 		bool AtMe();
 
-		virtual ~GroupMessage() = default;
 		virtual bool Set(const json& j) override
 		{
 			this->MessageChain.Set(j["messageChain"]);

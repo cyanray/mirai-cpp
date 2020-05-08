@@ -5,12 +5,18 @@
 
 namespace Cyan
 {
+	// Ç°ÖÃÉùÃ÷ MiraiBot Àà
+	class MiraiBot;
+
 	class EventBase
 	{
 	public:
 		EventBase() {}
-		virtual static MiraiEvent GetMiraiEvent() const = 0;
-		virtual SetMiraiBot(MiraiBot*) = 0;
+		static MiraiEvent GetMiraiEvent()
+		{
+			return MiraiEvent::Default;
+		}
+		virtual void SetMiraiBot(MiraiBot*) = 0;
 		virtual ~EventBase() {}
 	};
 

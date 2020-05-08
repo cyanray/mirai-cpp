@@ -328,7 +328,7 @@ namespace Cyan
 	MiraiBot& MiraiBot::OnEventReceived(const EventProcessor<T>& ep)
 	{
 		processors_.insert({
-			GetEventType<T>(),
+			T::GetMiraiEvent(),
 			[=](WeakEvent we)
 			{
 				// 这个lambda函数有两个作用
