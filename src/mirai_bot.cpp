@@ -798,15 +798,21 @@ namespace Cyan
 			if (!event_json_str.empty())
 			{
 				json j = json::parse(event_json_str);
-				if (j.find("code") != j.end() && j["code"].get<int>() == 3)
+				// code 不存在，说明没错误，处理事件/消息
+				if (j.find("code") == j.end())
+				{
+					ProcessEvents(j);
+					event_json_str.resize(0);
+					continue;
+				}
+				// code 存在，按照 code 进行错误处理
+				if (j["code"].get<int>() == 3 || j["code"].get<int>() == 4)
 				{
 					Release();
 					Auth(authKey_, qq_);
 					SessionConfigure(cacheSize_, ws_enabled_);
 					throw std::runtime_error("失去与mirai的连接，尝试重新验证...");
 				}
-				ProcessEvents(j);
-				event_json_str.resize(0);
 			}
 		}
 	}
