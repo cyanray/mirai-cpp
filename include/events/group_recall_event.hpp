@@ -6,11 +6,12 @@
 #include "defs/qq_types.hpp"
 #include "defs/serializable.hpp"
 #include "defs/group_member.hpp"
+#include "event_interface.hpp"
 
 namespace Cyan
 {
 	// 群成员消息撤回事件
-	class GroupRecallEvent : public Serializable
+	class GroupRecallEvent : public EventBase
 	{
 	public:
 		int64_t Time = 0;
@@ -19,32 +20,16 @@ namespace Cyan
 		Group_t Group;
 		GroupMember_t Operator;
 
-		GroupRecallEvent() = default;
-		GroupRecallEvent(const GroupRecallEvent& gm)
+		static MiraiEvent GetMiraiEvent()
 		{
-			Time = gm.Time;
-			AuthorQQ = gm.AuthorQQ;
-			MessageId = gm.MessageId;
-			Group = gm.Group;
-			Operator = gm.Operator;
-		}
-		GroupRecallEvent& operator=(const GroupRecallEvent& t)
-		{
-			GroupRecallEvent tmp(t);
-			std::swap(this->Time, tmp.Time);
-			std::swap(this->AuthorQQ, tmp.AuthorQQ);
-			std::swap(this->Group, tmp.Group);
-			std::swap(this->MessageId, tmp.MessageId);
-			std::swap(this->Operator, tmp.Operator);
-			return *this;
+			return MiraiEvent::GroupRecallEvent;
 		}
 
-		void SetMiraiBot(MiraiBot* bot)
+		virtual void SetMiraiBot(MiraiBot* bot) override
 		{
 			this->bot_ = bot;
 		}
 
-		virtual ~GroupRecallEvent() = default;
 		virtual bool Set(const json& j) override
 		{
 			this->Time = j["time"].get<int64_t>();

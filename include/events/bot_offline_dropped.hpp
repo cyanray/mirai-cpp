@@ -5,33 +5,26 @@
 #include <nlohmann/json.hpp>
 #include "defs/qq_types.hpp"
 #include "defs/serializable.hpp"
+#include "event_interface.hpp"
 
 namespace Cyan
 {
 	// bot 因网络原因掉线
-	class BotOfflineEventDropped : public Serializable
+	class BotOfflineEventDropped : public EventBase
 	{
 	public:
 		QQ_t QQ;
 
-		BotOfflineEventDropped() = default;
-		BotOfflineEventDropped(const BotOfflineEventDropped& gm)
+		static MiraiEvent GetMiraiEvent()
 		{
-			QQ = gm.QQ;
-		}
-		BotOfflineEventDropped& operator=(const BotOfflineEventDropped& t)
-		{
-			BotOfflineEventDropped tmp(t);
-			std::swap(this->QQ, tmp.QQ);
-			return *this;
+			return MiraiEvent::BotOfflineEventDropped;
 		}
 
-		void SetMiraiBot(MiraiBot* bot)
+		virtual void SetMiraiBot(MiraiBot* bot) override
 		{
 			this->bot_ = bot;
 		}
 
-		virtual ~BotOfflineEventDropped() = default;
 		virtual bool Set(const json& j) override
 		{
 			this->QQ = (QQ_t)(j["qq"].get<int64_t>());

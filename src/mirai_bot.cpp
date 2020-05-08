@@ -826,92 +826,15 @@ namespace Cyan
 		if (pit != processors_.end())
 		{
 			auto executor = pit->second;
-			WeakEvent pevent = CreateEvent(mirai_event, ele);
+			// 给 executor 传入 nullptr 可以创建一个 WeakEvent
+			WeakEvent pevent = executor(nullptr);
+			pevent->SetMiraiBot(this);
+			pevent->Set(ele);
+
 			pool_.enqueue([=]()
 				{
 					executor(pevent);
 				});
-		}
-	}
-
-
-	WeakEvent MiraiBot::CreateEvent(MiraiEvent miraiEvent, const json& json)
-	{
-		if (miraiEvent == MiraiEvent::GroupMessage)
-		{
-			return MakeWeakEvent<GroupMessage>(json);
-		}
-		if (miraiEvent == MiraiEvent::FriendMessage)
-		{
-			return MakeWeakEvent<FriendMessage>(json);
-		}
-		if (miraiEvent == MiraiEvent::TempMessage)
-		{
-			return MakeWeakEvent<TempMessage>(json);
-		}
-		if (miraiEvent == MiraiEvent::NewFriendRequestEvent)
-		{
-			return MakeWeakEvent<NewFriendRequestEvent>(json);
-		}
-		if (miraiEvent == MiraiEvent::MemberJoinRequestEvent)
-		{
-			return MakeWeakEvent<MemberJoinRequestEvent>(json);
-		}
-		if (miraiEvent == MiraiEvent::MemberJoinEvent)
-		{
-			return MakeWeakEvent<MemberJoinEvent>(json);
-		}
-		if (miraiEvent == MiraiEvent::BotMuteEvent)
-		{
-			return MakeWeakEvent<BotMuteEvent>(json);
-		}
-		if (miraiEvent == MiraiEvent::BotUnmuteEvent)
-		{
-			return MakeWeakEvent<BotUnmuteEvent>(json);
-		}
-		if (miraiEvent == MiraiEvent::MemberMuteEvent)
-		{
-			return MakeWeakEvent<MemberMuteEvent>(json);
-		}
-		if (miraiEvent == MiraiEvent::MemberUnmuteEvent)
-		{
-			return MakeWeakEvent<MemberUnmuteEvent>(json);
-		}
-		if (miraiEvent == MiraiEvent::MemberLeaveEventKick)
-		{
-			return MakeWeakEvent<MemberLeaveEventKick>(json);
-		}
-		if (miraiEvent == MiraiEvent::MemberLeaveEventQuit)
-		{
-			return MakeWeakEvent<MemberLeaveEventQuit>(json);
-		}
-		if (miraiEvent == MiraiEvent::GroupRecallEvent)
-		{
-			return MakeWeakEvent<GroupRecallEvent>(json);
-		}
-		if (miraiEvent == MiraiEvent::FriendRecallEvent)
-		{
-			return MakeWeakEvent<FriendRecallEvent>(json);
-		}
-		if (miraiEvent == MiraiEvent::BotOnlineEvent)
-		{
-			return MakeWeakEvent<BotOnlineEvent>(json);
-		}
-		if (miraiEvent == MiraiEvent::BotOfflineEventActive)
-		{
-			return MakeWeakEvent<BotOfflineEventActive>(json);
-		}
-		if (miraiEvent == MiraiEvent::BotOfflineEventForce)
-		{
-			return MakeWeakEvent<BotOfflineEventForce>(json);
-		}
-		if (miraiEvent == MiraiEvent::BotOfflineEventDropped)
-		{
-			return MakeWeakEvent<BotOfflineEventDropped>(json);
-		}
-		if (miraiEvent == MiraiEvent::BotReloginEvent)
-		{
-			return MakeWeakEvent<BotReloginEvent>(json);
 		}
 	}
 

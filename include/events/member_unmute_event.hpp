@@ -6,33 +6,23 @@
 #include "defs/qq_types.hpp"
 #include "defs/serializable.hpp"
 #include "defs/group_member.hpp"
+#include "event_interface.hpp"
 
 namespace Cyan
 {
 	// 群成员被取消禁言事件
-	class MemberUnmuteEvent : public Serializable
+	class MemberUnmuteEvent : public EventBase
 	{
 	public:
 		GroupMember_t Member;
 		GroupMember_t Operator;
 
-		MemberUnmuteEvent() = default;
-		MemberUnmuteEvent(const MemberUnmuteEvent& gm)
+		static MiraiEvent GetMiraiEvent()
 		{
-			Member = gm.Member;
-			Operator = gm.Operator;
-			operator_is_null_ = gm.operator_is_null_;
-		}
-		MemberUnmuteEvent& operator=(const MemberUnmuteEvent& t)
-		{
-			MemberUnmuteEvent tmp(t);
-			std::swap(this->Member, tmp.Member);
-			std::swap(this->Operator, tmp.Operator);
-			std::swap(this->operator_is_null_, tmp.operator_is_null_);
-			return *this;
+			return MiraiEvent::MemberUnmuteEvent;
 		}
 
-		void SetMiraiBot(MiraiBot* bot)
+		virtual void SetMiraiBot(MiraiBot* bot) override
 		{
 			this->bot_ = bot;
 		}
@@ -42,7 +32,6 @@ namespace Cyan
 			return operator_is_null_;
 		}
 
-		virtual ~MemberUnmuteEvent() = default;
 		virtual bool Set(const json& j) override
 		{
 			this->Member.Set(j["member"]);

@@ -8,11 +8,12 @@
 #include "defs/message_chain.hpp"
 #include "defs/friend.hpp"
 #include "exported.h"
+#include "event_interface.hpp"
 
 namespace Cyan
 {
 	// 新成员入群请求
-	class EXPORTED MemberJoinRequestEvent : public Serializable
+	class EXPORTED MemberJoinRequestEvent : public EventBase
 	{
 	public:
 		int64_t EventId;
@@ -22,31 +23,12 @@ namespace Cyan
 		string Nick;
 		string Message;
 
-		MemberJoinRequestEvent() = default;
-		MemberJoinRequestEvent(const MemberJoinRequestEvent& gm)
+		static MiraiEvent GetMiraiEvent()
 		{
-			EventId = gm.EventId;
-			FromId = gm.FromId;
-			GroupId = gm.GroupId;
-			Nick = gm.Nick;
-			GroupName = gm.GroupName;
-			Message = gm.Message;
-			bot_ = gm.bot_;
-		}
-		MemberJoinRequestEvent& operator=(const MemberJoinRequestEvent& t)
-		{
-			MemberJoinRequestEvent tmp(t);
-			std::swap(this->EventId, tmp.EventId);
-			std::swap(this->FromId, tmp.FromId);
-			std::swap(this->GroupId, tmp.GroupId);
-			std::swap(this->GroupName, tmp.GroupName);
-			std::swap(this->Nick, tmp.Nick);
-			std::swap(this->Message, tmp.Message);
-			std::swap(this->bot_, tmp.bot_);
-			return *this;
+			return MiraiEvent::MemberJoinRequestEvent;
 		}
 
-		void SetMiraiBot(MiraiBot* bot)
+		virtual void SetMiraiBot(MiraiBot* bot) override
 		{
 			this->bot_ = bot;
 		}
@@ -76,8 +58,6 @@ namespace Cyan
 			return Respose(4, message);
 		}
 
-
-		virtual ~MemberJoinRequestEvent() = default;
 		virtual bool Set(const json& j) override
 		{
 			this->EventId = j["eventId"].get<int64_t>();

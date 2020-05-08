@@ -7,33 +7,26 @@
 #include "defs/serializable.hpp"
 #include "defs/message_chain.hpp"
 #include "defs/group_member.hpp"
+#include "event_interface.hpp"
 
 namespace Cyan
 {
 	// bot 被解除禁言事件
-	class BotUnmuteEvent : public Serializable
+	class BotUnmuteEvent : public EventBase
 	{
 	public:
 		GroupMember_t Operator;
 
-		BotUnmuteEvent() = default;
-		BotUnmuteEvent(const BotUnmuteEvent& gm)
+		static MiraiEvent GetMiraiEvent()
 		{
-			Operator = gm.Operator;
-		}
-		BotUnmuteEvent& operator=(const BotUnmuteEvent& t)
-		{
-			BotUnmuteEvent tmp(t);
-			std::swap(this->Operator, tmp.Operator);
-			return *this;
+			return MiraiEvent::BotUnmuteEvent;
 		}
 
-		void SetMiraiBot(MiraiBot* bot)
+		virtual void SetMiraiBot(MiraiBot* bot) override
 		{
 			this->bot_ = bot;
 		}
 
-		virtual ~BotUnmuteEvent() = default;
 		virtual bool Set(const json& j) override
 		{
 			this->Operator.Set(j["operator"]);

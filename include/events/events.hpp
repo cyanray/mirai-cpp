@@ -28,5 +28,6 @@
 // 一些定义
 #include "event_processer.hpp"
 #include "events_name.hpp"
+#include "event_interface.hpp"
 
 #endif // !mirai_cpp_events_events_hpp_H_
