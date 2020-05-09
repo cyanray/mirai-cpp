@@ -65,15 +65,11 @@ namespace Cyan
 
 		httplib::Client& http_client = *(bot_->GetHttpClient());
 		auto res = http_client.Post("/resp/newFriendRequestEvent", data.dump(), "application/json;charset=UTF-8");
-		if (res)
-		{
-			if (res->status != 200)
-				throw std::runtime_error("[mirai-api-http error]: " + res->body);
-			return true;
-		}
-		else
+		if (!res)
 			throw std::runtime_error("网络错误");
-
+		if (res->status != 200)
+			throw std::runtime_error("[mirai-api-http error]: " + res->body);
+		return true;
 	}
 
 	bool MemberJoinRequestEvent::Respose(int operate, const string& message)
@@ -91,15 +87,11 @@ namespace Cyan
 
 		httplib::Client& http_client = *(bot_->GetHttpClient());
 		auto res = http_client.Post("/resp/memberJoinRequestEvent", data.dump(), "application/json;charset=UTF-8");
-		if (res)
-		{
-			if (res->status != 200)
-				throw std::runtime_error("[mirai-api-http error]: " + res->body);
-			return true;
-		}
-		else
+		if (!res)
 			throw std::runtime_error("网络错误");
-
+		if (res->status != 200)
+			throw std::runtime_error("[mirai-api-http error]: " + res->body);
+		return true;
 	}
 
 }
