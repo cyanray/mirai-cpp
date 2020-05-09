@@ -16,21 +16,6 @@ namespace Cyan
 	public:
 		string Name;
 		string SpecialTitle;
-
-		GroupMemberInfo() = default;
-		GroupMemberInfo(const GroupMemberInfo& gm)
-		{
-			Name = gm.Name;
-			SpecialTitle = gm.SpecialTitle;
-		}
-		GroupMemberInfo& operator=(const GroupMemberInfo& t)
-		{
-			GroupMemberInfo tmp(t);
-			std::swap(this->Name, tmp.Name);
-			std::swap(this->SpecialTitle, tmp.SpecialTitle);
-			return *this;
-		}
-		virtual ~GroupMemberInfo() = default;
 		virtual bool Set(const json& j) override
 		{
 			Name = j["name"].get<string>();
