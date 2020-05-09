@@ -37,6 +37,13 @@ int main()
 				MessageChain().Plain("👴 出狱了!"));
 		});
 
+	bot.On<BotJoinGroupEvent>(
+		[&](BotJoinGroupEvent e)
+		{
+			MiraiBot::SleepSeconds(5);
+			bot.SendMessage(e.Group.GID, MessageChain().Plain("👴 进群了！都来欢迎 👴！"));
+		});
+	
 	bot.On<BotOnlineEvent>(
 		[&](BotOnlineEvent e)
 		{

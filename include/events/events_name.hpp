@@ -54,6 +54,7 @@ namespace Cyan
 		if (miraiEvent == "BotOfflineEventForce") return MiraiEvent::BotOfflineEventForce;
 		if (miraiEvent == "BotOfflineEventDropped") return MiraiEvent::BotOfflineEventDropped;
 		if (miraiEvent == "BotReloginEvent") return MiraiEvent::BotReloginEvent;
+		if (miraiEvent == "BotJoinGroupEvent") return MiraiEvent::BotJoinGroupEvent;
 		return MiraiEvent::Default;
 	}
 

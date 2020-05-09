@@ -25,6 +25,7 @@
 #include "member_unmute_event.hpp"
 #include "bot_mute_event.hpp"
 #include "bot_unmute_event.hpp"
+#include "bot_join_group.hpp"
 // 一些定义
 #include "event_processer.hpp"
 #include "events_name.hpp"
