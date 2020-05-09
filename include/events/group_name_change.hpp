@@ -1,0 +1,67 @@
+#pragma once
+#ifndef mirai_cpp_events_group_name_change_hpp_H_
+#define mirai_cpp_events_group_name_change_hpp_H_
+
+#include <nlohmann/json.hpp>
+#include "defs/qq_types.hpp"
+#include "defs/group.hpp"
+#include "defs/group_member.hpp"
+#include "event_interface.hpp"
+
+namespace Cyan
+{
+	// 群名称被改变
+	class GroupNameChangeEvent : public EventBase
+	{
+	public:
+		string OriginName;
+		string CurrentName;
+		Group_t Group;
+		GroupMember_t Operator;
+
+		static MiraiEvent GetMiraiEvent()
+		{
+			return MiraiEvent::GroupNameChangeEvent;
+		}
+
+		virtual void SetMiraiBot(MiraiBot* bot) override
+		{
+			this->bot_ = bot;
+		}
+
+		bool OperatorIsBot() const
+		{
+			return operator_is_null_;
+		}
+
+		virtual bool Set(const json& j) override
+		{
+			this->OriginName = j["origin"].get<string>();
+			this->CurrentName = j["current"].get<string>();
+			this->Group.Set(j["group"]);
+			if (!j["operator"].is_null())
+			{
+				this->Operator.Set(j["operator"]);
+				this->operator_is_null_ = false;
+			}
+			return true;
+		}
+		virtual json ToJson() const override
+		{
+			json j = json::object();
+			j["type"] = "GroupNameChangeEvent";
+			j["origin"] = this->OriginName;
+			j["current"] = this->CurrentName;
+			j["group"] = this->Group.ToJson();
+			j["operator"] = this->Operator.ToJson();
+			return j;
+		}
+
+	private:
+		MiraiBot* bot_;
+		bool operator_is_null_ = true;
+	};
+
+}
+
+#endif // !mirai_cpp_events_group_name_change_hpp_H_

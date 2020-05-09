@@ -22,7 +22,7 @@ namespace Cyan
 		BotMuteEvent,			// Bot被禁言
 		BotUnmuteEvent,			// Bot被取消禁言
 		BotJoinGroupEvent,		// Bot加入了一个新群
-		GroupNameChangeEvent,	// TODO:某个群名称改变
+		GroupNameChangeEvent,	// 某个群名称改变
 		GroupMuteAllEvent,		// 群全员禁言
 		MemberJoinEvent,			// 新人入群事件
 		MemberLeaveEventKick,	// 成员被踢出群(该成员不是Bot)
@@ -59,6 +59,7 @@ namespace Cyan
 		if (miraiEvent == "BotJoinGroupEvent") return MiraiEvent::BotJoinGroupEvent;
 		if (miraiEvent == "BotLeaveEventActive") return MiraiEvent::BotLeaveEventActive;
 		if (miraiEvent == "BotLeaveEventKick") return MiraiEvent::BotLeaveEventKick;
+		if (miraiEvent == "GroupNameChangeEvent") return MiraiEvent::GroupNameChangeEvent;
 		return MiraiEvent::Default;
 	}
 

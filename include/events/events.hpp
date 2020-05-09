@@ -28,6 +28,7 @@
 #include "bot_join_group.hpp"
 #include "bot_leave_active.hpp"
 #include "bot_leave_kick.hpp"
+#include "group_name_change.hpp"
 // 一些定义
 #include "event_processer.hpp"
 #include "events_name.hpp"
