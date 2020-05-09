@@ -38,12 +38,12 @@ namespace Cyan
 		return bot_->SendMessage(Sender.Group.GID, mc, GetMessageId());
 	}
 
-	bool GroupMessage::Recall()
+	bool GroupMessage::Recall() const
 	{
 		return bot_->Recall(GetMessageId());
 	}
 
-	bool GroupMessage::AtMe()
+	bool GroupMessage::AtMe() const
 	{
 		auto at = MessageChain.GetAt();
 		auto it = std::find(at.begin(), at.end(), bot_->GetBotQQ());
@@ -51,14 +51,14 @@ namespace Cyan
 		else return false;
 	}
 
-	bool NewFriendRequestEvent::Respose(int operate, const string& message)
+	bool NewFriendRequestEvent::Response(int operate, const string& message)
 	{
 		json data =
 		{
 			{ "sessionKey",  bot_->GetSessionKey() },
 			{ "eventId", this->EventId},
-			{ "fromId",  (int64_t)this->FromId},
-			{ "groupId", (int64_t)this->GroupId},
+			{ "fromId",  int64_t(this->FromId)},
+			{ "groupId", int64_t(this->GroupId)},
 			{ "operate", operate},
 			{ "message", message},
 		};
@@ -72,15 +72,15 @@ namespace Cyan
 		return true;
 	}
 
-	bool MemberJoinRequestEvent::Respose(int operate, const string& message)
+	bool MemberJoinRequestEvent::Response(int operate, const string& message)
 	{
 
 		json data =
 		{
 			{ "sessionKey",  bot_->GetSessionKey() },
 			{ "eventId", this->EventId},
-			{ "fromId",  (int64_t)this->FromId},
-			{ "groupId", (int64_t)this->GroupId},
+			{ "fromId",  int64_t(this->FromId)},
+			{ "groupId", int64_t(this->GroupId)},
 			{ "operate", operate},
 			{ "message", message},
 		};

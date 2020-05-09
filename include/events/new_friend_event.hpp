@@ -34,17 +34,17 @@ namespace Cyan
 
 		bool Accept()
 		{
-			return Respose(0, "");
+			return Response(0, "");
 		}
 
 		bool Reject(const string& message = "")
 		{
-			return Respose(1, message);
+			return Response(1, message);
 		}
 
 		bool RejectAndBlock(const string& message = "")
 		{
-			return Respose(2, message);
+			return Response(2, message);
 		}
 
 		virtual bool Set(const json& j) override
@@ -70,7 +70,7 @@ namespace Cyan
 
 	private:
 		MiraiBot* bot_;
-		bool Respose(int operate, const string& message);
+		bool Response(int operate, const string& message);
 	};
 
 }

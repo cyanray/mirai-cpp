@@ -279,7 +279,7 @@ namespace Cyan
 			return res;
 		}
 
-		vector<QQ_t> GetAt()
+		vector<QQ_t> GetAt() const
 		{
 			vector<QQ_t> res;
 			for (const auto& ele : messages_)
@@ -294,7 +294,7 @@ namespace Cyan
 			return res;
 		}
 
-		vector<int> GetFace()
+		vector<int> GetFace() const
 		{
 			vector<int> res;
 			for (const auto& ele : messages_)
@@ -322,7 +322,7 @@ namespace Cyan
 		virtual bool Set(const json& j) override
 		{
 			messages_ = j;
-			if (j.size() >= 1)
+			if (!j.empty())
 			{
 				try
 				{
