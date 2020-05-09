@@ -226,6 +226,12 @@ namespace Cyan
 		 */
 		bool Recall(MessageId mid);
 		/**
+		 * \brief 让 Bot 退出一个群
+		 * \param group 要退出的群(GID_t)
+		 * \return 始终为 true 出错会抛出异常
+		 */
+		bool Quit(GID_t group);
+		/**
 		 * \brief 根据消息ID(MessageId)获取对应的好友消息
 		 * \param mid 消息ID(MessageId)
 		 * \return 始终为 true 出错会抛出异常
