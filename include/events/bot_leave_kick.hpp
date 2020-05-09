@@ -9,7 +9,7 @@
 
 namespace Cyan
 {
-	// bot ±»Ìß³öÈº
+	// bot è¢«è¸¢å‡ºç¾¤
 	class BotLeaveEventKick : public EventBase
 	{
 	public:
