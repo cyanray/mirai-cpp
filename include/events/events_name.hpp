@@ -30,7 +30,9 @@ namespace Cyan
 		MemberMuteEvent,			// 群成员被禁言(该成员不是Bot)
 		MemberUnmuteEvent,		// 群成员被取消禁言(该成员不是Bot)
 		NewFriendRequestEvent,	// 添加好友申请
-		MemberJoinRequestEvent	// 用户入群申请
+		MemberJoinRequestEvent,	// 用户入群申请
+		BotLeaveEventActive,		// Bot 主动离开群
+		BotLeaveEventKick,		// Bot 被剔出群
 	};
 
 	inline MiraiEvent MiraiEventStr(const string& miraiEvent)
@@ -54,6 +56,10 @@ namespace Cyan
 		if (miraiEvent == "BotOfflineEventForce") return MiraiEvent::BotOfflineEventForce;
 		if (miraiEvent == "BotOfflineEventDropped") return MiraiEvent::BotOfflineEventDropped;
 		if (miraiEvent == "BotReloginEvent") return MiraiEvent::BotReloginEvent;
+		if (miraiEvent == "BotJoinGroupEvent") return MiraiEvent::BotJoinGroupEvent;
+		if (miraiEvent == "BotLeaveEventActive") return MiraiEvent::BotLeaveEventActive;
+		if (miraiEvent == "BotLeaveEventKick") return MiraiEvent::BotLeaveEventKick;
+		if (miraiEvent == "GroupNameChangeEvent") return MiraiEvent::GroupNameChangeEvent;
 		return MiraiEvent::Default;
 	}
 
