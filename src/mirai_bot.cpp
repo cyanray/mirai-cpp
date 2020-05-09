@@ -525,6 +525,48 @@ namespace Cyan
 		throw runtime_error(msg);
 	}
 
+	GroupConfig MiraiBot::GetGroupConfig(GID_t group)
+	{
+		stringstream api_url;
+		api_url
+			<< "/groupConfig?sessionKey="
+			<< sessionKey_
+			<< "&target="
+			<< int64_t(group);
+		auto res = http_client_.Get(api_url.str().data());
+		if (!res)
+			throw runtime_error("网络错误");
+		if (res->status != 200)
+			throw std::runtime_error("[mirai-http-api error]: " + res->body);
+		json re_json = json::parse(res->body);
+		GroupConfig group_config;
+		group_config.Set(re_json);
+		return group_config;
+
+	}
+
+	bool MiraiBot::SetGroupConfig(GID_t group, GroupConfig groupConfig)
+	{
+		json data =
+		{
+			{ "sessionKey", sessionKey_ },
+			{ "target", int64_t(group) }
+		};
+		data["config"] = groupConfig.ToJson();
+
+		auto res = http_client_.Post("/groupConfig", data.dump(), "application/json;charset=UTF-8");
+		if (!res)
+			throw std::runtime_error("网络错误");
+		if (res->status != 200)
+			throw std::runtime_error("[mirai-api-http error]: " + res->body);
+		json re_json = json::parse(res->body);
+		int code = re_json["code"].get<int>();
+		if (code == 0)
+			return true;
+		string msg = re_json["msg"].get<string>();
+		throw runtime_error(msg);
+	}
+
 	FriendMessage MiraiBot::GetFriendMessageFromId(MessageId mid)
 	{
 		stringstream api_url;

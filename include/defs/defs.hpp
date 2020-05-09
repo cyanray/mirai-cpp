@@ -10,5 +10,6 @@
 #include "group_member.hpp"
 #include "message_chain.hpp"
 #include "group_member_info.hpp"
+#include "group_config.hpp"
 
 #endif // !mirai_cpp_defs_defs_hpp_H_

@@ -232,6 +232,19 @@ namespace Cyan
 		 */
 		bool Quit(GID_t group);
 		/**
+		 * \brief 获取群设置
+		 * \param group 群(GID_t)
+		 * \return 群设置
+		 */
+		GroupConfig GetGroupConfig(GID_t group);
+		/**
+		 * \brief 设置群设置
+		 * \param group 群(GID_t)
+		 * \param groupConfig 群设置
+		 * \return 始终为 true 出错会抛出异常
+		 */
+		bool SetGroupConfig(GID_t group, GroupConfig groupConfig);
+		/**
 		 * \brief 根据消息ID(MessageId)获取对应的好友消息
 		 * \param mid 消息ID(MessageId)
 		 * \return 始终为 true 出错会抛出异常
