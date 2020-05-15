@@ -56,7 +56,7 @@ system("chcp 65001");
 		{
 			m.QuoteReply(m.MessageChain);
 		});
-	// 可以多次监听同一事件，不保证执行顺序
+	// 可以多次监听同一事件，每个处理函数都会被执行，但是不保证执行顺序
 	bot.On<GroupMessage>(
 		[&](GroupMessage m)
 		{
