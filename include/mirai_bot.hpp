@@ -53,7 +53,7 @@ namespace Cyan
 		int GetRequiredApiVersionInt() const
 		{
 			// mirai-api-http v1.6.5
-			return 10605;
+			return 10700;
 		}
 
 		/**
@@ -63,7 +63,7 @@ namespace Cyan
 		string GetRequiredApiVersion() const
 		{
 			// mirai-api-http v1.6.5
-			return "v1.6.5";
+			return "v1.7.0";
 		}
 
 		/**
