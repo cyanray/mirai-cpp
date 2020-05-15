@@ -24,6 +24,7 @@ namespace Cyan
 	class EXPORTED Message : public EventBase
 	{
 	public:
+		QQ_t Sender;
 		Cyan::MessageChain MessageChain;
 
 		static MiraiEvent GetMiraiEvent()
@@ -38,23 +39,23 @@ namespace Cyan
 
 		FriendMessage ToFriendMessage() const
 		{
-			FriendMessage m;
-			m.Set(json_);
-			return m;
+			if (messageType_ != MessageType::FriendMessage)
+				throw std::runtime_error("错误的消息类型转换");
+			return friendMessage_;
 		}
 
 		GroupMessage ToGroupMessage() const
 		{
-			GroupMessage m;
-			m.Set(json_);
-			return m;
+			if (messageType_ != MessageType::GroupMessage)
+				throw std::runtime_error("错误的消息类型转换");
+			return groupMessage_;
 		}
 
 		TempMessage ToTempMessage() const
 		{
-			TempMessage m;
-			m.Set(json_);
-			return m;
+			if (messageType_ != MessageType::TempMessage)
+				throw std::runtime_error("错误的消息类型转换");
+			return tempMessage_;
 		}
 
 		MessageId GetMessageId() const
@@ -95,6 +96,7 @@ namespace Cyan
 				tempMessage_.Set(j);
 				tempMessage_.SetMiraiBot(bot_);
 			}
+			this->Sender = QQ_t(j["sender"]["id"].get<int64_t>());
 			this->MessageChain.Set(j["messageChain"]);
 			json_ = j;
 			return true;

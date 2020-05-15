@@ -81,6 +81,7 @@ system("chcp 65001");
 	bot.On<Message>(
 		[&](Message m)
 		{
+			cout<< int64_t(m.Sender) << " 发来一条消息." << endl;
 			m.Reply("Message事件可处理三种消息:" + m.MessageChain);
 
 			// 判断是否群组消息
