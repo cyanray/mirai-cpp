@@ -51,29 +51,52 @@ system("chcp 65001");
 	cout << "Bot Working..." << endl;
 
 	// 监听各类事件
-	bot.OnEventReceived<GroupMessage>(
+	bot.On<GroupMessage>(
 		[&](GroupMessage m)
 		{
 			m.QuoteReply(m.MessageChain);
 		});
-
-	bot.OnEventReceived<FriendMessage>(
+	// 可以多次监听同一事件，每个处理函数都会被执行，但是不保证执行顺序
+	bot.On<GroupMessage>(
+		[&](GroupMessage m)
+		{
+			m.Reply("2222 " + m.MessageChain);
+		});
+	
+	bot.On<FriendMessage>(
 		[&](FriendMessage m)
 		{
 			m.Reply("你好呀, " + m.MessageChain);
 		});
 
-	bot.OnEventReceived<TempMessage>(
+	bot.On<TempMessage>(
 		[&](TempMessage m)
 		{
 			m.Reply(m.MessageChain);
+		});
+
+	// 通用型消息
+	// 收到 FriendMessage、GroupMessage、TempMessage 时都会调用它
+	// 判断类型之后，也可调用对应的转换函数进行转换 (类型不正确将转换失败抛出异常)
+	bot.On<Message>(
+		[&](Message m)
+		{
+			m.Reply("Message事件可处理三种消息:" + m.MessageChain);
+
+			// 判断是否群组消息
+			if(m.GetMessageType() == MessageType::GroupMessage)
+			{
+				GroupMessage gm = m.ToGroupMessage();
+				// TODO: 针对群组消息的特别处理
+			}
+			
 		});
 
 
 	// 记录轮询事件时的错误
 	bot.EventLoop([](const char* errMsg)
 		{
-			cout << "轮询事件时出错: " << errMsg << endl;
+			cout << "获取事件时出错: " << errMsg << endl;
 		});
 
 	return 0;

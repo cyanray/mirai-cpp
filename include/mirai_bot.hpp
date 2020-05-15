@@ -20,7 +20,6 @@ using std::string;
 using std::vector;
 using std::function;
 using nlohmann::json;
-using std::unordered_map;
 
 // fu*k windows.h
 #ifdef max
@@ -337,31 +336,42 @@ namespace Cyan
 		bool ws_enabled_;
 		httplib::Client http_client_;
 		ThreadPool pool_;
-		unordered_map<MiraiEvent, function<WeakEvent(WeakEvent)>> processors_;
+		std::unordered_multimap<MiraiEvent, function<WeakEvent(WeakEvent)>> processors_;
 	};
 
 	template <typename T>
 	MiraiBot& MiraiBot::OnEventReceived(const EventProcessor<T>& ep)
 	{
-		processors_.insert({
-			T::GetMiraiEvent(),
-			[=](WeakEvent we)
+		auto func = [=](WeakEvent we)
+		{
+			// 这个lambda函数有两个作用
+			// 1.创建类型为T的WeakEvent
+			// 2.将传入的WeakEvent转化为类型T
+			//   然后给 EventProcessor 使用
+			if (we == nullptr)
 			{
-				// 这个lambda函数有两个作用
-				// 1.创建类型为T的WeakEvent
-				// 2.将传入的WeakEvent转化为类型T
-				//   然后给 EventProcessor 使用
-				if (we == nullptr)
-				{
-					std::shared_ptr<T> e = std::make_shared<T>();
-					return std::dynamic_pointer_cast<EventBase>(e);
-				}
-				else
-				{
-					ep(*(std::dynamic_pointer_cast<T>(we)));
-					return we;
-				}
-			} });
+				std::shared_ptr<T> e = std::make_shared<T>();
+				return std::dynamic_pointer_cast<EventBase>(e);
+			}
+			else
+			{
+				ep(*(std::dynamic_pointer_cast<T>(we)));
+				return we;
+			}
+		};
+
+		// 特别处理通用消息事件
+		if (T::GetMiraiEvent() == MiraiEvent::Message)
+		{
+			processors_.insert({ MiraiEvent::FriendMessage, func });
+			processors_.insert({ MiraiEvent::GroupMessage, func });
+			processors_.insert({ MiraiEvent::TempMessage, func });
+		}
+		else
+		{
+			processors_.insert({ T::GetMiraiEvent(), func });
+		}
+
 		return *this;
 	}
 
