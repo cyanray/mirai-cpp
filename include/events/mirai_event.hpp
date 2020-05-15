@@ -34,6 +34,7 @@ namespace Cyan
 		MemberJoinRequestEvent,	// 用户入群申请
 		BotLeaveEventActive,		// Bot 主动离开群
 		BotLeaveEventKick,		// Bot 被剔出群
+		Message					// 通用消息事件
 	};
 
 	inline MiraiEvent MiraiEventStr(const std::string& miraiEvent)

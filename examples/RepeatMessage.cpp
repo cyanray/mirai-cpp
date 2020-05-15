@@ -75,6 +75,23 @@ system("chcp 65001");
 			m.Reply(m.MessageChain);
 		});
 
+	// 通用型消息
+	// 收到 FriendMessage、GroupMessage、TempMessage 时都会调用它
+	// 判断类型之后，也可调用对应的转换函数进行转换 (类型不正确将转换失败抛出异常)
+	bot.On<Message>(
+		[&](Message m)
+		{
+			m.Reply("Message事件可处理三种消息:" + m.MessageChain);
+
+			// 判断是否群组消息
+			if(m.GetMessageType() == MessageType::GroupMessage)
+			{
+				GroupMessage gm = m.ToGroupMessage();
+				// TODO: 针对群组消息的特别处理
+			}
+			
+		});
+
 
 	// 记录轮询事件时的错误
 	bot.EventLoop([](const char* errMsg)

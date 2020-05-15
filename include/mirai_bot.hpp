@@ -342,25 +342,25 @@ namespace Cyan
 	template <typename T>
 	MiraiBot& MiraiBot::OnEventReceived(const EventProcessor<T>& ep)
 	{
-		processors_.insert({
-			T::GetMiraiEvent(),
-			[=](WeakEvent we)
+		auto func = [=](WeakEvent we)
+		{
+			// 这个lambda函数有两个作用
+			// 1.创建类型为T的WeakEvent
+			// 2.将传入的WeakEvent转化为类型T
+			//   然后给 EventProcessor 使用
+			if (we == nullptr)
 			{
-				// 这个lambda函数有两个作用
-				// 1.创建类型为T的WeakEvent
-				// 2.将传入的WeakEvent转化为类型T
-				//   然后给 EventProcessor 使用
-				if (we == nullptr)
-				{
-					std::shared_ptr<T> e = std::make_shared<T>();
-					return std::dynamic_pointer_cast<EventBase>(e);
-				}
-				else
-				{
-					ep(*(std::dynamic_pointer_cast<T>(we)));
-					return we;
-				}
-			} });
+				std::shared_ptr<T> e = std::make_shared<T>();
+				return std::dynamic_pointer_cast<EventBase>(e);
+			}
+			else
+			{
+				ep(*(std::dynamic_pointer_cast<T>(we)));
+				return we;
+			}
+		};
+		
+		processors_.insert({T::GetMiraiEvent(), func });
 		return *this;
 	}
 

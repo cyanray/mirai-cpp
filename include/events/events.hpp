@@ -3,6 +3,7 @@
 #define mirai_cpp_events_events_hpp_H_
 
 // 消息事件
+#include "message_event.hpp"
 #include "friend_message.hpp"
 #include "group_message.hpp"
 #include "temp_message.hpp"

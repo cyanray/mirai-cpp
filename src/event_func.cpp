@@ -94,4 +94,26 @@ namespace Cyan
 		return true;
 	}
 
+	MessageId Message::Reply(const Cyan::MessageChain& mc) const
+	{
+		switch (messageType_)
+		{
+		case	 MessageType::FriendMessage: return friendMessage_.Reply(mc);
+		case MessageType::GroupMessage: return groupMessage_.Reply(mc);
+		case MessageType::TempMessage: return tempMessage_.Reply(mc);
+		default: throw std::runtime_error("错误的 MessageType .");
+		}
+	}
+
+	MessageId Message::QuoteReply(const Cyan::MessageChain& mc) const
+	{
+		switch (messageType_)
+		{
+		case	 MessageType::FriendMessage: return friendMessage_.QuoteReply(mc);
+		case MessageType::GroupMessage: return groupMessage_.QuoteReply(mc);
+		case MessageType::TempMessage: return tempMessage_.QuoteReply(mc);
+		default: throw std::runtime_error("错误的 MessageType .");
+		}
+	}
+	
 }
