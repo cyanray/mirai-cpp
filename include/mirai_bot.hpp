@@ -20,7 +20,6 @@ using std::string;
 using std::vector;
 using std::function;
 using nlohmann::json;
-using std::unordered_map;
 
 // fu*k windows.h
 #ifdef max
@@ -337,7 +336,7 @@ namespace Cyan
 		bool ws_enabled_;
 		httplib::Client http_client_;
 		ThreadPool pool_;
-		unordered_map<MiraiEvent, function<WeakEvent(WeakEvent)>> processors_;
+		std::unordered_multimap<MiraiEvent, function<WeakEvent(WeakEvent)>> processors_;
 	};
 
 	template <typename T>

@@ -51,19 +51,25 @@ system("chcp 65001");
 	cout << "Bot Working..." << endl;
 
 	// 监听各类事件
-	bot.OnEventReceived<GroupMessage>(
+	bot.On<GroupMessage>(
 		[&](GroupMessage m)
 		{
 			m.QuoteReply(m.MessageChain);
 		});
-
-	bot.OnEventReceived<FriendMessage>(
+	// 可以多次监听同一事件，不保证执行顺序
+	bot.On<GroupMessage>(
+		[&](GroupMessage m)
+		{
+			m.Reply("2222 " + m.MessageChain);
+		});
+	
+	bot.On<FriendMessage>(
 		[&](FriendMessage m)
 		{
 			m.Reply("你好呀, " + m.MessageChain);
 		});
 
-	bot.OnEventReceived<TempMessage>(
+	bot.On<TempMessage>(
 		[&](TempMessage m)
 		{
 			m.Reply(m.MessageChain);
@@ -73,7 +79,7 @@ system("chcp 65001");
 	// 记录轮询事件时的错误
 	bot.EventLoop([](const char* errMsg)
 		{
-			cout << "轮询事件时出错: " << errMsg << endl;
+			cout << "获取事件时出错: " << errMsg << endl;
 		});
 
 	return 0;

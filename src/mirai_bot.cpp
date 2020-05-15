@@ -827,10 +827,10 @@ namespace Cyan
 		string event_name = ele["type"].get<string>();
 		MiraiEvent mirai_event = MiraiEventStr(event_name);
 		// 寻找能处理事件的 Processor
-		auto pit = processors_.find(mirai_event);
-		if (pit != processors_.end())
+		auto range = processors_.equal_range(mirai_event);
+		for (auto it = range.first; it != range.second; ++it)
 		{
-			auto executor = pit->second;
+			auto executor = it->second;
 			// 给 executor 传入 nullptr 可以创建一个 WeakEvent
 			WeakEvent pevent = executor(nullptr);
 			pevent->SetMiraiBot(this);
