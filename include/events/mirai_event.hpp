@@ -1,6 +1,7 @@
 #pragma once
 #ifndef mirai_cpp_events_events_name_hpp_H_
 #define mirai_cpp_events_events_name_hpp_H_
+#include <string>
 
 namespace Cyan
 {
@@ -35,7 +36,7 @@ namespace Cyan
 		BotLeaveEventKick,		// Bot 被剔出群
 	};
 
-	inline MiraiEvent MiraiEventStr(const string& miraiEvent)
+	inline MiraiEvent MiraiEventStr(const std::string& miraiEvent)
 	{
 		if (miraiEvent == "FriendMessage") return MiraiEvent::FriendMessage;
 		if (miraiEvent == "GroupMessage") return MiraiEvent::GroupMessage;
@@ -63,9 +64,9 @@ namespace Cyan
 		return MiraiEvent::Default;
 	}
 
-	inline string MiraiEventStr(MiraiEvent miraiEvent)
+	inline std::string MiraiEventStr(MiraiEvent miraiEvent)
 	{
-		string result;
+		std::string result;
 		switch (miraiEvent)
 		{
 		case Cyan::MiraiEvent::FriendMessage:
