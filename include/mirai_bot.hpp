@@ -359,8 +359,19 @@ namespace Cyan
 				return we;
 			}
 		};
-		
-		processors_.insert({T::GetMiraiEvent(), func });
+
+		// 特别处理通用消息事件
+		if (T::GetMiraiEvent() == MiraiEvent::Message)
+		{
+			processors_.insert({ MiraiEvent::FriendMessage, func });
+			processors_.insert({ MiraiEvent::GroupMessage, func });
+			processors_.insert({ MiraiEvent::TempMessage, func });
+		}
+		else
+		{
+			processors_.insert({ T::GetMiraiEvent(), func });
+		}
+
 		return *this;
 	}
 

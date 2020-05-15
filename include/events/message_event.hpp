@@ -15,12 +15,12 @@ namespace Cyan
 
 	enum class MessageType
 	{
-		FriendMessage,		// 好友消息
-		GroupMessage,		// 群组消息
-		TempMessage			// 临时消息
+		FriendMessage,		// 濂藉弸娑堟伅
+		GroupMessage,		// 缇ょ粍娑堟伅
+		TempMessage			// 涓存椂娑堟伅
 	};
 
-	// 通用消息事件 (可转换为 FriendMessage GroupMessage TempMessage)
+	// 閫氱敤娑堟伅浜嬩欢 (鍙浆鎹负 FriendMessage GroupMessage TempMessage)
 	class EXPORTED Message : public EventBase
 	{
 	public:
@@ -39,21 +39,21 @@ namespace Cyan
 		FriendMessage ToFriendMessage() const
 		{
 			FriendMessage m;
-			m.Set(this->ToJson());
+			m.Set(json_);
 			return m;
 		}
 
 		GroupMessage ToGroupMessage() const
 		{
 			GroupMessage m;
-			m.Set(this->ToJson());
+			m.Set(json_);
 			return m;
 		}
 
 		TempMessage ToTempMessage() const
 		{
 			TempMessage m;
-			m.Set(this->ToJson());
+			m.Set(json_);
 			return m;
 		}
 
@@ -81,32 +81,31 @@ namespace Cyan
 			{
 				messageType_ = MessageType::FriendMessage;
 				friendMessage_.Set(j);
+				friendMessage_.SetMiraiBot(bot_);
 			}
 			if (j["type"] == "GroupMessage")
 			{
 				messageType_ = MessageType::GroupMessage;
 				groupMessage_.Set(j);
+				groupMessage_.SetMiraiBot(bot_);
 			}
 			if (j["type"] == "TempMessage")
 			{
 				messageType_ = MessageType::TempMessage;
 				tempMessage_.Set(j);
+				tempMessage_.SetMiraiBot(bot_);
 			}
 			this->MessageChain.Set(j["messageChain"]);
+			json_ = j;
 			return true;
 		}
 		virtual json ToJson() const override
 		{
-			switch (messageType_)
-			{
-			case	 MessageType::FriendMessage: return friendMessage_.ToJson();
-			case MessageType::GroupMessage: return groupMessage_.ToJson();
-			case MessageType::TempMessage: return tempMessage_.ToJson();
-			default: throw std::runtime_error("错误的 MessageType .");
-			}
+			return json_;
 		}
 	private:
 		MiraiBot* bot_;
+		json json_;
 		MessageType messageType_;
 		FriendMessage friendMessage_;
 		GroupMessage groupMessage_;
