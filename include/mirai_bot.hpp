@@ -31,6 +31,9 @@ using nlohmann::json;
 #ifdef CreateEvent
 #undef CreateEvent
 #endif
+#ifdef SetPort
+#undef SetPort
+#endif
 
 namespace Cyan
 {
@@ -44,8 +47,22 @@ namespace Cyan
 		 * \param port port
 		 */
 		MiraiBot(const string& host, int port);
+		MiraiBot(const MiraiBot&) = delete;
+		MiraiBot& operator=(const MiraiBot&) = delete;
 		~MiraiBot();
 
+		/**
+		 * \brief 设置 Host
+		 * \param host Host
+		 * \return MiraiBot 引用
+		 */
+		MiraiBot& SetHost(const string& host);
+		/**
+		 * \brief 设置 Port
+		 * \param port Port
+		 * \return MiraiBot 引用
+		 */
+		MiraiBot& SetPort(int port);
 		/**
 		 * \brief 获得 mirai-cpp 适配的 API 版本
 		 * \return 用数字表示的版本号 (10605)
