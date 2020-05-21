@@ -30,19 +30,6 @@ namespace Cyan
 	{
 		Release();
 	}
-
-	MiraiBot& MiraiBot::SetHost(const string& host)
-	{
-		this->host_ = host;
-		return *this;
-	}
-
-	MiraiBot& MiraiBot::SetPort(int port)
-	{
-		this->port_ = port;
-		return *this;
-	}
-
 	string MiraiBot::GetSessionKey() const
 	{
 		return sessionKey_;
