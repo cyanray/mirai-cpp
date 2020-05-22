@@ -21,11 +21,6 @@ namespace Cyan
 			return MiraiEvent::BotMuteEvent;
 		}
 
-		virtual void SetMiraiBot(MiraiBot* bot) override
-		{
-			this->bot_ = bot;
-		}
-
 		virtual bool Set(const json& j) override
 		{
 			this->DurationSeconds = j["durationSeconds"].get<int>();
@@ -41,8 +36,6 @@ namespace Cyan
 			return j;
 		}
 
-	private:
-		MiraiBot* bot_;
 	};
 
 }

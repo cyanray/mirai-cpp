@@ -34,11 +34,6 @@ namespace Cyan
 			return (this->MessageChain).GetTimestamp();
 		}
 
-		virtual void SetMiraiBot(MiraiBot* bot) override
-		{
-			this->bot_ = bot;
-		}
-
 		MessageId Reply(const Cyan::MessageChain& mc) const;
 		MessageId QuoteReply(const Cyan::MessageChain& mc) const;
 		bool Recall() const;
@@ -57,8 +52,6 @@ namespace Cyan
 			j["sender"] = this->Sender.ToJson();
 			return j;
 		}
-	private:
-		MiraiBot* bot_;
 	};
 }
 

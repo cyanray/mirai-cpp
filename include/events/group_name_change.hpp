@@ -24,11 +24,6 @@ namespace Cyan
 			return MiraiEvent::GroupNameChangeEvent;
 		}
 
-		virtual void SetMiraiBot(MiraiBot* bot) override
-		{
-			this->bot_ = bot;
-		}
-
 		bool OperatorIsBot() const
 		{
 			return operator_is_null_;
@@ -58,7 +53,6 @@ namespace Cyan
 		}
 
 	private:
-		MiraiBot* bot_;
 		bool operator_is_null_ = true;
 	};
 

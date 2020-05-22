@@ -25,12 +25,6 @@ namespace Cyan
 			return MiraiEvent::FriendRecallEvent;
 		}
 
-
-		virtual void SetMiraiBot(MiraiBot* bot) override
-		{
-			this->bot_ = bot;
-		}
-
 		virtual bool Set(const json& j) override
 		{
 			this->Time = j["time"].get<int64_t>();
@@ -49,9 +43,6 @@ namespace Cyan
 			j["operator"] = (int64_t)this->Operator;
 			return j;
 		}
-
-	private:
-		MiraiBot* bot_;
 	};
 
 }

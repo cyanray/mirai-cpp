@@ -27,11 +27,6 @@ namespace Cyan
 			return MiraiEvent::FriendRecallEvent;
 		}
 
-		virtual void SetMiraiBot(MiraiBot* bot) override
-		{
-			this->bot_ = bot;
-		}
-
 		bool Accept()
 		{
 			return Response(0, "");
@@ -69,7 +64,6 @@ namespace Cyan
 		}
 
 	private:
-		MiraiBot* bot_;
 		bool Response(int operate, const string& message);
 	};
 
