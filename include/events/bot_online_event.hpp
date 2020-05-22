@@ -20,11 +20,6 @@ namespace Cyan
 			return MiraiEvent::BotOnlineEvent;
 		}
 
-		virtual void SetMiraiBot(MiraiBot* bot) override
-		{
-			this->bot_ = bot;
-		}
-
 		virtual bool Set(const json& j) override
 		{
 			this->QQ = (QQ_t)(j["qq"].get<int64_t>());
@@ -38,8 +33,6 @@ namespace Cyan
 			return j;
 		}
 
-	private:
-		MiraiBot* bot_;
 	};
 
 }

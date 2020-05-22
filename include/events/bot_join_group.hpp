@@ -20,16 +20,12 @@ namespace Cyan
 			return MiraiEvent::BotJoinGroupEvent;
 		}
 
-		virtual void SetMiraiBot(MiraiBot* bot) override
-		{
-			this->bot_ = bot;
-		}
-
 		virtual bool Set(const json& j) override
 		{
 			this->Group.Set(j["group"]);
 			return true;
 		}
+		
 		virtual json ToJson() const override
 		{
 			json j = json::object();
@@ -37,9 +33,6 @@ namespace Cyan
 			j["group"] = this->Group.ToJson();
 			return j;
 		}
-
-	private:
-		MiraiBot* bot_;
 	};
 
 }
