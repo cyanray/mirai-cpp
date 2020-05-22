@@ -9,13 +9,23 @@ namespace Cyan
 	class EventBase : public Serializable
 	{
 	public:
-		EventBase() {}
+		EventBase() : bot_(nullptr) {}
+
 		static MiraiEvent GetMiraiEvent()
 		{
 			return MiraiEvent::Default;
 		}
-		virtual void SetMiraiBot(MiraiBot*) = 0;
+		virtual void SetMiraiBot(MiraiBot* bot)
+		{
+			this->bot_ = bot;
+		}
+		virtual MiraiBot& GetMiraiBot()
+		{
+			return *bot_;
+		}
 		virtual ~EventBase() {}
+	protected:
+		MiraiBot* bot_;
 	};
 
 
