@@ -44,6 +44,8 @@ namespace Cyan
 		 * \param port port
 		 */
 		MiraiBot(const string& host, int port);
+		MiraiBot(const MiraiBot&) = delete;
+		MiraiBot& operator=(const MiraiBot&) = delete;
 		~MiraiBot();
 
 		/**
