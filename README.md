@@ -107,6 +107,12 @@
 
 </details>
 
+#### (2) 使用 vcpkg 安装 mirai-cpp
+
+要使用 vcpkg 管理 mirai-cpp，你需要将 [https://github.com/cyanray/mirai-cpp-vcpkg-port](https://github.com/cyanray/mirai-cpp-vcpkg-port) 中的 **mirai-cpp** 文件夹复制到 vcpkg 安装目录下的 **ports** 文件夹中。
+
+然后就可以使用 `./vcpkg install mirai-cpp` 安装 mirai-cpp。
+
 #### (2) 使用 CMake-GUI 编译
 
 未完待续……
