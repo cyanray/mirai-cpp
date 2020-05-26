@@ -24,7 +24,7 @@ namespace Cyan
 
 		static MiraiEvent GetMiraiEvent()
 		{
-			return MiraiEvent::FriendRecallEvent;
+			return MiraiEvent::NewFriendRequestEvent;
 		}
 
 		bool Accept()
