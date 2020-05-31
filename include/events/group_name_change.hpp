@@ -3,10 +3,9 @@
 #define mirai_cpp_events_group_name_change_hpp_H_
 
 #include <nlohmann/json.hpp>
-#include "defs/qq_types.hpp"
+#include "event_interface.hpp"
 #include "defs/group.hpp"
 #include "defs/group_member.hpp"
-#include "event_interface.hpp"
 
 namespace Cyan
 {
@@ -48,7 +47,10 @@ namespace Cyan
 			j["origin"] = this->OriginName;
 			j["current"] = this->CurrentName;
 			j["group"] = this->Group.ToJson();
-			j["operator"] = this->Operator.ToJson();
+			if (!operator_is_null_)
+				j["operator"] = this->Operator.ToJson();
+			else
+				j["operator"] = nullptr;
 			return j;
 		}
 
