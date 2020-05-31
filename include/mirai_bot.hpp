@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef mirai_cpp__mirai_bot_hpp_H_
 #define mirai_cpp__mirai_bot_hpp_H_
 #include <string>
@@ -44,6 +44,13 @@ namespace Cyan
 		 * \param port port
 		 */
 		MiraiBot(const string& host, int port);
+		/**
+		 * \brief 
+		 * \param host hostname
+		 * \param port port
+		 * \param threadNums 线程池线程数
+		 */
+		MiraiBot(const string& host, int port, int threadNums);
 		MiraiBot(const MiraiBot&) = delete;
 		MiraiBot& operator=(const MiraiBot&) = delete;
 		~MiraiBot();

@@ -1,4 +1,4 @@
-#include "mirai_bot.hpp"
+﻿#include "mirai_bot.hpp"
 #include <iostream>
 #include <exception>
 #include "easywsclient.hpp"
@@ -26,6 +26,14 @@ namespace Cyan
 		ws_enabled_(true),
 		http_client_(host, port),
 		pool_(4) {}
+	MiraiBot::MiraiBot(const string& host, int port, int threadNums) :
+		host_(host),
+		port_(port),
+		qq_(0),
+		cacheSize_(4096),
+		ws_enabled_(true),
+		http_client_(host, port),
+		pool_(threadNums) {}
 	MiraiBot::~MiraiBot()
 	{
 		Release();
