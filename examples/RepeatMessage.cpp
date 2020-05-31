@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 // 使用静态库必须要在引入 mirai.h 前定义这个宏
 #define MIRAICPP_STATICLIB
 #include <mirai.h>
@@ -10,11 +10,12 @@ int main()
 
 	// 源文件使用 UTF-8 编码保存，在 Windows 上需要切换代码页才不会显示乱码
 #if defined(WIN32) || defined(_WIN32)
-system("chcp 65001");
+	system("chcp 65001");
 #endif	
 
-	MiraiBot bot("127.0.0.1", 539);
-	
+	// 16 条事件处理线程
+	MiraiBot bot("127.0.0.1", 539, 16);
+
 	// 检查一下版本
 	try
 	{
@@ -29,7 +30,7 @@ system("chcp 65001");
 			cout << "! 警告: 你的 mirai-api-http 插件的版本与 mirai-cpp 适配的版本不同，可能存在潜在的异常。" << endl;
 		}
 	}
-	catch (const std::exception&ex)
+	catch (const std::exception& ex)
 	{
 		cout << ex.what() << endl;
 	}
@@ -62,7 +63,7 @@ system("chcp 65001");
 		{
 			m.Reply("2222 " + m.MessageChain);
 		});
-	
+
 	bot.On<FriendMessage>(
 		[&](FriendMessage m)
 		{
@@ -81,16 +82,16 @@ system("chcp 65001");
 	bot.On<Message>(
 		[&](Message m)
 		{
-			cout<< int64_t(m.Sender) << " 发来一条消息." << endl;
+			cout << int64_t(m.Sender) << " 发来一条消息." << endl;
 			m.Reply("Message事件可处理三种消息:" + m.MessageChain);
 
 			// 判断是否群组消息
-			if(m.GetMessageType() == MessageType::GroupMessage)
+			if (m.GetMessageType() == MessageType::GroupMessage)
 			{
 				GroupMessage gm = m.ToGroupMessage();
 				// TODO: 针对群组消息的特别处理
 			}
-			
+
 		});
 
 
