@@ -62,6 +62,7 @@ namespace Cyan
 		if (miraiEvent == "BotLeaveEventActive") return MiraiEvent::BotLeaveEventActive;
 		if (miraiEvent == "BotLeaveEventKick") return MiraiEvent::BotLeaveEventKick;
 		if (miraiEvent == "GroupNameChangeEvent") return MiraiEvent::GroupNameChangeEvent;
+		if (miraiEvent == "GroupMuteAllEvent") return MiraiEvent::GroupMuteAllEvent;
 		return MiraiEvent::Default;
 	}
 

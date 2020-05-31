@@ -50,6 +50,21 @@ int main()
 			bot.SendMessage(e.Member.Group.GID, mc);
 		});
 
+	bot.On<GroupMuteAllEvent>([&](GroupMuteAllEvent e)
+		{
+			// 机器人的操作不可访问 Operator
+			if (e.OperatorIsBot())
+			{
+				cout << "机器人群禁言操作" << endl;
+				return;
+			}
+		if(e.Current)
+			cout << e.Operator.MemberName << " 开启了全群禁言." << endl;
+		else
+			cout << e.Operator.MemberName << " 关闭了全群禁言." << endl;
+		
+		});
+	
 	try
 	{
 		bot.MuteAll(1029259687_gid);
