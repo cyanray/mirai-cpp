@@ -26,6 +26,12 @@ int main()
 
 	bot.On<MemberMuteEvent>([&](MemberMuteEvent e)
 		{
+			// 机器人的操作不做处理
+			if (e.OperatorIsBot())
+			{
+				cout << "机器人禁言操作" << endl;
+				return;
+			}
 			auto mc = MessageChain()
 				.Plain("恭喜老哥 " + e.Member.MemberName + " 喜提禁言套餐!");
 			bot.SendMessage(e.Member.Group.GID, mc);
@@ -33,59 +39,65 @@ int main()
 
 	bot.On<MemberUnmuteEvent>([&](MemberUnmuteEvent e)
 		{
+			// 机器人的操作不做处理
+			if (e.OperatorIsBot())
+			{
+				cout << "机器人解除禁言操作" << endl;
+				return;
+			}
 			auto mc = MessageChain()
 				.Plain("恭喜老哥 " + e.Member.MemberName + " 提前出狱!");
 			bot.SendMessage(e.Member.Group.GID, mc);
 		});
 
-	bool res = false;
-	res = bot.MuteAll(1029259687_gid);
-	if (res)
+	try
 	{
+		bot.MuteAll(1029259687_gid);
 		cout << "全体禁言成功！" << endl;
 	}
-	else
+	catch (const exception& ex)
 	{
-		cout << "全体禁言失败" << endl;
+		cout << "全体禁言失败: " << ex.what() << endl;
 	}
+
 
 	MiraiBot::SleepSeconds(5);
 
-	res = bot.UnMuteAll(1029259687_gid);
-	if (res)
+	try
 	{
+		bot.UnMuteAll(1029259687_gid);
 		cout << "解除全体禁言成功！" << endl;
 	}
-	else
+	catch (const exception& ex)
 	{
-		cout << "解除全体禁言失败" << endl;
+		cout << "解除全体禁言失败: " << ex.what() << endl;
 	}
 
-	res = bot.Mute(1029259687_gid, 211795583_qq, 60);
-	if (res)
+	try
 	{
-		cout << "禁言群员成功！" << endl;
+		bot.Mute(1029259687_gid, 211795583_qq, 60);
+		cout << "禁言群成员成功！" << endl;
 	}
-	else
+	catch (const exception& ex)
 	{
-		cout << "禁言群员失败" << endl;
+		cout << "禁言群成员失败: " << ex.what() << endl;
 	}
+
 
 	MiraiBot::SleepSeconds(5);
 
-	res = bot.UnMute(1029259687_gid, 211795583_qq);
-	if (res)
+	try
 	{
-		cout << "解除禁言群员成功！" << endl;
+		bot.UnMute(1029259687_gid, 211795583_qq);
+		cout << "解除禁言群成员成功！" << endl;
 	}
-	else
+	catch (const exception& ex)
 	{
-		cout << "解除禁言群员失败" << endl;
+		cout << "解除禁言群成员失败: " << ex.what() << endl;
 	}
 
 
 	bot.EventLoop();
-
 
 	return 0;
 }

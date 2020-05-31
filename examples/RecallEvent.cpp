@@ -26,12 +26,19 @@ int main()
 
 
 	bot.On<GroupRecallEvent>(
-		[&](GroupRecallEvent gm)
+		[&](GroupRecallEvent e)
 		{
 			try
 			{
-				auto mc = "刚刚有人撤回了: " + bot.GetGroupMessageFromId(gm.MessageId).MessageChain;
-				bot.SendMessage(gm.Group.GID, mc);
+				if(e.OperatorIsBot())
+				{
+					cout << "不处理原因：bot 撤回了一条消息" << endl;
+					return;
+				}
+				auto mc = "刚刚有人撤回了: " + bot.GetGroupMessageFromId(e.MessageId).MessageChain;
+				auto mid = bot.SendMessage(e.Group.GID, mc);
+				MiraiBot::SleepSeconds(5);
+				bot.Recall(mid);
 			}
 			catch (const std::exception& ex)
 			{
@@ -40,12 +47,12 @@ int main()
 		});
 
 	bot.On<FriendRecallEvent>(
-		[&](FriendRecallEvent gm)
+		[&](FriendRecallEvent e)
 		{
 			try
 			{
-				auto mc = "刚刚有人撤回了: " + bot.GetFriendMessageFromId(gm.MessageId).MessageChain;
-				bot.SendMessage(gm.AuthorQQ, mc);
+				auto mc = "刚刚有人撤回了: " + bot.GetFriendMessageFromId(e.MessageId).MessageChain;
+				bot.SendMessage(e.AuthorQQ, mc);
 			}
 			catch (const std::exception& ex)
 			{

@@ -3,10 +3,8 @@
 #define mirai_cpp_events_member_mute_event_hpp_H_
 
 #include <nlohmann/json.hpp>
-#include "defs/qq_types.hpp"
-#include "defs/serializable.hpp"
-#include "defs/group_member.hpp"
 #include "event_interface.hpp"
+#include "defs/group_member.hpp"
 
 namespace Cyan
 {
@@ -45,7 +43,10 @@ namespace Cyan
 			j["type"] = "MemberMuteEvent";
 			j["durationSeconds"] = this->DurationSeconds;
 			j["member"] = this->Member.ToJson();
-			j["operator"] = this->Operator.ToJson();
+			if (!operator_is_null_)
+				j["operator"] = this->Operator.ToJson();
+			else
+				j["operator"] = nullptr;
 			return j;
 		}
 
