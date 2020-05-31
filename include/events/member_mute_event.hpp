@@ -45,7 +45,10 @@ namespace Cyan
 			j["type"] = "MemberMuteEvent";
 			j["durationSeconds"] = this->DurationSeconds;
 			j["member"] = this->Member.ToJson();
-			j["operator"] = this->Operator.ToJson();
+			if (!operator_is_null_)
+				j["operator"] = this->Operator.ToJson();
+			else
+				j["operator"] = nullptr;
 			return j;
 		}
 
