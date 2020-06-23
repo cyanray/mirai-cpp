@@ -3,15 +3,14 @@
 #define mirai_cpp_events_bot_unmute_event_hpp_H_
 
 #include <nlohmann/json.hpp>
-#include "defs/qq_types.hpp"
-#include "defs/serializable.hpp"
-#include "defs/message_chain.hpp"
 #include "defs/group_member.hpp"
 #include "event_interface.hpp"
 
 namespace Cyan
 {
-	// bot 被解除禁言事件
+	/**
+	 * \brief bot 被解除禁言事件
+	 */
 	class BotUnmuteEvent : public EventBase
 	{
 	public:

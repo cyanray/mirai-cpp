@@ -8,7 +8,9 @@
 
 namespace Cyan
 {
-	// 群成员被踢出群事件
+	/**
+	 * \brief 群成员被踢出群事件
+	 */
 	class MemberLeaveEventKick : public EventBase
 	{
 	public:

@@ -9,7 +9,9 @@
 
 namespace Cyan
 {
-	// 群全体禁言事件
+	/**
+	 * \brief 群全体禁言事件
+	 */
 	class GroupMuteAllEvent : public EventBase
 	{
 	public:

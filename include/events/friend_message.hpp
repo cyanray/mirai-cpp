@@ -4,7 +4,6 @@
 
 #include <nlohmann/json.hpp>
 #include "defs/qq_types.hpp"
-#include "defs/serializable.hpp"
 #include "defs/message_chain.hpp"
 #include "defs/friend.hpp"
 #include "exported.h"
@@ -12,7 +11,9 @@
 
 namespace Cyan
 {
-	// 好友发来的消息
+	/**
+	 * \brief 好友发来的消息
+	 */
 	class EXPORTED FriendMessage : public EventBase
 	{
 	public:

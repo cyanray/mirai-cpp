@@ -3,13 +3,15 @@
 #define mirai_cpp_events_bot_leave_kick_hpp_H_
 
 #include <nlohmann/json.hpp>
-#include "defs/qq_types.hpp"
 #include "defs/group.hpp"
 #include "event_interface.hpp"
 
 namespace Cyan
 {
-	// bot 被踢出群
+
+	/**
+	 * \brief bot 被踢出群
+	 */
 	class BotLeaveEventKick : public EventBase
 	{
 	public:

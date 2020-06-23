@@ -4,12 +4,13 @@
 
 #include <nlohmann/json.hpp>
 #include "defs/qq_types.hpp"
-#include "defs/serializable.hpp"
 #include "event_interface.hpp"
 
 namespace Cyan
 {
-	// bot 被挤下线事件
+	/**
+	 * \brief bot 被挤下线事件
+	 */
 	class BotOfflineEventForce : public EventBase
 	{
 	public:

@@ -9,7 +9,9 @@
 
 namespace Cyan
 {
-	// 群成员消息撤回事件
+	/**
+	 * \brief 群成员消息撤回事件
+	 */
 	class GroupRecallEvent : public EventBase
 	{
 	public:

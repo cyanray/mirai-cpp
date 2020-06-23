@@ -20,7 +20,9 @@ namespace Cyan
 		TempMessage			// 临时消息
 	};
 
-	// 通用消息事件 (可转换为 FriendMessage GroupMessage TempMessage)
+	/**
+	 * \brief 通用消息事件 (可转换为 FriendMessage、GroupMessage、TempMessage)
+	 */
 	class EXPORTED Message : public EventBase
 	{
 	public:

@@ -9,7 +9,9 @@
 
 namespace Cyan
 {
-	// 群名称被改变
+	/**
+	 * \brief 群名称被改变
+	 */
 	class GroupNameChangeEvent : public EventBase
 	{
 	public:

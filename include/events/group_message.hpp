@@ -4,7 +4,6 @@
 
 #include <nlohmann/json.hpp>
 #include "defs/qq_types.hpp"
-#include "defs/serializable.hpp"
 #include "defs/message_chain.hpp"
 #include "defs/group_member.hpp"
 #include "event_interface.hpp"
@@ -12,7 +11,9 @@
 
 namespace Cyan
 {
-	// 群组发来的消息
+	/**
+	 * \brief 群组发来的消息
+	 */
 	class EXPORTED GroupMessage : public EventBase
 	{
 	public:

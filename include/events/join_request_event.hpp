@@ -4,15 +4,14 @@
 
 #include <nlohmann/json.hpp>
 #include "defs/qq_types.hpp"
-#include "defs/serializable.hpp"
-#include "defs/message_chain.hpp"
-#include "defs/friend.hpp"
 #include "exported.h"
 #include "event_interface.hpp"
 
 namespace Cyan
 {
-	// 新成员入群请求
+	/**
+	 * \brief 新成员入群请求
+	 */
 	class EXPORTED MemberJoinRequestEvent : public EventBase
 	{
 	public:

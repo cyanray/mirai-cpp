@@ -4,12 +4,13 @@
 
 #include <nlohmann/json.hpp>
 #include "defs/qq_types.hpp"
-#include "defs/serializable.hpp"
 #include "event_interface.hpp"
 
 namespace Cyan
 {
-	// bot 登录成功事件
+	/**
+	 * \brief bot 登录成功事件
+	 */
 	class BotOnlineEvent : public EventBase
 	{
 	public:
