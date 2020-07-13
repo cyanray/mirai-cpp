@@ -28,6 +28,16 @@ namespace Cyan
 			return *this;
 		}
 		
+		virtual bool Set(const json& json) override
+		{
+			return true;
+		}
+
+		virtual json ToJson() const override
+		{
+			return json::object();
+		}
+
 		virtual ~EventBase() = default;
 		
 		static MiraiEvent GetMiraiEvent()
