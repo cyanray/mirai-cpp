@@ -3,14 +3,14 @@
 #define mirai_cpp_events_member_leave_quit_event_hpp_H_
 
 #include <nlohmann/json.hpp>
-#include "defs/qq_types.hpp"
-#include "defs/serializable.hpp"
 #include "defs/group_member.hpp"
 #include "event_interface.hpp"
 
 namespace Cyan
 {
-	// 群成员主动离群事件
+	/**
+	 * \brief 群成员主动离群事件
+	 */
 	class MemberLeaveEventQuit : public EventBase
 	{
 	public:

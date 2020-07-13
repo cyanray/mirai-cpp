@@ -4,13 +4,13 @@
 
 #include <nlohmann/json.hpp>
 #include "defs/qq_types.hpp"
-#include "defs/serializable.hpp"
-#include "defs/group_member.hpp"
 #include "event_interface.hpp"
 
 namespace Cyan
 {
-	// 好友消息撤回事件
+	/**
+	 * \brief 好友消息撤回事件
+	 */
 	class FriendRecallEvent : public EventBase
 	{
 	public:

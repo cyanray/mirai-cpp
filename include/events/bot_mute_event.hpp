@@ -3,13 +3,15 @@
 #define mirai_cpp_events_bot_mute_event_hpp_H_
 
 #include <nlohmann/json.hpp>
-#include "defs/qq_types.hpp"
 #include "defs/group_member.hpp"
 #include "event_interface.hpp"
 
 namespace Cyan
 {
-	// bot 被禁言事件
+
+	/**
+	 * \brief bot 被禁言事件
+	 */
 	class BotMuteEvent : public EventBase
 	{
 	public:

@@ -3,13 +3,15 @@
 #define mirai_cpp_events_bot_join_group_hpp_H_
 
 #include <nlohmann/json.hpp>
-#include "defs/qq_types.hpp"
-#include "defs/group.hpp"
 #include "event_interface.hpp"
+#include "defs/group.hpp"
 
 namespace Cyan
 {
-	// bot 加入新群事件
+
+	/**
+	 * \brief bot 加入新群事件
+	 */
 	class BotJoinGroupEvent : public EventBase
 	{
 	public:

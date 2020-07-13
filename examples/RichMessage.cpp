@@ -28,6 +28,23 @@ int main()
 	GroupImage gImg = bot.UploadGroupImage("D:\\test.png");
 	TempImage tImg = bot.UploadTempImage("D:\\test.png");
 
+	bot.On<Message>([&](Message m)
+		{
+			try
+			{
+				if(m.MessageChain.GetPlainTextFirst() == "点歌")
+				{
+					m.Reply(MessageChain().App(R"( {"app":"com.tencent.structmsg","config":{"autosize":true,"ctime":1592909927,"forward":true,"token":"8e01d9ea9297158cef76512886cfe8bc","type":"normal"},"desc":"新闻","extra":{"app_type":1,"appid":100497308,"msg_seq":6841496030403626000},"meta":{"news":{"action":"","android_pkg_name":"","app_type":1,"appid":100497308,"desc":"周杰伦","jumpUrl":"https://i.y.qq.com/v8/playsong.html?platform=11&appshare=android_qq&appversion=9160007&songmid=004Z8Ihr0JIu5s&type=0&appsongtype=1&_wv=1&source=qq&ADTAG=qfshare","preview":"https://y.gtimg.cn/music/photo_new/T002R300x300M000003DFRzD192KKD.jpg","source_icon":"","source_url":"","tag":"QQ音乐","title":"七里香"}},"prompt":"[分享]七里香","ver":"0.0.0.1","view":"news"} )"));
+				}
+				cout << m.ToString() << endl;
+			}
+			catch (const exception& ex)
+			{
+				cout << ex.what() << endl;
+			}
+		});
+
+	
 	bot.On<FriendMessage>(
 		[&](FriendMessage fm)
 		{

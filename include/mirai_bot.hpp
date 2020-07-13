@@ -1,6 +1,7 @@
 ﻿#pragma once
 #ifndef mirai_cpp__mirai_bot_hpp_H_
 #define mirai_cpp__mirai_bot_hpp_H_
+// std libraries
 #include <string>
 #include <vector>
 #include <thread>
@@ -12,9 +13,17 @@
 #include "nlohmann/json.hpp"
 #include "httplib.h"
 // mirai header files
-#include "defs/defs.hpp"
-#include "events/events.hpp"
 #include "exported.h"
+#include "defs/qq_types.hpp"
+#include "defs/message_chain.hpp"
+#include "defs/friend.hpp"
+#include "defs/group.hpp"
+#include "defs/group_member.hpp"
+#include "defs/group_member_info.hpp"
+#include "defs/group_config.hpp"
+#include "events/event_processer.hpp"
+#include "events/friend_message.hpp"
+#include "events/group_message.hpp"
 
 using std::string;
 using std::vector;

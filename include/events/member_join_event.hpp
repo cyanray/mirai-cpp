@@ -3,15 +3,15 @@
 #define mirai_cpp_events_member_join_event_hpp_H_
 
 #include <nlohmann/json.hpp>
-#include "defs/qq_types.hpp"
-#include "defs/serializable.hpp"
-#include "defs/message_chain.hpp"
 #include "defs/group_member.hpp"
 #include "event_interface.hpp"
 
 namespace Cyan
 {
-	// 新成员入群事件
+
+	/**
+	 * \brief 新成员入群事件
+	 */
 	class MemberJoinEvent : public EventBase
 	{
 	public:

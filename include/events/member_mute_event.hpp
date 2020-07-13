@@ -8,7 +8,9 @@
 
 namespace Cyan
 {
-	// 群成员被禁言事件
+	/**
+	 * \brief 群成员被禁言事件
+	 */
 	class MemberMuteEvent : public EventBase
 	{
 	public:

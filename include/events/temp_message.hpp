@@ -4,7 +4,6 @@
 
 #include <nlohmann/json.hpp>
 #include "defs/qq_types.hpp"
-#include "defs/serializable.hpp"
 #include "defs/message_chain.hpp"
 #include "defs/group_member.hpp"
 #include "exported.h"
@@ -12,7 +11,9 @@
 
 namespace Cyan
 {
-	// 由群组发来的临时消息
+	/**
+	 * \brief 由群组发来的临时消息
+	 */
 	class EXPORTED TempMessage : public EventBase
 	{
 	public:
