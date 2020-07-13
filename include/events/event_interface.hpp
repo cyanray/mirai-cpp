@@ -6,7 +6,7 @@
 #include "defs/qq_types.hpp"
 namespace Cyan
 {
-	class EventBase : public Serializable
+	class EventBase : public ISerializable
 	{
 	public:
 		EventBase() : bot_(nullptr) {}
@@ -28,6 +28,16 @@ namespace Cyan
 			return *this;
 		}
 		
+		virtual bool Set(const json& json) override
+		{
+			return true;
+		}
+
+		virtual json ToJson() const override
+		{
+			return json::object();
+		}
+
 		virtual ~EventBase() = default;
 		
 		static MiraiEvent GetMiraiEvent()

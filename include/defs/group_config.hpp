@@ -8,7 +8,7 @@
 namespace Cyan
 {
 	// »∫…Ë÷√
-	class GroupConfig : public Serializable
+	class GroupConfig : public ISerializable
 	{
 	public:
 		string Name;

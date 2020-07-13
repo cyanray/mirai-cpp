@@ -11,7 +11,7 @@ namespace Cyan
 {
 
 	// 群组成员信息
-	class GroupMemberInfo : public Serializable
+	class GroupMemberInfo : public ISerializable
 	{
 	public:
 		string Name;
