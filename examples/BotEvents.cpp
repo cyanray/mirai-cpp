@@ -1,7 +1,16 @@
 ﻿#include <iostream>
 // 使用静态库必须要在引入 mirai.h 前定义这个宏
 #define MIRAICPP_STATICLIB
-#include <mirai.h>
+#include <mirai_bot.hpp>
+#include <events/bot_join_group.hpp>
+#include <events/bot_mute_event.hpp>
+#include <events/bot_unmute_event.hpp>
+#include <events/bot_leave_kick.hpp>
+#include <events/bot_online_event.hpp>
+#include <events/bot_offline_active.hpp>
+#include <events/bot_offline_force.hpp>
+#include <events/bot_offline_dropped.hpp>
+#include <events/bot_relogin_event.hpp>
 
 int main()
 {
