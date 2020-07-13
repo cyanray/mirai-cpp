@@ -6,7 +6,7 @@
 #include "defs/qq_types.hpp"
 namespace Cyan
 {
-	class EventBase : public Serializable
+	class EventBase : public ISerializable
 	{
 	public:
 		EventBase() : bot_(nullptr) {}

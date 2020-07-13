@@ -10,7 +10,7 @@ namespace Cyan
 {
 
 	// 群组数据格式
-	class Group_t : public Serializable
+	class Group_t : public ISerializable
 	{
 	public:
 		GID_t GID;

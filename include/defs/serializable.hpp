@@ -8,17 +8,17 @@ using nlohmann::json;
 
 namespace Cyan
 {
-	class Serializable
+	class ISerializable
 	{
 	public:
-		Serializable() {}
+		ISerializable() {}
 		virtual bool Set(const json& json) = 0;
 		virtual json ToJson() const = 0;
 		virtual string ToString() const
 		{
 			return ToJson().dump();
 		}
-		virtual ~Serializable() {}
+		virtual ~ISerializable() {}
 	};
 
 

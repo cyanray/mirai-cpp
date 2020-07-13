@@ -11,7 +11,7 @@ namespace Cyan
 {
 
 	// 群组成员格式
-	class GroupMember_t : public Serializable
+	class GroupMember_t : public ISerializable
 	{
 	public:
 		QQ_t QQ;

@@ -10,7 +10,7 @@ namespace Cyan
 {
 
 	// 好友数据格式
-	class Friend_t : public Serializable
+	class Friend_t : public ISerializable
 	{
 	public:
 		QQ_t QQ;

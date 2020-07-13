@@ -23,7 +23,7 @@ namespace Cyan
 		FangDaZhao
 	};
 
-	class MessageChain : public Serializable
+	class MessageChain : public ISerializable
 	{
 	public:
 		friend MessageChain& operator+(const string& str, MessageChain& mc);
