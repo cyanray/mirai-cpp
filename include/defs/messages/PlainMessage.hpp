@@ -29,7 +29,7 @@ namespace Cyan
 		}
 		virtual bool Set(const json& json) override
 		{
-			if (json["type"].get<string>() != this->GetType())
+			if (json["type"].is_null() || json["type"].get<string>() != this->GetType())
 				throw std::runtime_error("给定的json不正确");
 			text_ = json["text"].get<string>();
 			return true;
