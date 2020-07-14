@@ -12,10 +12,11 @@ namespace Cyan
 	*/
 	class IMessage : public ISerializable
 	{
+	public:
 		IMessage() {}
 		virtual const string& GetType() const = 0;
-		virtual bool operator==(const MessageChain& mc) const = 0;
-		virtual bool operator!=(const MessageChain& mc) const = 0;
+		virtual bool operator==(const IMessage&) const = 0;
+		virtual bool operator!=(const IMessage&) const = 0;
 		virtual ~IMessage() {}
 	};
 
