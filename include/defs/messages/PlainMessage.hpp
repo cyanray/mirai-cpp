@@ -9,44 +9,47 @@ namespace Cyan
 	class PlainMessage : public IMessage
 	{
 	public:
-		PlainMessage() :text() {}
+		PlainMessage() : text_() {}
+		PlainMessage(const string& text) : text_(text) {}
+		virtual const string& GetType() const override
+		{
+			return type_;
+		}
+		virtual bool operator==(const IMessage& m) const override
+		{
+			if (auto m_ptr = dynamic_cast<const PlainMessage*>(&m))
+			{
+				return m_ptr->text_ == this->text_;
+			}
+			return false;
+		}
+		virtual bool operator!=(const IMessage& m) const override
+		{
+			return !(*this == m);
+		}
 		virtual bool Set(const json& json) override
 		{
 			if (json["type"].get<string>() != this->GetType())
 				throw std::runtime_error("给定的json不正确");
-			text = json["text"].get<string>();
+			text_ = json["text"].get<string>();
 			return true;
 		}
 		virtual json ToJson() const override
 		{
 			return
 			{
-				{ "type", GetType() },
-				{ "text", text }
+				{ "type", type_ },
+				{ "text", text_ }
 			};
-		}
-		virtual const string& GetType() const override
-		{
-			return "Plain";
-		}
-		virtual bool operator==(const IMessage& m) const override
-		{
-			if (auto m_ptr = dynamic_cast<const PlainMessage*>(&m))
-			{
-				return m_ptr->text == this->text;
-			}
-		}
-		virtual bool operator!=(const IMessage& m) const override
-		{
-			return !(*this == m);
 		}
 		virtual ~PlainMessage() {}
 
-		const string& GetText() const { return text; }
-		void SetText(const string& text) { this->text = text; }
+		const string& GetText() const { return text_; }
+		void SetText(const string& text) { this->text_ = text; }
 
 	private:
-		string text;
+		string type_ = "Plain";
+		string text_;
 	};
 
 }
