@@ -281,20 +281,20 @@ namespace Cyan
 		//	return res;
 		//}
 
-		//vector<QQ_t> GetAt() const
-		//{
-		//	vector<QQ_t> res;
-		//	for (const auto& ele : messages_)
-		//	{
-		//		string type_name = ele["type"].get<string>();
-		//		if (type_name == "At")
-		//		{
-		//			QQ_t qq = (QQ_t)(ele["target"].get<int64_t>());
-		//			res.emplace_back(qq);
-		//		}
-		//	}
-		//	return res;
-		//}
+		vector<QQ_t> GetAt() const
+		{
+			vector<QQ_t> res;
+			//for (const auto& ele : messages_)
+			//{
+			//	string type_name = ele["type"].get<string>();
+			//	if (type_name == "At")
+			//	{
+			//		QQ_t qq = (QQ_t)(ele["target"].get<int64_t>());
+			//		res.emplace_back(qq);
+			//	}
+			//}
+			return res;
+		}
 
 		//vector<int> GetFace() const
 		//{
