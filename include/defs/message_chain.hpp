@@ -10,6 +10,7 @@
 #include "serializable.hpp"
 #include "defs/message_interface.hpp"
 #include "defs/messages/PlainMessage.hpp"
+#include "defs/simple_reflect.hpp"
 
 using std::vector;
 
@@ -50,7 +51,7 @@ namespace Cyan
 			vector<T> tmp;
 			for (size_t i = 0; i < messages_.size(); i++)
 			{
-				if (T* m = dynamic_cast<T*>(messages_[i]))
+				if (auto m = std::dynamic_pointer_cast<T>(messages_[i]))
 				{
 					tmp.push_back(*m);
 				}
@@ -63,7 +64,7 @@ namespace Cyan
 		{
 			for (size_t i = 0; i < messages_.size(); i++)
 			{
-				if (T* m = dynamic_cast<T*>(messages_[i]))
+				if (auto m = std::dynamic_pointer_cast<T>(messages_[i]))
 				{
 					return *m;
 				}
