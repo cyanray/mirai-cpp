@@ -7,3 +7,7 @@ TEST(ABC, TEST1) {
 TEST(ABC, TEST2) {
     ASSERT_TRUE(2 == 2);
 }
+
+TEST(ABC, TEST3) {
+    ASSERT_TRUE(23 == 2);
+}
