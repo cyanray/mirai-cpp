@@ -10,7 +10,7 @@
 #include "serializable.hpp"
 #include "defs/message_interface.hpp"
 #include "defs/messages/PlainMessage.hpp"
-
+#include "defs/simple_reflect.hpp"
 using std::vector;
 
 namespace Cyan
@@ -32,7 +32,13 @@ namespace Cyan
 		//friend MessageChain& operator+(const string& str, MessageChain& mc);
 		//template<int N>
 		//friend MessageChain& operator+(const char(&str)[N], MessageChain& mc);
-		MessageChain() :messages_(),messageId_(0),timestamp_(0) {}
+		MessageChain() :messages_(),messageId_(0),timestamp_(0) 
+		{
+			if (factory_.size() <= 0)
+			{
+				factory_.Register<PlainMessage>("Plain");
+			}
+		}
 		MessageChain(const MessageChain& mc)
 		{
 			messages_ = mc.messages_;
@@ -338,6 +344,17 @@ namespace Cyan
 					this->messageId_ = 0;
 					this->timestamp_ = 0;
 				}
+
+				for (size_t i = 1; i < j.size(); i++)
+				{
+					auto msg_ptr =  factory_.DynamicCreate(j[i]["type"]);
+					if (msg_ptr)
+					{
+						msg_ptr->Set(j[i]);
+						messages_.push_back(msg_ptr);
+					}
+				}
+
 			}
 
 			return true;
@@ -360,6 +377,7 @@ namespace Cyan
 		int64_t timestamp_;
 		MessageId messageId_;
 		vector<std::shared_ptr<IMessage>> messages_;
+		Cyan::Reflection<IMessage> factory_;
 	};
 
 	//template<int N>
