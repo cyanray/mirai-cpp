@@ -33,6 +33,14 @@ TEST(MessageChain_Test, GetAll) {
     ASSERT_TRUE(m[1].GetText() == "Hi");
 }
 
+TEST(MessageChain_Test, Count) {
+    using namespace Cyan;
+    MessageChain mc;
+    mc.Add(PlainMessage("Hello"));
+    mc.Add(PlainMessage("Hi"));
+    ASSERT_TRUE(mc.Count() == 2);
+}
+
 TEST(ABC, TEST2) {
     ASSERT_TRUE(2 == 2);
 }

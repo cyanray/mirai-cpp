@@ -81,6 +81,11 @@ namespace Cyan
 			return *this;
 		}
 
+		size_t Count() const
+		{
+			return messages_.size();
+		}
+
 		//MessageChain& At(const QQ_t qq)
 		//{
 		//	json j;
