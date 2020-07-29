@@ -32,93 +32,18 @@ namespace Cyan
 		//friend MessageChain& operator+(const string& str, MessageChain& mc);
 		//template<int N>
 		//friend MessageChain& operator+(const char(&str)[N], MessageChain& mc);
-		MessageChain() :messages_(),messageId_(0),timestamp_(0) 
-		{
-			if (factory_.size() <= 0)
-			{
-				factory_.Register<PlainMessage>("Plain");
-			}
-		}
-		MessageChain(const MessageChain& mc)
-		{
-			messages_ = mc.messages_;
-			messageId_ = mc.messageId_;
-			timestamp_ = mc.timestamp_;
-		}
-		MessageChain(MessageChain&& mc) noexcept
-		{
-			std::swap(messages_, mc.messages_);
-			std::swap(messageId_, mc.messageId_);
-			std::swap(timestamp_, mc.timestamp_);
-		}
-		MessageChain& operator=(const MessageChain& mc)
-		{
-			MessageChain tmp(mc);
-			std::swap(messages_, tmp.messages_);
-			std::swap(messageId_, tmp.messageId_);
-			std::swap(timestamp_, tmp.timestamp_);
-			return *this;
-		}
-		MessageChain& operator=(MessageChain&& mc) noexcept
-		{
-			std::swap(messages_, mc.messages_);
-			std::swap(messageId_, mc.messageId_);
-			std::swap(timestamp_, mc.timestamp_);
-			return *this;
-		}
-		//MessageChain& operator+(const MessageChain& mc)
-		//{
-		//	messages_.insert(messages_.end(), mc.messages_.begin(), mc.messages_.end());
-		//	return *this;
-		//}
-		//MessageChain& operator+(const string& val)
-		//{
-		//	return this->Plain(val);
-		//}
-		//MessageChain& operator+=(const string& val)
-		//{
-		//	return this->Plain(val);
-		//}
-		//bool operator==(const MessageChain& mc) const
-		//{
-		//	auto it1 = mc.messages_.begin();
-		//	auto it2 = messages_.begin();
-
-		//	for (; it1 != mc.messages_.end() && it2 != messages_.end(); ++it1, ++it2)
-		//	{
-		//		if (it1.value()["type"] != it2.value()["type"]) return false;
-		//		if (it1.value()["type"] == "At")
-		//		{
-		//			if (it1.value()["target"] != it2.value()["target"]) return false;
-		//		}
-		//		if (it1.value()["type"] == "Face")
-		//		{
-		//			if (it1.value()["faceId"] != it2.value()["faceId"]) return false;
-		//		}
-		//		if (it1.value()["type"] == "Plain")
-		//		{
-		//			if (it1.value()["text"] != it2.value()["text"]) return false;
-		//		}
-		//		if (it1.value()["type"] == "Image")
-		//		{
-		//			if (it1.value()["imageId"] != it2.value()["imageId"]) return false;
-		//		}
-		//		if (it1.value()["type"] == "FlashImage")
-		//		{
-		//			if (it1.value()["imageId"] != it2.value()["imageId"]) return false;
-		//		}
-		//		if (it1.value()["type"] == "Poke")
-		//		{
-		//			if (it1.value()["name"] != it2.value()["name"]) return false;
-		//		}
-		//	}
-		//	return true;
-		//}
-		//bool operator!=(const MessageChain& mc) const
-		//{
-		//	return !this->operator==(mc);
-		//}
+		MessageChain();
+		MessageChain(const MessageChain& mc);
+		MessageChain(MessageChain&& mc) noexcept;
+		MessageChain& operator=(const MessageChain& mc);
+		MessageChain& operator=(MessageChain&& mc) noexcept;
+		MessageChain& operator+(const MessageChain& mc);
+		MessageChain& operator+(const string& val);
+		MessageChain& operator+=(const string& val);
+		bool operator==(const MessageChain& mc) const;
+		bool operator!=(const MessageChain& mc) const;
 		virtual ~MessageChain() = default;
+
 		//MessageChain& At(const QQ_t qq)
 		//{
 		//	json j;
