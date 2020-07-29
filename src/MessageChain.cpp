@@ -1,4 +1,5 @@
 #include "defs/message_chain.hpp"
+#include "defs/simple_reflect.hpp"
 
 namespace Cyan
 {

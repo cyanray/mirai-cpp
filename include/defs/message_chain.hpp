@@ -10,7 +10,7 @@
 #include "serializable.hpp"
 #include "defs/message_interface.hpp"
 #include "defs/messages/PlainMessage.hpp"
-#include "defs/simple_reflect.hpp"
+
 using std::vector;
 
 namespace Cyan
@@ -43,6 +43,42 @@ namespace Cyan
 		bool operator==(const MessageChain& mc) const;
 		bool operator!=(const MessageChain& mc) const;
 		virtual ~MessageChain() = default;
+
+		template<class T>
+		std::vector<T> GetAll() const
+		{
+			vector<T> tmp;
+			for (size_t i = 0; i < messages_.size(); i++)
+			{
+				if (T* m = dynamic_cast<T*>(messages_[i]))
+				{
+					tmp.push_back(*m);
+				}
+			}
+			return tmp;
+		}
+
+		template<class T>
+		T GetFirst() const
+		{
+			for (size_t i = 0; i < messages_.size(); i++)
+			{
+				if (T* m = dynamic_cast<T*>(messages_[i]))
+				{
+					return *m;
+				}
+			}
+			throw std::runtime_error("没有找到指定类型的元素");
+		}
+
+		template<class T>
+		MessageChain& Add(const T& m)
+		{
+			static_assert(std::is_base_of<IMessage, T>::value, "只能接受 IMessage 的派生类");
+			std::shared_ptr<IMessage> m_ptr(new T(m));
+			messages_.push_back(m_ptr);
+			return *this;
+		}
 
 		//MessageChain& At(const QQ_t qq)
 		//{
