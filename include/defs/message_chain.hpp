@@ -28,9 +28,9 @@ namespace Cyan
 	class MessageChain : public ISerializable
 	{
 	public:
-		//friend MessageChain& operator+(const string& str, MessageChain& mc);
-		//template<int N>
-		//friend MessageChain& operator+(const char(&str)[N], MessageChain& mc);
+		friend MessageChain& operator+(const string& str, MessageChain& mc);
+		template<int N>
+		friend MessageChain& operator+(const char(&str)[N], MessageChain& mc);
 		MessageChain();
 		MessageChain(const MessageChain& mc);
 		MessageChain(MessageChain&& mc) noexcept;
@@ -84,8 +84,8 @@ namespace Cyan
 		void Remove(const T& m)
 		{
 			static_assert(std::is_base_of<IMessage, T>::value, "只能接受 IMessage 的派生类");
-			messages_.erase(std::remove_if(messages_.begin(), messages_.end(), 
-				[&](std::shared_ptr<IMessage> item) 
+			messages_.erase(std::remove_if(messages_.begin(), messages_.end(),
+				[&](std::shared_ptr<IMessage> item)
 				{
 					return *item == m;
 				}), messages_.end());
@@ -193,6 +193,19 @@ namespace Cyan
 		MessageId_t messageId_;
 		vector<std::shared_ptr<IMessage>> messages_;
 	};
+
+	template<int N>
+	inline MessageChain& operator+(const char(&str)[N], MessageChain& mc)
+	{
+		mc.messages_.insert(mc.messages_.begin(),std::make_shared<PlainMessage>(str));
+		return mc;
+	}
+
+	inline MessageChain& operator+(const string& str, MessageChain& mc)
+	{
+		mc.messages_.insert(mc.messages_.begin(), std::make_shared<PlainMessage>(str));
+		return mc;
+	}
 
 }
 

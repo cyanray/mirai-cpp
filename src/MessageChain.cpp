@@ -11,9 +11,15 @@ namespace Cyan
 		if (factory_.size() <= 0)
 		{
 			factory_.Register<PlainMessage>("Plain");
-			factory_.Register<ImageMessage>("ImageMessage");
-			factory_.Register<FlashImageMessage>("FlashImageMessage");
-			factory_.Register<AtMessage>("AtMessage");
+			factory_.Register<ImageMessage>("Image");
+			factory_.Register<FlashImageMessage>("FlashImage");
+			factory_.Register<AtMessage>("At");
+			factory_.Register<AtAllMessage>("AtAll");
+			factory_.Register<AppMessage>("App");
+			factory_.Register<JsonMessage>("Json");
+			factory_.Register<XmlMessage>("Xml");
+			factory_.Register<FaceMessage>("Face");
+			factory_.Register<PokeMessage>("Poke");
 		}
 	}
 
