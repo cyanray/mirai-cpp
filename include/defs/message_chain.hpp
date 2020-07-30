@@ -83,19 +83,14 @@ namespace Cyan
 		}
 
 		template<class T>
-		MessageChain& Remove(const T& m)
+		void Remove(const T& m)
 		{
 			static_assert(std::is_base_of<IMessage, T>::value, "只能接受 IMessage 的派生类");
 			messages_.erase(std::remove_if(messages_.begin(), messages_.end(), 
 				[&](std::shared_ptr<IMessage> item) 
 				{
-					return item == m;
+					return *item == m;
 				}), messages_.end());
-			for (auto msg : messages_)
-			{
-				if(msg == m)
-			}
-			return *this;
 		}
 
 		size_t Count() const

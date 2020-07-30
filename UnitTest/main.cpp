@@ -51,6 +51,27 @@ TEST(MessageChain_Test, get_at) {
     ASSERT_TRUE(mptr->GetText() == "Hi");
 }
 
+TEST(MessageChain_Test, Clear) {
+    using namespace Cyan;
+    MessageChain mc;
+    mc.Add(PlainMessage("Hello"));
+    mc.Add(PlainMessage("Hi"));
+    mc.Clear();
+    ASSERT_TRUE(mc.Count() == 0);
+}
+
+TEST(MessageChain_Test, Remove) {
+    using namespace Cyan;
+    MessageChain mc;
+    mc.Add(PlainMessage("Hello"));
+    mc.Add(PlainMessage("Hello"));
+    mc.Add(PlainMessage("Hi"));
+    mc.Remove(PlainMessage("Hello"));
+    ASSERT_TRUE(mc.Count() == 1);
+    auto mptr = std::dynamic_pointer_cast<PlainMessage>(mc[0]);
+    ASSERT_TRUE(mptr->GetText() == "Hi");
+}
+
 TEST(ABC, TEST2) {
     ASSERT_TRUE(2 == 2);
 }
