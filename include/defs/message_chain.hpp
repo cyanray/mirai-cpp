@@ -13,6 +13,7 @@
 #include "defs/messages/ImageMessage.hpp"
 #include "defs/messages/FlashImageMessage.hpp"
 #include "defs/messages/AtMessage.hpp"
+#include "defs/messages/AtAllMessage.hpp"
 
 using std::vector;
 

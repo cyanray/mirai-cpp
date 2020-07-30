@@ -108,6 +108,14 @@ TEST(MessageChain_Test, AtMessage) {
     ASSERT_TRUE(at.Target().QQ == 1234);
 }
 
+TEST(MessageChain_Test, AtAllMessage) {
+    using namespace Cyan;
+    MessageChain mc;
+    mc.Add(AtAllMessage());
+    auto at = mc.GetFirst<AtAllMessage>();
+    ASSERT_TRUE(true);
+}
+
 
 TEST(ABC, TEST2) {
     ASSERT_TRUE(2 == 2);
