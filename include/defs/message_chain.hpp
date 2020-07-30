@@ -141,10 +141,7 @@ namespace Cyan
 		//}
 		MessageChain& Plain(const string& plainText)
 		{
-			auto plain_ptr = std::make_shared<PlainMessage>();
-			plain_ptr->SetText(plainText);
-			this->messages_.emplace_back(plain_ptr);
-			return *this;
+			return this->Add(PlainMessage(plainText));
 		}
 		//template<typename T>
 		//MessageChain& Plain(const T& val)
