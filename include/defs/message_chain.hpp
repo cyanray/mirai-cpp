@@ -106,35 +106,28 @@ namespace Cyan
 			return messages_;
 		}
 
-		//MessageChain& At(const QQ_t qq)
-		//{
-		//	json j;
-		//	j["type"] = "At";
-		//	j["target"] = int64_t(qq);
-		//	messages_.push_back(j);
-		//	return *this;
-		//}
-		//MessageChain& AtAll()
-		//{
-		//	messages_.push_back({ {"type","AtAll"} });
-		//	return *this;
-		//}
-		//MessageChain& Face(int faceID)
-		//{
-		//	json j;
-		//	j["type"] = "Face";
-		//	j["faceId"] = faceID;
-		//	messages_.push_back(j);
-		//	return *this;
-		//}
-		//MessageChain& Face(const string& name)
-		//{
-		//	json j;
-		//	j["type"] = "Face";
-		//	j["name"] = name;
-		//	messages_.push_back(j);
-		//	return *this;
-		//}
+		MessageChain& At(const QQ_t qq)
+		{
+			return this->Add(AtMessage(qq));
+		}
+
+		MessageChain& AtAll()
+		{
+			return this->Add(AtAllMessage());
+		}
+
+		MessageChain& Face(int faceID)
+		{
+			return this->Add(FaceMessage(faceID));
+		}
+
+		MessageChain& Face(const string& name)
+		{
+			auto face_msg = FaceMessage();
+			face_msg.Name(name);
+			return this->Add(face_msg);
+		}
+
 		MessageChain& Plain(const string& plainText)
 		{
 			return this->Add(PlainMessage(plainText));
@@ -158,106 +151,29 @@ namespace Cyan
 			return this->Add(FlashImageMessage(Image));
 		}
 
-		//MessageChain& Xml(const string& xml_str)
-		//{
-		//	json j;
-		//	j["type"] = "Xml";
-		//	j["xml"] = xml_str;
-		//	messages_.push_back(j);
-		//	return *this;
-		//}
-		//MessageChain& Json(const string& json_str)
-		//{
-		//	json j;
-		//	j["type"] = "Json";
-		//	j["json"] = json_str;
-		//	messages_.push_back(j);
-		//	return *this;
-		//}
-		//MessageChain& App(const string& app_str)
-		//{
-		//	json j;
-		//	j["type"] = "App";
-		//	j["content"] = app_str;
-		//	messages_.push_back(j);
-		//	return *this;
-		//}
-		//MessageChain& Poke(Poke poke)
-		//{
-		//	const static string poke_name[] =
-		//	{ "Poke","ShowLove","Like","Heartbroken","SixSixSix","FangDaZhao" };
-		//	json j;
-		//	j["type"] = "Poke";
-		//	j["name"] = poke_name[static_cast<int>(poke)];
-		//	messages_.push_back(j);
-		//	return *this;
-		//}
+		MessageChain& Xml(const string& xml_str)
+		{
+			return this->Add(XmlMessage(xml_str));
+		}
+
+		MessageChain& Json(const string& json_str)
+		{
+			return this->Add(JsonMessage(json_str));
+		}
+
+		MessageChain& App(const string& app_str)
+		{
+			return this->Add(AppMessage(app_str));
+		}
+
+		MessageChain& Poke(PokeType poke)
+		{
+			return this->Add(PokeMessage(poke));
+		}
 
 		string GetPlainText() const;
 
 		string GetPlainTextFirst() const;
-
-		//vector<string> GetPlain() const
-		//{
-		//	vector<string> res;
-		//	for (const auto& ele : messages_)
-		//	{
-		//		if (ele["type"].get<string>() == "Plain")
-		//		{
-		//			res.emplace_back(ele["text"].get<string>());
-		//		}
-		//	}
-		//	return res;
-		//}
-
-		//vector<MiraiImage> GetImage() const
-		//{
-		//	vector<MiraiImage> res;
-		//	for (const auto& ele : messages_)
-		//	{
-		//		string type_name = ele["type"].get<string>();
-		//		if (type_name == "FlashImage" || type_name == "Image")
-		//		{
-		//			MiraiImage img;
-		//			img.IsFlashImage = (type_name == "FlashImage");
-		//			img.Path = "";
-		//			img.Url = ele["url"].get<string>();
-		//			img.ID = ele["imageId"].get<string>();
-		//			res.emplace_back(img);
-		//		}
-		//	}
-		//	return res;
-		//}
-
-		vector<QQ_t> GetAt() const
-		{
-			vector<QQ_t> res;
-			//for (const auto& ele : messages_)
-			//{
-			//	string type_name = ele["type"].get<string>();
-			//	if (type_name == "At")
-			//	{
-			//		QQ_t qq = (QQ_t)(ele["target"].get<int64_t>());
-			//		res.emplace_back(qq);
-			//	}
-			//}
-			return res;
-		}
-
-		//vector<int> GetFace() const
-		//{
-		//	vector<int> res;
-		//	for (const auto& ele : messages_)
-		//	{
-		//		string type_name = ele["type"].get<string>();
-		//		if (type_name == "Face")
-		//		{
-		//			int faceId = ele["faceId"].get<int>();
-		//			res.emplace_back(faceId);
-		//		}
-		//	}
-		//	return res;
-		//}
 
 		MessageId_t MessageId() const
 		{
@@ -270,15 +186,7 @@ namespace Cyan
 		}
 
 		virtual bool Set(const json& j) override;
-		virtual json ToJson() const override
-		{
-			json j = json::array();
-			for (const auto& m : messages_)
-			{
-				j.push_back(m->ToJson());
-			}
-			return j;
-		}
+		virtual json ToJson() const override;
 
 	private:
 		int64_t timestamp_;
@@ -286,22 +194,6 @@ namespace Cyan
 		vector<std::shared_ptr<IMessage>> messages_;
 	};
 
-	//template<int N>
-	//inline MessageChain& operator+(const char (&str)[N], MessageChain& mc)
-	//{
-	//	MessageChain tmp;
-	//	tmp.Plain(str);
-	//	mc.messages_.insert(mc.messages_.begin(), tmp.messages_.begin(), tmp.messages_.end());
-	//	return mc;
-	//}
-
-	//inline MessageChain& operator+(const string& str, MessageChain& mc)
-	//{
-	//	MessageChain tmp;
-	//	tmp.Plain(str);
-	//	mc.messages_.insert(mc.messages_.begin(), tmp.messages_.begin(), tmp.messages_.end());
-	//	return mc;
-	//}
 }
 
 
