@@ -143,14 +143,13 @@ namespace Cyan
 		{
 			return this->Add(PlainMessage(plainText));
 		}
-		//template<typename T>
-		//MessageChain& Plain(const T& val)
-		//{
-		//	std::stringstream ss;
-		//	ss << val;
-		//	this->Plain(ss.str());
-		//	return *this;
-		//}
+		template<typename T>
+		MessageChain& Plain(const T& val)
+		{
+			std::stringstream ss;
+			ss << val;
+			return this->Add(PlainMessage(ss.str()));
+		}
 		//MessageChain& Image(const string& url)
 		//{
 		//	json j;
