@@ -3,6 +3,7 @@
 #define mirai_cpp_defs_messages_image_message_hpp_H_
 
 #include "defs/message_interface.hpp"
+#include "defs/qq_types.hpp"
 
 namespace Cyan
 {
@@ -10,6 +11,12 @@ namespace Cyan
 	{
 	public:
 		ImageMessage() {}
+		ImageMessage(const MiraiImage& m)
+		{
+			imageId_ = m.ID;
+			url_ = m.Url;
+			path_ = m.Path;
+		}
 		virtual const string& GetType() const override
 		{
 			return type_;
@@ -67,8 +74,16 @@ namespace Cyan
 		}
 		virtual ~ImageMessage() {}
 
+		MiraiImage ToMiraiImage() const
+		{
+			MiraiImage tmp;
+			tmp.ID = imageId_;
+			tmp.Url = url_;
+			tmp.Path = path_;
+			return tmp;
+		}
 
-	private:
+	protected:
 		string type_ = "Image";
 		string imageId_;
 		string url_;

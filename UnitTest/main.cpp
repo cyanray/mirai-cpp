@@ -80,6 +80,26 @@ TEST(MessageChain_Test, GetPlainText) {
     ASSERT_TRUE(text == "Number:12345");
 }
 
+TEST(MessageChain_Test, ImageMessage) {
+    using namespace Cyan;
+    MessageChain mc;
+    MiraiImage img;
+    img.ID = "{qweasd}.png";
+    mc.Plain("Image:").Image(img);
+    auto img_msg = mc.GetFirst<ImageMessage>();
+    ASSERT_TRUE(img_msg.ToMiraiImage().ID == "{qweasd}.png");
+}
+
+TEST(MessageChain_Test, FlashImageMessage) {
+    using namespace Cyan;
+    MessageChain mc;
+    MiraiImage img;
+    img.ID = "{qweasd}.png";
+    mc.Plain("Image:").FlashImage(img);
+    auto img_msg = mc.GetFirst<FlashImageMessage>();
+    ASSERT_TRUE(img_msg.ToMiraiImage().ID == "{qweasd}.png");
+}
+
 
 TEST(ABC, TEST2) {
     ASSERT_TRUE(2 == 2);

@@ -10,6 +10,8 @@
 #include "serializable.hpp"
 #include "defs/message_interface.hpp"
 #include "defs/messages/PlainMessage.hpp"
+#include "defs/messages/ImageMessage.hpp"
+#include "defs/messages/FlashImageMessage.hpp"
 #include "defs/simple_reflect.hpp"
 
 using std::vector;
@@ -108,8 +110,6 @@ namespace Cyan
 			return messages_;
 		}
 
-
-
 		//MessageChain& At(const QQ_t qq)
 		//{
 		//	json j;
@@ -151,38 +151,17 @@ namespace Cyan
 			ss << val;
 			return this->Add(PlainMessage(ss.str()));
 		}
-		//MessageChain& Image(const string& url)
-		//{
-		//	json j;
-		//	j["type"] = "Image";
-		//	j["url"] = url;
-		//	messages_.push_back(j);
-		//	return *this;
-		//}
-		//MessageChain& Image(const MiraiImage& Image)
-		//{
-		//	json j;
-		//	j["type"] = "Image";
-		//	j["imageId"] = Image.ID;
-		//	messages_.push_back(j);
-		//	return *this;
-		//}
-		//MessageChain& FlashImage(const MiraiImage& Image)
-		//{
-		//	json j;
-		//	j["type"] = "FlashImage";
-		//	j["imageId"] = Image.ID;
-		//	messages_.push_back(j);
-		//	return *this;
-		//}
-		//MessageChain& FlashImage(const string& url)
-		//{
-		//	json j;
-		//	j["type"] = "FlashImage";
-		//	j["url"] = url;
-		//	messages_.push_back(j);
-		//	return *this;
-		//}
+
+		MessageChain& Image(const MiraiImage& Image)
+		{
+			return this->Add(ImageMessage(Image));
+		}
+
+		MessageChain& FlashImage(const MiraiImage& Image)
+		{
+			return this->Add(FlashImageMessage(Image));
+		}
+
 		//MessageChain& Xml(const string& xml_str)
 		//{
 		//	json j;
