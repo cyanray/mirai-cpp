@@ -43,6 +43,7 @@ namespace Cyan
 		MessageChain& operator+=(const string& val);
 		bool operator==(const MessageChain& mc) const;
 		bool operator!=(const MessageChain& mc) const;
+		std::shared_ptr<IMessage> operator[](int i);
 		virtual ~MessageChain() = default;
 
 		template<class T>

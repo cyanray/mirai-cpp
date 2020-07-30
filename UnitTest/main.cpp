@@ -41,6 +41,16 @@ TEST(MessageChain_Test, Count) {
     ASSERT_TRUE(mc.Count() == 2);
 }
 
+TEST(MessageChain_Test, get_at) {
+    using namespace Cyan;
+    MessageChain mc;
+    mc.Add(PlainMessage("Hello"));
+    mc.Add(PlainMessage("Hi"));
+    ASSERT_TRUE(mc[0]->GetType() == "Plain");
+    auto mptr = std::dynamic_pointer_cast<PlainMessage>(mc[1]);
+    ASSERT_TRUE(mptr->GetText() == "Hi");
+}
+
 TEST(ABC, TEST2) {
     ASSERT_TRUE(2 == 2);
 }

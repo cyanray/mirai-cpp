@@ -72,5 +72,10 @@ namespace Cyan
 		return !this->operator==(mc);
 	}
 
+	std::shared_ptr<IMessage> MessageChain::operator[](int i)
+	{
+		return messages_[i];
+	}
+
 
 }
