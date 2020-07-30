@@ -18,21 +18,12 @@
 #include "defs/messages/XmlMessage.hpp"
 #include "defs/messages/AppMessage.hpp"
 #include "defs/messages/JsonMessage.hpp"
+#include "defs/messages/PokeMessage.hpp"
 
 using std::vector;
 
 namespace Cyan
 {
-
-	enum class Poke
-	{
-		Poke,
-		ShowLove,
-		Like,
-		Heartbroken,
-		SixSixSix,
-		FangDaZhao
-	};
 
 	class MessageChain : public ISerializable
 	{
@@ -268,12 +259,12 @@ namespace Cyan
 		//	return res;
 		//}
 
-		MessageId GetMessageId() const
+		MessageId_t MessageId() const
 		{
 			return messageId_;
 		}
 
-		int64_t GetTimestamp() const
+		int64_t Timestamp() const
 		{
 			return timestamp_;
 		}
@@ -291,7 +282,7 @@ namespace Cyan
 
 	private:
 		int64_t timestamp_;
-		MessageId messageId_;
+		MessageId_t messageId_;
 		vector<std::shared_ptr<IMessage>> messages_;
 	};
 

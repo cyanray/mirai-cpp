@@ -148,6 +148,16 @@ TEST(MessageChain_Test, JsonMessage) {
     ASSERT_TRUE(x.Json() == R"({"type":"json"})");
 }
 
+TEST(MessageChain_Test, PokeMessage) {
+    using namespace Cyan;
+    MessageChain mc;
+    mc.Add(PokeMessage(PokeType::Poke));
+    auto x = mc.GetFirst<PokeMessage>();
+    ASSERT_TRUE(x.Poke() == PokeType::Poke);
+    x.Poke(PokeType::SixSixSix);
+    ASSERT_TRUE(x.Name() == "SixSixSix");
+}
+
 
 TEST(ABC, TEST2) {
     ASSERT_TRUE(2 == 2);
