@@ -85,7 +85,6 @@ namespace Cyan
 
 	struct MiraiImage
 	{
-		bool IsFlashImage = false;
 		string ID;
 		string Url;
 		string Path;
