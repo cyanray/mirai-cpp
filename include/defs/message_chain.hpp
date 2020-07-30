@@ -87,6 +87,18 @@ namespace Cyan
 			return messages_.size();
 		}
 
+		void Clear()
+		{
+			messages_.clear();
+		}
+
+		std::vector<std::shared_ptr<IMessage>>& ToVector()
+		{
+			return messages_;
+		}
+
+
+
 		//MessageChain& At(const QQ_t qq)
 		//{
 		//	json j;
