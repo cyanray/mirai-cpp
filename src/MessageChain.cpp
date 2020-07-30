@@ -152,5 +152,15 @@ namespace Cyan
 		return true;
 	}
 
+	json MessageChain::ToJson() const
+	{
+		json j = json::array();
+		for (const auto& m : messages_)
+		{
+			j.push_back(m->ToJson());
+		}
+		return j;
+	}
+
 
 }

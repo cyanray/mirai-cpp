@@ -45,8 +45,8 @@ namespace Cyan
 
 	bool GroupMessage::AtMe() const
 	{
-		auto at = MessageChain.GetAt();
-		auto it = std::find(at.begin(), at.end(), bot_->GetBotQQ());
+		auto at = MessageChain.GetAll<AtMessage>();
+		auto it = std::find_if(at.begin(), at.end(), [&](AtMessage a) {return a.Target() == bot_->GetBotQQ(); });
 		if (it != at.end()) return true;
 		else return false;
 	}
