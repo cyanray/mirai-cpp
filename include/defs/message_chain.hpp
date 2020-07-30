@@ -14,6 +14,7 @@
 #include "defs/messages/FlashImageMessage.hpp"
 #include "defs/messages/AtMessage.hpp"
 #include "defs/messages/AtAllMessage.hpp"
+#include "defs/messages/FaceMessage.hpp"
 
 using std::vector;
 

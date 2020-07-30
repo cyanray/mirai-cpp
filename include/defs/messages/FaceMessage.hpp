@@ -1,0 +1,63 @@
+#pragma once
+#ifndef mirai_cpp_defs_messages_face_message_hpp_H_
+#define mirai_cpp_defs_messages_face_message_hpp_H_
+
+#include "defs/message_interface.hpp"
+
+namespace Cyan
+{
+	class FaceMessage : public IMessage
+	{
+	public:
+		FaceMessage() : faceId_(0), name_() {}
+		FaceMessage(const int& id) : faceId_(id), name_() {}
+		virtual const string& GetType() const override
+		{
+			return type_;
+		}
+		virtual bool operator==(const IMessage& m) const override
+		{
+			if (auto m_ptr = dynamic_cast<const FaceMessage*>(&m))
+			{
+				return m_ptr->faceId_ == this->faceId_;
+			}
+			return false;
+		}
+		virtual bool operator!=(const IMessage& m) const override
+		{
+			return !(*this == m);
+		}
+		virtual bool Set(const json& json) override
+		{
+			if (json["type"].is_null() || json["type"].get<string>() != this->GetType())
+				throw std::runtime_error("给定的json不正确");
+			faceId_ = json["faceId"].get<int64_t>();
+			name_ = json["name"].get<string>();
+			return true;
+		}
+		virtual json ToJson() const override
+		{
+			return
+			{
+				{ "type", type_ },
+				{ "faceId", faceId_ },
+				{ "name",name_ }
+			};
+		}
+		virtual ~FaceMessage() {}
+
+		int FaceId() const { return faceId_; }
+		void FaceId(int id) { this->faceId_ = id; }
+
+		string Name() const { return name_; }
+		void Name(const string& n) { this->name_ = n; }
+
+	private:
+		string type_ = "Face";
+		int faceId_;
+		string name_;
+	};
+
+}
+#endif
+

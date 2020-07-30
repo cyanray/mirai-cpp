@@ -16,7 +16,7 @@ namespace Cyan
 		}
 		virtual bool operator==(const IMessage& m) const override
 		{
-			if (auto m_ptr = dynamic_cast<const AtMessage*>(&m))
+			if (auto m_ptr = dynamic_cast<const AtAllMessage*>(&m))
 			{
 				return true;
 			}

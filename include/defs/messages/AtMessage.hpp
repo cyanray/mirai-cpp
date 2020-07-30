@@ -48,11 +48,10 @@ namespace Cyan
 		}
 		virtual ~AtMessage() {}
 
-		const QQ_t& Target() const { return target_; }
+		QQ_t Target() const { return target_; }
 		void Target(const QQ_t& t) { this->target_ = t; }
 
-		const string& Display() const { return display_; }
-		void Display(const string& d) { this->display_ = d; }
+		string Display() const { return display_; }
 
 	private:
 		string type_ = "At";

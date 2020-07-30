@@ -112,8 +112,16 @@ TEST(MessageChain_Test, AtAllMessage) {
     using namespace Cyan;
     MessageChain mc;
     mc.Add(AtAllMessage());
-    auto at = mc.GetFirst<AtAllMessage>();
+    auto atall = mc.GetFirst<AtAllMessage>();
     ASSERT_TRUE(true);
+}
+
+TEST(MessageChain_Test, FaceMessage) {
+    using namespace Cyan;
+    MessageChain mc;
+    mc.Add(FaceMessage(1));
+    auto f = mc.GetFirst<FaceMessage>();
+    ASSERT_TRUE(f.FaceId() == 1);
 }
 
 
