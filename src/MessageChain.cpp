@@ -1,12 +1,19 @@
 #include "defs/message_chain.hpp"
+#include "defs/simple_reflect.hpp"
 
 namespace Cyan
 {
+
+	static Cyan::Reflection<IMessage> factory_;
+
 	MessageChain::MessageChain() :messages_(), messageId_(0), timestamp_(0)
 	{
 		if (factory_.size() <= 0)
 		{
 			factory_.Register<PlainMessage>("Plain");
+			factory_.Register<ImageMessage>("ImageMessage");
+			factory_.Register<FlashImageMessage>("FlashImageMessage");
+			factory_.Register<AtMessage>("AtMessage");
 		}
 	}
 
@@ -110,6 +117,39 @@ namespace Cyan
 			}
 		}
 		return string();
+	}
+
+	bool MessageChain::Set(const json& j)
+	{
+		if (!j.empty())
+		{
+			try
+			{
+				if (j[0]["type"].get<string>() == "Source")
+				{
+					this->messageId_ = j[0]["id"].get<int64_t>();
+					this->timestamp_ = j[0]["time"].get<int64_t>();
+				}
+			}
+			catch (...)
+			{
+				this->messageId_ = 0;
+				this->timestamp_ = 0;
+			}
+
+			for (size_t i = 1; i < j.size(); i++)
+			{
+				auto msg_ptr = factory_.DynamicCreate(j[i]["type"]);
+				if (msg_ptr)
+				{
+					msg_ptr->Set(j[i]);
+					messages_.push_back(msg_ptr);
+				}
+			}
+
+		}
+
+		return true;
 	}
 
 

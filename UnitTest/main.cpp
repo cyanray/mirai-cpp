@@ -100,6 +100,14 @@ TEST(MessageChain_Test, FlashImageMessage) {
     ASSERT_TRUE(img_msg.ToMiraiImage().ID == "{qweasd}.png");
 }
 
+TEST(MessageChain_Test, AtMessage) {
+    using namespace Cyan;
+    MessageChain mc;
+    mc.Add(AtMessage(1234_qq));
+    auto at = mc.GetFirst<AtMessage>();
+    ASSERT_TRUE(at.Target().QQ == 1234);
+}
+
 
 TEST(ABC, TEST2) {
     ASSERT_TRUE(2 == 2);

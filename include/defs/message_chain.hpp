@@ -12,7 +12,7 @@
 #include "defs/messages/PlainMessage.hpp"
 #include "defs/messages/ImageMessage.hpp"
 #include "defs/messages/FlashImageMessage.hpp"
-#include "defs/simple_reflect.hpp"
+#include "defs/messages/AtMessage.hpp"
 
 using std::vector;
 
@@ -273,38 +273,7 @@ namespace Cyan
 			return timestamp_;
 		}
 
-		virtual bool Set(const json& j) override
-		{
-			if (!j.empty())
-			{
-				try
-				{
-					if (j[0]["type"].get<string>() == "Source")
-					{
-						this->messageId_ = j[0]["id"].get<int64_t>();
-						this->timestamp_ = j[0]["time"].get<int64_t>();
-					}
-				}
-				catch (...)
-				{
-					this->messageId_ = 0;
-					this->timestamp_ = 0;
-				}
-
-				for (size_t i = 1; i < j.size(); i++)
-				{
-					auto msg_ptr =  factory_.DynamicCreate(j[i]["type"]);
-					if (msg_ptr)
-					{
-						msg_ptr->Set(j[i]);
-						messages_.push_back(msg_ptr);
-					}
-				}
-
-			}
-
-			return true;
-		}
+		virtual bool Set(const json& j) override;
 		virtual json ToJson() const override
 		{
 			json j = json::array();
@@ -314,16 +283,11 @@ namespace Cyan
 			}
 			return j;
 		}
-		virtual string ToString() const override
-		{
-			return ToJson().dump();
-		}
 
 	private:
 		int64_t timestamp_;
 		MessageId messageId_;
 		vector<std::shared_ptr<IMessage>> messages_;
-		Cyan::Reflection<IMessage> factory_;
 	};
 
 	//template<int N>
