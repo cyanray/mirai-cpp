@@ -8,39 +8,39 @@
 namespace Cyan
 {
 
-	MessageId TempMessage::Reply(const Cyan::MessageChain& mc) const
+	MessageId_t TempMessage::Reply(const Cyan::MessageChain& mc) const
 	{
 		return bot_->SendMessage(Sender.Group.GID, Sender.QQ, mc);
 	}
 
-	MessageId FriendMessage::Reply(const Cyan::MessageChain& mc) const
+	MessageId_t FriendMessage::Reply(const Cyan::MessageChain& mc) const
 	{
 		return bot_->SendMessage(Sender.QQ, mc);
 	}
 
-	MessageId GroupMessage::Reply(const Cyan::MessageChain& mc) const
+	MessageId_t GroupMessage::Reply(const Cyan::MessageChain& mc) const
 	{
 		return bot_->SendMessage(Sender.Group.GID, mc);
 	}
 
-	MessageId TempMessage::QuoteReply(const Cyan::MessageChain& mc) const
+	MessageId_t TempMessage::QuoteReply(const Cyan::MessageChain& mc) const
 	{
-		return bot_->SendMessage(Sender.Group.GID, Sender.QQ, mc, GetMessageId());
+		return bot_->SendMessage(Sender.Group.GID, Sender.QQ, mc, MessageId());
 	}
 
-	MessageId FriendMessage::QuoteReply(const Cyan::MessageChain& mc) const
+	MessageId_t FriendMessage::QuoteReply(const Cyan::MessageChain& mc) const
 	{
-		return bot_->SendMessage(Sender.QQ, mc, GetMessageId());
+		return bot_->SendMessage(Sender.QQ, mc, MessageId());
 	}
 
-	MessageId GroupMessage::QuoteReply(const Cyan::MessageChain& mc) const
+	MessageId_t GroupMessage::QuoteReply(const Cyan::MessageChain& mc) const
 	{
-		return bot_->SendMessage(Sender.Group.GID, mc, GetMessageId());
+		return bot_->SendMessage(Sender.Group.GID, mc, MessageId());
 	}
 
 	bool GroupMessage::Recall() const
 	{
-		return bot_->Recall(GetMessageId());
+		return bot_->Recall(MessageId());
 	}
 
 	bool GroupMessage::AtMe() const
@@ -94,7 +94,7 @@ namespace Cyan
 		return true;
 	}
 
-	MessageId Message::Reply(const Cyan::MessageChain& mc) const
+	MessageId_t Message::Reply(const Cyan::MessageChain& mc) const
 	{
 		switch (messageType_)
 		{
@@ -105,7 +105,7 @@ namespace Cyan
 		}
 	}
 
-	MessageId Message::QuoteReply(const Cyan::MessageChain& mc) const
+	MessageId_t Message::QuoteReply(const Cyan::MessageChain& mc) const
 	{
 		switch (messageType_)
 		{
