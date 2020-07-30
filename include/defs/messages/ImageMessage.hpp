@@ -83,8 +83,9 @@ namespace Cyan
 			return tmp;
 		}
 
-	protected:
+	private:
 		string type_ = "Image";
+	protected:
 		string imageId_;
 		string url_;
 		string path_;
