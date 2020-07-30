@@ -72,6 +72,15 @@ TEST(MessageChain_Test, Remove) {
     ASSERT_TRUE(mptr->GetText() == "Hi");
 }
 
+TEST(MessageChain_Test, GetPlainText) {
+    using namespace Cyan;
+    MessageChain mc;
+    mc.Plain("Number:").Plain(12345);
+    string text = mc.GetPlainText();
+    ASSERT_TRUE(text == "Number:12345");
+}
+
+
 TEST(ABC, TEST2) {
     ASSERT_TRUE(2 == 2);
 }

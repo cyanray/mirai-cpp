@@ -143,6 +143,7 @@ namespace Cyan
 		{
 			return this->Add(PlainMessage(plainText));
 		}
+
 		template<typename T>
 		MessageChain& Plain(const T& val)
 		{
@@ -217,30 +218,9 @@ namespace Cyan
 		//	return *this;
 		//}
 
-		//string GetPlainText() const
-		//{
-		//	using std::stringstream;
-		//	stringstream ss;
-		//	for (const auto& ele : messages_)
-		//	{
-		//		if (ele["type"].get<string>() == "Plain")
-		//		{
-		//			ss << ele["text"].get<string>();
-		//		}
-		//	}
-		//	return ss.str();
-		//}
-		//string GetPlainTextFirst() const
-		//{
-		//	for (const auto& ele : messages_)
-		//	{
-		//		if (ele["type"].get<string>() == "Plain")
-		//		{
-		//			return ele["text"].get<string>();
-		//		}
-		//	}
-		//	return string();
-		//}
+		string GetPlainText() const;
+
+		string GetPlainTextFirst() const;
 
 		//vector<string> GetPlain() const
 		//{

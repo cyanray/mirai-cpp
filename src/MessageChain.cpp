@@ -77,5 +77,40 @@ namespace Cyan
 		return messages_[i];
 	}
 
+	string MessageChain::GetPlainText() const
+	{
+		using std::stringstream;
+		stringstream ss;
+		for (auto m : messages_)
+		{
+			if (m->GetType() == "Plain")
+			{
+				auto mptr = std::dynamic_pointer_cast<PlainMessage>(m);
+				if (mptr)
+				{
+					ss << mptr->GetText();
+				}
+
+			}
+		}
+		return ss.str();
+	}
+
+	string MessageChain::GetPlainTextFirst() const
+	{
+		for (auto m : messages_)
+		{
+			if (m->GetType() == "Plain")
+			{
+				auto mptr = std::dynamic_pointer_cast<PlainMessage>(m);
+				if (mptr)
+				{
+					return mptr->GetText();
+				}
+			}
+		}
+		return string();
+	}
+
 
 }
