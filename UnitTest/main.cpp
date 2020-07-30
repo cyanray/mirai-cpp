@@ -124,6 +124,30 @@ TEST(MessageChain_Test, FaceMessage) {
     ASSERT_TRUE(f.FaceId() == 1);
 }
 
+TEST(MessageChain_Test, XmlMessage) {
+    using namespace Cyan;
+    MessageChain mc;
+    mc.Add(XmlMessage("<xml></xml>"));
+    auto x = mc.GetFirst<XmlMessage>();
+    ASSERT_TRUE(x.Xml() == "<xml></xml>");
+}
+
+TEST(MessageChain_Test, AppMessage) {
+    using namespace Cyan;
+    MessageChain mc;
+    mc.Add(AppMessage("<app></app>"));
+    auto x = mc.GetFirst<AppMessage>();
+    ASSERT_TRUE(x.Content() == "<app></app>");
+}
+
+TEST(MessageChain_Test, JsonMessage) {
+    using namespace Cyan;
+    MessageChain mc;
+    mc.Add(JsonMessage(R"({"type":"json"})"));
+    auto x = mc.GetFirst<JsonMessage>();
+    ASSERT_TRUE(x.Json() == R"({"type":"json"})");
+}
+
 
 TEST(ABC, TEST2) {
     ASSERT_TRUE(2 == 2);

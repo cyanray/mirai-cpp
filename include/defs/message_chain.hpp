@@ -15,6 +15,9 @@
 #include "defs/messages/AtMessage.hpp"
 #include "defs/messages/AtAllMessage.hpp"
 #include "defs/messages/FaceMessage.hpp"
+#include "defs/messages/XmlMessage.hpp"
+#include "defs/messages/AppMessage.hpp"
+#include "defs/messages/JsonMessage.hpp"
 
 using std::vector;
 
