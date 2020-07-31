@@ -94,6 +94,27 @@ namespace Cyan
 		return true;
 	}
 
+	bool Cyan::BotInvitedJoinGroupRequestEvent::Response(int operate, const string& message)
+	{
+		json data =
+		{
+			{ "sessionKey",  bot_->GetSessionKey() },
+			{ "eventId", this->EventId},
+			{ "fromId",  int64_t(this->FromId)},
+			{ "groupId", int64_t(this->GroupId)},
+			{ "operate", operate},
+			{ "message", message},
+		};
+
+		httplib::Client& http_client = *(bot_->GetHttpClient());
+		auto res = http_client.Post("/resp/botInvitedJoinGroupRequestEvent", data.dump(), "application/json;charset=UTF-8");
+		if (!res)
+			throw std::runtime_error("网络错误");
+		if (res->status != 200)
+			throw std::runtime_error("[mirai-api-http error]: " + res->body);
+		return true;
+	}
+
 	MessageId_t Message::Reply(const Cyan::MessageChain& mc) const
 	{
 		switch (messageType_)

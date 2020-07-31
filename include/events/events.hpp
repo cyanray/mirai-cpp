@@ -19,7 +19,7 @@
 // 群组相关事件
 #include "group_recall_event.hpp"
 #include "group_mute_all_event.hpp"
-#include "join_request_event.hpp"
+#include "member_join_request_event.hpp"
 #include "member_join_event.hpp"
 #include "member_leave_kick.hpp"
 #include "member_leave_quit.hpp"
@@ -30,6 +30,7 @@
 #include "bot_join_group.hpp"
 #include "bot_leave_active.hpp"
 #include "bot_leave_kick.hpp"
+#include "bot_invited_join_group_request_event.hpp"
 #include "group_name_change.hpp"
 // 一些定义
 #include "event_processer.hpp"
