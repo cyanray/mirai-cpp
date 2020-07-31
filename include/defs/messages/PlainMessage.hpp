@@ -44,8 +44,8 @@ namespace Cyan
 		}
 		virtual ~PlainMessage() {}
 
-		const string& GetText() const { return text_; }
-		void SetText(const string& text) { this->text_ = text; }
+		const string& Text() const { return text_; }
+		void Text(const string& text) { this->text_ = text; }
 
 	private:
 		string type_ = "Plain";
