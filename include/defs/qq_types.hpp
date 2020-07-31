@@ -17,11 +17,6 @@ namespace Cyan
 		operator int64_t() const { return QQ; }
 	};
 
-	inline QQ_t operator "" qq(unsigned long long int v)
-	{
-		return QQ_t(int64_t(v));
-	}
-
 	inline QQ_t operator "" _qq(unsigned long long int v)
 	{
 		return QQ_t(int64_t(v));
@@ -35,11 +30,6 @@ namespace Cyan
 		explicit GID_t(int64_t gid) :GID(gid) {}
 		operator int64_t() const { return GID; }
 	};
-
-	inline GID_t operator "" gid(unsigned long long int v)
-	{
-		return GID_t(int64_t(v));
-	}
 
 	inline GID_t operator "" _gid(unsigned long long int v)
 	{
