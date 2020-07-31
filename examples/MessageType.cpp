@@ -32,20 +32,20 @@ int main()
 			MessageChain mc = gm.MessageChain;
 
 			// 把收到的图片再发回去
-			vector<MiraiImage> imgs = mc.GetImage();
+			vector<ImageMessage> imgs = mc.GetAll<ImageMessage>();
 			if (imgs.size() != 0)
 			{
 				gm.QuoteReply(MessageChain().Plain("你发了 ").Plain(imgs.size()).Plain(" 张图"));
 				for (auto&& img : imgs)
 				{
-					gm.Reply(MessageChain().FlashImage(img));
+					gm.Reply(MessageChain().FlashImage(img.ToMiraiImage()));
 					MiraiBot::SleepMilliseconds(500);
 				}
 			}
 
 			// 如果有人发微笑，就问候对方 (微笑的id是14)
-			vector<int> faceId = mc.GetFace();
-			auto result = find(faceId.begin(), faceId.end(), 14);
+			vector<FaceMessage> faceId = mc.GetAll<FaceMessage>();
+			auto result = find_if(faceId.begin(), faceId.end(), [](FaceMessage m) {return m.FaceId() == 14; });
 			if (result != faceId.end())
 			{
 				gm.QuoteReply(MessageChain().Face(14));

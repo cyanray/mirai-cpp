@@ -11,6 +11,7 @@
 #include <events/bot_offline_force.hpp>
 #include <events/bot_offline_dropped.hpp>
 #include <events/bot_relogin_event.hpp>
+#include <events/bot_invited_join_group_request_event.hpp>
 
 int main()
 {
@@ -59,11 +60,11 @@ int main()
 		{
 			cout << "👴被踢出群了: " << int64_t(e.Group.GID) << endl;
 		});
-	
+
 	bot.On<BotOnlineEvent>(
 		[&](BotOnlineEvent e)
 		{
-			cout << "Bot "<< (int64_t)e.QQ <<" 主动登录事件" << endl;
+			cout << "Bot " << (int64_t)e.QQ << " 主动登录事件" << endl;
 		});
 
 	bot.On<BotOfflineEventActive>(
@@ -88,6 +89,13 @@ int main()
 		[&](BotReloginEvent e)
 		{
 			cout << "Bot " << (int64_t)e.QQ << " 重新登录事件" << endl;
+		});
+
+	bot.On<BotInvitedJoinGroupRequestEvent>(
+		[&](BotInvitedJoinGroupRequestEvent e)
+		{
+			cout << "邀请你入群：" << e.GroupName << ", " << e.Message << endl;
+			e.Accept();
 		});
 
 	bot.EventLoop();
