@@ -16,7 +16,7 @@ namespace Cyan
 	public:
 		int64_t Time = 0;
 		QQ_t AuthorQQ;
-		Cyan::MessageId MessageId;
+		Cyan::MessageId_t MessageId;
 		QQ_t Operator;
 
 

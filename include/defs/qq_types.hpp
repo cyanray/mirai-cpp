@@ -47,7 +47,7 @@ namespace Cyan
 	}
 
 	// 消息 ID
-	typedef int64_t MessageId;
+	typedef int64_t MessageId_t;
 
 	// 群成员权限
 	enum class GroupPermission
@@ -85,7 +85,6 @@ namespace Cyan
 
 	struct MiraiImage
 	{
-		bool IsFlashImage = false;
 		string ID;
 		string Url;
 		string Path;

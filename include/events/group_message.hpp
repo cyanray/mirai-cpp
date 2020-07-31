@@ -25,18 +25,18 @@ namespace Cyan
 			return MiraiEvent::GroupMessage;
 		}
 
-		MessageId GetMessageId() const
+		MessageId_t MessageId() const
 		{
-			return (this->MessageChain).GetMessageId();
+			return (this->MessageChain).MessageId();
 		}
 
-		int64_t GetTimestamp() const
+		int64_t Timestamp() const
 		{
-			return (this->MessageChain).GetTimestamp();
+			return (this->MessageChain).Timestamp();
 		}
 
-		MessageId Reply(const Cyan::MessageChain& mc) const;
-		MessageId QuoteReply(const Cyan::MessageChain& mc) const;
+		MessageId_t Reply(const Cyan::MessageChain& mc) const;
+		MessageId_t QuoteReply(const Cyan::MessageChain& mc) const;
 		bool Recall() const;
 		bool AtMe() const;
 

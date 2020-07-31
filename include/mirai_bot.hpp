@@ -118,7 +118,7 @@ namespace Cyan
 		 * \param msgId 可选, 如果不为空则发送引用消息
 		 * \return 用于引用或撤回的消息 ID (MessageId)
 		 */
-		MessageId SendMessage(QQ_t target, const MessageChain& messageChain, MessageId msgId = 0);
+		MessageId_t SendMessage(QQ_t target, const MessageChain& messageChain, MessageId_t msgId = 0);
 		/**
 		 * \brief 发送群聊消息
 		 * \param target 发送对象(GID_t)
@@ -126,7 +126,7 @@ namespace Cyan
 		 * \param msgId 可选, 如果不为空则发送引用消息
 		 * \return 用于引用或撤回的消息 ID (MessageId)
 		 */
-		MessageId SendMessage(GID_t target, const MessageChain& messageChain, MessageId msgId = 0);
+		MessageId_t SendMessage(GID_t target, const MessageChain& messageChain, MessageId_t msgId = 0);
 		/**
 		 * \brief 发送临时消息
 		 * \param gid 群组(GID)
@@ -135,7 +135,7 @@ namespace Cyan
 		 * \param msgId 可选, 如果不为空则发送引用消息
 		 * \return 用于引用或撤回的消息 ID (MessageId)
 		 */
-		MessageId SendMessage(GID_t gid, QQ_t qq, const MessageChain& messageChain, MessageId msgId = 0);
+		MessageId_t SendMessage(GID_t gid, QQ_t qq, const MessageChain& messageChain, MessageId_t msgId = 0);
 		/**
 		 * \brief 上传可以发送给好友的图片
 		 * \param fileName 文件名
@@ -241,7 +241,7 @@ namespace Cyan
 		 * \param mid 消息ID(MessageId)
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		bool Recall(MessageId mid);
+		bool Recall(MessageId_t mid);
 		/**
 		 * \brief 让 Bot 退出一个群
 		 * \param group 要退出的群(GID_t)
@@ -266,13 +266,13 @@ namespace Cyan
 		 * \param mid 消息ID(MessageId)
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		FriendMessage GetFriendMessageFromId(MessageId mid);
+		FriendMessage GetFriendMessageFromId(MessageId_t mid);
 		/**
 		 * \brief 根据消息ID(MessageId)获取对应的群组消息
 		 * \param mid 消息ID(MessageId)
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		GroupMessage GetGroupMessageFromId(MessageId mid);
+		GroupMessage GetGroupMessageFromId(MessageId_t mid);
 
 		/**
 		 * \brief 监听事件

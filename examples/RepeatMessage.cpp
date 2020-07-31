@@ -67,7 +67,7 @@ int main()
 	bot.On<FriendMessage>(
 		[&](FriendMessage m)
 		{
-			m.Reply("你好呀, " + m.MessageChain);
+			m.Reply(m.MessageChain);
 		});
 
 	bot.On<TempMessage>(

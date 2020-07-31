@@ -95,7 +95,7 @@ namespace Cyan
 	}
 
 
-	MessageId MiraiBot::SendMessage(QQ_t target, const MessageChain& messageChain, MessageId msgId)
+	MessageId_t MiraiBot::SendMessage(QQ_t target, const MessageChain& messageChain, MessageId_t msgId)
 	{
 		json data =
 		{
@@ -114,7 +114,7 @@ namespace Cyan
 		int code = re_json["code"].get<int>();
 		if (code == 0)
 		{
-			MessageId msg_id = re_json["messageId"].get<int>();
+			MessageId_t msg_id = re_json["messageId"].get<int>();
 			return msg_id;
 		}
 		string msg = re_json["msg"].get<string>();
@@ -122,7 +122,7 @@ namespace Cyan
 	}
 
 
-	MessageId MiraiBot::SendMessage(GID_t target, const MessageChain& messageChain, MessageId msgId)
+	MessageId_t MiraiBot::SendMessage(GID_t target, const MessageChain& messageChain, MessageId_t msgId)
 	{
 		json data =
 		{
@@ -141,7 +141,7 @@ namespace Cyan
 		int code = re_json["code"].get<int>();
 		if (code == 0)
 		{
-			MessageId msg_id = re_json["messageId"].get<int>();
+			MessageId_t msg_id = re_json["messageId"].get<int>();
 			return msg_id;
 		}
 		string msg = re_json["msg"].get<string>();
@@ -149,7 +149,7 @@ namespace Cyan
 	}
 
 
-	MessageId MiraiBot::SendMessage(GID_t gid, QQ_t qq, const MessageChain& messageChain, MessageId msgId)
+	MessageId_t MiraiBot::SendMessage(GID_t gid, QQ_t qq, const MessageChain& messageChain, MessageId_t msgId)
 	{
 		json data =
 		{
@@ -169,7 +169,7 @@ namespace Cyan
 		int code = re_json["code"].get<int>();
 		if (code == 0)
 		{
-			MessageId msg_id = re_json["messageId"].get<int>();
+			MessageId_t msg_id = re_json["messageId"].get<int>();
 			return msg_id;
 		}
 		string msg = re_json["msg"].get<string>();
@@ -491,7 +491,7 @@ namespace Cyan
 	}
 
 
-	bool MiraiBot::Recall(MessageId mid)
+	bool MiraiBot::Recall(MessageId_t mid)
 	{
 		json data =
 		{
@@ -575,7 +575,7 @@ namespace Cyan
 		throw runtime_error(msg);
 	}
 
-	FriendMessage MiraiBot::GetFriendMessageFromId(MessageId mid)
+	FriendMessage MiraiBot::GetFriendMessageFromId(MessageId_t mid)
 	{
 		stringstream api_url;
 		api_url
@@ -601,7 +601,7 @@ namespace Cyan
 	}
 
 
-	GroupMessage MiraiBot::GetGroupMessageFromId(MessageId mid)
+	GroupMessage MiraiBot::GetGroupMessageFromId(MessageId_t mid)
 	{
 		stringstream api_url;
 		api_url

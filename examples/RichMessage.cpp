@@ -51,7 +51,7 @@ int main()
 			try
 			{
 				fm.Reply(MessageChain().FlashImage(img));
-				fm.Reply(MessageChain().Poke(Poke::FangDaZhao));
+				fm.Reply(MessageChain().Poke(PokeType::FangDaZhao));
 			}
 			catch (const std::exception& ex)
 			{
