@@ -30,7 +30,7 @@ int main()
 		{
 			try
 			{
-				MessageId id = gm.Reply(gm.MessageChain);
+				MessageId_t id = gm.Reply(gm.MessageChain);
 				MiraiBot::SleepSeconds(5);
 				bot.Recall(id);
 				MiraiBot::SleepSeconds(2);
