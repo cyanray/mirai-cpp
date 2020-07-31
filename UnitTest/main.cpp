@@ -22,6 +22,14 @@ TEST(MessageChain_Test, Add_and_Get) {
     ASSERT_TRUE(m.Text() == "Hello");
 }
 
+TEST(MessageChain_Test, Add_and_Get2) {
+    using namespace Cyan;
+    MessageChain mc;
+    mc.Add<PlainMessage>("Hello");
+    auto m = mc.GetFirst<PlainMessage>();
+    ASSERT_TRUE(m.Text() == "Hello");
+}
+
 TEST(MessageChain_Test, GetAll) {
     using namespace Cyan;
     MessageChain mc;
@@ -105,7 +113,7 @@ TEST(MessageChain_Test, AtMessage) {
     MessageChain mc;
     mc.Add(AtMessage(1234_qq));
     auto at = mc.GetFirst<AtMessage>();
-    ASSERT_TRUE(at.Target().QQ == 1234);
+    ASSERT_TRUE(at.Target().ToInt64() == 1234);
 }
 
 TEST(MessageChain_Test, AtAllMessage) {

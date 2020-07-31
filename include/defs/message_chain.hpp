@@ -81,6 +81,15 @@ namespace Cyan
 			return *this;
 		}
 
+		template<class T,class... Args>
+		MessageChain& Add(Args&&... args)
+		{
+			static_assert(std::is_base_of<IMessage, T>::value, "只能接受 IMessage 的派生类");
+			std::shared_ptr<IMessage> m_ptr(new T(args...));
+			messages_.push_back(m_ptr);
+			return *this;
+		}
+
 		template<class T>
 		void Remove(const T& m)
 		{
