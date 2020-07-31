@@ -20,6 +20,7 @@ namespace Cyan
 			factory_.Register<XmlMessage>("Xml");
 			factory_.Register<FaceMessage>("Face");
 			factory_.Register<PokeMessage>("Poke");
+			factory_.Register<QuoteMessage>("Quote");
 		}
 	}
 

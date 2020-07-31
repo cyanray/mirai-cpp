@@ -1,26 +1,26 @@
 #pragma once
-#ifndef mirai_cpp_defs_messages_at_message_hpp_H_
-#define mirai_cpp_defs_messages_at_message_hpp_H_
+#ifndef mirai_cpp_defs_messages_quote_message_hpp_H_
+#define mirai_cpp_defs_messages_quote_message_hpp_H_
 
+#include <iostream>
 #include "defs/message_interface.hpp"
 #include "defs/qq_types.hpp"
 
 namespace Cyan
 {
-	class AtMessage : public IMessage
+	class QuoteMessage : public IMessage
 	{
 	public:
-		AtMessage() : target_(0), display_() {}
-		AtMessage(const QQ_t& q) : target_(q), display_() {}
+		QuoteMessage() :messageId_(0) {}
 		virtual const string& GetType() const override
 		{
 			return type_;
 		}
 		virtual bool operator==(const IMessage& m) const override
 		{
-			if (auto m_ptr = dynamic_cast<const AtMessage*>(&m))
+			if (auto m_ptr = dynamic_cast<const QuoteMessage*>(&m))
 			{
-				return m_ptr->target_ == this->target_;
+				return m_ptr->messageId_ == this->messageId_;
 			}
 			return false;
 		}
@@ -32,9 +32,8 @@ namespace Cyan
 		{
 			if (json["type"].is_null() || json["type"].get<string>() != this->GetType())
 				throw std::runtime_error("给定的json不正确");
-			target_ = QQ_t(json["target"].get<int64_t>());
-			if (!json["display"].is_null())
-				display_ = json["display"].get<string>();
+			messageId_ = json["id"].get<int64_t>();
+			std::cout << json.dump() << std::endl;
 			return true;
 		}
 		virtual json ToJson() const override
@@ -42,21 +41,17 @@ namespace Cyan
 			return
 			{
 				{ "type", type_ },
-				{ "target", (int64_t)(target_) },
-				{ "display",display_ }
+				{ "id", messageId_ }
 			};
 		}
-		virtual ~AtMessage() {}
+		virtual ~QuoteMessage() {}
 
-		QQ_t Target() const { return target_; }
-		void Target(const QQ_t& t) { this->target_ = t; }
-
-		string Display() const { return display_; }
+		MessageId_t MessageId() const { return messageId_; }
+		void MessageId(MessageId_t mid) { this->messageId_ = mid; }
 
 	private:
-		string type_ = "At";
-		QQ_t target_;
-		string display_;
+		string type_ = "Quote";
+		MessageId_t messageId_;
 	};
 
 }

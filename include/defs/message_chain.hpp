@@ -19,6 +19,7 @@
 #include "defs/messages/AppMessage.hpp"
 #include "defs/messages/JsonMessage.hpp"
 #include "defs/messages/PokeMessage.hpp"
+#include "defs/messages/QuoteMessage.hpp"
 
 using std::vector;
 
