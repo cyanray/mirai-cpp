@@ -9,18 +9,16 @@
 namespace Cyan
 {
 	// QQ 号码类型
-	struct QQ_t
+	class QQ_t
 	{
-		int64_t QQ;
+	public:
 		QQ_t() :QQ(-1) {}
 		explicit  QQ_t(int64_t qq) :QQ(qq) {}
 		operator int64_t() const { return QQ; }
+		int64_t ToInt64() const { return QQ; }
+	private:
+		int64_t QQ;
 	};
-
-	inline QQ_t operator "" qq(unsigned long long int v)
-	{
-		return QQ_t(int64_t(v));
-	}
 
 	inline QQ_t operator "" _qq(unsigned long long int v)
 	{
@@ -28,18 +26,16 @@ namespace Cyan
 	}
 
 	// 群号码类型
-	struct GID_t
+	class GID_t
 	{
-		int64_t GID;
+	public:
 		GID_t() :GID(-1) {}
 		explicit GID_t(int64_t gid) :GID(gid) {}
 		operator int64_t() const { return GID; }
+		int64_t ToInt64() const { return GID; }
+	private:
+		int64_t GID;
 	};
-
-	inline GID_t operator "" gid(unsigned long long int v)
-	{
-		return GID_t(int64_t(v));
-	}
 
 	inline GID_t operator "" _gid(unsigned long long int v)
 	{
