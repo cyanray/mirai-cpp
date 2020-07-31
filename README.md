@@ -6,21 +6,9 @@
 
 本项目为 mirai-http-api 的 C++ 封装，方便使用 C++ 开发 mirai-http-api 插件
 
-## 项目依赖
-
-> 本项目所有依赖都为 Header-Only 库，已经内置到本项目的 mirai-third-party 文件夹中。
-
-1. [**yhirose/cpp-httplib**](https://github.com/yhirose/cpp-httplib) A C++ header-only HTTP/HTTPS server and client library.
-
-2. [**nlohmann/json**](https://github.com/nlohmann/json) JSON for Modern C++.
-
-3. [**progschj/ThreadPool**](https://github.com/progschj/ThreadPool) A simple C++11 Thread Pool implementation.
-
-4. [**dhbaird/EasyWSClient**](https://github.com/dhbaird/easywsclient) A short and sweet WebSocket client for C++.
-
 ## 项目文档
 
-> 项目文档没有详细介绍各 API 函数的用法，mirai_bot.hpp 中的注释已经比较详细，如有疑惑，建议浏览。
+> 推荐浏览顺序：项目文档 --> examples --> mirai_bot.hpp 的注释
 
 项目文档: [使用说明](doc/使用说明.md)
 
@@ -43,7 +31,6 @@
 | RecallEvent.cpp      | 处理其他人撤回消息的事件     |
 | Mute.cpp             | 和禁言有关的操作             |
 | RichMessage.cpp      | 发送 JSON、闪照等类型的消息  |
-| CompareMessage.cpp   | 对比 MessageChain 是否相同   |
 | FetchEventsViaHTTP.cpp| 设置通过 HTTP 短轮询获取事件和消息 |
 | GroupMemberInfo.cpp  | 获取/设置群成员的群名片与群头衔 |
 
@@ -113,9 +100,19 @@
 
 然后就可以使用 `./vcpkg install mirai-cpp` 安装 mirai-cpp。
 
-#### (2) 使用 CMake-GUI 编译
 
-未完待续……
+## 项目依赖
+
+> 本项目所有依赖都为 Header-Only 库，已经内置到本项目的 mirai-third-party 文件夹中。
+
+1. [**yhirose/cpp-httplib**](https://github.com/yhirose/cpp-httplib) A C++ header-only HTTP/HTTPS server and client library.
+
+2. [**nlohmann/json**](https://github.com/nlohmann/json) JSON for Modern C++.
+
+3. [**progschj/ThreadPool**](https://github.com/progschj/ThreadPool) A simple C++11 Thread Pool implementation.
+
+4. [**dhbaird/EasyWSClient**](https://github.com/dhbaird/easywsclient) A short and sweet WebSocket client for C++.
+
 
 ## 代码风格
 
