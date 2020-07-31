@@ -102,7 +102,7 @@ namespace Cyan
 				auto mptr = std::dynamic_pointer_cast<PlainMessage>(m);
 				if (mptr)
 				{
-					ss << mptr->GetText();
+					ss << mptr->Text();
 				}
 
 			}
@@ -119,7 +119,7 @@ namespace Cyan
 				auto mptr = std::dynamic_pointer_cast<PlainMessage>(m);
 				if (mptr)
 				{
-					return mptr->GetText();
+					return mptr->Text();
 				}
 			}
 		}

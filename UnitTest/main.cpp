@@ -19,7 +19,7 @@ TEST(MessageChain_Test, Add_and_Get) {
     MessageChain mc;
     mc.Add(PlainMessage("Hello"));
     auto m = mc.GetFirst<PlainMessage>();
-    ASSERT_TRUE(m.GetText() == "Hello");
+    ASSERT_TRUE(m.Text() == "Hello");
 }
 
 TEST(MessageChain_Test, GetAll) {
@@ -29,8 +29,8 @@ TEST(MessageChain_Test, GetAll) {
     mc.Add(PlainMessage("Hi"));
     auto m = mc.GetAll<PlainMessage>();
     ASSERT_TRUE(m.size() == 2);
-    ASSERT_TRUE(m[0].GetText() == "Hello");
-    ASSERT_TRUE(m[1].GetText() == "Hi");
+    ASSERT_TRUE(m[0].Text() == "Hello");
+    ASSERT_TRUE(m[1].Text() == "Hi");
 }
 
 TEST(MessageChain_Test, Count) {
@@ -48,7 +48,7 @@ TEST(MessageChain_Test, get_at) {
     mc.Add(PlainMessage("Hi"));
     ASSERT_TRUE(mc[0]->GetType() == "Plain");
     auto mptr = std::dynamic_pointer_cast<PlainMessage>(mc[1]);
-    ASSERT_TRUE(mptr->GetText() == "Hi");
+    ASSERT_TRUE(mptr->Text() == "Hi");
 }
 
 TEST(MessageChain_Test, Clear) {
@@ -69,7 +69,7 @@ TEST(MessageChain_Test, Remove) {
     mc.Remove(PlainMessage("Hello"));
     ASSERT_TRUE(mc.Count() == 1);
     auto mptr = std::dynamic_pointer_cast<PlainMessage>(mc[0]);
-    ASSERT_TRUE(mptr->GetText() == "Hi");
+    ASSERT_TRUE(mptr->Text() == "Hi");
 }
 
 TEST(MessageChain_Test, GetPlainText) {
