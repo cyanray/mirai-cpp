@@ -46,6 +46,10 @@ if(MIRAI_CPP_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif(MIRAI_CPP_BUILD_EXAMPLES)
 
+option(MIRAI_CPP_BUILD_UNIT_TESTS "Build UnitTests" OFF)
+if(MIRAI_CPP_BUILD_UNIT_TESTS)
+    add_subdirectory(UnitTest)
+endif(MIRAI_CPP_BUILD_UNIT_TESTS)
 
 option(MIRAI_CPP_INSTALL "INSTALL_MIRAI_CPP" ON)
 if(MIRAI_CPP_INSTALL)

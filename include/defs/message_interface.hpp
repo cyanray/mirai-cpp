@@ -7,11 +7,17 @@
 
 namespace Cyan
 {
-
+	/**
+	 * @brief 消息的抽象类
+	*/
 	class IMessage : public ISerializable
 	{
-
-
+	public:
+		IMessage() {}
+		virtual const string& GetType() const = 0;
+		virtual bool operator==(const IMessage&) const = 0;
+		virtual bool operator!=(const IMessage&) const = 0;
+		virtual ~IMessage() {}
 	};
 
 }
