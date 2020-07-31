@@ -118,17 +118,17 @@ namespace Cyan
 
 		MessageChain& At(const QQ_t qq)
 		{
-			return this->Add(AtMessage(qq));
+			return this->Add<AtMessage>(qq);
 		}
 
 		MessageChain& AtAll()
 		{
-			return this->Add(AtAllMessage());
+			return this->Add<AtAllMessage>();
 		}
 
 		MessageChain& Face(int faceID)
 		{
-			return this->Add(FaceMessage(faceID));
+			return this->Add<FaceMessage>(faceID);
 		}
 
 		MessageChain& Face(const string& name)
@@ -140,7 +140,7 @@ namespace Cyan
 
 		MessageChain& Plain(const string& plainText)
 		{
-			return this->Add(PlainMessage(plainText));
+			return this->Add<PlainMessage>(plainText);
 		}
 
 		template<typename T>
@@ -148,37 +148,37 @@ namespace Cyan
 		{
 			std::stringstream ss;
 			ss << val;
-			return this->Add(PlainMessage(ss.str()));
+			return this->Add<PlainMessage>(ss.str());
 		}
 
 		MessageChain& Image(const MiraiImage& Image)
 		{
-			return this->Add(ImageMessage(Image));
+			return this->Add<ImageMessage>(Image);
 		}
 
 		MessageChain& FlashImage(const MiraiImage& Image)
 		{
-			return this->Add(FlashImageMessage(Image));
+			return this->Add<FlashImageMessage>(Image);
 		}
 
 		MessageChain& Xml(const string& xml_str)
 		{
-			return this->Add(XmlMessage(xml_str));
+			return this->Add<XmlMessage>(xml_str);
 		}
 
 		MessageChain& Json(const string& json_str)
 		{
-			return this->Add(JsonMessage(json_str));
+			return this->Add<JsonMessage>(json_str);
 		}
 
 		MessageChain& App(const string& app_str)
 		{
-			return this->Add(AppMessage(app_str));
+			return this->Add<AppMessage>(app_str);
 		}
 
 		MessageChain& Poke(PokeType poke)
 		{
-			return this->Add(PokeMessage(poke));
+			return this->Add<PokeMessage>(poke);
 		}
 
 		string GetPlainText() const;
