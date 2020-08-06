@@ -4,17 +4,19 @@
 
 [mirai](https://github.com/mamoe/mirai) 是全开源 QQ 机器人 / QQ 协议支持库。
 
-本项目为 mirai-http-api 的 C++ 封装，方便使用 C++ 开发 mirai-http-api 插件
+本项目为 mirai-api-http 的 C++ 封装，方便使用 C++ 开发基于 mirai-api-http 插件。
 
 ## 项目文档
 
-> 推荐浏览顺序：项目文档 --> examples --> mirai_bot.hpp 的注释
+> 推荐浏览顺序：使用说明 --> examples --> mirai_bot.hpp 的注释
 
-项目文档: [使用说明](doc/使用说明.md)
+使用说明: [使用说明](doc/使用说明.md)
 
-对于刚入门的 C++ 用户，推荐使用 [mirai-cpp-template](https://github.com/cyanray/mirai-cpp-template) 这个模板项目来降低使用难度。
+对于刚入门的 C++ 用户，推荐从 [mirai-cpp-template](https://github.com/cyanray/mirai-cpp-template) 这个模板项目开始编写自己的程序。
 
-推荐阅读 examples 目录下的示例。
+对于 C++ 大佬，可以参考 [mirai-cpp-template](https://github.com/cyanray/mirai-cpp-template) 这个模板项目的 CMakeLists.txt 了解使用方法。（所以我就不写这部分的内容了，手动狗头）
+
+推荐阅读 examples 目录下的示例以了解使用方法。
 
 | 文件名               | 说明                         |
 |----------------------|------------------------------|
@@ -25,9 +27,9 @@
 | GetGroupList.cpp     | 打印Bot的群组列表            |
 | MemberJoinEvent.cpp  | 处理新成员加入群的申请和事件 |
 | MemberLeaveEvent.cpp | 处理成员退出群的事件         |
-| MessageType.cpp      | 获取/处理各种类型的消息示例  |
+| MessageType.cpp      | 获取/处理各种类型的消息      |
 | NewFriendEvent.cpp   | 处理好友申请                 |
-| Recall.cpp           | 撤回消息示例                 |
+| Recall.cpp           | 撤回消息                   |
 | RecallEvent.cpp      | 处理其他人撤回消息的事件     |
 | Mute.cpp             | 和禁言有关的操作             |
 | RichMessage.cpp      | 发送 JSON、闪照等类型的消息  |
@@ -36,7 +38,7 @@
 
 ## 如何使用
 
-### 1. 快速尝试
+### 1. 快速尝试 (运行 examples、参与开发)
 
 #### (1) 使用 Visual Studio
 
@@ -62,19 +64,23 @@
 
 3. 安装 CMake Tools 扩展。
 
-4. 直接开始调试
+4. 如图，可以直接开始调试
 
 ![vsc 开始调试](./doc/pic/vsc.png)
 
 ### 2. 创建自己的机器人项目
 
-推荐使用 [mirai-cpp-template](https://github.com/cyanray/mirai-cpp-template) 这个模板项目来降低使用难度。
+#### (1) 使用 CMake Project 模板
 
-未完待续……
+具体参考 [mirai-cpp-template](https://github.com/cyanray/mirai-cpp-template) 的说明。
+
+#### (2) 在 Visual Studio 项目中使用 (VS 解决方案, sln)
+
+// TODO: 编写如何在 Visual Studio 解决方案中使用 mirai-cpp
 
 ### 3. 其他使用方式
 
-#### (1) 将程序轻松移植、部署到 Linux 上
+#### (1) 将程序移植、部署到 Linux 上
 
 <details>
 
@@ -98,7 +104,7 @@
 
 要使用 vcpkg 管理 mirai-cpp，你需要将 [https://github.com/cyanray/mirai-cpp-vcpkg-port](https://github.com/cyanray/mirai-cpp-vcpkg-port) 中的 **mirai-cpp** 文件夹复制到 vcpkg 安装目录下的 **ports** 文件夹中。
 
-然后就可以使用 `./vcpkg install mirai-cpp` 安装 mirai-cpp。
+然后就可以使用 `./vcpkg install mirai-cpp:x86-windows mirai-cpp:x64-windows` 安装 mirai-cpp。
 
 
 ## 项目依赖
@@ -113,7 +119,11 @@
 
 4. [**dhbaird/EasyWSClient**](https://github.com/dhbaird/easywsclient) A short and sweet WebSocket client for C++.
 
+## 参与开发
 
-## 代码风格
+mirai-cpp 目前还有许多不足，欢迎提出 issues 或 pull requests。
 
-本项目的代码使用的是我自己喜欢的代码风格，如果你有更好的建议（比如修改为 Google-Style），欢迎提出 issues 或 pull request。
+<!-- ## 以下项目正在使用 mirai-cpp
+
+> 如果你愿意分享你开发的程序，可以通过提出 issues 或 pull requests 的方式列于下方
+-->
