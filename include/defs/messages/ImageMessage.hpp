@@ -25,25 +25,25 @@ namespace Cyan
 		{
 			if (auto m_ptr = dynamic_cast<const ImageMessage*>(&m))
 			{
-				// ÓÃ ImageId ×÷ÎªÅĞ¶ÏÒÀ¾İ£¬±ØĞëÓĞÒ»¸ö ImageId ²»Îª¿Õ
+				// ç”¨ ImageId ä½œä¸ºåˆ¤æ–­ä¾æ®ï¼Œå¿…é¡»æœ‰ä¸€ä¸ª ImageId ä¸ä¸ºç©º
 				if (!m_ptr->imageId_.empty() || !this->imageId_.empty())
 				{
 					return (m_ptr->imageId_ == this->imageId_);
 				}
-				// Èç¹û ImageId ¶¼Îª¿Õ£¬ÄÇÃ´ÓÃ url ÔÙÅĞ¶ÏÒ»ÏÂ
+				// å¦‚æœ ImageId éƒ½ä¸ºç©ºï¼Œé‚£ä¹ˆç”¨ url å†åˆ¤æ–­ä¸€ä¸‹
 				if (!m_ptr->url_.empty() || !this->url_.empty())
 				{
 					return (m_ptr->url_ == this->url_);
 				}
-				// Èç¹û url ¶¼Îª¿Õ£¬ÄÇÃ´ÓÃ path ÔÙÅĞ¶ÏÒ»ÏÂ
+				// å¦‚æœ url éƒ½ä¸ºç©ºï¼Œé‚£ä¹ˆç”¨ path å†åˆ¤æ–­ä¸€ä¸‹
 				if (!m_ptr->path_.empty() || !this->path_.empty())
 				{
 					return (m_ptr->path_ == this->path_);
 				}
-				// Èı¸ö²ÎÊı¶¼Îª¿Õ£¬Á½¸ö¿ÕµÄ ImageMessage µ±È»ÊÇÏàµÈµÄ£º
+				// ä¸‰ä¸ªå‚æ•°éƒ½ä¸ºç©ºï¼Œä¸¤ä¸ªç©ºçš„ ImageMessage å½“ç„¶æ˜¯ç›¸ç­‰çš„ï¼š
 				return true;
 			}
-			// ÀàĞÍ¶¼²»Í¬£¬Ö±½Ó²»ÏàµÈ£º
+			// ç±»å‹éƒ½ä¸åŒï¼Œç›´æ¥ä¸ç›¸ç­‰ï¼š
 			return false;
 		}
 		virtual bool operator!=(const IMessage& m) const override
@@ -53,7 +53,7 @@ namespace Cyan
 		virtual bool Set(const json& json) override
 		{
 			if (json["type"].is_null() || json["type"].get<string>() != this->GetType())
-				throw std::runtime_error("¸ø¶¨µÄjson²»ÕıÈ·");
+				throw std::runtime_error("ç»™å®šçš„jsonä¸æ­£ç¡®");
 			if (!json["imageId"].is_null()) 
 				imageId_ = json["imageId"].get<string>();
 			if (!json["url"].is_null())
