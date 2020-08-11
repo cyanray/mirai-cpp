@@ -7,7 +7,7 @@
 
 namespace Cyan
 {
-	// ÈºÉèÖÃ
+	// ç¾¤è®¾ç½®
 	class GroupConfig : public ISerializable
 	{
 	public:

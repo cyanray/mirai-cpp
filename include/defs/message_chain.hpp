@@ -69,13 +69,13 @@ namespace Cyan
 					return *m;
 				}
 			}
-			throw std::runtime_error("Ã»ÓĞÕÒµ½Ö¸¶¨ÀàĞÍµÄÔªËØ");
+			throw std::runtime_error("æ²¡æœ‰æ‰¾åˆ°æŒ‡å®šç±»å‹çš„å…ƒç´ ");
 		}
 
 		template<class T>
 		MessageChain& Add(const T& m)
 		{
-			static_assert(std::is_base_of<IMessage, T>::value, "Ö»ÄÜ½ÓÊÜ IMessage µÄÅÉÉúÀà");
+			static_assert(std::is_base_of<IMessage, T>::value, "åªèƒ½æ¥å— IMessage çš„æ´¾ç”Ÿç±»");
 			std::shared_ptr<IMessage> m_ptr(new T(m));
 			messages_.push_back(m_ptr);
 			return *this;
@@ -84,7 +84,7 @@ namespace Cyan
 		template<class T,class... Args>
 		MessageChain& Add(Args&&... args)
 		{
-			static_assert(std::is_base_of<IMessage, T>::value, "Ö»ÄÜ½ÓÊÜ IMessage µÄÅÉÉúÀà");
+			static_assert(std::is_base_of<IMessage, T>::value, "åªèƒ½æ¥å— IMessage çš„æ´¾ç”Ÿç±»");
 			std::shared_ptr<IMessage> m_ptr(new T(args...));
 			messages_.push_back(m_ptr);
 			return *this;
@@ -93,7 +93,7 @@ namespace Cyan
 		template<class T>
 		void Remove(const T& m)
 		{
-			static_assert(std::is_base_of<IMessage, T>::value, "Ö»ÄÜ½ÓÊÜ IMessage µÄÅÉÉúÀà");
+			static_assert(std::is_base_of<IMessage, T>::value, "åªèƒ½æ¥å— IMessage çš„æ´¾ç”Ÿç±»");
 			messages_.erase(std::remove_if(messages_.begin(), messages_.end(),
 				[&](std::shared_ptr<IMessage> item)
 				{

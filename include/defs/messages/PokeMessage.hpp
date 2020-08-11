@@ -43,7 +43,7 @@ namespace Cyan
 		virtual bool Set(const json& json) override
 		{
 			if (json["type"].is_null() || json["type"].get<string>() != this->GetType())
-				throw std::runtime_error("¸ø¶¨µÄjson²»ÕıÈ·");
+				throw std::runtime_error("ç»™å®šçš„jsonä¸æ­£ç¡®");
 			name_ = json["name"].get<string>();
 			for (int i = 0; i < 6; ++i)
 			{
