@@ -14,3 +14,9 @@ jobs:
     steps:
     - name: run-cmake
       uses: lukka/run-cmake@v2.5
+      with:
+            cmakeListsOrSettingsJson: CMakeListsTxtBasic
+            cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+            useVcpkgToolchainFile: false
+            buildDirectory: '${{ runner.workspace }}/b//unixmakefiles'
+            cmakeAppendedArgs: '-GNinja '
