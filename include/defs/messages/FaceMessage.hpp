@@ -31,7 +31,7 @@ namespace Cyan
 		{
 			if (json["type"].is_null() || json["type"].get<string>() != this->GetType())
 				throw std::runtime_error("给定的json不正确");
-			faceId_ = json["faceId"].get<int64_t>();
+			faceId_ = json["faceId"].get<int>();
 			name_ = json["name"].get<string>();
 			return true;
 		}
