@@ -8,7 +8,7 @@
 namespace Cyan
 {
 	/**
-	 * @brief 消息的抽象类
+	 * @brief 娑堟伅鐨勬娊璞＄被
 	*/
 	class IMessage : public ISerializable
 	{
