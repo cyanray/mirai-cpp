@@ -868,6 +868,7 @@ namespace Cyan
 	string MiraiBot::ReadFile(const string& filename)
 	{
 		std::ifstream ifs(filename, std::ifstream::binary);
+		if (!ifs.is_open()) throw std::runtime_error("打开文件失败，请确认路径是否正确并检查文件是否存在");
 		std::filebuf* pbuf = ifs.rdbuf();
 		std::size_t size = pbuf->pubseekoff(0, ifs.end, ifs.in);
 		pbuf->pubseekpos(0, ifs.in);
