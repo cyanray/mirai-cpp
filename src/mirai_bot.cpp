@@ -1,9 +1,9 @@
-﻿#include "mirai_bot.hpp"
+﻿#include "mirai/mirai_bot.hpp"
 #include <iostream>
 #include <exception>
-#include "third-party/easywsclient.hpp"
+#include "mirai/third-party/easywsclient.hpp"
 #define _SSIZE_T_DEFINED
-#include "third-party/easywsclient.cpp"
+#include "mirai/third-party/easywsclient.cpp"
 
 using std::runtime_error;
 using std::stringstream;

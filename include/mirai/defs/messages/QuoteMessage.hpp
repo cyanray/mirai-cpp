@@ -3,8 +3,8 @@
 #define mirai_cpp_defs_messages_quote_message_hpp_H_
 
 #include <iostream>
-#include "defs/message_interface.hpp"
-#include "defs/qq_types.hpp"
+#include "mirai/defs/message_interface.hpp"
+#include "mirai/defs/qq_types.hpp"
 
 namespace Cyan
 {

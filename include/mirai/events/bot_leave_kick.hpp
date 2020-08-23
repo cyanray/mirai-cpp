@@ -2,8 +2,8 @@
 #ifndef mirai_cpp_events_bot_leave_kick_hpp_H_
 #define mirai_cpp_events_bot_leave_kick_hpp_H_
 
-#include "third-party/nlohmann/json.hpp"
-#include "defs/group.hpp"
+#include "mirai/third-party/nlohmann/json.hpp"
+#include "mirai/defs/group.hpp"
 #include "event_interface.hpp"
 
 namespace Cyan

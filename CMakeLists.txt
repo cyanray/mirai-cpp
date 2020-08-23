@@ -23,7 +23,7 @@ aux_source_directory(./src SRCS)
 
 add_library(${PROJECT_NAME} ${LIBRARY_TYPE} ${SRCS})
 target_include_directories(${PROJECT_NAME} PUBLIC 
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/mirai>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
     )
 

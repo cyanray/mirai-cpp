@@ -2,25 +2,25 @@
 #ifndef mirai_cpp_defs_message_chain_hpp_H_
 #define mirai_cpp_defs_message_chain_hpp_H_
 
-#include "third-party/nlohmann/json.hpp"
+#include "mirai/third-party/nlohmann/json.hpp"
 #include <sstream>
 #include <vector>
 #include <memory>
-#include "exported.h"
+#include "mirai/exported.h"
 #include "qq_types.hpp"
 #include "serializable.hpp"
-#include "defs/message_interface.hpp"
-#include "defs/messages/PlainMessage.hpp"
-#include "defs/messages/ImageMessage.hpp"
-#include "defs/messages/FlashImageMessage.hpp"
-#include "defs/messages/AtMessage.hpp"
-#include "defs/messages/AtAllMessage.hpp"
-#include "defs/messages/FaceMessage.hpp"
-#include "defs/messages/XmlMessage.hpp"
-#include "defs/messages/AppMessage.hpp"
-#include "defs/messages/JsonMessage.hpp"
-#include "defs/messages/PokeMessage.hpp"
-#include "defs/messages/QuoteMessage.hpp"
+#include "message_interface.hpp"
+#include "messages/PlainMessage.hpp"
+#include "messages/ImageMessage.hpp"
+#include "messages/FlashImageMessage.hpp"
+#include "messages/AtMessage.hpp"
+#include "messages/AtAllMessage.hpp"
+#include "messages/FaceMessage.hpp"
+#include "messages/XmlMessage.hpp"
+#include "messages/AppMessage.hpp"
+#include "messages/JsonMessage.hpp"
+#include "messages/PokeMessage.hpp"
+#include "messages/QuoteMessage.hpp"
 
 using std::vector;
 

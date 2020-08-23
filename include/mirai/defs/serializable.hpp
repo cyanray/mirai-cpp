@@ -1,7 +1,7 @@
 #pragma once
 #ifndef mirai_cpp_defs_serializable_hpp_H_
 #define mirai_cpp_defs_serializable_hpp_H_
-#include "third-party/nlohmann/json.hpp"
+#include "mirai/third-party/nlohmann/json.hpp"
 #include <string>
 using std::string;
 using nlohmann::json;
