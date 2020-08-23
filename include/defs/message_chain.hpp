@@ -6,6 +6,7 @@
 #include <sstream>
 #include <vector>
 #include <memory>
+#include "exported.h"
 #include "qq_types.hpp"
 #include "serializable.hpp"
 #include "defs/message_interface.hpp"
@@ -26,7 +27,7 @@ using std::vector;
 namespace Cyan
 {
 
-	class MessageChain : public ISerializable
+	class EXPORTED MessageChain : public ISerializable
 	{
 	public:
 		friend MessageChain& operator+(const string& str, MessageChain& mc);
