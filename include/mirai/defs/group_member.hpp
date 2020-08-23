@@ -2,7 +2,7 @@
 #ifndef mirai_cpp_defs_group_member_hpp_H_
 #define mirai_cpp_defs_group_member_hpp_H_
 
-#include <nlohmann/json.hpp>
+#include "third-party/nlohmann/json.hpp"
 #include "qq_types.hpp"
 #include "serializable.hpp"
 #include "group.hpp"

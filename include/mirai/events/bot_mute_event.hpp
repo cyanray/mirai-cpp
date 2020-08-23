@@ -2,7 +2,7 @@
 #ifndef mirai_cpp_events_bot_mute_event_hpp_H_
 #define mirai_cpp_events_bot_mute_event_hpp_H_
 
-#include <nlohmann/json.hpp>
+#include "third-party/nlohmann/json.hpp"
 #include "defs/group_member.hpp"
 #include "event_interface.hpp"
 

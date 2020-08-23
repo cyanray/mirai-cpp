@@ -3,7 +3,7 @@
 #define mirai_cpp_defs_group_member_info_hpp_H_
 
 #include <string>
-#include <nlohmann/json.hpp>
+#include "third-party/nlohmann/json.hpp"
 #include "serializable.hpp"
 
 

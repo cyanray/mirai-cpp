@@ -2,7 +2,7 @@
 #ifndef mirai_cpp_events_message_hpp_H_
 #define mirai_cpp_events_message_hpp_H_
 
-#include <nlohmann/json.hpp>
+#include "third-party/nlohmann/json.hpp"
 #include "defs/qq_types.hpp"
 #include "friend_message.hpp"
 #include "group_message.hpp"

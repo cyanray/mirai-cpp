@@ -2,7 +2,7 @@
 #ifndef mirai_cpp_events_bot_invited_join_group_request_event_hpp_H_
 #define mirai_cpp_events_bot_invited_join_group_request_event_hpp_H_
 
-#include <nlohmann/json.hpp>
+#include "third-party/nlohmann/json.hpp"
 #include "defs/qq_types.hpp"
 #include "exported.h"
 #include "event_interface.hpp"

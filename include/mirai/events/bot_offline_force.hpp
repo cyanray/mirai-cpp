@@ -2,7 +2,7 @@
 #ifndef mirai_cpp_events_bot_offline_force_hpp_H_
 #define mirai_cpp_events_bot_offline_force_hpp_H_
 
-#include <nlohmann/json.hpp>
+#include "third-party/nlohmann/json.hpp"
 #include "defs/qq_types.hpp"
 #include "event_interface.hpp"
 

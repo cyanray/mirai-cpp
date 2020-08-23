@@ -2,7 +2,7 @@
 #ifndef mirai_cpp_events_group_mute_all_event_hpp_H_
 #define mirai_cpp_events_group_mute_all_event_hpp_H_
 
-#include <nlohmann/json.hpp>
+#include "third-party/nlohmann/json.hpp"
 #include "event_interface.hpp"
 #include "defs/group.hpp"
 #include "defs/group_member.hpp"
