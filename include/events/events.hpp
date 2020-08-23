@@ -19,6 +19,7 @@
 // 群组相关事件
 #include "group_recall_event.hpp"
 #include "group_mute_all_event.hpp"
+#include "member_card_change_event.hpp"
 #include "member_join_request_event.hpp"
 #include "member_join_event.hpp"
 #include "member_leave_kick.hpp"
