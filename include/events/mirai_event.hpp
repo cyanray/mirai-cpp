@@ -35,7 +35,8 @@ namespace Cyan
 		BotLeaveEventActive,					// Bot 主动离开群
 		BotLeaveEventKick,					// Bot 被剔出群
 		Message,								// 通用消息事件
-		BotInvitedJoinGroupRequestEvent		// Bot被邀请入群申请
+		BotInvitedJoinGroupRequestEvent,		// Bot被邀请入群申请
+		MemberCardChangeEvent				// 群成员群名片被修改事件
 	};
 
 	inline MiraiEvent MiraiEventStr(const std::string& miraiEvent)
@@ -65,6 +66,7 @@ namespace Cyan
 		if (miraiEvent == "GroupNameChangeEvent") return MiraiEvent::GroupNameChangeEvent;
 		if (miraiEvent == "GroupMuteAllEvent") return MiraiEvent::GroupMuteAllEvent;
 		if (miraiEvent == "BotInvitedJoinGroupRequestEvent") return MiraiEvent::BotInvitedJoinGroupRequestEvent;
+		if (miraiEvent == "MemberCardChangeEvent") return MiraiEvent::MemberCardChangeEvent;
 		return MiraiEvent::Default;
 	}
 
@@ -132,6 +134,9 @@ namespace Cyan
 			break;
 		case Cyan::MiraiEvent::BotInvitedJoinGroupRequestEvent:
 			result = "BotInvitedJoinGroupRequestEvent";
+			break;
+		case Cyan::MiraiEvent::MemberCardChangeEvent:
+			result = "MemberCardChangeEvent";
 			break;
 		default:
 			result = "Default";
