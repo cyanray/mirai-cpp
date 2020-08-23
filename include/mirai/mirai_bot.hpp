@@ -275,6 +275,34 @@ namespace Cyan
 		GroupMessage GetGroupMessageFromId(MessageId_t mid);
 
 		/**
+		 * @brief 注册指令
+		 * @param commandName 指令名称
+		 * @param alias 指令别名
+		 * @param description 指令描述
+		 * @param helpMessage 指令帮助，执行出错时显示
+		 * @return *this
+		*/
+		MiraiBot& RegisterCommand(
+			const string& commandName,
+			const vector<string> alias,
+			const string& description,
+			const string& helpMessage = "");
+
+		/**
+		 * @brief 发送指令
+		 * @param commandName 指令名称
+		 * @param args 参数
+		 * @return *this
+		*/
+		MiraiBot& SendCommand(const string& commandName, const vector<string> args);
+
+		/**
+		 * @brief 获得 Managers
+		 * @return Managers
+		*/
+		vector<QQ_t> GetManagers();
+
+		/**
 		 * \brief 监听事件
 		 * \tparam T 事件类型
 		 * \param ep 事件处理函数
