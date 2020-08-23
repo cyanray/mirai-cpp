@@ -3,7 +3,7 @@
 #include "mirai_bot.hpp"
 #include "defs/message_chain.hpp"
 #include "events/events.hpp"
-#include "httplib.h"
+#include "third-party/httplib.h"
 
 namespace Cyan
 {
