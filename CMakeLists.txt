@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.1)
 
-project (mirai-cpp VERSION 0.4.4)
+project (mirai-cpp VERSION 1.2.0)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -23,12 +23,8 @@ aux_source_directory(./src SRCS)
 
 add_library(${PROJECT_NAME} ${LIBRARY_TYPE} ${SRCS})
 target_include_directories(${PROJECT_NAME} PUBLIC 
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/mirai>
     $<INSTALL_INTERFACE:include>
-    )
-target_include_directories(${PROJECT_NAME} PUBLIC 
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/mirai-third-party>
-    $<INSTALL_INTERFACE:third-party>
     )
 
 if(BUILD_SHARED_LIBS)
@@ -41,7 +37,7 @@ endif()
 
 
 
-option(MIRAI_CPP_BUILD_EXAMPLES "Build examples" ON)
+option(MIRAI_CPP_BUILD_EXAMPLES "Build examples" OFF)
 if(MIRAI_CPP_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif(MIRAI_CPP_BUILD_EXAMPLES)
@@ -66,11 +62,6 @@ if(MIRAI_CPP_INSTALL)
         DESTINATION ${CMAKE_INSTALL_PREFIX}
         )
     
-        install(
-        DIRECTORY mirai-third-party
-        DESTINATION ${CMAKE_INSTALL_PREFIX}
-        )
-
     install(
         TARGETS ${PROJECT_NAME}
         EXPORT  ${PROJECT_NAME}Targets

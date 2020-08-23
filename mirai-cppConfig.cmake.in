@@ -4,8 +4,6 @@ include(CMakeFindDependencyMacro)
 # set(my-config-var @my-config-var@)
 
 # 项目依赖项
-find_dependency(CURL CONFIG REQUIRED)
-find_dependency(nlohmann_json CONFIG REQUIRED)
 
 # Any extra setup
 

@@ -9,9 +9,9 @@
 #include <unordered_map>
 #include <memory>
 // third-party
-#include "ThreadPool.h"
-#include "nlohmann/json.hpp"
-#include "httplib.h"
+#include "third-party/ThreadPool.h"
+#include "third-party/nlohmann/json.hpp"
+#include "third-party/httplib.h"
 // mirai header files
 #include "exported.h"
 #include "defs/qq_types.hpp"
