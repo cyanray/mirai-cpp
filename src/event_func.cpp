@@ -137,4 +137,14 @@ namespace Cyan
 		}
 	}
 	
+	bool Command::SenderIsManager()
+	{
+		// 控制台发来的指令，算作是Manager
+		if (this->Sender.ToInt64() == 0) return true;
+		vector<QQ_t> managers = this->GetMiraiBot().GetManagers();
+		auto it = std::find_if(managers.begin(), managers.end(), 
+			[&](QQ_t q) { return q.ToInt64() == this->Sender.ToInt64(); });
+		return it != managers.end();
+	}
+
 }

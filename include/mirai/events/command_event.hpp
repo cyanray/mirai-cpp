@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include "mirai/exported.h"
 #include "mirai/third-party/nlohmann/json.hpp"
 #include "mirai/defs/qq_types.hpp"
 #include "event_interface.hpp"
@@ -16,7 +17,7 @@ namespace Cyan
 	/**
 	 * \brief 指令事件
 	 */
-	class Command : public EventBase
+	class EXPORTED Command : public EventBase
 	{
 	public:
 		string CommandName;
@@ -28,6 +29,12 @@ namespace Cyan
 		{
 			return MiraiEvent::Command;
 		}
+
+		/**
+		 * @brief 检查发送指令的人是不是 Manager (控制台的指令也返回true)
+		 * @return 是否为Manager
+		*/
+		bool SenderIsManager();
 
 		virtual bool Set(const json& j) override
 		{
