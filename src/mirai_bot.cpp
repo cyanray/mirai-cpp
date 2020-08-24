@@ -255,6 +255,31 @@ namespace Cyan
 	}
 
 
+	MiraiVoice MiraiBot::UploadGroupVoice(const string& filename)
+	{
+		string voice_data = ReadFile(filename);
+		httplib::MultipartFormDataItems items =
+		{
+		  { "sessionKey", sessionKey_, "", "" },
+		  { "type", "group", "", "" },
+		  { "voice", voice_data, std::to_string(rand()) + ".amr", "application/octet-stream"  }
+		};
+
+		auto res = http_client_.Post("/uploadVoice", items);
+
+		if (!res)
+			throw runtime_error("网络错误");
+		if (res->status != 200)
+			throw std::runtime_error("[mirai-http-api error]: " + res->body);
+		json re_json = json::parse(res->body);
+		MiraiVoice result;
+		result.Id = re_json["voiceId"].get<string>();
+		if (!re_json["url"].is_null())
+			result.Url = re_json["url"].get<string>();
+		result.Path = re_json["path"].get<string>();
+		return result;
+	}
+
 	vector<Friend_t> MiraiBot::GetFriendList()
 	{
 		auto res = http_client_.Get(("/friendList?sessionKey=" + sessionKey_).data());
@@ -628,9 +653,9 @@ namespace Cyan
 	}
 
 	MiraiBot& MiraiBot::RegisterCommand(
-		const string& commandName, 
-		const vector<string> alias, 
-		const string& description, 
+		const string& commandName,
+		const vector<string> alias,
+		const string& description,
 		const string& helpMessage)
 	{
 		json data =

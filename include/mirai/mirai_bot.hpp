@@ -71,7 +71,7 @@ namespace Cyan
 		int GetRequiredApiVersionInt() const
 		{
 			// mirai-api-http v1.6.5
-			return 10704;
+			return 10800;
 		}
 
 		/**
@@ -81,7 +81,7 @@ namespace Cyan
 		string GetRequiredApiVersion() const
 		{
 			// mirai-api-http v1.6.5
-			return "v1.7.4";
+			return "v1.8.0";
 		}
 
 		/**
@@ -154,6 +154,12 @@ namespace Cyan
 		 * \return 临时消息图片
 		 */
 		TempImage UploadTempImage(const string& fileName);
+		/**
+		 * @brief 上传可以发给群组的语音
+		 * @param filename 文件名(amr文件)
+		 * @return MiraiVoice
+		*/
+		MiraiVoice UploadGroupVoice(const string& filename);
 		/**
 		 * \brief 获得好友列表
 		 * \return vector<Friend_t>

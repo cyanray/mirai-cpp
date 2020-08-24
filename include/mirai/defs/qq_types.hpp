@@ -92,6 +92,13 @@ namespace Cyan
 
 	typedef MiraiImage TempImage;
 
+	struct MiraiVoice
+	{
+		string Id;
+		string Url;
+		string Path;
+	};
+
 	// 预先声明 MiraiBot 类
 	class EXPORTED MiraiBot;
 
