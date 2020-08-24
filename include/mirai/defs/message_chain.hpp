@@ -21,6 +21,7 @@
 #include "messages/JsonMessage.hpp"
 #include "messages/PokeMessage.hpp"
 #include "messages/QuoteMessage.hpp"
+#include "messages/VoiceMessage.hpp"
 
 using std::vector;
 
@@ -180,6 +181,11 @@ namespace Cyan
 		MessageChain& Poke(PokeType poke)
 		{
 			return this->Add<PokeMessage>(poke);
+		}
+
+		MessageChain& Voice(const VoiceMessage& voice)
+		{
+			return this->Add<VoiceMessage>(voice);
 		}
 
 		string GetPlainText() const;
