@@ -51,6 +51,8 @@ int main()
 			cout << endl;
 		});
 
+	bot.SendCommand("hello", {});
+
 	bot.EventLoop();
 	return 0;
 }

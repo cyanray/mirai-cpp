@@ -650,6 +650,22 @@ namespace Cyan
 		return *this;
 	}
 
+	MiraiBot& MiraiBot::SendCommand(const string& commandName, const vector<string> args)
+	{
+		json data =
+		{
+			{ "authKey", authKey_ },
+			{ "name", commandName },
+			{ "args", json(args) }
+		};
+		auto res = http_client_.Post("/command/send", data.dump(), "application/json;charset=UTF-8");
+		if (!res)
+			throw runtime_error("网络错误");
+		if (res->status != 200)
+			throw std::runtime_error("[mirai-http-api error]: " + res->body);
+		return *this;
+	}
+
 	vector<QQ_t> MiraiBot::GetManagers()
 	{
 		vector<QQ_t> result;
