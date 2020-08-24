@@ -369,6 +369,7 @@ namespace Cyan
 		bool SessionConfigure(int cacheSize, bool enableWebsocket);
 		unsigned int FetchEventsHttp(unsigned int count = 10);
 		void FetchEventsWs();
+		void ProcessMessage(std::string& event_json_str);
 		void ProcessEvents(const json& ele);
 		bool Release() noexcept;
 		static inline string ReadFile(const string& filename);
