@@ -18,10 +18,11 @@
 
 推荐阅读 examples 目录下的示例以了解使用方法。
 
-| 文件名               | 说明                         |
+| 文件名                | 说明                         |
 |----------------------|------------------------------|
 | RepeatMessage.cpp    | 简单的复读机器人             |
 | SendImageMessage.cpp | 发送图片示例                 |
+| VoiceMessage.cpp     | 发送语音消息示例              |
 | BotEvents.cpp        | 处理有关Bot相关的事件        |
 | GetFriendList.cpp    | 打印Bot的好友列表            |
 | GetGroupList.cpp     | 打印Bot的群组列表            |
@@ -35,6 +36,7 @@
 | RichMessage.cpp      | 发送 JSON、闪照等类型的消息  |
 | FetchEventsViaHTTP.cpp| 设置通过 HTTP 短轮询获取事件和消息 |
 | GroupMemberInfo.cpp  | 获取/设置群成员的群名片与群头衔 |
+| Command.cpp          | 指令系统相关的操作           |
 
 ## 如何使用
 
