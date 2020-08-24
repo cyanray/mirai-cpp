@@ -27,7 +27,7 @@ int main()
 
 	try
 	{
-		bot.RegisterCommand("hello", { "hi" }, "helloddd", "helllll");
+		bot.RegisterCommand("hello", { "hi","你好" }, "指令描述描述描述", "使用方法：/hello 你想说的话");
 		auto managers = bot.GetManagers();
 		for (auto manager : managers)
 		{
@@ -51,7 +51,8 @@ int main()
 			cout << endl;
 		});
 
-	bot.SendCommand("hello", {});
+	// 发送指令
+	bot.SendCommand("hello", { "arg1","arg2" });
 
 	bot.EventLoop();
 	return 0;
