@@ -1,9 +1,9 @@
-﻿#include "mirai_bot.hpp"
+﻿#include "mirai/mirai_bot.hpp"
 #include <iostream>
 #include <exception>
-#include "third-party/easywsclient.hpp"
+#include "mirai/third-party/easywsclient.hpp"
 #define _SSIZE_T_DEFINED
-#include "third-party/easywsclient.cpp"
+#include "mirai/third-party/easywsclient.cpp"
 
 using std::runtime_error;
 using std::stringstream;
@@ -189,7 +189,7 @@ namespace Cyan
 		};
 
 		auto res = http_client_.Post("/uploadImage", items);
-		
+
 		if (!res)
 			throw runtime_error("网络错误");
 		if (res->status != 200)
@@ -215,7 +215,7 @@ namespace Cyan
 		};
 
 		auto res = http_client_.Post("/uploadImage", items);
-		
+
 		if (!res)
 			throw runtime_error("网络错误");
 		if (res->status != 200)
@@ -241,7 +241,7 @@ namespace Cyan
 		};
 
 		auto res = http_client_.Post("/uploadImage", items);
-		
+
 		if (!res)
 			throw runtime_error("网络错误");
 		if (res->status != 200)
@@ -319,7 +319,7 @@ namespace Cyan
 
 	GroupMemberInfo MiraiBot::GetGroupMemberInfo(GID_t gid, QQ_t memberId)
 	{
-		
+
 		stringstream api_url;
 		api_url
 			<< "/memberInfo?sessionKey="
@@ -627,6 +627,66 @@ namespace Cyan
 		throw runtime_error(msg);
 	}
 
+	MiraiBot& MiraiBot::RegisterCommand(
+		const string& commandName, 
+		const vector<string> alias, 
+		const string& description, 
+		const string& helpMessage)
+	{
+		json data =
+		{
+			{ "authKey", authKey_ },
+			{ "name", commandName },
+			{ "alias", json(alias) },
+			{ "description", description },
+			{ "usage", helpMessage }
+		};
+		auto res = http_client_.Post("/command/register", data.dump(), "application/json;charset=UTF-8");
+		if (!res)
+			throw runtime_error("网络错误");
+		if (res->status != 200)
+			throw std::runtime_error("[mirai-http-api error]: " + res->body);
+
+		return *this;
+	}
+
+	MiraiBot& MiraiBot::SendCommand(const string& commandName, const vector<string> args)
+	{
+		json data =
+		{
+			{ "authKey", authKey_ },
+			{ "name", commandName },
+			{ "args", json(args) }
+		};
+		auto res = http_client_.Post("/command/send", data.dump(), "application/json;charset=UTF-8");
+		if (!res)
+			throw runtime_error("网络错误");
+		if (res->status != 200)
+			throw std::runtime_error("[mirai-http-api error]: " + res->body);
+		return *this;
+	}
+
+	vector<QQ_t> MiraiBot::GetManagers()
+	{
+		vector<QQ_t> result;
+		stringstream api_url;
+		api_url << "/managers?qq=" << GetBotQQ().ToInt64();
+		auto res = http_client_.Get(api_url.str().data());
+		if (!res)
+			throw runtime_error("网络错误");
+		if (res->status != 200)
+			throw std::runtime_error("[mirai-http-api error]: " + res->body);
+		json re_json = json::parse(res->body);
+		if (re_json.is_array())
+		{
+			for (const auto& qq : re_json)
+			{
+				result.emplace_back(qq.get<int64_t>());
+			}
+		}
+		return result;
+	}
+
 
 	MiraiBot& MiraiBot::SetCacheSize(int cacheSize)
 	{
@@ -793,47 +853,78 @@ namespace Cyan
 	void MiraiBot::FetchEventsWs()
 	{
 		using namespace easywsclient;
-		stringstream url;
-		url << "ws://" << host_ << ":" << port_ << "/all?sessionKey=" << sessionKey_;
-		std::shared_ptr<WebSocket> ws(WebSocket::from_url(url.str()));
-		if (!ws)
+		stringstream all_events_url;
+		all_events_url << "ws://" << host_ << ":" << port_ << "/all?sessionKey=" << sessionKey_;
+		std::shared_ptr<WebSocket> ws_events(WebSocket::from_url(all_events_url.str()));
+		if (!ws_events)
 			throw std::runtime_error("无法建立 WebSocket 连接!");
-		string event_json_str;
-		while (ws->getReadyState() != WebSocket::CLOSED && this->ws_enabled_)
-		{
 
-			ws->poll(20);
-			ws->dispatch([&](const std::string& message)
-				{
-					event_json_str = message;
-				});
-			// 这部分不能在lambda表达式中，否则异常无法被EventLoop捕捉
-			if (!event_json_str.empty())
+		stringstream command_url;
+		command_url << "ws://" << host_ << ":" << port_ << "/command?authKey=" << authKey_;
+		std::shared_ptr<WebSocket> ws_command(WebSocket::from_url(command_url.str()));
+		if (!ws_command)
+			throw std::runtime_error("无法建立 WebSocket 连接!");
+
+		while (true)
+		{
+			string event_json_str;
+			if (ws_events->getReadyState() != WebSocket::CLOSED && this->ws_enabled_)
 			{
-				json j = json::parse(event_json_str);
-				// code 不存在，说明没错误，处理事件/消息
-				if (j.find("code") == j.end())
-				{
-					ProcessEvents(j);
-					event_json_str.resize(0);
-					continue;
-				}
-				// code 存在，按照 code 进行错误处理
-				if (j["code"].get<int>() == 3 || j["code"].get<int>() == 4)
-				{
-					Release();
-					Auth(authKey_, qq_);
-					SessionConfigure(cacheSize_, ws_enabled_);
-					throw std::runtime_error("失去与mirai的连接，尝试重新验证...");
-				}
+				ws_events->poll(20);
+				ws_events->dispatch([&](const std::string& message)
+					{
+						event_json_str = message;
+					});
+				ProcessMessage(event_json_str);
+			}
+
+			if (ws_command->getReadyState() != WebSocket::CLOSED)
+			{
+				ws_command->poll(20);
+				ws_command->dispatch([&](const std::string& message)
+					{
+						event_json_str = message;
+					});
+				ProcessMessage(event_json_str);
+			}
+
+		}
+
+	}
+
+	void MiraiBot::ProcessMessage(std::string& event_json_str)
+	{
+
+		if (!event_json_str.empty())
+		{
+			json j = json::parse(event_json_str);
+			// code 不存在，说明没错误，处理事件/消息
+			if (j.find("code") == j.end())
+			{
+				ProcessEvents(j);
+			}
+			// code 存在，按照 code 进行错误处理
+			else if (j["code"].get<int>() == 3 || j["code"].get<int>() == 4)
+			{
+				Release();
+				Auth(authKey_, qq_);
+				SessionConfigure(cacheSize_, ws_enabled_);
+				throw std::runtime_error("失去与mirai的连接，尝试重新验证...");
 			}
 		}
 	}
 
 	void MiraiBot::ProcessEvents(const nlohmann::json& ele)
 	{
-		string event_name = ele["type"].get<string>();
-		MiraiEvent mirai_event = MiraiEventStr(event_name);
+		MiraiEvent mirai_event;
+		// 要么是事件要么是指令，不应该是别的
+		if (ele.find("type") != ele.end())
+		{
+			string event_name = ele["type"].get<string>();
+			mirai_event = MiraiEventStr(event_name);
+		}
+		else
+			mirai_event = MiraiEvent::Command;
 		// 寻找能处理事件的 Processor
 		auto range = processors_.equal_range(mirai_event);
 		for (auto it = range.first; it != range.second; ++it)

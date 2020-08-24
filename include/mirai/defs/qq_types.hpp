@@ -4,7 +4,7 @@
 
 #include <exception>
 #include "serializable.hpp"
-#include "exported.h"
+#include "mirai/exported.h"
 
 namespace Cyan
 {

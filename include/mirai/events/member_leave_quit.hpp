@@ -2,8 +2,8 @@
 #ifndef mirai_cpp_events_member_leave_quit_event_hpp_H_
 #define mirai_cpp_events_member_leave_quit_event_hpp_H_
 
-#include "third-party/nlohmann/json.hpp"
-#include "defs/group_member.hpp"
+#include "mirai/third-party/nlohmann/json.hpp"
+#include "mirai/defs/group_member.hpp"
 #include "event_interface.hpp"
 
 namespace Cyan

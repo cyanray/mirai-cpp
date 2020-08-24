@@ -1,9 +1,9 @@
 #include <exception>
 #include <algorithm>
-#include "mirai_bot.hpp"
-#include "defs/message_chain.hpp"
-#include "events/events.hpp"
-#include "third-party/httplib.h"
+#include "mirai/mirai_bot.hpp"
+#include "mirai/defs/message_chain.hpp"
+#include "mirai/events/events.hpp"
+#include "mirai/third-party/httplib.h"
 
 namespace Cyan
 {

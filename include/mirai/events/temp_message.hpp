@@ -2,11 +2,11 @@
 #ifndef mirai_cpp_events_temp_message_hpp_H_
 #define mirai_cpp_events_temp_message_hpp_H_
 
-#include "third-party/nlohmann/json.hpp"
-#include "defs/qq_types.hpp"
-#include "defs/message_chain.hpp"
-#include "defs/group_member.hpp"
-#include "exported.h"
+#include "mirai/third-party/nlohmann/json.hpp"
+#include "mirai/defs/qq_types.hpp"
+#include "mirai/defs/message_chain.hpp"
+#include "mirai/defs/group_member.hpp"
+#include "mirai/exported.h"
 #include "event_interface.hpp"
 
 namespace Cyan

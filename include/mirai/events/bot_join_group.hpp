@@ -2,9 +2,9 @@
 #ifndef mirai_cpp_events_bot_join_group_hpp_H_
 #define mirai_cpp_events_bot_join_group_hpp_H_
 
-#include "third-party/nlohmann/json.hpp"
+#include "mirai/third-party/nlohmann/json.hpp"
 #include "event_interface.hpp"
-#include "defs/group.hpp"
+#include "mirai/defs/group.hpp"
 
 namespace Cyan
 {

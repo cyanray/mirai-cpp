@@ -9,21 +9,21 @@
 #include <unordered_map>
 #include <memory>
 // third-party
-#include "third-party/ThreadPool.h"
-#include "third-party/nlohmann/json.hpp"
-#include "third-party/httplib.h"
+#include "mirai/third-party/ThreadPool.h"
+#include "mirai/third-party/nlohmann/json.hpp"
+#include "mirai/third-party/httplib.h"
 // mirai header files
-#include "exported.h"
-#include "defs/qq_types.hpp"
-#include "defs/message_chain.hpp"
-#include "defs/friend.hpp"
-#include "defs/group.hpp"
-#include "defs/group_member.hpp"
-#include "defs/group_member_info.hpp"
-#include "defs/group_config.hpp"
-#include "events/event_processer.hpp"
-#include "events/friend_message.hpp"
-#include "events/group_message.hpp"
+#include "mirai/exported.h"
+#include "mirai/defs/qq_types.hpp"
+#include "mirai/defs/message_chain.hpp"
+#include "mirai/defs/friend.hpp"
+#include "mirai/defs/group.hpp"
+#include "mirai/defs/group_member.hpp"
+#include "mirai/defs/group_member_info.hpp"
+#include "mirai/defs/group_config.hpp"
+#include "mirai/events/event_processer.hpp"
+#include "mirai/events/friend_message.hpp"
+#include "mirai/events/group_message.hpp"
 
 using std::string;
 using std::vector;
@@ -275,6 +275,34 @@ namespace Cyan
 		GroupMessage GetGroupMessageFromId(MessageId_t mid);
 
 		/**
+		 * @brief 注册指令
+		 * @param commandName 指令名称
+		 * @param alias 指令别名
+		 * @param description 指令描述
+		 * @param helpMessage 指令帮助，执行出错时显示
+		 * @return *this
+		*/
+		MiraiBot& RegisterCommand(
+			const string& commandName,
+			const vector<string> alias,
+			const string& description,
+			const string& helpMessage = "");
+
+		/**
+		 * @brief 发送指令
+		 * @param commandName 指令名称
+		 * @param args 参数
+		 * @return *this
+		*/
+		MiraiBot& SendCommand(const string& commandName, const vector<string> args);
+
+		/**
+		 * @brief 获得 Managers
+		 * @return Managers
+		*/
+		vector<QQ_t> GetManagers();
+
+		/**
 		 * \brief 监听事件
 		 * \tparam T 事件类型
 		 * \param ep 事件处理函数
@@ -341,6 +369,7 @@ namespace Cyan
 		bool SessionConfigure(int cacheSize, bool enableWebsocket);
 		unsigned int FetchEventsHttp(unsigned int count = 10);
 		void FetchEventsWs();
+		void ProcessMessage(std::string& event_json_str);
 		void ProcessEvents(const json& ele);
 		bool Release() noexcept;
 		static inline string ReadFile(const string& filename);
