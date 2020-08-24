@@ -27,9 +27,15 @@ int main()
 	bot.On<GroupMessage>(
 		[&](GroupMessage m)
 		{
-			MiraiVoice voice;
-			voice.Id = "BDD8FD5EAF989C4F4B7DB4D853A9509E.amr";
-			m.Reply(MessageChain().Voice(voice));
+			try
+			{
+				MiraiVoice voice = bot.UploadGroupVoice("D:\\5.amr");
+				m.Reply(MessageChain().Voice(voice));
+			}
+			catch (const std::exception& ex)
+			{
+				cout << ex.what() << endl;
+			}
 		});
 
 
