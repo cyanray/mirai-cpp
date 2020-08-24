@@ -28,6 +28,11 @@ int main()
 	try
 	{
 		bot.RegisterCommand("hello", { "hi" }, "helloddd", "helllll");
+		auto managers = bot.GetManagers();
+		for (auto manager : managers)
+		{
+			cout << "manager : " << manager << endl;
+		}
 	}
 	catch (const std::exception& ex)
 	{

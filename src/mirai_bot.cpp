@@ -650,6 +650,27 @@ namespace Cyan
 		return *this;
 	}
 
+	vector<QQ_t> MiraiBot::GetManagers()
+	{
+		vector<QQ_t> result;
+		stringstream api_url;
+		api_url << "/managers?qq=" << GetBotQQ().ToInt64();
+		auto res = http_client_.Get(api_url.str().data());
+		if (!res)
+			throw runtime_error("网络错误");
+		if (res->status != 200)
+			throw std::runtime_error("[mirai-http-api error]: " + res->body);
+		json re_json = json::parse(res->body);
+		if (re_json.is_array())
+		{
+			for (const auto& qq : re_json)
+			{
+				result.emplace_back(qq.get<int64_t>());
+			}
+		}
+		return result;
+	}
+
 
 	MiraiBot& MiraiBot::SetCacheSize(int cacheSize)
 	{
