@@ -49,6 +49,13 @@ int main()
 			for (const auto& arg : e.Args)
 				cout << arg << " ";
 			cout << endl;
+
+			// 检查指令的发送者是不是 Manager
+			if (e.SenderIsManager())
+			{
+				bot.SendMessage(e.GroupId, MessageChain().Plain("执行指令: ").Plain(e.CommandName));
+			}
+
 		});
 
 	// 发送指令
