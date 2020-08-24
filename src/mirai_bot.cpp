@@ -867,9 +867,9 @@ namespace Cyan
 
 		while (true)
 		{
-			string event_json_str;
 			if (ws_events->getReadyState() != WebSocket::CLOSED && this->ws_enabled_)
 			{
+				string event_json_str;
 				ws_events->poll(20);
 				ws_events->dispatch([&](const std::string& message)
 					{
@@ -880,6 +880,7 @@ namespace Cyan
 
 			if (ws_command->getReadyState() != WebSocket::CLOSED)
 			{
+				string event_json_str;
 				ws_command->poll(20);
 				ws_command->dispatch([&](const std::string& message)
 					{
