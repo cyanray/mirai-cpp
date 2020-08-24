@@ -155,6 +155,12 @@ namespace Cyan
 		 */
 		TempImage UploadTempImage(const string& fileName);
 		/**
+		 * @brief 上传可以发给群组的语音
+		 * @param filename 文件名(amr文件)
+		 * @return MiraiVoice
+		*/
+		MiraiVoice UploadGroupVoice(const string& filename);
+		/**
 		 * \brief 获得好友列表
 		 * \return vector<Friend_t>
 		 */
