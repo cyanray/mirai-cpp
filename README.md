@@ -54,6 +54,8 @@
 
 ![使用 VS 直接打开 mirai-cpp 文件夹](./doc/pic/vs_1.png)
 
+![勾上 MIRAI_CPP_BUILD_EXAMPLES](./doc/pic/vs_4.png)
+
 ![开始运行 examples](./doc/pic/vs_2.png)
 
 </details>
