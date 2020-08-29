@@ -1,12 +1,12 @@
 # mirai-cpp
 
-## 项目简介
+## 0x01 项目简介
 
 [mirai](https://github.com/mamoe/mirai) 是全开源 QQ 机器人 / QQ 协议支持库。
 
 本项目为 mirai-api-http 的 C++ 封装，方便使用 C++ 开发基于 mirai-api-http 插件。
 
-## 项目文档
+## 0x02 项目文档
 
 > 推荐浏览顺序：使用说明 --> examples --> mirai_bot.hpp 的注释
 
@@ -38,7 +38,7 @@
 | GroupMemberInfo.cpp  | 获取/设置群成员的群名片与群头衔 |
 | Command.cpp          | 指令系统相关的操作           |
 
-## 如何使用
+## 0x03 如何使用
 
 ### 1. 快速尝试 (运行 examples、参与开发)
 
@@ -111,7 +111,7 @@
 然后就可以使用 `./vcpkg install mirai-cpp:x86-windows mirai-cpp:x64-windows` 安装 mirai-cpp。
 
 
-## 项目依赖
+## 0x04 项目依赖
 
 > 本项目所有依赖都为 Header-Only 库，已经内置到本项目的 mirai-third-party 文件夹中。
 
@@ -123,11 +123,13 @@
 
 4. [**dhbaird/EasyWSClient**](https://github.com/dhbaird/easywsclient) A short and sweet WebSocket client for C++.
 
-## 参与开发
+## 0x05 参与开发
 
 mirai-cpp 目前还有许多不足，欢迎提出 issues 或 pull requests。
 
-<!-- ## 以下项目正在使用 mirai-cpp
+## 0x06 以下项目正在使用 mirai-cpp
 
-> 如果你愿意分享你开发的程序，可以通过提出 issues 或 pull requests 的方式列于下方
--->
+> 如果你愿意分享你开发的程序，欢迎提出 issues 或 pull requests 在下方分享你的程序
+
+1. [MocliaMusic](https://github.com/Moclia-Developer-Team/MocliaMusic) : 基于Mirai-Api-Http和Mirai-cpp的点歌项目
+
