@@ -33,7 +33,7 @@ namespace Cyan
 			if (json["type"].is_null() || json["type"].get<string>() != this->GetType())
 				throw std::runtime_error("给定的json不正确");
 			messageId_ = json["id"].get<int64_t>();
-			std::cout << json.dump() << std::endl;
+			//std::cout << json.dump() << std::endl;
 			return true;
 		}
 		virtual json ToJson() const override
