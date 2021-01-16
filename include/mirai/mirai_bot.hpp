@@ -66,16 +66,6 @@ namespace Cyan
 
 		/**
 		 * \brief 获得 mirai-cpp 适配的 API 版本
-		 * \return 用数字表示的版本号 (10605)
-		 */
-		int GetRequiredApiVersionInt() const
-		{
-			// mirai-api-http v1.6.5
-			return 10804;
-		}
-
-		/**
-		 * \brief 获得 mirai-cpp 适配的 API 版本
 		 * \return 用字符串表示的版本号(1.6.5)
 		 */
 		string GetRequiredApiVersion() const
