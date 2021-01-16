@@ -51,7 +51,7 @@ namespace Cyan
 		return &(this->http_client_);
 	}
 
-	string MiraiBot::GetApiVersion()
+	string MiraiBot::GetMiraiApiHttpVersion()
 	{
 
 		auto res = http_client_.Get("/about");

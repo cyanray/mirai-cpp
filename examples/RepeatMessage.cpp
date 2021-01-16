@@ -19,15 +19,15 @@ int main()
 	// 检查一下版本
 	try
 	{
-		// 获取 mirai-api-http 插件地版本
-		string current_version = bot.GetApiVersion();
-		// 获取 mirai-cpp 适配的版本
-		string required_version = bot.GetRequiredApiVersion();
-		cout << "! 需要的 API 版本: " << required_version
-			<< "; 当前 API 版本: " << current_version << "; " << endl;
-		if (current_version != required_version)
+		// 获取 mirai-api-http 插件的版本
+		string mah_version = bot.GetMiraiApiHttpVersion();
+		// 获取 mirai-cpp 的版本
+		string mc_version = bot.GetMiraiCppVersion();
+		cout << "! mirai-api-http 的版本: " << mah_version
+			<< "; 当mirai-cpp 的版本: " << mc_version << "; " << endl;
+		if (mah_version != mc_version)
 		{
-			cout << "! 警告: 你的 mirai-api-http 插件的版本与 mirai-cpp 适配的版本不同，可能存在潜在的异常。" << endl;
+			cout << "! 警告: 你的 mirai-api-http 插件的版本与 mirai-cpp 的版本不同，可能存在兼容性问题。" << endl;
 		}
 	}
 	catch (const std::exception& ex)
