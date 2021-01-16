@@ -1,10 +1,16 @@
 # mirai-cpp
 
+![Build](https://github.com/cyanray/mirai-cpp/workflows/Build/badge.svg)
+
 ## 0x01 项目简介
 
-[mirai](https://github.com/mamoe/mirai) 是全开源 QQ 机器人 / QQ 协议支持库。
+[mirai](https://github.com/mamoe/mirai) 是全开源 QQ 机器人 / QQ 协议支持库。(使用Kotlin编写)
 
-本项目为 mirai-api-http 的 C++ 封装，方便使用 C++ 开发基于 mirai-api-http 插件。
+[mirai-api-http](https://github.com/project-mirai/mirai-api-http) 提供一系列 HTTP API 以便其他语言使用 mirai。
+
+本项目为 mirai-api-http 的 C++ 封装，方便使用 C++ 开发基于 mirai-api-http 的插件。
+
+在使用 mirai-cpp 和基于 mirai-cpp 的插件之前，你需要配置好 [mirai-console](https://github.com/mamoe/mirai-console) 并且安装 [mirai-api-http](https://github.com/project-mirai/mirai-api-http) 插件。
 
 ## 0x02 项目文档
 
