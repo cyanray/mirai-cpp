@@ -65,10 +65,10 @@ namespace Cyan
 		~MiraiBot();
 
 		/**
-		 * \brief 获得 mirai-cpp 适配的 API 版本
-		 * \return 用字符串表示的版本号(1.6.5)
+		 * \brief 获得 mirai-cpp 的版本号
+		 * \return 用字符串表示的版本号，如："1.6.5"
 		 */
-		string GetRequiredApiVersion() const
+		string GetMiraiCppVersion() const
 		{
 			// mirai-api-http v1.6.5
 			return "1.8.4";
@@ -76,9 +76,9 @@ namespace Cyan
 
 		/**
 		 * \brief 获得 mirai-api-http 插件的版本
-		 * \return 用字符串表示的版本号(1.6.5)
+		 * \return 用字符串表示的版本号，如："1.6.5"
 		 */
-		string GetApiVersion();
+		string GetMiraiApiHttpVersion();
 		/**
 		 * \brief 获得验证后的 SessionKey
 		 * \return SessionKey
