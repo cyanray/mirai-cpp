@@ -359,6 +359,10 @@ namespace Cyan
 		if (res->status != 200)
 			throw std::runtime_error("[mirai-api-http error]: " + res->body);
 		json re_json = json::parse(res->body);
+		if (re_json.find("code") != re_json.end())
+		{
+			throw std::runtime_error(re_json["msg"]);
+		}
 		GroupMemberInfo result;
 		result.Set(re_json);
 		return result;
