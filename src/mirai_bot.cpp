@@ -1,9 +1,8 @@
 ﻿#include "mirai/mirai_bot.hpp"
 #include <iostream>
 #include <exception>
-#include "mirai/third-party/easywsclient.hpp"
-#define _SSIZE_T_DEFINED
-#include "mirai/third-party/easywsclient.cpp"
+#include "mirai/third-party/WebSocketClient.h"
+#include "mirai/third-party/WebSocketClient.cpp"
 
 using std::runtime_error;
 using std::stringstream;
@@ -881,43 +880,43 @@ namespace Cyan
 
 	void MiraiBot::FetchEventsWs()
 	{
-		using namespace easywsclient;
+		using namespace cyanray;
 		stringstream all_events_url;
 		all_events_url << "ws://" << host_ << ":" << port_ << "/all?sessionKey=" << sessionKey_;
-		std::shared_ptr<WebSocket> ws_events(WebSocket::from_url(all_events_url.str()));
-		if (!ws_events)
-			throw std::runtime_error("无法建立 WebSocket 连接!");
+		WebSocketClient events_client;
+		try
+		{
+			events_client.Connect(all_events_url.str());
+			events_client.OnTextReceived([this](WebSocketClient& client, string text)
+				{
+					ProcessMessage(text);
+				});
+		}
+		catch (const std::exception& ex)
+		{
+			// TODO: exception
+		}
 
 		stringstream command_url;
 		command_url << "ws://" << host_ << ":" << port_ << "/command?authKey=" << authKey_;
-		std::shared_ptr<WebSocket> ws_command(WebSocket::from_url(command_url.str()));
-		if (!ws_command)
-			throw std::runtime_error("无法建立 WebSocket 连接!");
-
+		WebSocketClient command_client;
+		try
+		{
+			command_client.Connect(command_url.str());
+			command_client.OnTextReceived([this](WebSocketClient& client, string text)
+				{
+					ProcessMessage(text);
+				});
+		}
+		catch (const std::exception& ex)
+		{
+			// TODO: exception
+		}
+		
+		// 临时兼容措施: 新的WebSocket不会阻塞
 		while (true)
 		{
-			if (ws_events->getReadyState() != WebSocket::CLOSED && this->ws_enabled_)
-			{
-				string event_json_str;
-				ws_events->poll(20);
-				ws_events->dispatch([&](const std::string& message)
-					{
-						event_json_str = message;
-					});
-				ProcessMessage(event_json_str);
-			}
-
-			if (ws_command->getReadyState() != WebSocket::CLOSED)
-			{
-				string event_json_str;
-				ws_command->poll(20);
-				ws_command->dispatch([&](const std::string& message)
-					{
-						event_json_str = message;
-					});
-				ProcessMessage(event_json_str);
-			}
-
+			MiraiBot::SleepMilliseconds(50);
 		}
 
 	}
