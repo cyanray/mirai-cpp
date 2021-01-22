@@ -395,7 +395,6 @@ namespace Cyan
 		template <typename T>
 		void StoreCallbackInvoker(CallbackInvoker);
 
-		static inline string ReadFile(const string& filename);
 		// 私有成员变量
 		string host_;
 		int port_;

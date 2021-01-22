@@ -7,6 +7,23 @@
 using std::runtime_error;
 using std::stringstream;
 
+namespace
+{
+	// 因为 httplib 使用 string 来保存文件内容，这里返回值也跟着适配
+	string ReadFile(const string& filename)
+	{
+		std::ifstream ifs(filename, std::ifstream::binary);
+		if (!ifs.is_open()) throw std::runtime_error("打开文件失败，请确认路径是否正确并检查文件是否存在");
+		std::filebuf* pbuf = ifs.rdbuf();
+		std::size_t size = pbuf->pubseekoff(0, ifs.end, ifs.in);
+		pbuf->pubseekpos(0, ifs.in);
+		string result(size, '\0');
+		pbuf->sgetn(&result[0], size);
+		ifs.close();
+		return result;
+	}
+}
+
 namespace Cyan
 {
 	MiraiBot::MiraiBot() :
@@ -982,20 +999,6 @@ namespace Cyan
 			return false;
 		}
 
-	}
-
-	// 因为 httplib 使用 string 来保存文件内容，这里返回值也跟着适配
-	string MiraiBot::ReadFile(const string& filename)
-	{
-		std::ifstream ifs(filename, std::ifstream::binary);
-		if (!ifs.is_open()) throw std::runtime_error("打开文件失败，请确认路径是否正确并检查文件是否存在");
-		std::filebuf* pbuf = ifs.rdbuf();
-		std::size_t size = pbuf->pubseekoff(0, ifs.end, ifs.in);
-		pbuf->pubseekpos(0, ifs.in);
-		string result(size, '\0');
-		pbuf->sgetn(&result[0], size);
-		ifs.close();
-		return result;
 	}
 
 } // namespace Cyan
