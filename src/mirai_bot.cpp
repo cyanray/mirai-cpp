@@ -1,6 +1,9 @@
-﻿#include "mirai/mirai_bot.hpp"
-#include <iostream>
+﻿#include <iostream>
+#include <queue>
+#include <mutex>
+#include <condition_variable>
 #include <exception>
+#include "mirai/mirai_bot.hpp"
 #include "mirai/third-party/WebSocketClient.h"
 #include "mirai/third-party/WebSocketClient.cpp"
 
@@ -898,15 +901,22 @@ namespace Cyan
 	void MiraiBot::FetchEventsWs()
 	{
 		using namespace cyanray;
+
+		std::queue<string> event_queue;
+		mutex mutex_event_queue;
+		condition_variable cv;
+
 		stringstream all_events_url;
 		all_events_url << "ws://" << host_ << ":" << port_ << "/all?sessionKey=" << sessionKey_;
 		WebSocketClient events_client;
 		try
 		{
 			events_client.Connect(all_events_url.str());
-			events_client.OnTextReceived([this](WebSocketClient& client, string text)
+			events_client.OnTextReceived([&](WebSocketClient& client, string text)
 				{
-					ProcessMessage(text);
+					lock_guard<mutex> lock(mutex_event_queue);
+					event_queue.emplace(text);
+					cv.notify_one();
 				});
 		}
 		catch (const std::exception& ex)
@@ -920,20 +930,28 @@ namespace Cyan
 		try
 		{
 			command_client.Connect(command_url.str());
-			command_client.OnTextReceived([this](WebSocketClient& client, string text)
+			command_client.OnTextReceived([&](WebSocketClient& client, string text)
 				{
-					ProcessMessage(text);
+					lock_guard<mutex> lock(mutex_event_queue);
+					event_queue.emplace(text);
+					cv.notify_one();
 				});
 		}
 		catch (const std::exception& ex)
 		{
 			// TODO: exception
 		}
-		
-		// 临时兼容措施: 新的WebSocket不会阻塞
+
+		// 循环处理事件队列(WebSocket库不可执行耗时操作，因此在此线程处理事件)
 		while (true)
 		{
-			MiraiBot::SleepMilliseconds(50);
+			unique_lock<mutex> lock(mutex_event_queue);
+			cv.wait(lock, [&]() {return !event_queue.empty(); });
+			string event_text = event_queue.front();
+			event_queue.pop();
+			lock.unlock();
+			ProcessMessage(event_text);
+			std::this_thread::yield();
 		}
 
 	}
