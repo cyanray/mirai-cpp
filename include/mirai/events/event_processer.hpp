@@ -9,12 +9,11 @@
 namespace Cyan
 {
 	template<typename T>
-	using EventProcessor = std::function<void(T)>;
+	using EventCallback = std::function<void(T)>;
 
 	typedef std::shared_ptr<EventBase> WeakEvent;
-	//using WeakEvent = std::function<void(Serializable*)>;
 
-
+	typedef std::function<WeakEvent(WeakEvent)> CallbackInvoker;
 }
 
 
