@@ -25,6 +25,7 @@
 #include "mirai/events/friend_message.hpp"
 #include "mirai/events/group_message.hpp"
 #include "mirai/events/message_event.hpp"
+#include <mirai/events/lost_connection.hpp>
 
 using std::string;
 using std::vector;
@@ -369,6 +370,7 @@ namespace Cyan
 		void ProcessMessage(std::string& event_json_str);
 		void ProcessEvents(const json& ele);
 		bool Release() noexcept;
+		EventCallback<LostConnection> LostConnectionCallback;
 
 		template <typename T>
 		CallbackInvoker GetCallbackInvoker(const EventCallback<T>& ep)
@@ -423,10 +425,17 @@ namespace Cyan
 	}
 
 	template <typename T>
-	MiraiBot& MiraiBot::OnEventReceived(const EventCallback<T>& ep)
+	inline MiraiBot& MiraiBot::OnEventReceived(const EventCallback<T>& ep)
 	{
 		auto func = GetCallbackInvoker<T>(ep);
 		StoreCallbackInvoker<T>(func);
+		return *this;
+	}
+
+	template<>
+	inline MiraiBot& MiraiBot::OnEventReceived<LostConnection>(const EventCallback<LostConnection>& cb)
+	{
+		LostConnectionCallback = cb;
 		return *this;
 	}
 
