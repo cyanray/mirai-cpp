@@ -206,6 +206,10 @@ namespace cyanray
 	
 	WebSocketClient::~WebSocketClient()
 	{
+		if (PrivateMembers->recvLoop.joinable())
+		{
+			PrivateMembers->recvLoop.join();
+		}
 		delete PrivateMembers;
 #if defined(_WIN32)
 		WSACleanup();
@@ -259,7 +263,6 @@ namespace cyanray
 
 		status = Status::Open;
 		PrivateMembers->recvLoop = std::thread([this]() {RecvLoop(); });
-		PrivateMembers->recvLoop.detach();
 	}
 
 	void WebSocketClient::Shutdown()
