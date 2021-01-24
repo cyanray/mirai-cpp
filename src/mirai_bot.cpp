@@ -764,13 +764,12 @@ namespace Cyan
 		SessionConfigure(cacheSize_, ws_enabled_);
 		while (true)
 		{
-			unsigned count = 0;
 			try
 			{
 				if (ws_enabled_)
 					FetchEventsWs();
 				else
-					count = FetchEventsHttp(count_per_loop);
+					FetchEventsHttp(count_per_loop);
 			}
 			catch (const std::exception& ex)
 			{
@@ -783,11 +782,7 @@ namespace Cyan
 					errLogger(ex.what());
 				}
 			}
-
-			if (count < count_per_loop)
-			{
-				SleepMilliseconds(time_interval);
-			}
+			SleepMilliseconds(time_interval);
 		}
 
 	}
@@ -883,7 +878,7 @@ namespace Cyan
 			{
 				Release();
 				Auth(authKey_, qq_);
-				throw std::runtime_error("失去与mirai的连接，尝试重新验证...");
+				throw std::runtime_error("失去与mirai的连接，已重新连接。");
 			}
 			string msg = re_json["msg"].get<string>();
 			throw runtime_error(msg);
