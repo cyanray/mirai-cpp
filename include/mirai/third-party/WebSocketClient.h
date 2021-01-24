@@ -17,7 +17,7 @@ namespace cyanray
 
 		enum class Status
 		{
-			Open, Closed
+			Open, Closing, Closed
 		};
 
 		WebSocketClient();

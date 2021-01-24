@@ -206,10 +206,6 @@ namespace cyanray
 	
 	WebSocketClient::~WebSocketClient()
 	{
-		if (PrivateMembers->recvLoop.joinable())
-		{
-			PrivateMembers->recvLoop.join();
-		}
 		delete PrivateMembers;
 #if defined(_WIN32)
 		WSACleanup();
@@ -263,6 +259,7 @@ namespace cyanray
 
 		status = Status::Open;
 		PrivateMembers->recvLoop = std::thread([this]() {RecvLoop(); });
+		PrivateMembers->recvLoop.detach();
 	}
 
 	void WebSocketClient::Shutdown()
@@ -328,7 +325,7 @@ namespace cyanray
 	void WebSocketClient::Close()
 	{
 		if (status == Status::Closed) return;
-		status = Status::Closed;
+		status = Status::Closing;
 		PrivateMembers->Send(WebSocketOpcode::Close);
 	}
 
@@ -368,10 +365,14 @@ namespace cyanray
 				}
 				else
 				{
-					this->Shutdown();
-					if (LostConnectionCallback != nullptr)
+					// If close socket actively(shutdown), should not call the callback function.
+					if (status == Status::Open)
 					{
-						LostConnectionCallback(*this, 1006);
+						this->Shutdown();
+						if (LostConnectionCallback != nullptr)
+						{
+							LostConnectionCallback(*this, 1006);
+						}
 					}
 					break;
 				}
@@ -434,14 +435,15 @@ namespace cyanray
 						}
 						else if (info.Opcode == WebSocketOpcode::Close)
 						{
-							if (status == Status::Closed)
+							if (status == Status::Closing)
 							{
-								closesocket(PrivateMembers->wsSocket);
+								Shutdown();
 							}
 							else if (status == Status::Open)
 							{
 								// close frame from server, response a close frame and close socket.
 								Close();
+								Shutdown();
 								if (LostConnectionCallback != nullptr)
 								{
 									LostConnectionCallback(*this, 1000);
