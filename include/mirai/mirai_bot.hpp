@@ -367,7 +367,7 @@ namespace Cyan
 		bool SessionConfigure(int cacheSize, bool enableWebsocket);
 		unsigned int FetchEventsHttp(unsigned int count = 10);
 		void FetchEventsWs();
-		void ProcessMessage(std::string& event_json_str);
+		void ProcessEvent(std::string& event_json_str);
 		void HandlingSingleEvent(const json& ele);
 		bool Release() noexcept;
 		EventCallback<LostConnection> LostConnectionCallback;

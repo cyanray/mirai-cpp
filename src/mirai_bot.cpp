@@ -957,13 +957,13 @@ namespace Cyan
 			string event_text = event_queue.front();
 			event_queue.pop();
 			lock.unlock();
-			ProcessMessage(event_text);
+			ProcessEvent(event_text);
 			std::this_thread::yield();
 		}
 
 	}
 
-	void MiraiBot::ProcessMessage(std::string& event_json_str)
+	void MiraiBot::ProcessEvent(std::string& event_json_str)
 	{
 
 		if (!event_json_str.empty())
