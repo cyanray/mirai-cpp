@@ -1019,7 +1019,7 @@ namespace Cyan
 		{
 			return SessionRelease();
 		}
-		catch (const std::exception&)
+		catch (...)
 		{
 			return false;
 		}
