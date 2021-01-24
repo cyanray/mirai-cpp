@@ -892,7 +892,7 @@ namespace Cyan
 		int received_count = 0;
 		for (const auto& ele : re_json["data"])
 		{
-			ProcessEvents(ele);
+			HandlingSingleEvent(ele);
 			received_count++;
 		}
 		return received_count;
@@ -909,44 +909,51 @@ namespace Cyan
 		stringstream all_events_url;
 		all_events_url << "ws://" << host_ << ":" << port_ << "/all?sessionKey=" << sessionKey_;
 		WebSocketClient events_client;
-		try
-		{
-			events_client.Connect(all_events_url.str());
-			events_client.OnTextReceived([&](WebSocketClient& client, string text)
-				{
-					lock_guard<mutex> lock(mutex_event_queue);
-					event_queue.emplace(text);
-					cv.notify_one();
-				});
-		}
-		catch (const std::exception& ex)
-		{
-			// TODO: exception
-		}
+
+		events_client.Connect(all_events_url.str());
+		events_client.OnTextReceived([&](WebSocketClient& client, string text)
+			{
+				lock_guard<mutex> lock(mutex_event_queue);
+				event_queue.emplace(text);
+				cv.notify_one();
+			});
+		events_client.OnLostConnection([&](WebSocketClient& client, int code)
+			{
+				cv.notify_one();
+			});
+
 
 		stringstream command_url;
 		command_url << "ws://" << host_ << ":" << port_ << "/command?authKey=" << authKey_;
 		WebSocketClient command_client;
-		try
-		{
-			command_client.Connect(command_url.str());
-			command_client.OnTextReceived([&](WebSocketClient& client, string text)
-				{
-					lock_guard<mutex> lock(mutex_event_queue);
-					event_queue.emplace(text);
-					cv.notify_one();
-				});
-		}
-		catch (const std::exception& ex)
-		{
-			// TODO: exception
-		}
+
+		command_client.Connect(command_url.str());
+		command_client.OnTextReceived([&](WebSocketClient& client, string text)
+			{
+				lock_guard<mutex> lock(mutex_event_queue);
+				event_queue.emplace(text);
+				cv.notify_one();
+			});
+		command_client.OnLostConnection([&](WebSocketClient& client, int code)
+			{
+				cv.notify_one();
+			});
+
 
 		// 循环处理事件队列(WebSocket库不可执行耗时操作，因此在此线程处理事件)
 		while (true)
 		{
+			if (event_queue.empty() &&
+				(events_client.GetStatus() != WebSocketClient::Status::Open ||
+					command_client.GetStatus() != WebSocketClient::Status::Open))
+			{
+				events_client.Shutdown();
+				command_client.Shutdown();
+				break;
+			}
 			unique_lock<mutex> lock(mutex_event_queue);
-			cv.wait(lock, [&]() {return !event_queue.empty(); });
+			cv.wait(lock);
+			if (event_queue.empty()) continue;
 			string event_text = event_queue.front();
 			event_queue.pop();
 			lock.unlock();
@@ -965,7 +972,7 @@ namespace Cyan
 			// code 不存在，说明没错误，处理事件/消息
 			if (j.find("code") == j.end())
 			{
-				ProcessEvents(j);
+				HandlingSingleEvent(j);
 			}
 			// code 存在，按照 code 进行错误处理
 			else if (j["code"].get<int>() == 3 || j["code"].get<int>() == 4)
@@ -973,12 +980,12 @@ namespace Cyan
 				Release();
 				Auth(authKey_, qq_);
 				SessionConfigure(cacheSize_, ws_enabled_);
-				throw std::runtime_error("失去与mirai的连接，尝试重新验证...");
+				throw std::runtime_error("失去与mirai的连接，已重新连接。");
 			}
 		}
 	}
 
-	void MiraiBot::ProcessEvents(const nlohmann::json& ele)
+	void MiraiBot::HandlingSingleEvent(const nlohmann::json& ele)
 	{
 		MiraiEvent mirai_event;
 		// 要么是事件要么是指令，不应该是别的
