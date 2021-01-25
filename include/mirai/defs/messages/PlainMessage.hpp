@@ -10,6 +10,8 @@ namespace Cyan
 	{
 	public:
 		PlainMessage() : text_() {}
+		template<int N>
+		PlainMessage(const char(&text)[N] ) : text_(text, N) {}
 		PlainMessage(const string& text) : text_(text) {}
 		virtual const string& GetType() const override
 		{
