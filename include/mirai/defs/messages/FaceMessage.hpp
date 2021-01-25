@@ -1,7 +1,7 @@
 #pragma once
 #ifndef mirai_cpp_defs_messages_face_message_hpp_H_
 #define mirai_cpp_defs_messages_face_message_hpp_H_
-
+#include <utility>
 #include "mirai/defs/message_interface.hpp"
 
 namespace Cyan
@@ -11,6 +11,15 @@ namespace Cyan
 	public:
 		FaceMessage() : faceId_(0), name_() {}
 		FaceMessage(const int& id) : faceId_(id), name_() {}
+		FaceMessage(const string& name) : faceId_(0), name_(name) {}
+		template<int N>
+		FaceMessage(const char(&name)[N]) : faceId_(0), name_(name,N) {}
+		FaceMessage(const FaceMessage& m) :faceId_(m.faceId_), name_(m.name_) {}
+		FaceMessage(FaceMessage&& m) noexcept
+		{
+			std::swap(this->faceId_,m.faceId_);
+			std::swap(this->name_, m.name_);
+		}
 		virtual const string& GetType() const override
 		{
 			return type_;
