@@ -138,9 +138,7 @@ namespace Cyan
 
 		MessageChain& Face(const string& name)
 		{
-			auto face_msg = FaceMessage();
-			face_msg.Name(name);
-			return this->Add(face_msg);
+			return this->Add<FaceMessage>(name);
 		}
 
 		MessageChain& Plain(const string& plainText)
