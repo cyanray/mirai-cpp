@@ -168,7 +168,7 @@ TEST(MessageChain_Test, XmlMessage) {
     MessageChain mc;
     mc.Add(XmlMessage("<xml></xml>"));
     auto x = mc.GetFirst<XmlMessage>();
-    ASSERT_TRUE(x.Xml() == "<xml></xml>");
+    ASSERT_STREQ("<xml></xml>", x.Xml().c_str());
 }
 
 TEST(MessageChain_Test, AppMessage) {

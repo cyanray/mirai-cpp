@@ -77,7 +77,7 @@ namespace Cyan
 		template<class T>
 		MessageChain& Add(T&& m)
 		{
-			using real_type = std::remove_const<std::remove_reference<T>::type>::type;
+			using real_type = typename std::remove_const<typename std::remove_reference<T>::type >::type;
 			static_assert(std::is_base_of<IMessage, real_type>::value, "只能接受 IMessage 的派生类");
 			std::shared_ptr<IMessage> m_ptr(new real_type(std::forward<T>(m)));
 			messages_.emplace_back(std::move(m_ptr));
