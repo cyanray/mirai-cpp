@@ -11,7 +11,7 @@ TEST(MessageChain_Test, Set_Plain) {
     };
     mc.Set(j);
     string text = mc.ToJson()[0]["text"];
-    ASSERT_TRUE(text == "textsssss");
+    ASSERT_STREQ("textsssss", text.c_str());
 }
 
 TEST(MessageChain_Test, Add_and_Get) {
@@ -19,7 +19,7 @@ TEST(MessageChain_Test, Add_and_Get) {
     MessageChain mc;
     mc.Add(PlainMessage("Hello"));
     auto m = mc.GetFirst<PlainMessage>();
-    ASSERT_TRUE(m.Text() == "Hello");
+    ASSERT_STREQ("Hello", m.Text().c_str());
 }
 
 TEST(MessageChain_Test, Add_and_Get2) {
@@ -27,7 +27,7 @@ TEST(MessageChain_Test, Add_and_Get2) {
     MessageChain mc;
     mc.Add<PlainMessage>("Hello");
     auto m = mc.GetFirst<PlainMessage>();
-    ASSERT_TRUE(m.Text() == "Hello");
+    ASSERT_STREQ("Hello", m.Text().c_str());
 }
 
 TEST(MessageChain_Test, GetAll) {
@@ -37,8 +37,8 @@ TEST(MessageChain_Test, GetAll) {
     mc.Add(PlainMessage("Hi"));
     auto m = mc.GetAll<PlainMessage>();
     ASSERT_TRUE(m.size() == 2);
-    ASSERT_TRUE(m[0].Text() == "Hello");
-    ASSERT_TRUE(m[1].Text() == "Hi");
+    ASSERT_STREQ("Hello", m[0].Text().c_str());
+    ASSERT_STREQ("Hi", m[1].Text().c_str());
 }
 
 TEST(MessageChain_Test, Count) {
@@ -56,7 +56,7 @@ TEST(MessageChain_Test, get_at) {
     mc.Add(PlainMessage("Hi"));
     ASSERT_TRUE(mc[0]->GetType() == "Plain");
     auto mptr = std::dynamic_pointer_cast<PlainMessage>(mc[1]);
-    ASSERT_TRUE(mptr->Text() == "Hi");
+    ASSERT_STREQ("Hi", mptr->Text().c_str());
 }
 
 TEST(MessageChain_Test, Clear) {
@@ -77,7 +77,7 @@ TEST(MessageChain_Test, Remove) {
     mc.Remove(PlainMessage("Hello"));
     ASSERT_TRUE(mc.Count() == 1);
     auto mptr = std::dynamic_pointer_cast<PlainMessage>(mc[0]);
-    ASSERT_TRUE(mptr->Text() == "Hi");
+    ASSERT_STREQ("Hi", mptr->Text().c_str());
 }
 
 TEST(MessageChain_Test, GetPlainText) {
@@ -85,7 +85,7 @@ TEST(MessageChain_Test, GetPlainText) {
     MessageChain mc;
     mc.Plain("Number:").Plain(12345);
     string text = mc.GetPlainText();
-    ASSERT_TRUE(text == "Number:12345");
+    ASSERT_STREQ("Number:12345", text.c_str());
 }
 
 TEST(MessageChain_Test, ImageMessage) {
@@ -164,6 +164,19 @@ TEST(MessageChain_Test, PokeMessage) {
     ASSERT_TRUE(x.Poke() == PokeType::Poke);
     x.Poke(PokeType::SixSixSix);
     ASSERT_TRUE(x.Name() == "SixSixSix");
+}
+
+TEST(MessageChain_Test, RemoveAt) {
+    using namespace Cyan;
+    MessageChain mc;
+    mc.Add(PlainMessage("Hello"));
+    mc.Add(PlainMessage("Hello"));
+    mc.Add(PlainMessage("Hi"));
+    mc.RemoveAt(0);
+    mc.RemoveAt(1);
+    ASSERT_TRUE(mc.Count() == 1);
+    auto mptr = std::dynamic_pointer_cast<PlainMessage>(mc[0]);
+    ASSERT_STREQ("Hello", mptr->Text().c_str());
 }
 
 

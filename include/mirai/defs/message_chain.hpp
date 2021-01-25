@@ -103,6 +103,8 @@ namespace Cyan
 				}), messages_.end());
 		}
 
+		void RemoveAt(int index);
+
 		size_t Count() const
 		{
 			return messages_.size();

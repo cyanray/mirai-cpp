@@ -91,6 +91,11 @@ namespace Cyan
 		return messages_[i];
 	}
 
+	void MessageChain::RemoveAt(int index)
+	{
+		messages_.erase(messages_.begin() + index);
+	}
+
 	string MessageChain::GetPlainText() const
 	{
 		using std::stringstream;
