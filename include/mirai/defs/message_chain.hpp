@@ -75,11 +75,12 @@ namespace Cyan
 		}
 
 		template<class T>
-		MessageChain& Add(const T& m)
+		MessageChain& Add(T&& m)
 		{
-			static_assert(std::is_base_of<IMessage, T>::value, "只能接受 IMessage 的派生类");
-			std::shared_ptr<IMessage> m_ptr(new T(m));
-			messages_.push_back(m_ptr);
+			using real_type = std::remove_const<std::remove_reference<T>::type>::type;
+			static_assert(std::is_base_of<IMessage, real_type>::value, "只能接受 IMessage 的派生类");
+			std::shared_ptr<IMessage> m_ptr(new real_type(std::forward<T>(m)));
+			messages_.emplace_back(std::move(m_ptr));
 			return *this;
 		}
 
@@ -88,7 +89,7 @@ namespace Cyan
 		{
 			static_assert(std::is_base_of<IMessage, T>::value, "只能接受 IMessage 的派生类");
 			std::shared_ptr<IMessage> m_ptr(new T(args...));
-			messages_.push_back(m_ptr);
+			messages_.emplace_back(std::move(m_ptr));
 			return *this;
 		}
 
