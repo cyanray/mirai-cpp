@@ -1,4 +1,5 @@
 #include <mirai.h>
+#include <vector>
 #include <gtest/gtest.h>
 
 TEST(MessageChain_Test, Set_Plain) {
@@ -209,6 +210,23 @@ TEST(MessageChain_Test, RemoveAt) {
     auto mptr = std::dynamic_pointer_cast<PlainMessage>(mc[0]);
     ASSERT_STREQ("Hello", mptr->Text().c_str());
 }
+
+TEST(MessageChain_Test, Iterator) {
+    using namespace Cyan;
+    const vector<string> test_data = { "Well", "Hello" , "Hi" };
+    MessageChain mc;
+    for (const string& str : test_data)
+    {
+        mc.Add<PlainMessage>(str);
+    }
+    int i = 0;
+    for (const auto& m : mc)
+    {
+        auto mptr = std::dynamic_pointer_cast<PlainMessage>(m);
+        ASSERT_STREQ(test_data[i++].c_str(), mptr->Text().c_str());
+    }
+}
+
 
 
 TEST(ABC, TEST2) {

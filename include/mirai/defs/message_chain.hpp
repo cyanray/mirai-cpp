@@ -31,6 +31,8 @@ namespace Cyan
 	class EXPORTED MessageChain : public ISerializable
 	{
 	public:
+		typedef vector<std::shared_ptr<IMessage>>::iterator iterator;
+
 		friend MessageChain& operator+(const string& str, MessageChain& mc);
 		template<int N>
 		friend MessageChain& operator+(const char(&str)[N], MessageChain& mc);
@@ -46,6 +48,10 @@ namespace Cyan
 		bool operator!=(const MessageChain& mc) const;
 		std::shared_ptr<IMessage> operator[](int i);
 		virtual ~MessageChain() = default;
+
+		iterator begin() { return messages_.begin(); }
+
+		iterator end() { return messages_.end(); }
 
 		template<class T>
 		std::vector<T> GetAll() const
@@ -84,7 +90,7 @@ namespace Cyan
 			return *this;
 		}
 
-		template<class T,class... Args>
+		template<class T, class... Args>
 		MessageChain& Add(Args&&... args)
 		{
 			static_assert(std::is_base_of<IMessage, T>::value, "只能接受 IMessage 的派生类");
@@ -215,7 +221,7 @@ namespace Cyan
 	template<int N>
 	inline MessageChain& operator+(const char(&str)[N], MessageChain& mc)
 	{
-		mc.messages_.insert(mc.messages_.begin(),std::make_shared<PlainMessage>(str));
+		mc.messages_.insert(mc.messages_.begin(), std::make_shared<PlainMessage>(str));
 		return mc;
 	}
 
