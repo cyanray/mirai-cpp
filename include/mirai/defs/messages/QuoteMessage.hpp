@@ -1,8 +1,7 @@
 #pragma once
 #ifndef mirai_cpp_defs_messages_quote_message_hpp_H_
 #define mirai_cpp_defs_messages_quote_message_hpp_H_
-
-#include <iostream>
+#include <utility>
 #include "mirai/defs/message_interface.hpp"
 #include "mirai/defs/qq_types.hpp"
 
@@ -12,6 +11,11 @@ namespace Cyan
 	{
 	public:
 		QuoteMessage() :messageId_(0) {}
+		QuoteMessage(const QuoteMessage& m) : messageId_(m.messageId_) {}
+		QuoteMessage(QuoteMessage&& m) noexcept
+		{
+			std::swap(this->messageId_, m.messageId_);
+		}
 		virtual const string& GetType() const override
 		{
 			return type_;

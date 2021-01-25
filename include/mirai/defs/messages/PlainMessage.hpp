@@ -13,6 +13,11 @@ namespace Cyan
 		template<int N>
 		PlainMessage(const char(&text)[N] ) : text_(text, N) {}
 		PlainMessage(const string& text) : text_(text) {}
+		PlainMessage(const PlainMessage& m) :text_(m.text_) {}
+		PlainMessage(PlainMessage&& m) noexcept
+		{
+			std::swap(this->text_, m.text_);
+		}
 		virtual const string& GetType() const override
 		{
 			return type_;

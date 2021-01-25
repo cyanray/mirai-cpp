@@ -1,7 +1,7 @@
 #pragma once
 #ifndef mirai_cpp_defs_messages_voice_message_hpp_H_
 #define mirai_cpp_defs_messages_image_message_hpp_H_
-
+#include <utility>
 #include "mirai/defs/message_interface.hpp"
 #include "mirai/defs/qq_types.hpp"
 
@@ -11,11 +11,13 @@ namespace Cyan
 	{
 	public:
 		VoiceMessage() {}
-		VoiceMessage(const MiraiVoice& m)
+		VoiceMessage(const MiraiVoice& m) : voiceId_(m.Id), url_(m.Url), path_(m.Path) {}
+		VoiceMessage(const VoiceMessage& m) : voiceId_(m.voiceId_), url_(m.voiceId_), path_(m.path_) {}
+		VoiceMessage(VoiceMessage&& m) noexcept
 		{
-			voiceId_ = m.Id;
-			url_ = m.Url;
-			path_ = m.Path;
+			std::swap(this->voiceId_, m.voiceId_);
+			std::swap(this->url_, m.url_);
+			std::swap(this->path_, m.path_);
 		}
 		virtual const string& GetType() const override
 		{
@@ -54,7 +56,7 @@ namespace Cyan
 		{
 			if (json["type"].is_null() || json["type"].get<string>() != this->GetType())
 				throw std::runtime_error("给定的json不正确");
-			if (!json["voiceId"].is_null()) 
+			if (!json["voiceId"].is_null())
 				voiceId_ = json["voiceId"].get<string>();
 			if (!json["url"].is_null())
 				url_ = json["url"].get<string>();

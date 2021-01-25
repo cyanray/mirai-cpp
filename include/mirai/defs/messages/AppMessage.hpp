@@ -1,7 +1,6 @@
 #pragma once
 #ifndef mirai_cpp_defs_messages_app_message_hpp_H_
 #define mirai_cpp_defs_messages_app_message_hpp_H_
-
 #include "mirai/defs/message_interface.hpp"
 
 namespace Cyan
@@ -11,6 +10,11 @@ namespace Cyan
 	public:
 		AppMessage() : content_() {}
 		AppMessage(const string& content) : content_(content) {}
+		AppMessage(const AppMessage& m) : content_(m.content_) {}
+		AppMessage(AppMessage&& m) noexcept
+		{
+			std::swap(this->content_, m.content_);
+		}
 		virtual const string& GetType() const override
 		{
 			return type_;

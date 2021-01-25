@@ -10,6 +10,8 @@ namespace Cyan
 	{
 	public:
 		AtAllMessage() {}
+		AtAllMessage(const AtAllMessage&) {}
+		AtAllMessage(AtAllMessage&&) noexcept {}
 		virtual const string& GetType() const override
 		{
 			return type_;

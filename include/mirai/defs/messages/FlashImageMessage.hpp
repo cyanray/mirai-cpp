@@ -10,12 +10,9 @@ namespace Cyan
 	{
 	public:
 		FlashImageMessage() {}
-		FlashImageMessage(const MiraiImage& m)
-		{
-			ImageMessage::imageId_ = m.ID;
-			ImageMessage::url_ = m.Url;
-			ImageMessage::path_ = m.Path;
-		}
+		FlashImageMessage(const MiraiImage& m) : ImageMessage(m) {}
+		FlashImageMessage(const FlashImageMessage& m) : ImageMessage(m) {}
+		FlashImageMessage(FlashImageMessage&& m) noexcept : ImageMessage(std::move(m)) {}
 		virtual const string& GetType() const override
 		{
 			return type_;

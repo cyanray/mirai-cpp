@@ -30,6 +30,37 @@ TEST(MessageChain_Test, Add_and_Get2) {
     ASSERT_STREQ("Hello", m.Text().c_str());
 }
 
+TEST(MessageChain_Test, Add_and_Get3) {
+    using namespace Cyan;
+    MessageChain mc;
+    AppMessage app("<app></app>");
+    mc.Add(app);
+    AtAllMessage atall;
+    mc.Add(atall);
+    AtMessage at(123456_qq);
+    mc.Add(at);
+    FaceMessage face("wx");
+    mc.Add(face);
+    FlashImageMessage flash;
+    mc.Add(flash);
+    ImageMessage img;
+    mc.Add(img);
+    JsonMessage json;
+    mc.Add(json);
+    PlainMessage plain("Hello");
+    mc.Add(plain);
+    PokeMessage poke;
+    mc.Add(poke);
+    QuoteMessage quote;
+    mc.Add(quote);
+    VoiceMessage voice;
+    mc.Add(voice);
+    XmlMessage xml;
+    mc.Add(xml);
+    auto m = mc.GetFirst<PlainMessage>();
+    ASSERT_STREQ("Hello", m.Text().c_str());
+}
+
 TEST(MessageChain_Test, GetAll) {
     using namespace Cyan;
     MessageChain mc;

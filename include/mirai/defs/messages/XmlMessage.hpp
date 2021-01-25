@@ -11,6 +11,13 @@ namespace Cyan
 	public:
 		XmlMessage() : xml_() {}
 		XmlMessage(const string& xml) : xml_(xml) {}
+		template<int N>
+		XmlMessage(const char(&xml)[N]) : xml_(xml, N) {}
+		XmlMessage(const XmlMessage& m) : xml_(m.xml_) {}
+		XmlMessage(XmlMessage&& m) noexcept
+		{
+			std::swap(this->xml_, m.xml_);
+		}
 		virtual const string& GetType() const override
 		{
 			return type_;

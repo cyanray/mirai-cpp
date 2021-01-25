@@ -1,7 +1,7 @@
 #pragma once
 #ifndef mirai_cpp_defs_messages_at_message_hpp_H_
 #define mirai_cpp_defs_messages_at_message_hpp_H_
-
+#include <utility>
 #include "mirai/defs/message_interface.hpp"
 #include "mirai/defs/qq_types.hpp"
 
@@ -12,6 +12,12 @@ namespace Cyan
 	public:
 		AtMessage() : target_(0), display_() {}
 		AtMessage(const QQ_t& q) : target_(q), display_() {}
+		AtMessage(const AtMessage& m) : target_(m.target_), display_(m.display_) {}
+		AtMessage(AtMessage&& m) noexcept
+		{
+			std::swap(this->target_, m.target_);
+			std::swap(this->display_, m.display_);
+		}
 		virtual const string& GetType() const override
 		{
 			return type_;
