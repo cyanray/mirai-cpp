@@ -71,7 +71,7 @@ namespace Cyan
 		string GetMiraiCppVersion() const
 		{
 			// mirai-api-http v1.6.5
-			return "1.9.6";
+			return "1.9.7";
 		}
 
 		/**
