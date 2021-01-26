@@ -342,7 +342,6 @@ namespace cyanray
 		tv.tv_sec = 0;
 		tv.tv_usec = 20 * 1000;
 
-		size_t tsize = 0;
 		while (status == Status::Open)
 		{
 			FD_SET(sock, &fds_read);
@@ -354,8 +353,7 @@ namespace cyanray
 					ErrorCallback(*this, "select error.");
 				}
 			}
-			if (ret == 0) continue;
-			if (FD_ISSET(sock, &fds_read))
+			if (ret != 0 && FD_ISSET(sock, &fds_read))
 			{
 				array<char, 2048>  buf = {};
 				int bytesReceived = recv(sock, buf.data(), (int)buf.size(), 0);
@@ -378,8 +376,7 @@ namespace cyanray
 				}
 			}
 
-			// if new data is appended to the buffer
-			if (tsize != buffer.size())
+			if (buffer.size())
 			{
 				FrameInfo info;
 				int offset = TryParseFrame(&info, buffer.data(), buffer.size());
@@ -465,7 +462,6 @@ namespace cyanray
 						buffer.erase(buffer.begin(), buffer.begin() + (offset + info.PayloadLength));
 					}
 				}
-				tsize = buffer.size();
 			}
 		}
 
