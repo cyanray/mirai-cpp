@@ -152,5 +152,11 @@ namespace Cyan
 
 }
 
+// https://stackoverflow.com/questions/18837857/cant-use-enum-class-as-unordered-map-key
+namespace std {
+	template <> struct hash<Cyan::MiraiEvent> {
+		size_t operator() (const Cyan::MiraiEvent& t) const { return size_t(t); }
+	};
+}
 
 #endif // !mirai_cpp_events_events_name_hpp_H_
