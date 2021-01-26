@@ -53,7 +53,7 @@ namespace Cyan
 		void Json(const string& json) { this->json_ = json; }
 
 	private:
-		string type_ = "Plain";
+		const string type_ = "Plain";
 		string json_;
 	};
 

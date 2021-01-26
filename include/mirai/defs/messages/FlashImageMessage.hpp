@@ -28,7 +28,7 @@ namespace Cyan
 			};
 		}
 	private:
-		string type_ = "FlashImage";
+		const string type_ = "FlashImage";
 	};
 
 }

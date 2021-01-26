@@ -55,7 +55,7 @@ namespace Cyan
 		void Xml(const string& xml) { this->xml_ = xml; }
 
 	private:
-		string type_ = "Xml";
+		const string type_ = "Xml";
 		string xml_;
 	};
 

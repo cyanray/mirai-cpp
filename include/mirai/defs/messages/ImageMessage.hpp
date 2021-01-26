@@ -85,7 +85,7 @@ namespace Cyan
 		}
 
 	private:
-		string type_ = "Image";
+		const string type_ = "Image";
 	protected:
 		string imageId_;
 		string url_;

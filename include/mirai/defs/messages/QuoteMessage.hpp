@@ -54,7 +54,7 @@ namespace Cyan
 		void MessageId(MessageId_t mid) { this->messageId_ = mid; }
 
 	private:
-		string type_ = "Quote";
+		const string type_ = "Quote";
 		MessageId_t messageId_;
 	};
 

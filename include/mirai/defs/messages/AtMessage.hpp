@@ -60,7 +60,7 @@ namespace Cyan
 		string Display() const { return display_; }
 
 	private:
-		string type_ = "At";
+		const string type_ = "At";
 		QQ_t target_;
 		string display_;
 	};

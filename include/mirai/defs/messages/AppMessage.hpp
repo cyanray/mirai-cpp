@@ -52,7 +52,7 @@ namespace Cyan
 		void Content(const string& content) { this->content_ = content; }
 
 	private:
-		string type_ = "App";
+		const string type_ = "App";
 		string content_;
 	};
 

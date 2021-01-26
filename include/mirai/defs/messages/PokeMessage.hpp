@@ -82,9 +82,9 @@ namespace Cyan
 
 
 	private:
-		string poke_name[6] =
+		const string poke_name[6] =
 		{ "Poke","ShowLove","Like","Heartbroken","SixSixSix","FangDaZhao" };
-		string type_ = "Poke";
+		const string type_ = "Poke";
 		string name_;
 		PokeType poke_;
 	};

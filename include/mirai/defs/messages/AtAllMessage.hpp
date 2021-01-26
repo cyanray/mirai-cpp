@@ -44,7 +44,7 @@ namespace Cyan
 		virtual ~AtAllMessage() {}
 
 	private:
-		string type_ = "AtAll";
+		const string type_ = "AtAll";
 	};
 
 }

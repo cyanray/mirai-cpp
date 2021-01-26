@@ -55,7 +55,7 @@ namespace Cyan
 		void Text(const string& text) { this->text_ = text; }
 
 	private:
-		string type_ = "Plain";
+		const string type_ = "Plain";
 		string text_;
 	};
 

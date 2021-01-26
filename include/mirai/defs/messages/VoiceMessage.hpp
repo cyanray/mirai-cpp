@@ -86,7 +86,7 @@ namespace Cyan
 		}
 
 	private:
-		string type_ = "Voice";
+		const string type_ = "Voice";
 	protected:
 		string voiceId_;
 		string url_;

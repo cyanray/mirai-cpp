@@ -62,7 +62,7 @@ namespace Cyan
 		void Name(const string& n) { this->name_ = n; }
 
 	private:
-		string type_ = "Face";
+		const string type_ = "Face";
 		int faceId_;
 		string name_;
 	};
