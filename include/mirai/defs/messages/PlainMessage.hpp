@@ -10,7 +10,14 @@ namespace Cyan
 	{
 	public:
 		PlainMessage() : text_() {}
+		template<int N>
+		PlainMessage(const char(&text)[N] ) : text_(text, N) {}
 		PlainMessage(const string& text) : text_(text) {}
+		PlainMessage(const PlainMessage& m) :text_(m.text_) {}
+		PlainMessage(PlainMessage&& m) noexcept
+		{
+			std::swap(this->text_, m.text_);
+		}
 		virtual const string& GetType() const override
 		{
 			return type_;
@@ -48,7 +55,7 @@ namespace Cyan
 		void Text(const string& text) { this->text_ = text; }
 
 	private:
-		string type_ = "Plain";
+		const string type_ = "Plain";
 		string text_;
 	};
 

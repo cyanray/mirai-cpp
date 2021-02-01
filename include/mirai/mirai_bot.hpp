@@ -24,6 +24,8 @@
 #include "mirai/events/event_processer.hpp"
 #include "mirai/events/friend_message.hpp"
 #include "mirai/events/group_message.hpp"
+#include "mirai/events/message_event.hpp"
+#include <mirai/events/lost_connection.hpp>
 
 using std::string;
 using std::vector;
@@ -305,7 +307,7 @@ namespace Cyan
 		 * \return MiraiBot 引用
 		 */
 		template <typename T>
-		MiraiBot& On(const EventProcessor<T>& ep)
+		MiraiBot& On(const EventCallback<T>& ep)
 		{
 			return OnEventReceived<T>(ep);
 		}
@@ -317,7 +319,7 @@ namespace Cyan
 		 * \return MiraiBot 引用
 		 */
 		template <typename T>
-		MiraiBot& OnEventReceived(const EventProcessor<T>& ep);
+		MiraiBot& OnEventReceived(const EventCallback<T>& ep);
 
 		/**
 		 * \brief 睡眠当前线程
@@ -365,10 +367,36 @@ namespace Cyan
 		bool SessionConfigure(int cacheSize, bool enableWebsocket);
 		unsigned int FetchEventsHttp(unsigned int count = 10);
 		void FetchEventsWs();
-		void ProcessMessage(std::string& event_json_str);
-		void ProcessEvents(const json& ele);
+		void ProcessEvent(std::string& event_json_str);
+		void HandlingSingleEvent(const json& ele);
 		bool Release() noexcept;
-		static inline string ReadFile(const string& filename);
+		EventCallback<LostConnection> LostConnectionCallback;
+
+		template <typename T>
+		CallbackInvoker GetCallbackInvoker(const EventCallback<T>& ep)
+		{
+			return [=](WeakEvent we)
+			{
+				// 这个lambda函数有两个作用
+				// 1.创建类型为T的WeakEvent
+				// 2.将传入的WeakEvent转化为类型T
+				//   然后给 EventProcessor 使用
+				if (we == nullptr)
+				{
+					std::shared_ptr<T> e = std::make_shared<T>();
+					return std::dynamic_pointer_cast<EventBase>(e);
+				}
+				else
+				{
+					ep(*(std::dynamic_pointer_cast<T>(we)));
+					return we;
+				}
+			};
+		}
+		
+		template <typename T>
+		void StoreCallbackInvoker(CallbackInvoker);
+
 		// 私有成员变量
 		string host_;
 		int port_;
@@ -379,42 +407,35 @@ namespace Cyan
 		bool ws_enabled_;
 		httplib::Client http_client_;
 		ThreadPool pool_;
-		std::unordered_multimap<MiraiEvent, function<WeakEvent(WeakEvent)>> processors_;
+		std::unordered_multimap<MiraiEvent, CallbackInvoker> processors_;
 	};
 
-	template <typename T>
-	MiraiBot& MiraiBot::OnEventReceived(const EventProcessor<T>& ep)
+	template<typename T>
+	inline void MiraiBot::StoreCallbackInvoker(CallbackInvoker func)
 	{
-		auto func = [=](WeakEvent we)
-		{
-			// 这个lambda函数有两个作用
-			// 1.创建类型为T的WeakEvent
-			// 2.将传入的WeakEvent转化为类型T
-			//   然后给 EventProcessor 使用
-			if (we == nullptr)
-			{
-				std::shared_ptr<T> e = std::make_shared<T>();
-				return std::dynamic_pointer_cast<EventBase>(e);
-			}
-			else
-			{
-				ep(*(std::dynamic_pointer_cast<T>(we)));
-				return we;
-			}
-		};
+		processors_.insert({ T::GetMiraiEvent(), func });
+	}
 
-		// 特别处理通用消息事件
-		if (T::GetMiraiEvent() == MiraiEvent::Message)
-		{
-			processors_.insert({ MiraiEvent::FriendMessage, func });
-			processors_.insert({ MiraiEvent::GroupMessage, func });
-			processors_.insert({ MiraiEvent::TempMessage, func });
-		}
-		else
-		{
-			processors_.insert({ T::GetMiraiEvent(), func });
-		}
+	template<>
+	inline void MiraiBot::StoreCallbackInvoker<Message>(CallbackInvoker func)
+	{
+		processors_.insert({ MiraiEvent::FriendMessage, func });
+		processors_.insert({ MiraiEvent::GroupMessage, func });
+		processors_.insert({ MiraiEvent::TempMessage, func });
+	}
 
+	template <typename T>
+	inline MiraiBot& MiraiBot::OnEventReceived(const EventCallback<T>& ep)
+	{
+		auto func = GetCallbackInvoker<T>(ep);
+		StoreCallbackInvoker<T>(func);
+		return *this;
+	}
+
+	template<>
+	inline MiraiBot& MiraiBot::OnEventReceived<LostConnection>(const EventCallback<LostConnection>& cb)
+	{
+		LostConnectionCallback = cb;
 		return *this;
 	}
 

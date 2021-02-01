@@ -11,6 +11,11 @@ namespace Cyan
 	public:
 		JsonMessage() : json_() {}
 		JsonMessage(const string& json) : json_(json) {}
+		JsonMessage(const JsonMessage& m) : json_(m.json_) {}
+		JsonMessage(JsonMessage&& m) noexcept
+		{
+			std::swap(this->json_, m.json_);
+		}
 		virtual const string& GetType() const override
 		{
 			return type_;
@@ -48,7 +53,7 @@ namespace Cyan
 		void Json(const string& json) { this->json_ = json; }
 
 	private:
-		string type_ = "Plain";
+		const string type_ = "Plain";
 		string json_;
 	};
 

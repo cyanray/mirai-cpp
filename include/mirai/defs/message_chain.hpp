@@ -31,6 +31,8 @@ namespace Cyan
 	class EXPORTED MessageChain : public ISerializable
 	{
 	public:
+		typedef vector<std::shared_ptr<IMessage>>::iterator iterator;
+
 		friend MessageChain& operator+(const string& str, MessageChain& mc);
 		template<int N>
 		friend MessageChain& operator+(const char(&str)[N], MessageChain& mc);
@@ -46,6 +48,10 @@ namespace Cyan
 		bool operator!=(const MessageChain& mc) const;
 		std::shared_ptr<IMessage> operator[](int i);
 		virtual ~MessageChain() = default;
+
+		iterator begin() { return messages_.begin(); }
+
+		iterator end() { return messages_.end(); }
 
 		template<class T>
 		std::vector<T> GetAll() const
@@ -75,20 +81,21 @@ namespace Cyan
 		}
 
 		template<class T>
-		MessageChain& Add(const T& m)
+		MessageChain& Add(T&& m)
 		{
-			static_assert(std::is_base_of<IMessage, T>::value, "只能接受 IMessage 的派生类");
-			std::shared_ptr<IMessage> m_ptr(new T(m));
-			messages_.push_back(m_ptr);
+			using real_type = typename std::remove_const<typename std::remove_reference<T>::type >::type;
+			static_assert(std::is_base_of<IMessage, real_type>::value, "只能接受 IMessage 的派生类");
+			std::shared_ptr<IMessage> m_ptr(new real_type(std::forward<T>(m)));
+			messages_.emplace_back(std::move(m_ptr));
 			return *this;
 		}
 
-		template<class T,class... Args>
+		template<class T, class... Args>
 		MessageChain& Add(Args&&... args)
 		{
 			static_assert(std::is_base_of<IMessage, T>::value, "只能接受 IMessage 的派生类");
 			std::shared_ptr<IMessage> m_ptr(new T(args...));
-			messages_.push_back(m_ptr);
+			messages_.emplace_back(std::move(m_ptr));
 			return *this;
 		}
 
@@ -102,6 +109,8 @@ namespace Cyan
 					return *item == m;
 				}), messages_.end());
 		}
+
+		void RemoveAt(int index);
 
 		size_t Count() const
 		{
@@ -135,9 +144,7 @@ namespace Cyan
 
 		MessageChain& Face(const string& name)
 		{
-			auto face_msg = FaceMessage();
-			face_msg.Name(name);
-			return this->Add(face_msg);
+			return this->Add<FaceMessage>(name);
 		}
 
 		MessageChain& Plain(const string& plainText)
@@ -214,7 +221,7 @@ namespace Cyan
 	template<int N>
 	inline MessageChain& operator+(const char(&str)[N], MessageChain& mc)
 	{
-		mc.messages_.insert(mc.messages_.begin(),std::make_shared<PlainMessage>(str));
+		mc.messages_.insert(mc.messages_.begin(), std::make_shared<PlainMessage>(str));
 		return mc;
 	}
 

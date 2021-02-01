@@ -11,6 +11,10 @@ add_definitions(-D_VARIADIC_MAX=10)
 add_executable(unit_test main.cpp)
 target_link_libraries(unit_test mirai-cpp)
 target_link_libraries(unit_test ${GTEST_BOTH_LIBRARIES})
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+	target_link_libraries(unit_test pthread)
+endif()
+
 #  π”√ mirai-cpp æ≤Ã¨ø‚
 target_compile_definitions(unit_test PRIVATE MIRAICPP_STATICLIB)
 

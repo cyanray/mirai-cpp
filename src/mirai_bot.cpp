@@ -1,12 +1,31 @@
-﻿#include "mirai/mirai_bot.hpp"
-#include <iostream>
+﻿#include <iostream>
+#include <queue>
+#include <mutex>
+#include <condition_variable>
 #include <exception>
-#include "mirai/third-party/easywsclient.hpp"
-#define _SSIZE_T_DEFINED
-#include "mirai/third-party/easywsclient.cpp"
+#include "mirai/mirai_bot.hpp"
+#include "mirai/third-party/WebSocketClient.h"
+#include "mirai/third-party/WebSocketClient.cpp"
 
 using std::runtime_error;
 using std::stringstream;
+
+namespace
+{
+	// 因为 httplib 使用 string 来保存文件内容，这里返回值也跟着适配
+	string ReadFile(const string& filename)
+	{
+		std::ifstream ifs(filename, std::ifstream::binary);
+		if (!ifs.is_open()) throw std::runtime_error("打开文件失败，请确认路径是否正确并检查文件是否存在");
+		std::filebuf* pbuf = ifs.rdbuf();
+		std::size_t size = pbuf->pubseekoff(0, ifs.end, ifs.in);
+		pbuf->pubseekpos(0, ifs.in);
+		string result(size, '\0');
+		pbuf->sgetn(&result[0], size);
+		ifs.close();
+		return result;
+	}
+}
 
 namespace Cyan
 {
@@ -745,13 +764,12 @@ namespace Cyan
 		SessionConfigure(cacheSize_, ws_enabled_);
 		while (true)
 		{
-			unsigned count = 0;
 			try
 			{
 				if (ws_enabled_)
 					FetchEventsWs();
 				else
-					count = FetchEventsHttp(count_per_loop);
+					FetchEventsHttp(count_per_loop);
 			}
 			catch (const std::exception& ex)
 			{
@@ -764,11 +782,7 @@ namespace Cyan
 					errLogger(ex.what());
 				}
 			}
-
-			if (count < count_per_loop)
-			{
-				SleepMilliseconds(time_interval);
-			}
+			SleepMilliseconds(time_interval);
 		}
 
 	}
@@ -864,7 +878,7 @@ namespace Cyan
 			{
 				Release();
 				Auth(authKey_, qq_);
-				throw std::runtime_error("失去与mirai的连接，尝试重新验证...");
+				throw std::runtime_error("失去与mirai的连接，已重新连接。");
 			}
 			string msg = re_json["msg"].get<string>();
 			throw runtime_error(msg);
@@ -873,7 +887,7 @@ namespace Cyan
 		int received_count = 0;
 		for (const auto& ele : re_json["data"])
 		{
-			ProcessEvents(ele);
+			HandlingSingleEvent(ele);
 			received_count++;
 		}
 		return received_count;
@@ -881,48 +895,70 @@ namespace Cyan
 
 	void MiraiBot::FetchEventsWs()
 	{
-		using namespace easywsclient;
+		using namespace cyanray;
+
+		std::queue<string> event_queue;
+		mutex mutex_event_queue;
+		condition_variable cv;
+
 		stringstream all_events_url;
 		all_events_url << "ws://" << host_ << ":" << port_ << "/all?sessionKey=" << sessionKey_;
-		std::shared_ptr<WebSocket> ws_events(WebSocket::from_url(all_events_url.str()));
-		if (!ws_events)
-			throw std::runtime_error("无法建立 WebSocket 连接!");
+		WebSocketClient events_client;
+
+		events_client.Connect(all_events_url.str());
+		events_client.OnTextReceived([&](WebSocketClient& client, string text)
+			{
+				lock_guard<mutex> lock(mutex_event_queue);
+				event_queue.emplace(text);
+				cv.notify_one();
+			});
+		events_client.OnLostConnection([&](WebSocketClient& client, int code)
+			{
+				cv.notify_one();
+			});
+
 
 		stringstream command_url;
 		command_url << "ws://" << host_ << ":" << port_ << "/command?authKey=" << authKey_;
-		std::shared_ptr<WebSocket> ws_command(WebSocket::from_url(command_url.str()));
-		if (!ws_command)
-			throw std::runtime_error("无法建立 WebSocket 连接!");
+		WebSocketClient command_client;
 
+		command_client.Connect(command_url.str());
+		command_client.OnTextReceived([&](WebSocketClient& client, string text)
+			{
+				lock_guard<mutex> lock(mutex_event_queue);
+				event_queue.emplace(text);
+				cv.notify_one();
+			});
+		command_client.OnLostConnection([&](WebSocketClient& client, int code)
+			{
+				cv.notify_one();
+			});
+
+
+		// 循环处理事件队列(WebSocket库不可执行耗时操作，因此在此线程处理事件)
 		while (true)
 		{
-			if (ws_events->getReadyState() != WebSocket::CLOSED && this->ws_enabled_)
+			if (event_queue.empty() &&
+				(events_client.GetStatus() != WebSocketClient::Status::Open ||
+					command_client.GetStatus() != WebSocketClient::Status::Open))
 			{
-				string event_json_str;
-				ws_events->poll(20);
-				ws_events->dispatch([&](const std::string& message)
-					{
-						event_json_str = message;
-					});
-				ProcessMessage(event_json_str);
+				events_client.Shutdown();
+				command_client.Shutdown();
+				break;
 			}
-
-			if (ws_command->getReadyState() != WebSocket::CLOSED)
-			{
-				string event_json_str;
-				ws_command->poll(20);
-				ws_command->dispatch([&](const std::string& message)
-					{
-						event_json_str = message;
-					});
-				ProcessMessage(event_json_str);
-			}
-
+			unique_lock<mutex> lock(mutex_event_queue);
+			cv.wait(lock);
+			if (event_queue.empty()) continue;
+			string event_text = event_queue.front();
+			event_queue.pop();
+			lock.unlock();
+			ProcessEvent(event_text);
+			std::this_thread::yield();
 		}
 
 	}
 
-	void MiraiBot::ProcessMessage(std::string& event_json_str)
+	void MiraiBot::ProcessEvent(std::string& event_json_str)
 	{
 
 		if (!event_json_str.empty())
@@ -931,7 +967,7 @@ namespace Cyan
 			// code 不存在，说明没错误，处理事件/消息
 			if (j.find("code") == j.end())
 			{
-				ProcessEvents(j);
+				HandlingSingleEvent(j);
 			}
 			// code 存在，按照 code 进行错误处理
 			else if (j["code"].get<int>() == 3 || j["code"].get<int>() == 4)
@@ -939,12 +975,12 @@ namespace Cyan
 				Release();
 				Auth(authKey_, qq_);
 				SessionConfigure(cacheSize_, ws_enabled_);
-				throw std::runtime_error("失去与mirai的连接，尝试重新验证...");
+				throw std::runtime_error("失去与mirai的连接，已重新连接。");
 			}
 		}
 	}
 
-	void MiraiBot::ProcessEvents(const nlohmann::json& ele)
+	void MiraiBot::HandlingSingleEvent(const nlohmann::json& ele)
 	{
 		MiraiEvent mirai_event;
 		// 要么是事件要么是指令，不应该是别的
@@ -978,25 +1014,11 @@ namespace Cyan
 		{
 			return SessionRelease();
 		}
-		catch (const std::exception&)
+		catch (...)
 		{
 			return false;
 		}
 
-	}
-
-	// 因为 httplib 使用 string 来保存文件内容，这里返回值也跟着适配
-	string MiraiBot::ReadFile(const string& filename)
-	{
-		std::ifstream ifs(filename, std::ifstream::binary);
-		if (!ifs.is_open()) throw std::runtime_error("打开文件失败，请确认路径是否正确并检查文件是否存在");
-		std::filebuf* pbuf = ifs.rdbuf();
-		std::size_t size = pbuf->pubseekoff(0, ifs.end, ifs.in);
-		pbuf->pubseekpos(0, ifs.in);
-		string result(size, '\0');
-		pbuf->sgetn(&result[0], size);
-		ifs.close();
-		return result;
 	}
 
 } // namespace Cyan

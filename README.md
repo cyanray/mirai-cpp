@@ -60,6 +60,8 @@
 
 ![使用 VS 直接打开 mirai-cpp 文件夹](./doc/pic/vs_1.png)
 
+![项目配置](./doc/pic/vs_3.png)
+
 ![勾上 MIRAI_CPP_BUILD_EXAMPLES](./doc/pic/vs_4.png)
 
 ![开始运行 examples](./doc/pic/vs_2.png)
@@ -78,7 +80,7 @@
 
 ![vsc 开始调试](./doc/pic/vsc.png)
 
-### 2. 创建自己的机器人项目
+### **2. 创建自己的机器人项目**
 
 #### (1) 使用 CMake Project 模板
 
@@ -127,7 +129,7 @@
 
 3. [**progschj/ThreadPool**](https://github.com/progschj/ThreadPool) A simple C++11 Thread Pool implementation.
 
-4. [**dhbaird/EasyWSClient**](https://github.com/dhbaird/easywsclient) A short and sweet WebSocket client for C++.
+4. [**cyanray/LightWebSocketClient**](https://github.com/cyanray/LightWebSocketClient) A simple cross-platform WebSocket client.
 
 ## 0x05 参与开发
 

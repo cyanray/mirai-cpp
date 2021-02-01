@@ -1,7 +1,7 @@
 #pragma once
 #ifndef mirai_cpp_defs_messages_poke_message_hpp_H_
 #define mirai_cpp_defs_messages_poke_message_hpp_H_
-
+#include <utility>
 #include "mirai/defs/message_interface.hpp"
 
 namespace Cyan
@@ -20,9 +20,15 @@ namespace Cyan
 	{
 	public:
 		PokeMessage() : poke_(PokeType::Poke), name_() {}
-		PokeMessage(PokeType p) : poke_(p), name_() 
+		PokeMessage(PokeType p) : poke_(p), name_()
 		{
 			Poke(p);
+		}
+		PokeMessage(const PokeMessage& m) : poke_(m.poke_), name_(m.name_) {}
+		PokeMessage(PokeMessage&& m) noexcept
+		{
+			std::swap(this->poke_, m.poke_);
+			std::swap(this->name_, m.name_);
 		}
 		virtual const string& GetType() const override
 		{
@@ -76,9 +82,9 @@ namespace Cyan
 
 
 	private:
-		string poke_name[6] =
+		const string poke_name[6] =
 		{ "Poke","ShowLove","Like","Heartbroken","SixSixSix","FangDaZhao" };
-		string type_ = "Poke";
+		const string type_ = "Poke";
 		string name_;
 		PokeType poke_;
 	};
