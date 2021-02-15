@@ -345,11 +345,10 @@ namespace cyanray
 		FD_ZERO(&fds_read);
 
 		struct timeval tv;
-		tv.tv_sec = 0;
-		tv.tv_usec = 200 * 1000;
-
 		while (status == Status::Open)
 		{
+			tv.tv_sec = 0;
+			tv.tv_usec = 200 * 1000;
 			FD_SET(sock, &fds_read);
 			int ret = select((int)(sock + 1), &fds_read, NULL, NULL, &tv);
 			if (ret < 0)
