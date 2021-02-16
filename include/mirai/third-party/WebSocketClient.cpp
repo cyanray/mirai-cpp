@@ -322,6 +322,12 @@ namespace cyanray
 		PrivateMembers->Send(WebSocketOpcode::Pong);
 	}
 
+	void WebSocketClient::Pong(const vector<uint8_t>& data)
+	{
+		if (status == Status::Closed) return;
+		PrivateMembers->Send(WebSocketOpcode::Pong, data.begin(), data.end());
+	}
+
 	void WebSocketClient::Close()
 	{
 		if (status == Status::Closed) return;
@@ -339,11 +345,10 @@ namespace cyanray
 		FD_ZERO(&fds_read);
 
 		struct timeval tv;
-		tv.tv_sec = 0;
-		tv.tv_usec = 20 * 1000;
-
 		while (status == Status::Open)
 		{
+			tv.tv_sec = 0;
+			tv.tv_usec = 200 * 1000;
 			FD_SET(sock, &fds_read);
 			int ret = select((int)(sock + 1), &fds_read, NULL, NULL, &tv);
 			if (ret < 0)
@@ -376,7 +381,7 @@ namespace cyanray
 				}
 			}
 
-			if (buffer.size())
+			while (buffer.size())
 			{
 				FrameInfo info;
 				int offset = TryParseFrame(&info, buffer.data(), buffer.size());
@@ -386,6 +391,7 @@ namespace cyanray
 					{
 						ErrorCallback(*this, "Failed to parse frame.");
 					}
+					break;
 				}
 				else
 				{
@@ -420,7 +426,7 @@ namespace cyanray
 						{
 							try
 							{
-								Pong();
+								Pong(vector<uint8_t>(payload_start, payload_end));
 							}
 							catch (const std::exception& ex)
 							{
@@ -446,7 +452,7 @@ namespace cyanray
 									LostConnectionCallback(*this, 1000);
 								}
 							}
-							break;
+							return;
 						}
 						else
 						{
@@ -460,6 +466,10 @@ namespace cyanray
 							}
 						}
 						buffer.erase(buffer.begin(), buffer.begin() + (offset + info.PayloadLength));
+					}
+					else
+					{
+						break;
 					}
 				}
 			}

@@ -107,6 +107,12 @@ namespace cyanray
 		void Pong();
 
 		/**
+		 * @brief Send pong frame.
+		 * @param ping data
+		*/
+		void Pong(const vector<uint8_t>& data);
+
+		/**
 		 * @brief Send a close frame. 
 				  If websocket server response a close frame, 
 				  will close tcp socket.

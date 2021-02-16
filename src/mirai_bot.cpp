@@ -947,7 +947,10 @@ namespace Cyan
 				break;
 			}
 			unique_lock<mutex> lock(mutex_event_queue);
-			cv.wait(lock);
+			if (event_queue.empty())
+			{
+				cv.wait(lock);
+			}
 			if (event_queue.empty()) continue;
 			string event_text = event_queue.front();
 			event_queue.pop();
