@@ -1,30 +1,45 @@
 name: Build
 
-on: [push]
-
+on:
+  pull_request:
+    branches: [ master, dev/*, feature/* ]
+  push:
+    branches: [ master, dev/*, feature/* ]
+    
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
 
 jobs:
   build:
-    # The CMake configure and build commands are platform agnostic and should work equally
-    # well on Windows or Mac.  You can convert this to a matrix build if you need
-    # cross-platform coverage.
-    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: ubuntu-latest
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    env:
+      CC: ${{ matrix.config.cc }}
+      CXX: ${{ matrix.config.cxx }}
+    strategy:
+      matrix:
+        config:
+          - name: "Windows Latest MinGW"
+            os: windows-latest
+            cc: "gcc"
+            cxx: "g++"
+          - name: "Ubuntu Latest GCC"
+            os: ubuntu-latest
+            cc: "gcc"
+            cxx: "g++"
+          - name: "macOS Latest Clang"
+            os: macos-latest
+            cc: "clang"
+            cxx: "clang++"
 
     steps:
     - uses: actions/checkout@v2
 
     - name: Create Build Environment
-      # Some projects don't allow in-source building, so create a separate build directory
-      # We'll use this as our working directory for all subsequent commands
       run: cmake -E make_directory ${{github.workspace}}/build
 
     - name: Configure CMake
-      # Use a bash shell so we can use the same syntax for environment variable
-      # access regardless of the host operating system
       shell: bash
       working-directory: ${{github.workspace}}/build
       # Note the current convention is to use the -S and -B options here to specify source 
@@ -35,5 +50,4 @@ jobs:
     - name: Build
       working-directory: ${{github.workspace}}/build
       shell: bash
-      # Execute the build.  You can specify a specific target with "--target <NAME>"
       run: cmake --build . --config $BUILD_TYPE
