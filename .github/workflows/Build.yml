@@ -14,24 +14,25 @@ jobs:
   build:
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
-    env:
-      CC: ${{ matrix.config.cc }}
-      CXX: ${{ matrix.config.cxx }}
     strategy:
       matrix:
         config:
-          - name: "Windows Latest MinGW"
+          - name: Windows Latest MSVC
             os: windows-latest
-            cc: "gcc"
-            cxx: "g++"
-          - name: "Ubuntu Latest GCC"
+            cc: cl
+            cxx: cl
+          - name: Windows Latest MinGW
+            os: windows-latest
+            cc: gcc
+            cxx: g++
+          - name: Ubuntu Latest GCC
             os: ubuntu-latest
-            cc: "gcc"
-            cxx: "g++"
-          - name: "macOS Latest Clang"
+            cc: gcc
+            cxx: g++
+          - name: macOS Latest Clang
             os: macos-latest
-            cc: "clang"
-            cxx: "clang++"
+            cc: clang
+            cxx: clang++
 
     steps:
     - uses: actions/checkout@v2
@@ -45,7 +46,7 @@ jobs:
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_C_COMPILER=${{ matrix.config.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
 
     - name: Build
       working-directory: ${{github.workspace}}/build
