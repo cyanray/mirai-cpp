@@ -35,7 +35,9 @@ else()
     target_compile_definitions(${PROJECT_NAME} PRIVATE MIRAICPP_STATICLIB)
 endif()
 
-
+if (WIN32)
+    target_link_libraries (${PROJECT_NAME} wsock32 ws2_32)
+endif(WIN32)
 
 option(MIRAI_CPP_BUILD_EXAMPLES "Build examples" OFF)
 if(MIRAI_CPP_BUILD_EXAMPLES)
