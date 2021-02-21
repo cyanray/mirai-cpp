@@ -6,15 +6,14 @@ on:
   push:
     branches: [ master, dev/*, feature/* ]
     
-env:
-  BUILD_TYPE: Release
-  CC: ${{ matrix.config.cc }}
-  CXX: ${{ matrix.config.cxx }}
-
 jobs:
   build:
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
+    env:
+      BUILD_TYPE: Release
+      CC: ${{ matrix.config.cc }}
+      CXX: ${{ matrix.config.cxx }}
     strategy:
       matrix:
         config:
