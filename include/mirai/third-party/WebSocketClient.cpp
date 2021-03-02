@@ -337,7 +337,7 @@ namespace cyanray
 
 	void WebSocketClient::RecvLoop()
 	{
-		socket_t& sock = PrivateMembers->wsSocket;
+		socket_t sock = PrivateMembers->wsSocket;
 		vector<byte_t> buffer;
 		buffer.reserve(8192);
 
