@@ -35,7 +35,7 @@ namespace Cyan
 
 		friend MessageChain& operator+(const string& str, MessageChain& mc);
 		template<int N>
-		friend MessageChain& operator+(const char(&str)[N], MessageChain& mc);
+		friend MessageChain& operator+(const char(&str)[N], MessageChain&& mc);
 		MessageChain();
 		MessageChain(const MessageChain& mc);
 		MessageChain(MessageChain&& mc) noexcept;
@@ -219,7 +219,7 @@ namespace Cyan
 	};
 
 	template<int N>
-	inline MessageChain& operator+(const char(&str)[N], MessageChain& mc)
+	inline MessageChain& operator+(const char(&str)[N], MessageChain&& mc)
 	{
 		mc.messages_.insert(mc.messages_.begin(), std::make_shared<PlainMessage>(str));
 		return mc;
