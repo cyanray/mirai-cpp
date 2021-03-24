@@ -66,11 +66,6 @@ namespace Cyan
 		return this->Plain(val);
 	}
 
-	MessageChain& MessageChain::operator+=(const string& val)
-	{
-		return this->Plain(val);
-	}
-
 	bool MessageChain::operator==(const MessageChain& mc) const
 	{
 		if (this->messages_.size() != mc.messages_.size()) return false;
