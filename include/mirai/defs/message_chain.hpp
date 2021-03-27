@@ -117,6 +117,11 @@ namespace Cyan
 			return messages_.size();
 		}
 
+		bool Empty() const
+		{
+			return Count() == 0;
+		}
+
 		void Clear()
 		{
 			messages_.clear();
