@@ -62,6 +62,16 @@ TEST(MessageChain_Test, Add_and_Get3) {
     ASSERT_STREQ("Hello", m.Text().c_str());
 }
 
+TEST(MessageChain_Test, Insert_and_Get) {
+    using namespace Cyan;
+    MessageChain mc;
+    mc.Add<PlainMessage>("OOOOOO");
+    mc.Insert(mc.begin(), PlainMessage("Hello"));
+    ASSERT_TRUE(mc[0]->GetType() == "Plain");
+    auto mptr = std::dynamic_pointer_cast<PlainMessage>(mc[0]);
+    ASSERT_STREQ("Hello", mptr->Text().c_str());
+}
+
 TEST(MessageChain_Test, GetAll) {
     using namespace Cyan;
     MessageChain mc;
