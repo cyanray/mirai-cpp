@@ -34,13 +34,8 @@ namespace Cyan
 		typedef vector<std::shared_ptr<IMessage>>::iterator iterator;
 
 		friend MessageChain& operator+(const string& str, MessageChain& mc);
-
-		template<typename T>
-		friend MessageChain& operator+(T&& val, MessageChain& mc);
-
-		template<std::size_t N>
-		friend MessageChain& operator+(const char(&str)[N], MessageChain& mc);
-
+		template<int N>
+		friend MessageChain& operator+(const char(&str)[N], MessageChain&& mc);
 		MessageChain();
 		MessageChain(const MessageChain& mc);
 		MessageChain(MessageChain&& mc) noexcept;
@@ -48,19 +43,7 @@ namespace Cyan
 		MessageChain& operator=(MessageChain&& mc) noexcept;
 		MessageChain& operator+(const MessageChain& mc);
 		MessageChain& operator+(const string& val);
-
-		template<typename T>
-		MessageChain& operator+=(T&& val)
-		{
-			return this->Add(std::forward<T>(val));
-		}
-
-		template<std::size_t N>
-		MessageChain& operator+=(const char (&val)[N])
-		{
-			return this->Add<PlainMessage>(val);
-		}
-
+		MessageChain& operator+=(const string& val);
 		bool operator==(const MessageChain& mc) const;
 		bool operator!=(const MessageChain& mc) const;
 		std::shared_ptr<IMessage> operator[](int i);
@@ -132,11 +115,6 @@ namespace Cyan
 		size_t Count() const
 		{
 			return messages_.size();
-		}
-
-		bool Empty() const
-		{
-			return Count() == 0;
 		}
 
 		void Clear()
@@ -240,18 +218,8 @@ namespace Cyan
 		vector<std::shared_ptr<IMessage>> messages_;
 	};
 
-	template<typename T>
-	inline MessageChain& operator+(T&& val, MessageChain& mc)
-	{
-		using real_type = typename std::remove_const<typename std::remove_reference<T>::type >::type;
-		static_assert(std::is_base_of<IMessage, real_type>::value, "只能接受 IMessage 的派生类");
-		std::shared_ptr<IMessage> m_ptr(new real_type(std::forward<T>(val)));
-		mc.messages_.insert(mc.messages_.begin(), m_ptr);
-		return mc;
-	}
-
-	template<std::size_t N>
-	inline MessageChain& operator+(const char(&str)[N], MessageChain& mc)
+	template<int N>
+	inline MessageChain& operator+(const char(&str)[N], MessageChain&& mc)
 	{
 		mc.messages_.insert(mc.messages_.begin(), std::make_shared<PlainMessage>(str));
 		return mc;
@@ -262,6 +230,7 @@ namespace Cyan
 		mc.messages_.insert(mc.messages_.begin(), std::make_shared<PlainMessage>(str));
 		return mc;
 	}
+
 }
 
 
