@@ -54,16 +54,23 @@ int main()
 	bot.On<NudgeEvent>(
 		[&](NudgeEvent e)
 		{
-			stringstream ss;
-			ss << e.FromId.ToInt64() << " " << e.Action << " " << e.Target << " " << e.Suffix;
-			if (e.FromKind == NudgeEvent::SubjectKind::Group)
-			{
-				bot.SendMessage(GID_t(e.SubjectId), MessageChain().Plain(ss.str()));
-			}
-			else
-			{
-				bot.SendMessage(QQ_t(e.SubjectId), MessageChain().Plain(ss.str()));
-			}
+			// 注意: 使用 SendNudge 发送的戳一戳，也会触发该事件,
+			// 注意: 因此必须过滤掉来自bot自己的戳一戳事件，不然会导致死循环
+			if (e.FromId.ToInt64() == bot.GetBotQQ().ToInt64()) return;
+
+			cout << e.FromId.ToInt64() << " " << e.Action << " " << e.Target << " " << e.Suffix;
+			// 如果别人戳机器人，那么就让机器人戳回去
+			if (e.Target.ToInt64() != bot.GetBotQQ().ToInt64()) return;
+			bot.SendNudge(e.FromId, e.SubjectId, e.FromKind);
+			// 如果不喜欢上面这一行代码，也可以用下面的代码代替
+			//if (e.FromKind == NudgeEvent::SubjectKind::Group)
+			//{
+			//	bot.SendNudge(e.FromId, (GID_t)e.SubjectId);
+			//}
+			//else
+			//{
+			//	bot.SendNudge(e.FromId, (QQ_t)e.SubjectId);
+			//}
 		});
 
 
