@@ -195,6 +195,44 @@ namespace Cyan
 		throw runtime_error(msg);
 	}
 
+	void MiraiBot::SendNudge(int64_t target, int64_t subject_id, const string& kind)
+	{
+		json data =
+		{
+			{ "sessionKey", sessionKey_ },
+			{ "target", target },
+			{ "subject", subject_id },
+			{ "kind" , kind }
+		};
+
+		auto res = http_client_.Post("/sendNudge", data.dump(), "application/json;charset=UTF-8");
+		if (!res)
+			throw std::runtime_error("网络错误");
+		if (res->status != 200)
+			throw std::runtime_error("[mirai-api-http error]: " + res->body);
+		json re_json = json::parse(res->body);
+		int code = re_json["code"].get<int>();
+		if (code != 0)
+		{
+			string msg = re_json["msg"].get<string>();
+			throw runtime_error(msg);
+		}
+	}
+
+	void MiraiBot::SendNudge(QQ_t target, QQ_t subject_id)
+	{
+		SendNudge(target.ToInt64(), subject_id.ToInt64(), "Friend");
+	}
+
+	void MiraiBot::SendNudge(QQ_t target, GID_t subject_id)
+	{
+		SendNudge(target.ToInt64(), subject_id.ToInt64(), "Group");
+	}
+
+	void MiraiBot::SendNudge(QQ_t target, int64_t subject_id, NudgeEvent::SubjectKind kind)
+	{
+		SendNudge(target.ToInt64(), subject_id, NudgeEvent::SubjectKindStr(kind));
+	}
 
 	FriendImage MiraiBot::UploadFriendImage(const string& fileName)
 	{

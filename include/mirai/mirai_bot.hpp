@@ -25,7 +25,8 @@
 #include "mirai/events/friend_message.hpp"
 #include "mirai/events/group_message.hpp"
 #include "mirai/events/message_event.hpp"
-#include <mirai/events/lost_connection.hpp>
+#include "mirai/events/nudge_event.hpp"
+#include "mirai/events/lost_connection.hpp"
 
 using std::string;
 using std::vector;
@@ -73,7 +74,7 @@ namespace Cyan
 		string GetMiraiCppVersion() const
 		{
 			// mirai-api-http v1.6.5
-			return "1.9.7";
+			return "1.9.10";
 		}
 
 		/**
@@ -128,6 +129,25 @@ namespace Cyan
 		 * \return 用于引用或撤回的消息 ID (MessageId)
 		 */
 		MessageId_t SendMessage(GID_t gid, QQ_t qq, const MessageChain& messageChain, MessageId_t msgId = 0);
+		/**
+		 * @brief 发送戳一戳
+		 * @param target 目标QQ，可以是好友或者Bot的QQ
+		 * @param subject_id 戳一戳接收主体，好友QQ
+		*/
+		void SendNudge(QQ_t target, QQ_t subject_id);
+		/**
+		 * @brief 发送戳一戳
+		 * @param target 目标QQ，可以是好友或者Bot的QQ
+		 * @param subject_id 戳一戳接收主体，群号码
+		*/
+		void SendNudge(QQ_t target, GID_t subject_id);
+		/**
+		 * @brief 发送戳一戳
+		 * @param target 目标QQ，可以是好友或者Bot的QQ
+		 * @param subject_id 戳一戳接收主体，可以是QQ好友或者群号码
+		 * @param kind 需要指定接收主体的类型
+		*/
+		void SendNudge(QQ_t target, int64_t subject_id, NudgeEvent::SubjectKind kind);
 		/**
 		 * \brief 上传可以发送给好友的图片
 		 * \param fileName 文件名
@@ -362,6 +382,7 @@ namespace Cyan
 		void EventLoop(function<void(const char*)> errLogger = nullptr);
 	private:
 		// 私有成员函数
+		void SendNudge(int64_t target, int64_t subject_id, const string& kind);
 		bool SessionVerify();
 		bool SessionRelease();
 		bool SessionConfigure(int cacheSize, bool enableWebsocket);
