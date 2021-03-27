@@ -33,6 +33,8 @@
 #include "bot_leave_kick.hpp"
 #include "bot_invited_join_group_request_event.hpp"
 #include "group_name_change.hpp"
+// 其他事件
+#include "nudge_event.hpp"
 // 一些定义
 #include "event_processer.hpp"
 #include "mirai_event.hpp"
