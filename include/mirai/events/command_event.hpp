@@ -40,7 +40,7 @@ namespace Cyan
 		{
 			CommandName = j["name"].get<string>();
 			Sender = (QQ_t)(j["friend"].get<int64_t>());
-			GroupId = (GID_t)(QQ_t)(j["group"].get<int64_t>());
+			GroupId = (GID_t)(j["group"].get<int64_t>());
 			Args = j["args"].get<vector<string>>();
 			return true;
 		}

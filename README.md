@@ -43,6 +43,7 @@
 | FetchEventsViaHTTP.cpp| 设置通过 HTTP 短轮询获取事件和消息 |
 | GroupMemberInfo.cpp  | 获取/设置群成员的群名片与群头衔 |
 | Command.cpp          | 指令系统相关的操作           |
+| NudgeEvent.cpp       | 戳一戳事件和发送相关的操作    |
 
 ## 0x03 如何使用
 
