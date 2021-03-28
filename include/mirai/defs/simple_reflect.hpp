@@ -29,7 +29,7 @@ namespace Cyan
 			return (t == nullptr) ? nullptr : t();
 		}
 
-		int size() const
+		size_t size() const
 		{
 			return obj_map.size();
 		}
