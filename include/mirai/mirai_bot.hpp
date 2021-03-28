@@ -145,7 +145,7 @@ namespace Cyan
 		 * @param target 目标QQ，可以是好友或者Bot的QQ
 		 * @param subject_id 戳一戳接收主体
 		*/
-		void MiraiBot::SendNudge(QQ_t target, const UID_t& subject_id);
+		void SendNudge(QQ_t target, const UID_t& subject_id);
 		/**
 		 * \brief 上传可以发送给好友的图片
 		 * \param fileName 文件名
