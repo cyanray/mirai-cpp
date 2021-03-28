@@ -25,7 +25,6 @@
 #include "mirai/events/friend_message.hpp"
 #include "mirai/events/group_message.hpp"
 #include "mirai/events/message_event.hpp"
-#include "mirai/events/nudge_event.hpp"
 #include "mirai/events/lost_connection.hpp"
 
 using std::string;
@@ -144,10 +143,9 @@ namespace Cyan
 		/**
 		 * @brief 发送戳一戳
 		 * @param target 目标QQ，可以是好友或者Bot的QQ
-		 * @param subject_id 戳一戳接收主体，可以是QQ好友或者群号码
-		 * @param kind 需要指定接收主体的类型
+		 * @param subject_id 戳一戳接收主体
 		*/
-		void SendNudge(QQ_t target, int64_t subject_id, NudgeEvent::SubjectKind kind);
+		void MiraiBot::SendNudge(QQ_t target, const UID_t& subject_id);
 		/**
 		 * \brief 上传可以发送给好友的图片
 		 * \param fileName 文件名

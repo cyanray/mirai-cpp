@@ -229,9 +229,16 @@ namespace Cyan
 		SendNudge(target.ToInt64(), subject_id.ToInt64(), "Group");
 	}
 
-	void MiraiBot::SendNudge(QQ_t target, int64_t subject_id, NudgeEvent::SubjectKind kind)
+	void MiraiBot::SendNudge(QQ_t target, const UID_t& subject_id)
 	{
-		SendNudge(target.ToInt64(), subject_id, NudgeEvent::SubjectKindStr(kind));
+		if (typeid(subject_id) == typeid(GID_t))
+		{
+			SendNudge(target, (const GID_t&)(subject_id));
+		}
+		else
+		{
+			SendNudge(target, (const QQ_t&)(subject_id));
+		}
 	}
 
 	FriendImage MiraiBot::UploadFriendImage(const string& fileName)
