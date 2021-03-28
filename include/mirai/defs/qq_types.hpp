@@ -3,43 +3,73 @@
 #define mirai_cpp_defs_qq_types_hpp_H_
 
 #include <exception>
+#include <iostream>
 #include "serializable.hpp"
 #include "mirai/exported.h"
 
 namespace Cyan
 {
-	// QQ 号码类型
-	class QQ_t
+	// QQ_t 和 GID_t 的基类型
+	class UID_t
 	{
 	public:
-		QQ_t() :QQ(-1) {}
-		explicit  QQ_t(int64_t qq) :QQ(qq) {}
-		operator int64_t() const { return QQ; }
-		int64_t ToInt64() const { return QQ; }
+		int64_t ToInt64() const
+		{
+			return data_;
+		}
+		explicit operator int64_t() const
+		{
+			return data_;
+		}
+		bool operator==(const UID_t& a) const
+		{
+			return this->data_ == a.data_;
+		}
+		bool operator!=(const UID_t& a) const
+		{
+			return !operator==(a);
+		}
+		virtual ~UID_t() = default;
+	protected:
+		explicit UID_t(int64_t id) : data_(id) {}
+		virtual void __avoiding_object_slicing() const = 0;
+		int64_t data_;
+	};
+	
+	// 储存 QQ 号码的类型
+	class QQ_t : public UID_t
+	{
+	public:
+		QQ_t() : UID_t(-1) {}
+		explicit QQ_t(int64_t id) : UID_t(id) {}
 	private:
-		int64_t QQ;
+		virtual void __avoiding_object_slicing() const override {}
 	};
 
-	inline QQ_t operator "" _qq(unsigned long long int v)
+	// 储存群号码的类型
+	class GID_t : public UID_t
 	{
-		return QQ_t(int64_t(v));
+	public:
+		GID_t() : UID_t(-1) {}
+		explicit GID_t(int64_t id) : UID_t(id) {}
+	private:
+		virtual void __avoiding_object_slicing() const override {}
+	};
+
+	inline GID_t operator ""_gid(unsigned long long int id)
+	{
+		return (GID_t)(id);
 	}
 
-	// 群号码类型
-	class GID_t
+	inline QQ_t operator ""_qq(unsigned long long int id)
 	{
-	public:
-		GID_t() :GID(-1) {}
-		explicit GID_t(int64_t gid) :GID(gid) {}
-		operator int64_t() const { return GID; }
-		int64_t ToInt64() const { return GID; }
-	private:
-		int64_t GID;
-	};
+		return (QQ_t)(id);
+	}
 
-	inline GID_t operator "" _gid(unsigned long long int v)
+	inline std::ostream& operator<<(std::ostream& o, const UID_t& uid)
 	{
-		return GID_t(int64_t(v));
+		o << (int64_t)(uid);
+		return o;
 	}
 
 	// 消息 ID
