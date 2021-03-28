@@ -58,18 +58,18 @@ int main()
 			// 注意: 因此必须过滤掉来自bot自己的戳一戳事件，不然会导致死循环
 			if (e.FromId.ToInt64() == bot.GetBotQQ().ToInt64()) return;
 
-			cout << e.FromId.ToInt64() << " " << e.Action << " " << e.Target << " " << e.Suffix;
+			cout << e.FromId.ToInt64() << " " << e.Action << " " << e.Target << " " << e.Suffix << endl;
 			// 如果别人戳机器人，那么就让机器人戳回去
 			if (e.Target.ToInt64() != bot.GetBotQQ().ToInt64()) return;
-			bot.SendNudge(e.FromId, e.SubjectId, e.FromKind);
+			bot.SendNudge(e.FromId, *e.GetSubjectId());
 			// 如果不喜欢上面这一行代码，也可以用下面的代码代替
 			//if (e.FromKind == NudgeEvent::SubjectKind::Group)
 			//{
-			//	bot.SendNudge(e.FromId, (GID_t)e.SubjectId);
+			//	bot.SendNudge(e.FromId, (GID_t)e.RawSubjectId);
 			//}
 			//else
 			//{
-			//	bot.SendNudge(e.FromId, (QQ_t)e.SubjectId);
+			//	bot.SendNudge(e.FromId, (QQ_t)e.RawSubjectId);
 			//}
 		});
 
