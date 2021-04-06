@@ -388,6 +388,7 @@ namespace Cyan
 		void FetchEventsWs();
 		void ProcessEvent(std::string& event_json_str);
 		void HandlingSingleEvent(const json& ele);
+		MiraiImage UploadImage(const string& fileName, const string& type);
 		bool Release() noexcept;
 		EventCallback<LostConnection> LostConnectionCallback;
 
