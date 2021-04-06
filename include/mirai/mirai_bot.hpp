@@ -171,6 +171,13 @@ namespace Cyan
 		*/
 		MiraiVoice UploadGroupVoice(const string& filename);
 		/**
+		 * @brief 上传并发送群文件
+		 * @param gid 目标群
+		 * @param filename 文件名
+		 * @return MiraiFile
+		*/
+		MiraiFile UploadFileAndSend(GID_t gid, const string& filename);
+		/**
 		 * \brief 获得好友列表
 		 * \return vector<Friend_t>
 		 */
@@ -390,6 +397,7 @@ namespace Cyan
 		void HandlingSingleEvent(const json& ele);
 		MiraiImage UploadImage(const string& fileName, const string& type);
 		MiraiVoice UploadVoice(const string& filename, const string& type);
+		MiraiFile UploadFileAndSend(int64_t target, const string& filename, const string& type);
 		bool Release() noexcept;
 		EventCallback<LostConnection> LostConnectionCallback;
 

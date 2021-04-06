@@ -16,6 +16,11 @@ namespace Cyan
 			name_(m.name_), 
 			internalId_(m.internalId_), 
 			size_(m.size_) {}
+		FileMessage(const MiraiFile& m) :
+			id_(m.Id),
+			name_(m.FileName),
+			internalId_(m.InternalId),
+			size_(m.FileSize) {}
 		FileMessage(FileMessage&& m) noexcept
 		{
 			std::swap(this->id_, m.id_);

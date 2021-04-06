@@ -312,6 +312,38 @@ namespace Cyan
 		return UploadVoice(filename, "group");
 	}
 
+	MiraiFile MiraiBot::UploadFileAndSend(int64_t target, const string& filename, const string& type)
+	{
+		string base_filename = filename.substr(filename.find_last_of("/\\") + 1);
+		string file_data = ReadFile(filename);
+		httplib::MultipartFormDataItems items =
+		{
+		  { "sessionKey", sessionKey_, "", "" },
+		  { "type", type, "", "" },
+		  { "target", to_string(target), "", "" },
+		  { "path", "/" + base_filename, "", "" },
+		  { "file", file_data, base_filename, "application/octet-stream"  }
+		};
+
+		auto res = http_client_.Post("/uploadFileAndSend", items);
+
+		if (!res)
+			throw runtime_error("网络错误");
+		if (res->status != 200)
+			throw std::runtime_error("[mirai-http-api error]: " + res->body);
+		json re_json = json::parse(res->body);
+		MiraiFile result;
+		result.FileSize = file_data.size();
+		result.FileName = base_filename;
+		result.Id = re_json["id"].get<string>();
+		return result;
+	}
+
+	MiraiFile MiraiBot::UploadFileAndSend(GID_t gid, const string& filename)
+	{
+		return UploadFileAndSend(gid.ToInt64(), filename, "Group");
+	}
+
 	vector<Friend_t> MiraiBot::GetFriendList()
 	{
 		auto res = http_client_.Get(("/friendList?sessionKey=" + sessionKey_).data());
