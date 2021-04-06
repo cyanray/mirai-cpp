@@ -17,9 +17,14 @@ namespace
 	// 因为 httplib 使用 string 来保存文件内容，这里返回值也跟着适配
 	string ReadFile(const string& filename)
 	{
+#ifdef _WIN32
+		// 将 utf-8 转换为 utf-16
+		// 这样才能打开 windows 上带有 unicode 字符的文件
 		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-		wstring wfilename = converter.from_bytes(filename);
-		std::ifstream ifs(wfilename, std::ifstream::binary);
+		std::ifstream ifs(converter.from_bytes(filename), std::ifstream::binary);
+#else
+		std::ifstream ifs(filename, std::ifstream::binary);
+#endif // _WIN32
 		if (!ifs.is_open()) throw std::runtime_error("打开文件失败，请确认路径是否正确并检查文件是否存在");
 		std::filebuf* pbuf = ifs.rdbuf();
 		std::size_t size = pbuf->pubseekoff(0, ifs.end, ifs.in);
