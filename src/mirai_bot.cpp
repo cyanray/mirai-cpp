@@ -241,10 +241,10 @@ namespace Cyan
 		}
 	}
 
-	MiraiImage MiraiBot::UploadImage(const string& fileName, const string& type)
+	MiraiImage MiraiBot::UploadImage(const string& filename, const string& type)
 	{
-		string base_filename = fileName.substr(fileName.find_last_of("/\\") + 1);
-		string img_data = ReadFile(fileName);
+		string base_filename = filename.substr(filename.find_last_of("/\\") + 1);
+		string img_data = ReadFile(filename);
 		httplib::MultipartFormDataItems items =
 		{
 		  { "sessionKey", sessionKey_, "", "" },
@@ -266,29 +266,30 @@ namespace Cyan
 		return img;
 	}
 
-	FriendImage MiraiBot::UploadFriendImage(const string& fileName)
+	FriendImage MiraiBot::UploadFriendImage(const string& filename)
 	{
-		return UploadImage(fileName, "friend");
+		return UploadImage(filename, "friend");
 	}
 
-	GroupImage MiraiBot::UploadGroupImage(const string& fileName)
+	GroupImage MiraiBot::UploadGroupImage(const string& filename)
 	{
-		return UploadImage(fileName, "group");
+		return UploadImage(filename, "group");
 	}
 
-	TempImage MiraiBot::UploadTempImage(const string& fileName)
+	TempImage MiraiBot::UploadTempImage(const string& filename)
 	{
-		return UploadImage(fileName, "temp");
+		return UploadImage(filename, "temp");
 	}
 
-	MiraiVoice MiraiBot::UploadGroupVoice(const string& filename)
+	MiraiVoice MiraiBot::UploadVoice(const string& filename, const string& type)
 	{
+		string base_filename = filename.substr(filename.find_last_of("/\\") + 1);
 		string voice_data = ReadFile(filename);
 		httplib::MultipartFormDataItems items =
 		{
 		  { "sessionKey", sessionKey_, "", "" },
-		  { "type", "group", "", "" },
-		  { "voice", voice_data, std::to_string(rand()) + ".amr", "application/octet-stream"  }
+		  { "type", type, "", "" },
+		  { "voice", voice_data, base_filename, "application/octet-stream"  }
 		};
 
 		auto res = http_client_.Post("/uploadVoice", items);
@@ -304,6 +305,11 @@ namespace Cyan
 			result.Url = re_json["url"].get<string>();
 		result.Path = re_json["path"].get<string>();
 		return result;
+	}
+
+	MiraiVoice MiraiBot::UploadGroupVoice(const string& filename)
+	{
+		return UploadVoice(filename, "group");
 	}
 
 	vector<Friend_t> MiraiBot::GetFriendList()
