@@ -109,18 +109,12 @@ namespace Cyan
 		throw std::runtime_error("错误的 GroupPermissionStr");
 	}
 
-	struct MiraiImage
+	typedef struct MiraiImage
 	{
 		string ID;
 		string Url;
 		string Path;
-	};
-
-	typedef MiraiImage FriendImage;
-
-	typedef MiraiImage GroupImage;
-
-	typedef MiraiImage TempImage;
+	} FriendImage, GroupImage, TempImage;
 
 	struct MiraiVoice
 	{
