@@ -147,6 +147,11 @@ namespace Cyan
 		*/
 		void SendNudge(QQ_t target, const UID_t& subject_id);
 		/**
+		 * @brief 设置精华消息
+		 * @param target 群消息的 MessageId
+		*/
+		void SetEssence(MessageId_t target);
+		/**
 		 * \brief 上传可以发送给好友的图片
 		 * \param fileName 文件名
 		 * \return 好友图片

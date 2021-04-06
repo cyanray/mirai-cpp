@@ -250,6 +250,28 @@ namespace Cyan
 		}
 	}
 
+	void MiraiBot::SetEssence(MessageId_t target)
+	{
+		json data =
+		{
+			{ "sessionKey", sessionKey_ },
+			{ "target", target }
+		};
+
+		auto res = http_client_.Post("/setEssence", data.dump(), "application/json;charset=UTF-8");
+		if (!res)
+			throw std::runtime_error("网络错误");
+		if (res->status != 200)
+			throw std::runtime_error("[mirai-api-http error]: " + res->body);
+		json re_json = json::parse(res->body);
+		int code = re_json["code"].get<int>();
+		if (code != 0)
+		{
+			string msg = re_json["msg"].get<string>();
+			throw runtime_error(msg);
+		}
+	}
+
 	MiraiImage MiraiBot::UploadImage(const string& filename, const string& type)
 	{
 		string base_filename = filename.substr(filename.find_last_of("/\\") + 1);
