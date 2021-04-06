@@ -3,6 +3,8 @@
 #include <mutex>
 #include <condition_variable>
 #include <exception>
+#include <locale>
+#include <codecvt>
 #include "mirai/mirai_bot.hpp"
 #include "mirai/third-party/WebSocketClient.h"
 #include "mirai/third-party/WebSocketClient.cpp"
@@ -15,7 +17,9 @@ namespace
 	// 因为 httplib 使用 string 来保存文件内容，这里返回值也跟着适配
 	string ReadFile(const string& filename)
 	{
-		std::ifstream ifs(filename, std::ifstream::binary);
+		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+		wstring wfilename = converter.from_bytes(filename);
+		std::ifstream ifs(wfilename, std::ifstream::binary);
 		if (!ifs.is_open()) throw std::runtime_error("打开文件失败，请确认路径是否正确并检查文件是否存在");
 		std::filebuf* pbuf = ifs.rdbuf();
 		std::size_t size = pbuf->pubseekoff(0, ifs.end, ifs.in);
@@ -332,11 +336,17 @@ namespace Cyan
 		if (res->status != 200)
 			throw std::runtime_error("[mirai-http-api error]: " + res->body);
 		json re_json = json::parse(res->body);
-		MiraiFile result;
-		result.FileSize = file_data.size();
-		result.FileName = base_filename;
-		result.Id = re_json["id"].get<string>();
-		return result;
+		int code = re_json["code"].get<int>();
+		if (code == 0)
+		{
+			MiraiFile result;
+			result.FileSize = file_data.size();
+			result.FileName = base_filename;
+			result.Id = re_json["id"].get<string>();
+			return result;
+		}
+		string msg = re_json["msg"].get<string>();
+		throw runtime_error(msg);
 	}
 
 	MiraiFile MiraiBot::UploadFileAndSend(GID_t gid, const string& filename)
