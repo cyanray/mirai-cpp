@@ -241,15 +241,15 @@ namespace Cyan
 		}
 	}
 
-	FriendImage MiraiBot::UploadFriendImage(const string& fileName)
+	MiraiImage MiraiBot::UploadImage(const string& filename, const string& type)
 	{
-		srand(time(0));
-		string img_data = ReadFile(fileName);
+		string base_filename = filename.substr(filename.find_last_of("/\\") + 1);
+		string img_data = ReadFile(filename);
 		httplib::MultipartFormDataItems items =
 		{
 		  { "sessionKey", sessionKey_, "", "" },
-		  { "type", "friend", "", "" },
-		  { "img", img_data,std::to_string(rand()) + ".png", "image/png" }
+		  { "type", type, "", "" },
+		  { "img", img_data, base_filename, "image/png" }
 		};
 
 		auto res = http_client_.Post("/uploadImage", items);
@@ -259,74 +259,37 @@ namespace Cyan
 		if (res->status != 200)
 			throw std::runtime_error("[mirai-http-api error]: " + res->body);
 		json re_json = json::parse(res->body);
-		FriendImage img;
-		img.ID = re_json["imageId"].get<string>();
+		MiraiImage img;
+		img.Id = re_json["imageId"].get<string>();
 		img.Url = re_json["url"].get<string>();
 		img.Path = re_json["path"].get<string>();
 		return img;
 	}
 
-
-	GroupImage MiraiBot::UploadGroupImage(const string& fileName)
+	FriendImage MiraiBot::UploadFriendImage(const string& filename)
 	{
-		srand(time(0));
-		string img_data = ReadFile(fileName);
-		httplib::MultipartFormDataItems items =
-		{
-		  { "sessionKey", sessionKey_, "", "" },
-		  { "type", "group", "", "" },
-		  { "img", img_data, std::to_string(rand()) + ".png", "image/png"  }
-		};
-
-		auto res = http_client_.Post("/uploadImage", items);
-
-		if (!res)
-			throw runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-http-api error]: " + res->body);
-		json re_json = json::parse(res->body);
-		GroupImage img;
-		img.ID = re_json["imageId"].get<string>();
-		img.Url = re_json["url"].get<string>();
-		img.Path = re_json["path"].get<string>();
-		return img;
+		return UploadImage(filename, "friend");
 	}
 
-
-	TempImage MiraiBot::UploadTempImage(const string& fileName)
+	GroupImage MiraiBot::UploadGroupImage(const string& filename)
 	{
-		srand(time(0));
-		string img_data = ReadFile(fileName);
-		httplib::MultipartFormDataItems items =
-		{
-		  { "sessionKey", sessionKey_, "", "" },
-		  { "type", "temp", "", "" },
-		  { "img", img_data, std::to_string(rand()) + ".png", "image/png"  }
-		};
-
-		auto res = http_client_.Post("/uploadImage", items);
-
-		if (!res)
-			throw runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-http-api error]: " + res->body);
-		json re_json = json::parse(res->body);
-		TempImage img;
-		img.ID = re_json["imageId"].get<string>();
-		img.Url = re_json["url"].get<string>();
-		img.Path = re_json["path"].get<string>();
-		return img;
+		return UploadImage(filename, "group");
 	}
 
-
-	MiraiVoice MiraiBot::UploadGroupVoice(const string& filename)
+	TempImage MiraiBot::UploadTempImage(const string& filename)
 	{
+		return UploadImage(filename, "temp");
+	}
+
+	MiraiVoice MiraiBot::UploadVoice(const string& filename, const string& type)
+	{
+		string base_filename = filename.substr(filename.find_last_of("/\\") + 1);
 		string voice_data = ReadFile(filename);
 		httplib::MultipartFormDataItems items =
 		{
 		  { "sessionKey", sessionKey_, "", "" },
-		  { "type", "group", "", "" },
-		  { "voice", voice_data, std::to_string(rand()) + ".amr", "application/octet-stream"  }
+		  { "type", type, "", "" },
+		  { "voice", voice_data, base_filename, "application/octet-stream"  }
 		};
 
 		auto res = http_client_.Post("/uploadVoice", items);
@@ -342,6 +305,11 @@ namespace Cyan
 			result.Url = re_json["url"].get<string>();
 		result.Path = re_json["path"].get<string>();
 		return result;
+	}
+
+	MiraiVoice MiraiBot::UploadGroupVoice(const string& filename)
+	{
+		return UploadVoice(filename, "group");
 	}
 
 	vector<Friend_t> MiraiBot::GetFriendList()

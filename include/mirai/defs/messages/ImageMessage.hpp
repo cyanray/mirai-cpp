@@ -10,7 +10,7 @@ namespace Cyan
 	{
 	public:
 		ImageMessage() {}
-		ImageMessage(const MiraiImage& m) : imageId_(m.ID), url_(m.Url), path_(m.Path) {}
+		ImageMessage(const MiraiImage& m) : imageId_(m.Id), url_(m.Url), path_(m.Path) {}
 		ImageMessage(const ImageMessage& m) : imageId_(m.imageId_), url_(m.url_), path_(m.path_) {}
 		ImageMessage(ImageMessage&& m) noexcept
 		{
@@ -78,7 +78,7 @@ namespace Cyan
 		MiraiImage ToMiraiImage() const
 		{
 			MiraiImage tmp;
-			tmp.ID = imageId_;
+			tmp.Id = imageId_;
 			tmp.Url = url_;
 			tmp.Path = path_;
 			return tmp;
