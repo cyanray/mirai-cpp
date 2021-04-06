@@ -22,6 +22,7 @@
 #include "messages/PokeMessage.hpp"
 #include "messages/QuoteMessage.hpp"
 #include "messages/VoiceMessage.hpp"
+#include "messages/FileMessage.hpp"
 
 using std::vector;
 

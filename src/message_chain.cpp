@@ -21,6 +21,7 @@ namespace Cyan
 			factory_.Register<FaceMessage>("Face");
 			factory_.Register<PokeMessage>("Poke");
 			factory_.Register<QuoteMessage>("Quote");
+			factory_.Register<FileMessage>("File");
 		}
 	}
 
