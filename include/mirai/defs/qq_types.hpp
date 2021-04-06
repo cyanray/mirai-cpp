@@ -129,6 +129,17 @@ namespace Cyan
 		string Path;
 	};
 
+	/**
+	 * @brief 上传文件后得到的对象，可用于发文件消息
+	*/
+	struct MiraiFile
+	{
+		string Id;
+		string FileName;
+		size_t FileSize;
+		int InternalId = 102;
+	};
+
 	// 预先声明 MiraiBot 类
 	class EXPORTED MiraiBot;
 
