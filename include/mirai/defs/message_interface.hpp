@@ -16,7 +16,10 @@ namespace Cyan
 		IMessage() {}
 		virtual const string& GetType() const = 0;
 		virtual bool operator==(const IMessage&) const = 0;
-		virtual bool operator!=(const IMessage&) const = 0;
+		virtual bool operator!=(const IMessage& m) const
+		{
+			return !(*this == m);
+		}
 		virtual ~IMessage() {}
 	};
 
