@@ -14,13 +14,7 @@
 #include "mirai/third-party/httplib.h"
 // mirai header files
 #include "mirai/exported.h"
-#include "mirai/defs/qq_types.hpp"
-#include "mirai/defs/message_chain.hpp"
-#include "mirai/defs/friend.hpp"
-#include "mirai/defs/group.hpp"
-#include "mirai/defs/group_member.hpp"
-#include "mirai/defs/group_member_info.hpp"
-#include "mirai/defs/group_config.hpp"
+#include "mirai/defs/defs.hpp"
 #include "mirai/events/event_processer.hpp"
 #include "mirai/events/friend_message.hpp"
 #include "mirai/events/group_message.hpp"
@@ -205,6 +199,19 @@ namespace Cyan
 		 * \return GroupMemberInfo
 		 */
 		GroupMemberInfo GetGroupMemberInfo(GID_t gid, QQ_t memberId);
+		/**
+		 * @brief 获取群文件列表
+		 * @param gid 群组(GID_t)
+		 * @return 群文件列表
+		*/
+		vector<GroupFile> GetGroupFiles(GID_t gid);
+		/**
+		 * @brief 获取群文件详细信息
+		 * @param gid 群组(GID_t)
+		 * @param groupFile 群文件(GroupFile)
+		 * @return GroupFileInfo
+		*/
+		GroupFileInfo GetGroupFileInfo(GID_t gid, const GroupFile& groupFile);
 		/**
 		 * \brief 设置群成员的群名片和群头衔信息
 		 * \param gid 群组(GID_t)
