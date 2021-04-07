@@ -506,6 +506,59 @@ namespace Cyan
 		return this->SetGroupMemberInfo(gid, memberId, member_info);
 	}
 
+	vector<GroupFile> MiraiBot::GetGroupFiles(GID_t gid)
+	{
+		stringstream api_url;
+		api_url
+			<< "/groupFileList?sessionKey="
+			<< sessionKey_
+			<< "&target="
+			<< int64_t(gid);
+		auto res = http_client_.Get(api_url.str().data());
+		if (!res)
+			throw std::runtime_error("网络错误");
+		if (res->status != 200)
+			throw std::runtime_error("[mirai-api-http error]: " + res->body);
+		json re_json = json::parse(res->body);
+		if (re_json.find("code") != re_json.end())
+		{
+			throw std::runtime_error(re_json["msg"]);
+		}
+		vector<GroupFile> result;
+		for (const auto& item : re_json)
+		{
+			GroupFile f;
+			f.Set(item);
+			result.push_back(f);
+		}
+		return result;
+	}
+
+	GroupFileInfo MiraiBot::GetGroupFileInfo(GID_t gid, const GroupFile& groupFile)
+	{
+		stringstream api_url;
+		api_url
+			<< "/groupFileInfo?sessionKey="
+			<< sessionKey_
+			<< "&target="
+			<< int64_t(gid)
+			<< "&id="
+			<< groupFile.Id;
+		auto res = http_client_.Get(api_url.str().data());
+		if (!res)
+			throw std::runtime_error("网络错误");
+		if (res->status != 200)
+			throw std::runtime_error("[mirai-api-http error]: " + res->body);
+		json re_json = json::parse(res->body);
+		if (re_json.find("code") != re_json.end())
+		{
+			throw std::runtime_error(re_json["msg"]);
+		}
+		GroupFileInfo result;
+		result.Set(re_json);
+		return result;
+	}
+
 	bool MiraiBot::MuteAll(GID_t target)
 	{
 		json data =
