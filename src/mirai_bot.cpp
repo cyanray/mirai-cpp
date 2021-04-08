@@ -559,6 +559,77 @@ namespace Cyan
 		return result;
 	}
 
+	void MiraiBot::GroupFileRename(GID_t gid, const GroupFile& groupFile, const string& newName)
+	{
+		json data =
+		{
+			{ "sessionKey", sessionKey_ },
+			{ "target", int64_t(gid) },
+			{ "id", groupFile.Id },
+			{ "rename", newName }
+		};
+
+		auto res = http_client_.Post("/groupFileRename", data.dump(), "application/json;charset=UTF-8");
+		if (!res)
+			throw std::runtime_error("网络错误");
+		if (res->status != 200)
+			throw std::runtime_error("[mirai-api-http error]: " + res->body);
+		json re_json = json::parse(res->body);
+		int code = re_json["code"].get<int>();
+		if (code != 0)
+		{
+			string msg = re_json["msg"].get<string>();
+			throw runtime_error(msg);
+		}
+	}
+
+	void MiraiBot::GroupFileMove(GID_t gid, const GroupFile& groupFile, const string& moveToPath)
+	{
+		json data =
+		{
+			{ "sessionKey", sessionKey_ },
+			{ "target", int64_t(gid) },
+			{ "id", groupFile.Id },
+			{ "movePath", moveToPath }
+		};
+
+		auto res = http_client_.Post("/groupFileMove", data.dump(), "application/json;charset=UTF-8");
+		if (!res)
+			throw std::runtime_error("网络错误");
+		if (res->status != 200)
+			throw std::runtime_error("[mirai-api-http error]: " + res->body);
+		json re_json = json::parse(res->body);
+		int code = re_json["code"].get<int>();
+		if (code != 0)
+		{
+			string msg = re_json["msg"].get<string>();
+			throw runtime_error(msg);
+		}
+	}
+
+	void MiraiBot::GroupFileDelete(GID_t gid, const GroupFile& groupFile)
+	{
+		json data =
+		{
+			{ "sessionKey", sessionKey_ },
+			{ "target", int64_t(gid) },
+			{ "id", groupFile.Id }
+		};
+
+		auto res = http_client_.Post("/groupFileDelete", data.dump(), "application/json;charset=UTF-8");
+		if (!res)
+			throw std::runtime_error("网络错误");
+		if (res->status != 200)
+			throw std::runtime_error("[mirai-api-http error]: " + res->body);
+		json re_json = json::parse(res->body);
+		int code = re_json["code"].get<int>();
+		if (code != 0)
+		{
+			string msg = re_json["msg"].get<string>();
+			throw runtime_error(msg);
+		}
+	}
+
 	bool MiraiBot::MuteAll(GID_t target)
 	{
 		json data =

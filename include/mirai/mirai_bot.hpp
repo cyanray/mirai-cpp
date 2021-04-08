@@ -213,6 +213,26 @@ namespace Cyan
 		*/
 		GroupFileInfo GetGroupFileInfo(GID_t gid, const GroupFile& groupFile);
 		/**
+		 * @brief 重命名群文件
+		 * @param gid 群组(GID_t)
+		 * @param groupFile 群文件(GroupFile)
+		 * @param newName 新群文件名
+		*/
+		void GroupFileRename(GID_t gid, const GroupFile& groupFile, const string& newName);
+		/**
+		 * @brief 移动群文件
+		 * @param gid 群组(GID_t)
+		 * @param groupFile 群文件(GroupFile)
+		 * @param moveToPath 移动目标路径, "/" 为根目录
+		*/
+		void GroupFileMove(GID_t gid, const GroupFile& groupFile, const string& moveToPath = "/");
+		/**
+		 * @brief 删除群文件
+		 * @param gid 群组(GID_t)
+		 * @param groupFile 群文件(GroupFile)
+		*/
+		void GroupFileDelete(GID_t gid, const GroupFile& groupFile);
+		/**
 		 * \brief 设置群成员的群名片和群头衔信息
 		 * \param gid 群组(GID_t)
 		 * \param memberId 群成员(QQ_t)
