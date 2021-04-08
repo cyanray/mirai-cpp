@@ -134,20 +134,20 @@ TEST(MessageChain_Test, ImageMessage) {
     using namespace Cyan;
     MessageChain mc;
     MiraiImage img;
-    img.ID = "{qweasd}.png";
+    img.Id = "{qweasd}.png";
     mc.Plain("Image:").Image(img);
     auto img_msg = mc.GetFirst<ImageMessage>();
-    ASSERT_TRUE(img_msg.ToMiraiImage().ID == "{qweasd}.png");
+    ASSERT_TRUE(img_msg.ToMiraiImage().Id == "{qweasd}.png");
 }
 
 TEST(MessageChain_Test, FlashImageMessage) {
     using namespace Cyan;
     MessageChain mc;
     MiraiImage img;
-    img.ID = "{qweasd}.png";
+    img.Id = "{qweasd}.png";
     mc.Plain("Image:").FlashImage(img);
     auto img_msg = mc.GetFirst<FlashImageMessage>();
-    ASSERT_TRUE(img_msg.ToMiraiImage().ID == "{qweasd}.png");
+    ASSERT_TRUE(img_msg.ToMiraiImage().Id == "{qweasd}.png");
 }
 
 TEST(MessageChain_Test, AtMessage) {
