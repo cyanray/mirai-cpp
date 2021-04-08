@@ -13,10 +13,10 @@ namespace Cyan
 	public:
 		string Name;
 		string Announcement;
-		bool ConfessTalk;
-		bool AllowMemberInvite;
-		bool AutoApprove;
-		bool AnonymousChat;
+		bool ConfessTalk = false;
+		bool AllowMemberInvite = false;
+		bool AutoApprove = false;
+		bool AnonymousChat = false;
 		virtual bool Set(const json& j) override
 		{
 			Name = j["name"].get<string>();

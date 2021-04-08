@@ -8,12 +8,16 @@
 #include "mirai/mirai_bot.hpp"
 #include "mirai/third-party/WebSocketClient.h"
 #include "mirai/third-party/WebSocketClient.cpp"
+#include "mirai/exceptions/network_exception.hpp"
+#include "mirai/exceptions/mirai_api_http_exception.hpp"
 
 using std::runtime_error;
 using std::stringstream;
 
 namespace
 {
+	const string CONTENT_TYPE = "application/json;charset=UTF-8";
+
 	// 因为 httplib 使用 string 来保存文件内容，这里返回值也跟着适配
 	string ReadFile(const string& filename)
 	{
@@ -34,6 +38,24 @@ namespace
 		ifs.close();
 		return result;
 	}
+
+	json ParseOrThrowException(const shared_ptr<httplib::Response>& response)
+	{
+		using namespace Cyan;
+		if (!response) throw NetworkException();
+		json re_json = json::parse(response->body);
+		if (re_json.find("code") != re_json.end())
+		{
+			int code = re_json["code"].get<int>();
+			if (code != 0)
+			{
+				string msg = re_json["msg"].get<string>();
+				throw MiraiApiHttpException(code, msg);
+			}
+		}
+		return re_json;
+	}
+
 }
 
 namespace Cyan
@@ -84,9 +106,9 @@ namespace Cyan
 
 		auto res = http_client_.Get("/about");
 		if (!res)
-			throw runtime_error("网络错误");
+			throw NetworkException();
 		if (res->status != 200)
-			throw std::runtime_error("[mirai-http-api error]: " + res->body);
+			throw MiraiApiHttpException(-1, res->body);
 		json re_json = json::parse(res->body);
 		int code = re_json["code"].get<int>();
 		if (code == 0)
@@ -104,22 +126,12 @@ namespace Cyan
 		{
 			{ "authKey", authKey }
 		};
-
-		auto res = http_client_.Post("/auth", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code == 0)
-		{
-			this->sessionKey_ = re_json["session"].get<string>();
-			this->authKey_ = authKey;
-			this->qq_ = qq;
-			return SessionVerify();
-		}
-		throw runtime_error("Auth Key 不正确");
+		auto res = http_client_.Post("/auth", data.dump(), CONTENT_TYPE.c_str());
+		json re_json = ParseOrThrowException(res);
+		this->sessionKey_ = re_json["session"].get<string>();
+		this->authKey_ = authKey;
+		this->qq_ = qq;
+		return SessionVerify();
 	}
 
 
@@ -128,25 +140,15 @@ namespace Cyan
 		json data =
 		{
 			{ "sessionKey", sessionKey_ },
-			{"target",int64_t(target)}
+			{ "target",int64_t(target) }
 		};
 		data["messageChain"] = messageChain.ToJson();
 		if (msgId != 0) data["quote"] = msgId;
 
-		auto res = http_client_.Post("/sendFriendMessage", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code == 0)
-		{
-			MessageId_t msg_id = re_json["messageId"].get<int>();
-			return msg_id;
-		}
-		string msg = re_json["msg"].get<string>();
-		throw runtime_error(msg);
+		auto res = http_client_.Post("/sendFriendMessage", data.dump(), CONTENT_TYPE.c_str());
+		json re_json = ParseOrThrowException(res);
+		MessageId_t msg_id = re_json["messageId"].get<int>();
+		return msg_id;
 	}
 
 
@@ -155,53 +157,32 @@ namespace Cyan
 		json data =
 		{
 			{ "sessionKey", sessionKey_ },
-			{"target",int64_t(target)}
+			{ "target",int64_t(target) }
 		};
 		data["messageChain"] = messageChain.ToJson();
 		if (msgId != 0) data["quote"] = msgId;
 
-		auto res = http_client_.Post("/sendGroupMessage", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code == 0)
-		{
-			MessageId_t msg_id = re_json["messageId"].get<int>();
-			return msg_id;
-		}
-		string msg = re_json["msg"].get<string>();
-		throw runtime_error(msg);
+		auto res = http_client_.Post("/sendGroupMessage", data.dump(), CONTENT_TYPE.c_str());
+		json re_json = ParseOrThrowException(res);
+		MessageId_t msg_id = re_json["messageId"].get<int>();
+		return msg_id;
 	}
-
 
 	MessageId_t MiraiBot::SendMessage(GID_t gid, QQ_t qq, const MessageChain& messageChain, MessageId_t msgId)
 	{
 		json data =
 		{
 			{ "sessionKey", sessionKey_ },
-			{"group",int64_t(gid)},
-			{"qq",int64_t(qq)}
+			{ "group",int64_t(gid) },
+			{ "qq",int64_t(qq) }
 		};
 		data["messageChain"] = messageChain.ToJson();
 		if (msgId != 0) data["quote"] = msgId;
 
-		auto res = http_client_.Post("/sendTempMessage", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code == 0)
-		{
-			MessageId_t msg_id = re_json["messageId"].get<int>();
-			return msg_id;
-		}
-		string msg = re_json["msg"].get<string>();
-		throw runtime_error(msg);
+		auto res = http_client_.Post("/sendTempMessage", data.dump(), CONTENT_TYPE.c_str());
+		json re_json = ParseOrThrowException(res);
+		MessageId_t msg_id = re_json["messageId"].get<int>();
+		return msg_id;
 	}
 
 	void MiraiBot::SendNudge(int64_t target, int64_t subject_id, const string& kind)
@@ -214,18 +195,8 @@ namespace Cyan
 			{ "kind" , kind }
 		};
 
-		auto res = http_client_.Post("/sendNudge", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code != 0)
-		{
-			string msg = re_json["msg"].get<string>();
-			throw runtime_error(msg);
-		}
+		auto res = http_client_.Post("/sendNudge", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
 	}
 
 	void MiraiBot::SendNudge(QQ_t target, QQ_t subject_id)
@@ -258,18 +229,8 @@ namespace Cyan
 			{ "target", target }
 		};
 
-		auto res = http_client_.Post("/setEssence", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code != 0)
-		{
-			string msg = re_json["msg"].get<string>();
-			throw runtime_error(msg);
-		}
+		auto res = http_client_.Post("/setEssence", data.dump(), CONTENT_TYPE.c_str());
+		json re_json = ParseOrThrowException(res);
 	}
 
 	MiraiImage MiraiBot::UploadImage(const string& filename, const string& type)
@@ -284,12 +245,7 @@ namespace Cyan
 		};
 
 		auto res = http_client_.Post("/uploadImage", items);
-
-		if (!res)
-			throw runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-http-api error]: " + res->body);
-		json re_json = json::parse(res->body);
+		json re_json = ParseOrThrowException(res);
 		MiraiImage img;
 		img.Id = re_json["imageId"].get<string>();
 		img.Url = re_json["url"].get<string>();
@@ -324,12 +280,7 @@ namespace Cyan
 		};
 
 		auto res = http_client_.Post("/uploadVoice", items);
-
-		if (!res)
-			throw runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-http-api error]: " + res->body);
-		json re_json = json::parse(res->body);
+		json re_json = ParseOrThrowException(res);
 		MiraiVoice result;
 		result.Id = re_json["voiceId"].get<string>();
 		if (!re_json["url"].is_null())
@@ -357,23 +308,12 @@ namespace Cyan
 		};
 
 		auto res = http_client_.Post("/uploadFileAndSend", items);
-
-		if (!res)
-			throw runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-http-api error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code == 0)
-		{
-			MiraiFile result;
-			result.FileSize = file_data.size();
-			result.FileName = base_filename;
-			result.Id = re_json["id"].get<string>();
-			return result;
-		}
-		string msg = re_json["msg"].get<string>();
-		throw runtime_error(msg);
+		json re_json = ParseOrThrowException(res);
+		MiraiFile result;
+		result.FileSize = file_data.size();
+		result.FileName = base_filename;
+		result.Id = re_json["id"].get<string>();
+		return result;
 	}
 
 	MiraiFile MiraiBot::UploadFileAndSend(GID_t gid, const string& filename)
@@ -384,12 +324,8 @@ namespace Cyan
 	vector<Friend_t> MiraiBot::GetFriendList()
 	{
 		auto res = http_client_.Get(("/friendList?sessionKey=" + sessionKey_).data());
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
+		json re_json = ParseOrThrowException(res);
 		vector<Friend_t> result;
-		json re_json = json::parse(res->body);
 		for (const auto& ele : re_json)
 		{
 			Friend_t f;
@@ -403,12 +339,8 @@ namespace Cyan
 	vector<Group_t> MiraiBot::GetGroupList()
 	{
 		auto res = http_client_.Get(("/groupList?sessionKey=" + sessionKey_).data());
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
+		json re_json = ParseOrThrowException(res);
 		vector<Group_t> result;
-		json re_json = json::parse(res->body);
 		for (const auto& ele : re_json)
 		{
 			Group_t group;
@@ -428,12 +360,8 @@ namespace Cyan
 			<< "&target="
 			<< target;
 		auto res = http_client_.Get(api_url.str().data());
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
+		json re_json = ParseOrThrowException(res);
 		vector<GroupMember_t> result;
-		json re_json = json::parse(res->body);
 		for (const auto& ele : re_json)
 		{
 			GroupMember_t f;
@@ -455,15 +383,7 @@ namespace Cyan
 			<< "&memberId="
 			<< int64_t(memberId);
 		auto res = http_client_.Get(api_url.str().data());
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		if (re_json.find("code") != re_json.end())
-		{
-			throw std::runtime_error(re_json["msg"]);
-		}
+		json re_json = ParseOrThrowException(res);
 		GroupMemberInfo result;
 		result.Set(re_json);
 		return result;
@@ -479,17 +399,9 @@ namespace Cyan
 		};
 		data["info"] = memberInfo.ToJson();
 
-		auto res = http_client_.Post("/memberInfo", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code == 0)
-			return true;
-		string msg = re_json["msg"].get<string>();
-		throw runtime_error(msg);
+		auto res = http_client_.Post("/memberInfo", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
+		return true;
 	}
 
 	bool MiraiBot::SetGroupMemberName(GID_t gid, QQ_t memberId, const string& name)
@@ -515,15 +427,7 @@ namespace Cyan
 			<< "&target="
 			<< int64_t(gid);
 		auto res = http_client_.Get(api_url.str().data());
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		if (re_json.find("code") != re_json.end())
-		{
-			throw std::runtime_error(re_json["msg"]);
-		}
+		json re_json = ParseOrThrowException(res);
 		vector<GroupFile> result;
 		for (const auto& item : re_json)
 		{
@@ -545,15 +449,7 @@ namespace Cyan
 			<< "&id="
 			<< groupFile.Id;
 		auto res = http_client_.Get(api_url.str().data());
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		if (re_json.find("code") != re_json.end())
-		{
-			throw std::runtime_error(re_json["msg"]);
-		}
+		json re_json = ParseOrThrowException(res);
 		GroupFileInfo result;
 		result.Set(re_json);
 		return result;
@@ -569,18 +465,8 @@ namespace Cyan
 			{ "rename", newName }
 		};
 
-		auto res = http_client_.Post("/groupFileRename", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code != 0)
-		{
-			string msg = re_json["msg"].get<string>();
-			throw runtime_error(msg);
-		}
+		auto res = http_client_.Post("/groupFileRename", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
 	}
 
 	void MiraiBot::GroupFileMove(GID_t gid, const GroupFile& groupFile, const string& moveToPath)
@@ -593,18 +479,8 @@ namespace Cyan
 			{ "movePath", moveToPath }
 		};
 
-		auto res = http_client_.Post("/groupFileMove", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code != 0)
-		{
-			string msg = re_json["msg"].get<string>();
-			throw runtime_error(msg);
-		}
+		auto res = http_client_.Post("/groupFileMove", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
 	}
 
 	void MiraiBot::GroupFileDelete(GID_t gid, const GroupFile& groupFile)
@@ -616,18 +492,8 @@ namespace Cyan
 			{ "id", groupFile.Id }
 		};
 
-		auto res = http_client_.Post("/groupFileDelete", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code != 0)
-		{
-			string msg = re_json["msg"].get<string>();
-			throw runtime_error(msg);
-		}
+		auto res = http_client_.Post("/groupFileDelete", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
 	}
 
 	bool MiraiBot::MuteAll(GID_t target)
@@ -638,17 +504,9 @@ namespace Cyan
 			{ "target", int64_t(target)}
 		};
 
-		auto res = http_client_.Post("/muteAll", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code == 0)
-			return true;
-		string msg = re_json["msg"].get<string>();
-		throw runtime_error(msg);
+		auto res = http_client_.Post("/muteAll", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
+		return true;
 	}
 
 
@@ -660,17 +518,9 @@ namespace Cyan
 			{ "target", int64_t(target)}
 		};
 
-		auto res = http_client_.Post("/unmuteAll", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code == 0)
-			return true;
-		string msg = re_json["msg"].get<string>();
-		throw runtime_error(msg);
+		auto res = http_client_.Post("/unmuteAll", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
+		return true;
 	}
 
 
@@ -684,17 +534,9 @@ namespace Cyan
 			{ "time", time_seconds}
 		};
 
-		auto res = http_client_.Post("/mute", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code == 0)
-			return true;
-		string msg = re_json["msg"].get<string>();
-		throw runtime_error(msg);
+		auto res = http_client_.Post("/mute", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
+		return true;
 	}
 
 
@@ -707,17 +549,9 @@ namespace Cyan
 			{ "memberId", int64_t(memberId)}
 		};
 
-		auto res = http_client_.Post("/unmute", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code == 0)
-			return true;
-		string msg = re_json["msg"].get<string>();
-		throw runtime_error(msg);
+		auto res = http_client_.Post("/unmute", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
+		return true;
 	}
 
 
@@ -731,17 +565,9 @@ namespace Cyan
 			{ "reason_msg" , reason_msg}
 		};
 
-		auto res = http_client_.Post("/kick", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code == 0)
-			return true;
-		string msg = re_json["msg"].get<string>();
-		throw runtime_error(msg);
+		auto res = http_client_.Post("/kick", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
+		return true;
 	}
 
 
@@ -753,17 +579,9 @@ namespace Cyan
 			{ "target", int64_t(mid)}
 		};
 
-		auto res = http_client_.Post("/recall", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code == 0)
-			return true;
-		string msg = re_json["msg"].get<string>();
-		throw runtime_error(msg);
+		auto res = http_client_.Post("/recall", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
+		return true;
 	}
 
 	bool MiraiBot::Quit(GID_t group)
@@ -774,17 +592,9 @@ namespace Cyan
 			{ "target", int64_t(group)}
 		};
 
-		auto res = http_client_.Post("/quit", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code == 0)
-			return true;
-		string msg = re_json["msg"].get<string>();
-		throw runtime_error(msg);
+		auto res = http_client_.Post("/quit", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
+		return true;
 	}
 
 	GroupConfig MiraiBot::GetGroupConfig(GID_t group)
@@ -796,11 +606,7 @@ namespace Cyan
 			<< "&target="
 			<< int64_t(group);
 		auto res = http_client_.Get(api_url.str().data());
-		if (!res)
-			throw runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-http-api error]: " + res->body);
-		json re_json = json::parse(res->body);
+		json re_json = ParseOrThrowException(res);
 		GroupConfig group_config;
 		group_config.Set(re_json);
 		return group_config;
@@ -816,17 +622,9 @@ namespace Cyan
 		};
 		data["config"] = groupConfig.ToJson();
 
-		auto res = http_client_.Post("/groupConfig", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code == 0)
-			return true;
-		string msg = re_json["msg"].get<string>();
-		throw runtime_error(msg);
+		auto res = http_client_.Post("/groupConfig", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
+		return true;
 	}
 
 	FriendMessage MiraiBot::GetFriendMessageFromId(MessageId_t mid)
@@ -838,20 +636,10 @@ namespace Cyan
 			<< "&id="
 			<< mid;
 		auto res = http_client_.Get(api_url.str().data());
-		if (!res)
-			throw runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-http-api error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code == 0)
-		{
-			FriendMessage result;
-			result.Set(re_json["data"]);
-			return result;
-		}
-		string msg = re_json["msg"].get<string>();
-		throw runtime_error(msg);
+		json re_json = ParseOrThrowException(res);
+		FriendMessage result;
+		result.Set(re_json["data"]);
+		return result;
 	}
 
 
@@ -865,25 +653,15 @@ namespace Cyan
 			<< mid;
 
 		auto res = http_client_.Get(api_url.str().data());
-		if (!res)
-			throw runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-http-api error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code == 0)
-		{
-			GroupMessage result;
-			result.Set(re_json["data"]);
-			return result;
-		}
-		string msg = re_json["msg"].get<string>();
-		throw runtime_error(msg);
+		json re_json = ParseOrThrowException(res);
+		GroupMessage result;
+		result.Set(re_json["data"]);
+		return result;
 	}
 
-	MiraiBot& MiraiBot::RegisterCommand(
+	void MiraiBot::RegisterCommand(
 		const string& commandName,
-		const vector<string> alias,
+		const vector<string>& alias,
 		const string& description,
 		const string& helpMessage)
 	{
@@ -895,16 +673,11 @@ namespace Cyan
 			{ "description", description },
 			{ "usage", helpMessage }
 		};
-		auto res = http_client_.Post("/command/register", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-http-api error]: " + res->body);
-
-		return *this;
+		auto res = http_client_.Post("/command/register", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
 	}
 
-	MiraiBot& MiraiBot::SendCommand(const string& commandName, const vector<string> args)
+	void MiraiBot::SendCommand(const string& commandName, const vector<string>& args)
 	{
 		json data =
 		{
@@ -912,25 +685,17 @@ namespace Cyan
 			{ "name", commandName },
 			{ "args", json(args) }
 		};
-		auto res = http_client_.Post("/command/send", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-http-api error]: " + res->body);
-		return *this;
+		auto res = http_client_.Post("/command/send", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
 	}
 
 	vector<QQ_t> MiraiBot::GetManagers()
 	{
-		vector<QQ_t> result;
 		stringstream api_url;
 		api_url << "/managers?qq=" << GetBotQQ().ToInt64();
 		auto res = http_client_.Get(api_url.str().data());
-		if (!res)
-			throw runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-http-api error]: " + res->body);
-		json re_json = json::parse(res->body);
+		json re_json = ParseOrThrowException(res);
+		vector<QQ_t> result;
 		if (re_json.is_array())
 		{
 			for (const auto& qq : re_json)
@@ -1002,17 +767,9 @@ namespace Cyan
 			{ "qq", int64_t(qq_)}
 		};
 
-		auto res = http_client_.Post("/verify", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code == 0)
-			return true;
-		string msg = re_json["msg"].get<string>();
-		throw runtime_error(msg);
+		auto res = http_client_.Post("/verify", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
+		return true;
 	}
 
 
@@ -1024,17 +781,9 @@ namespace Cyan
 			{ "qq", int64_t(qq_)}
 		};
 
-		auto res = http_client_.Post("/release", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code == 0)
-			return true;
-		string msg = re_json["msg"].get<string>();
-		throw runtime_error(msg);
+		auto res = http_client_.Post("/release", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
+		return true;
 	}
 
 	bool MiraiBot::SessionConfigure(int cacheSize, bool enableWebsocket)
@@ -1046,17 +795,9 @@ namespace Cyan
 			{ "enableWebsocket", enableWebsocket }
 		};
 
-		auto res = http_client_.Post("/config", data.dump(), "application/json;charset=UTF-8");
-		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-		if (code == 0)
-			return true;
-		string msg = re_json["msg"].get<string>();
-		throw runtime_error(msg);
+		auto res = http_client_.Post("/config", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
+		return true;
 	}
 
 
@@ -1071,9 +812,9 @@ namespace Cyan
 		http_client_.set_timeout_sec(10);
 		auto res = http_client_.Get(api_url.str().data());
 		if (!res)
-			throw std::runtime_error("网络错误");
-		if (res->status != 200)
-			throw std::runtime_error("[mirai-api-http error]: " + res->body);
+			throw NetworkException();
+			if (res->status != 200)
+				throw MiraiApiHttpException(-1, res->body);
 		json re_json = json::parse(res->body);
 		int code = re_json["code"].get<int>();
 

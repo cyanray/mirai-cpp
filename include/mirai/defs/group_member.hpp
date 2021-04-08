@@ -16,7 +16,7 @@ namespace Cyan
 	public:
 		QQ_t QQ;
 		string MemberName;
-		GroupPermission Permission;
+		GroupPermission Permission = GroupPermission::Member;
 		Group_t Group;
 		virtual bool Set(const json& j) override
 		{
@@ -35,9 +35,7 @@ namespace Cyan
 			j["group"] = Group.ToJson();
 			return j;
 		}
-
 	};
-
 }
 
 #endif // !mirai_cpp_defs_group_member_hpp_H_

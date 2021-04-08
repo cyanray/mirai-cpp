@@ -136,7 +136,7 @@ namespace Cyan
 	{
 		string Id;
 		string FileName;
-		size_t FileSize;
+		size_t FileSize = 0;
 		int InternalId = 102;
 	};
 

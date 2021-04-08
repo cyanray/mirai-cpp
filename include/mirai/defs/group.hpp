@@ -15,7 +15,7 @@ namespace Cyan
 	public:
 		GID_t GID;
 		string Name;
-		GroupPermission Permission;
+		GroupPermission Permission = GroupPermission::Member;
 		virtual bool Set(const json& j) override
 		{
 			GID = GID_t(j["id"].get<int64_t>());

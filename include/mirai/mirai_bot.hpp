@@ -337,9 +337,9 @@ namespace Cyan
 		 * @param helpMessage 指令帮助，执行出错时显示
 		 * @return *this
 		*/
-		MiraiBot& RegisterCommand(
+		void RegisterCommand(
 			const string& commandName,
-			const vector<string> alias,
+			const vector<string>& alias,
 			const string& description,
 			const string& helpMessage = "");
 
@@ -349,7 +349,7 @@ namespace Cyan
 		 * @param args 参数
 		 * @return *this
 		*/
-		MiraiBot& SendCommand(const string& commandName, const vector<string> args);
+		void SendCommand(const string& commandName, const vector<string>& args);
 
 		/**
 		 * @brief 获得 Managers
