@@ -16,7 +16,7 @@ using std::stringstream;
 
 namespace
 {
-	const string CONTENT_TYPE = "application/json;charset=UTF-8"s;
+	const string CONTENT_TYPE = "application/json;charset=UTF-8";
 
 	// 因为 httplib 使用 string 来保存文件内容，这里返回值也跟着适配
 	string ReadFile(const string& filename)
@@ -659,9 +659,9 @@ namespace Cyan
 		return result;
 	}
 
-	MiraiBot& MiraiBot::RegisterCommand(
+	void MiraiBot::RegisterCommand(
 		const string& commandName,
-		const vector<string> alias,
+		const vector<string>& alias,
 		const string& description,
 		const string& helpMessage)
 	{
@@ -675,10 +675,9 @@ namespace Cyan
 		};
 		auto res = http_client_.Post("/command/register", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
-		return *this;			// TODO: 修改返回值类型
 	}
 
-	MiraiBot& MiraiBot::SendCommand(const string& commandName, const vector<string> args)
+	void MiraiBot::SendCommand(const string& commandName, const vector<string>& args)
 	{
 		json data =
 		{
@@ -688,7 +687,6 @@ namespace Cyan
 		};
 		auto res = http_client_.Post("/command/send", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
-		return *this;			// TODO: 修改返回值类型
 	}
 
 	vector<QQ_t> MiraiBot::GetManagers()
