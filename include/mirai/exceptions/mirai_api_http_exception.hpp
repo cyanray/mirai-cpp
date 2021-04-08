@@ -8,7 +8,7 @@
 namespace Cyan
 {
 	/**
-	 * @brief mirai-api-http Òì³£
+	 * @brief mirai-api-http å¼‚å¸¸
 	*/
 	class MiraiApiHttpException : public std::runtime_error
 	{
@@ -18,7 +18,7 @@ namespace Cyan
 		MiraiApiHttpException(int code, const std::string& error_msg) : 
 			Code(code),
 			Message(error_msg),
-			std::runtime_error("mirai-api-http ´íÎó: " + error_msg) {}
+			std::runtime_error("mirai-api-http é”™è¯¯: " + error_msg) {}
 		virtual ~MiraiApiHttpException() = default;
 	};
 

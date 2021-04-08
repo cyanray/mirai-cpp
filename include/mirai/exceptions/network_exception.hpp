@@ -7,12 +7,12 @@
 namespace Cyan
 {
 	/**
-	 * @brief ÍøÂç´íÎóÒì³£
+	 * @brief ç½‘ç»œé”™è¯¯å¼‚å¸¸
 	*/
 	class NetworkException : public std::runtime_error
 	{
 	public:
-		NetworkException(): std::runtime_error("ÍøÂç´íÎó.") {}
+		NetworkException(): std::runtime_error("ç½‘ç»œé”™è¯¯.") {}
 		virtual ~NetworkException() = default;
 	};
 
