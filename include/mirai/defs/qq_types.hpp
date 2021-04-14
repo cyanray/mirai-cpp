@@ -4,6 +4,7 @@
 
 #include <exception>
 #include <iostream>
+#include <functional>
 #include "serializable.hpp"
 #include "mirai/exported.h"
 
@@ -29,13 +30,19 @@ namespace Cyan
 		{
 			return !operator==(a);
 		}
+
+		bool operator<(const UID_t& a) const
+		{
+			return data_ < a.data_;
+		}
+
 		virtual ~UID_t() = default;
 	protected:
 		explicit UID_t(int64_t id) : data_(id) {}
 		virtual void __avoiding_object_slicing() const = 0;
 		int64_t data_;
 	};
-	
+
 	// 储存 QQ 号码的类型
 	class QQ_t : public UID_t
 	{
@@ -143,6 +150,28 @@ namespace Cyan
 	// 预先声明 MiraiBot 类
 	class EXPORTED MiraiBot;
 
+}
+
+namespace std
+{
+	template<> struct hash<Cyan::UID_t>
+	{
+		size_t operator() (const Cyan::UID_t& t) const {
+			return size_t(t.ToInt64());
+		}
+	};
+	template<> struct hash<Cyan::GID_t>
+	{
+		size_t operator() (const Cyan::GID_t& t) const {
+			return size_t(t.ToInt64());
+		}
+	};
+	template<> struct hash<Cyan::QQ_t>
+	{
+		size_t operator() (const Cyan::QQ_t& t) const {
+			return size_t(t.ToInt64());
+		}
+	};
 }
 
 #endif // !mirai_cpp_defs_qq_types_hpp_H_
