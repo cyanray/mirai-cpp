@@ -326,7 +326,7 @@ namespace Cyan
 		auto res = http_client_.Get(("/friendList?sessionKey=" + sessionKey_).data());
 		json re_json = ParseOrThrowException(res);
 		vector<Friend_t> result;
-		for (const auto& ele : re_json)
+		for (const auto& ele : re_json["data"])
 		{
 			Friend_t f;
 			f.Set(ele);
@@ -341,7 +341,7 @@ namespace Cyan
 		auto res = http_client_.Get(("/groupList?sessionKey=" + sessionKey_).data());
 		json re_json = ParseOrThrowException(res);
 		vector<Group_t> result;
-		for (const auto& ele : re_json)
+		for (const auto& ele : re_json["data"])
 		{
 			Group_t group;
 			group.Set(ele);
@@ -362,7 +362,7 @@ namespace Cyan
 		auto res = http_client_.Get(api_url.str().data());
 		json re_json = ParseOrThrowException(res);
 		vector<GroupMember_t> result;
-		for (const auto& ele : re_json)
+		for (const auto& ele : re_json["data"])
 		{
 			GroupMember_t f;
 			f.Set(ele);
