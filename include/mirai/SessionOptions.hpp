@@ -18,6 +18,10 @@ namespace Cyan
 		Property<QQ_t> BotQQ;
 		Property<string> Hostname = "localhost"s;
 		Property<string> VerifyKey;
+
+		static SessionOptions FromCommandLine(int argc, char* argv[]);
+		static SessionOptions FromJsonFile(const string& filename);
+		static SessionOptions FromJson(const json& json);
 	};
 }
 
