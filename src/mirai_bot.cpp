@@ -1,4 +1,6 @@
-﻿#include <iostream>
+﻿#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
+
+#include <iostream>
 #include <queue>
 #include <mutex>
 #include <condition_variable>
