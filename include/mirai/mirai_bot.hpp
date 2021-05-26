@@ -91,12 +91,12 @@ namespace Cyan
 		 */
 		httplib::Client* GetHttpClient();
 		/**
-		 * \brief 验证 AuthKey 并自动验证 Session Key
-		 * \param authKey AuthKey
+		 * \brief 验证 VerifyKey 并自动验证 Session Key
+		 * \param verifyKey VerifyKey
 		 * \param qq Bot QQ
 		 * \return 始终为 true (失败会抛出异常)
 		 */
-		bool Auth(const string& authKey, QQ_t qq);
+		bool Verify(const string& verifyKey, QQ_t qq);
 		/**
 		 * \brief 发送私聊消息
 		 * \param target 发送对象(QQ_t)
@@ -420,7 +420,7 @@ namespace Cyan
 	private:
 		// 私有成员函数
 		void SendNudge(int64_t target, int64_t subject_id, const string& kind);
-		bool SessionVerify();
+		bool SessionBind();
 		bool SessionRelease();
 		bool SessionConfigure(int cacheSize, bool enableWebsocket);
 		unsigned int FetchEventsHttp(unsigned int count = 10);
@@ -461,7 +461,7 @@ namespace Cyan
 		// 私有成员变量
 		string host_;
 		int port_;
-		string authKey_;
+		string verifyKey_;
 		QQ_t qq_;
 		string sessionKey_;
 		int cacheSize_;

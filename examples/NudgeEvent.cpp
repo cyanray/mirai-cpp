@@ -35,12 +35,12 @@ int main()
 		cout << ex.what() << endl;
 	}
 
-	// 自动重试地进行 Auth
+	// 自动重试地进行 Verify
 	while (true)
 	{
 		try
 		{
-			bot.Auth("AuthKeyASDEWQ", 1589588851_qq);
+			bot.Verify("VerifyKeyASDEWQ", 1589588851_qq);
 			break;
 		}
 		catch (const std::exception& ex)
