@@ -14,9 +14,54 @@ namespace Cyan
 	class SessionOptions
 	{
 	public:
-		Property<short> Port = 8080;
+		/**
+		 * @brief 是否进行认证流程.
+		*/
+		Property<bool> EnableVerify = true;
+
+		/**
+		 * @brief 是否为 SingleMode.
+		*/
+		Property<bool> SingleMode = false;
+
+		/**
+		 * @brief 与 mirai-api-http 通信的端口(Http 适配器)，默认值为 8080.
+		*/
+		Property<short> HttpPort = 8080;
+
+		/**
+		 * @brief 与 mirai-api-http 通信的端口(WebSocket 适配器)，默认值为 8080.
+		*/
+		Property<short> WebSocketPort = 8080;
+
+		/**
+		 * @brief WebSocket 通信保留的同步ID(默认为-1).
+		*/
+		Property<int> ReservedSyncId = -1;
+
+		/**
+		 * @brief mirai-api-http 历史消息缓存容量, 过小可能导致撤回消息失败, 默认值为 4096.
+		*/
+		Property<int> CacheSize = 4096;
+
+		/**
+		 * @brief 机器人的QQ号(SingleMode=true时忽略此设置).
+		*/
 		Property<QQ_t> BotQQ;
-		Property<string> Hostname = "localhost"s;
+
+		/**
+		 * @brief Hostname (Http 适配器), 默认值为 localhost.
+		*/
+		Property<string> HttpHostname = "localhost"s;
+
+		/**
+		 * @brief Hostname (WebScoket 适配器), 默认值为 localhost.
+		*/
+		Property<string> WebSocketHostname = "localhost"s;
+
+		/**
+		 * @brief 认证流程需要的密钥(EnableVerify=false时忽略此参数).
+		*/
 		Property<string> VerifyKey;
 
 		static SessionOptions FromCommandLine(int argc, char* argv[]);

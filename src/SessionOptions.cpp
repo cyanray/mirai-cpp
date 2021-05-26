@@ -42,19 +42,24 @@ namespace Cyan
 		SessionOptions opt;
 		if (json.contains("hostname"))
 		{
-			opt.Hostname = json["hostname"].get<string>();
+			string hostname = json["hostname"].get<string>();
+			opt.WebSocketHostname = hostname;
+			opt.HttpHostname = hostname;
 		}
 		if (json.contains("port"))
 		{
 			auto &json_port = json["port"];
+			short port;
 			if (json_port.type() == nlohmann::detail::value_t::string)
 			{
-				opt.Port = stoi(json_port.get<string>());
+				port = stoi(json_port.get<string>());
 			}
 			else
 			{
-				opt.Port = json_port.get<short>();
+				port = json_port.get<short>();
 			}
+			opt.HttpPort = port;
+			opt.WebSocketPort = port;
 		}
 		if (json.contains("botQQ"))
 		{
