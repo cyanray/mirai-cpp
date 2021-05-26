@@ -120,18 +120,18 @@ namespace Cyan
 		throw runtime_error(msg);
 	}
 
-	bool MiraiBot::Auth(const string& authKey, QQ_t qq)
+	bool MiraiBot::Verify(const string& verifyKey, QQ_t qq)
 	{
 		json data =
 		{
-			{ "authKey", authKey }
+			{ "verifyKey", verifyKey }
 		};
-		auto res = http_client_.Post("/auth", data.dump(), CONTENT_TYPE.c_str());
+		auto res = http_client_.Post("/verify", data.dump(), CONTENT_TYPE.c_str());
 		json re_json = ParseOrThrowException(res);
 		this->sessionKey_ = re_json["session"].get<string>();
-		this->authKey_ = authKey;
+		this->verifyKey_ = verifyKey;
 		this->qq_ = qq;
-		return SessionVerify();
+		return SessionBind();
 	}
 
 
@@ -326,7 +326,7 @@ namespace Cyan
 		auto res = http_client_.Get(("/friendList?sessionKey=" + sessionKey_).data());
 		json re_json = ParseOrThrowException(res);
 		vector<Friend_t> result;
-		for (const auto& ele : re_json)
+		for (const auto& ele : re_json["data"])
 		{
 			Friend_t f;
 			f.Set(ele);
@@ -341,7 +341,7 @@ namespace Cyan
 		auto res = http_client_.Get(("/groupList?sessionKey=" + sessionKey_).data());
 		json re_json = ParseOrThrowException(res);
 		vector<Group_t> result;
-		for (const auto& ele : re_json)
+		for (const auto& ele : re_json["data"])
 		{
 			Group_t group;
 			group.Set(ele);
@@ -362,7 +362,7 @@ namespace Cyan
 		auto res = http_client_.Get(api_url.str().data());
 		json re_json = ParseOrThrowException(res);
 		vector<GroupMember_t> result;
-		for (const auto& ele : re_json)
+		for (const auto& ele : re_json["data"])
 		{
 			GroupMember_t f;
 			f.Set(ele);
@@ -667,7 +667,7 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "authKey", authKey_ },
+			{ "verifyKey", verifyKey_ },
 			{ "name", commandName },
 			{ "alias", json(alias) },
 			{ "description", description },
@@ -681,7 +681,7 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "authKey", authKey_ },
+			{ "verifyKey", verifyKey_ },
 			{ "name", commandName },
 			{ "args", json(args) }
 		};
@@ -759,7 +759,7 @@ namespace Cyan
 	}
 
 
-	bool MiraiBot::SessionVerify()
+	bool MiraiBot::SessionBind()
 	{
 		json data =
 		{
@@ -767,7 +767,7 @@ namespace Cyan
 			{ "qq", int64_t(qq_)}
 		};
 
-		auto res = http_client_.Post("/verify", data.dump(), CONTENT_TYPE.c_str());
+		auto res = http_client_.Post("/bind", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 		return true;
 	}
@@ -820,11 +820,11 @@ namespace Cyan
 
 		if (code != 0)
 		{
-			// 特判，code=3为session失效，releas后重新auth
+			// 特判，code=3为session失效，releas后重新verify
 			if (code == 3)
 			{
 				Release();
-				Auth(authKey_, qq_);
+				Verify(verifyKey_, qq_);
 				throw std::runtime_error("失去与mirai的连接，已重新连接。");
 			}
 			string msg = re_json["msg"].get<string>();
@@ -866,7 +866,7 @@ namespace Cyan
 
 
 		stringstream command_url;
-		command_url << "ws://" << host_ << ":" << port_ << "/command?authKey=" << authKey_;
+		command_url << "ws://" << host_ << ":" << port_ << "/command?verifyKey=" << verifyKey_;
 		WebSocketClient command_client;
 
 		command_client.Connect(command_url.str());
@@ -923,7 +923,7 @@ namespace Cyan
 			else if (j["code"].get<int>() == 3 || j["code"].get<int>() == 4)
 			{
 				Release();
-				Auth(authKey_, qq_);
+				Verify(verifyKey_, qq_);
 				SessionConfigure(cacheSize_, ws_enabled_);
 				throw std::runtime_error("失去与mirai的连接，已重新连接。");
 			}
