@@ -2,8 +2,8 @@
 // 使用静态库必须要在引入 mirai.h 前定义这个宏
 #define MIRAICPP_STATICLIB
 #include <mirai.h>
-
-int main()
+#include <mirai/SessionOptions.hpp>
+int main(int argc, char* argv[])
 {
 	using namespace std;
 	using namespace Cyan;
@@ -13,8 +13,34 @@ int main()
 	system("chcp 65001");
 #endif	
 
-	// 16 条事件处理线程
-	MiraiBot bot("127.0.0.1", 539, 16);
+	SessionOptions opts = SessionOptions::FromCommandLine(argc, argv);
+	cout << opts.HttpHostname.Get() << endl;
+	cout << opts.HttpPort.Get() << endl;
+	cout << opts.WebSocketHostname.Get() << endl;
+	cout << opts.WebSocketPort.Get() << endl;
+	cout << opts.BotQQ.Get() << endl;
+	cout << opts.VerifyKey.Get() << endl;
+	cout << opts.CacheSize.Get() << endl;
+	cout << opts.EnableVerify.Get() << endl;
+	cout << opts.SingleMode.Get() << endl;
+	cout << opts.ReservedSyncId.Get() << endl;
+	cout << opts.ThreadPoolSize.Get() << endl;
+
+	MiraiBot bot;
+	// 自动重试地与 mirai-api-http 建立连接
+	while (true)
+	{
+		try
+		{
+			bot.Connect(opts);
+			break;
+		}
+		catch (const std::exception& ex)
+		{
+			cout << ex.what() << endl;
+		}
+		MiraiBot::SleepSeconds(1);
+	}
 
 	// 检查一下版本
 	try
@@ -35,71 +61,23 @@ int main()
 		cout << ex.what() << endl;
 	}
 
-	// 自动重试地进行 Verify
-	while (true)
-	{
-		try
-		{
-			bot.Verify("INITKEY7A3O1a9v", 1589588851_qq);
-			break;
-		}
-		catch (const std::exception& ex)
-		{
-			cout << ex.what() << endl;
-		}
-		MiraiBot::SleepSeconds(1);
-	}
 	cout << "Bot Working..." << endl;
 
-	// 监听各类事件
-	bot.On<GroupMessage>(
-		[&](GroupMessage m)
-		{
-			m.QuoteReply(m.MessageChain);
-		});
-	// 可以多次监听同一事件，每个处理函数都会被执行，但是不保证执行顺序
-	bot.On<GroupMessage>(
-		[&](GroupMessage m)
-		{
-			m.Reply("2222 " + m.MessageChain);
-		});
-
-	bot.On<FriendMessage>(
-		[&](FriendMessage m)
-		{
-			m.Reply(m.MessageChain);
-		});
-
-	bot.On<TempMessage>(
-		[&](TempMessage m)
-		{
-			m.Reply(m.MessageChain);
-		});
-
-	// 通用型消息
-	// 收到 FriendMessage、GroupMessage、TempMessage 时都会调用它
-	// 判断类型之后，也可调用对应的转换函数进行转换 (类型不正确将转换失败抛出异常)
 	bot.On<Message>(
 		[&](Message m)
 		{
-			cout << int64_t(m.Sender) << " 发来一条消息." << endl;
-			m.Reply("Message事件可处理三种消息:" + m.MessageChain);
-
-			// 判断是否群组消息
-			if (m.GetMessageType() == MessageType::GroupMessage)
-			{
-				GroupMessage gm = m.ToGroupMessage();
-				// TODO: 针对群组消息的特别处理
-			}
-
+			cout << int64_t(m.Sender) << " 发来一条消息." << m.MessageChain.ToString() << endl;
+			m.Reply(m.MessageChain);
 		});
 
+	string command;
+	while (cin >> command)
+	{
+		if (command == "exit") break;
+	}
 
-	// 记录轮询事件时的错误
-	bot.EventLoop([](const char* errMsg)
-		{
-			cout << "获取事件时出错: " << errMsg << endl;
-		});
+	// 程序结束前必须释放 Session, 否则会导致 mirai-api-http 内存泄漏
+	bot.Release();
 
 	return 0;
 }
