@@ -8,10 +8,23 @@
 #include <locale>
 #include <codecvt>
 #include "mirai/mirai_bot.hpp"
+#include "mirai/third-party/ThreadPool.h"
+#include "mirai/third-party/httplib.h"
 #include "mirai/third-party/WebSocketClient.h"
 #include "mirai/third-party/WebSocketClient.cpp"
 #include "mirai/exceptions/network_exception.hpp"
 #include "mirai/exceptions/mirai_api_http_exception.hpp"
+
+// fu*k windows.h
+#ifdef max
+#undef max
+#endif
+#ifdef SendMessage
+#undef SendMessage
+#endif
+#ifdef CreateEvent
+#undef CreateEvent
+#endif
 
 using std::runtime_error;
 using std::stringstream;
@@ -46,7 +59,7 @@ namespace
 		using namespace Cyan;
 		if (!response) throw NetworkException();
 		json re_json = json::parse(response->body);
-		if (re_json.find("code") != re_json.end())
+		if (re_json.contains("code"))
 		{
 			int code = re_json["code"].get<int>();
 			if (code != 0)
@@ -62,51 +75,59 @@ namespace
 
 namespace Cyan
 {
-	MiraiBot::MiraiBot() :
-		host_("localhost"),
-		port_(8080),
-		qq_(0),
-		cacheSize_(4096),
-		ws_enabled_(true),
-		http_client_("localhost", 8080),
-		pool_(4) {}
-	MiraiBot::MiraiBot(const string& host, int port) :
-		host_(host),
-		port_(port),
-		qq_(0),
-		cacheSize_(4096),
-		ws_enabled_(true),
-		http_client_(host, port),
-		pool_(4) {}
-	MiraiBot::MiraiBot(const string& host, int port, int threadNums) :
-		host_(host),
-		port_(port),
-		qq_(0),
-		cacheSize_(4096),
-		ws_enabled_(true),
-		http_client_(host, port),
-		pool_(threadNums) {}
-	MiraiBot::~MiraiBot()
+	struct MiraiBot::pimpl
 	{
-		Release();
+		QQ_t botQQ;
+		string sessionKey;
+		std::shared_ptr<SessionOptions> sessionOptions;
+		std::shared_ptr<httplib::Client> httpClient;
+		std::unique_ptr<ThreadPool> threadPool;
+	};
+
+	MiraiBot::MiraiBot() = default;
+	MiraiBot::~MiraiBot() = default;
+
+	void MiraiBot::Connect(const SessionOptions& opts)
+	{
+		pmem = std::make_unique<pimpl>();
+		pmem->sessionOptions = std::make_shared<SessionOptions>(opts);
+		pmem->threadPool = std::make_unique<ThreadPool>(opts.ThreadPoolSize.Get());
+		pmem->httpClient = std::make_shared<httplib::Client>(opts.HttpHostname.Get(), opts.HttpPort.Get());
+		pmem->botQQ = opts.BotQQ.Get();
+		string& sessionKey = pmem->sessionKey;
+		if (opts.EnableVerify.Get())
+		{
+			sessionKey = Verify(opts.VerifyKey.Get());
+		}
+		if (!opts.SingleMode.Get())
+		{
+			SessionBind(sessionKey, opts.BotQQ.Get());
+		}
 	}
+
+	void MiraiBot::Release()
+	{
+		SessionRelease(pmem->sessionKey, pmem->botQQ);
+	}
+
 	string MiraiBot::GetSessionKey() const
 	{
-		return sessionKey_;
+		return pmem->sessionKey;
 	}
+
 	QQ_t MiraiBot::GetBotQQ() const
 	{
-		return qq_;
+		return pmem->botQQ;
 	}
-	httplib::Client* MiraiBot::GetHttpClient()
+
+	std::shared_ptr<httplib::Client> MiraiBot::GetHttpClient()
 	{
-		return &(this->http_client_);
+		return pmem->httpClient;
 	}
 
 	string MiraiBot::GetMiraiApiHttpVersion()
 	{
-
-		auto res = http_client_.Get("/about");
+		auto res = pmem->httpClient->Get("/about");
 		if (!res)
 			throw NetworkException();
 		if (res->status != 200)
@@ -118,36 +139,58 @@ namespace Cyan
 			string version = re_json["data"]["version"].get<string>();
 			return version;
 		}
-		string msg = re_json["errorMessage"].get<string>();
+		string msg = re_json["msg"].get<string>();
 		throw runtime_error(msg);
 	}
 
-	bool MiraiBot::Verify(const string& verifyKey, QQ_t qq)
+	string MiraiBot::Verify(const string& verifyKey)
 	{
 		json data =
 		{
 			{ "verifyKey", verifyKey }
 		};
-		auto res = http_client_.Post("/verify", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/verify", data.dump(), CONTENT_TYPE.c_str());
 		json re_json = ParseOrThrowException(res);
-		this->sessionKey_ = re_json["session"].get<string>();
-		this->verifyKey_ = verifyKey;
-		this->qq_ = qq;
-		return SessionBind();
+		return re_json["session"].get<string>();
 	}
 
+	bool MiraiBot::SessionBind(const string& sessionKey, const QQ_t& qq)
+	{
+		json data =
+		{
+			{ "sessionKey", sessionKey },
+			{ "qq", int64_t(qq)}
+		};
+
+		auto res = pmem->httpClient->Post("/bind", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
+		return true;
+	}
+
+	bool MiraiBot::SessionRelease(const string& sessionKey, const QQ_t& qq)
+	{
+		json data =
+		{
+			{ "sessionKey", sessionKey },
+			{ "qq", int64_t(qq)}
+		};
+
+		auto res = pmem->httpClient->Post("/release", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
+		return true;
+	}
 
 	MessageId_t MiraiBot::SendMessage(QQ_t target, const MessageChain& messageChain, MessageId_t msgId)
 	{
 		json data =
 		{
-			{ "sessionKey", sessionKey_ },
+			{ "sessionKey", pmem->sessionKey },
 			{ "target",int64_t(target) }
 		};
 		data["messageChain"] = messageChain.ToJson();
 		if (msgId != 0) data["quote"] = msgId;
 
-		auto res = http_client_.Post("/sendFriendMessage", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/sendFriendMessage", data.dump(), CONTENT_TYPE.c_str());
 		json re_json = ParseOrThrowException(res);
 		MessageId_t msg_id = re_json["messageId"].get<int>();
 		return msg_id;
@@ -158,13 +201,13 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "sessionKey", sessionKey_ },
+			{ "sessionKey", pmem->sessionKey },
 			{ "target",int64_t(target) }
 		};
 		data["messageChain"] = messageChain.ToJson();
 		if (msgId != 0) data["quote"] = msgId;
 
-		auto res = http_client_.Post("/sendGroupMessage", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/sendGroupMessage", data.dump(), CONTENT_TYPE.c_str());
 		json re_json = ParseOrThrowException(res);
 		MessageId_t msg_id = re_json["messageId"].get<int>();
 		return msg_id;
@@ -174,14 +217,14 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "sessionKey", sessionKey_ },
+			{ "sessionKey", pmem->sessionKey },
 			{ "group",int64_t(gid) },
 			{ "qq",int64_t(qq) }
 		};
 		data["messageChain"] = messageChain.ToJson();
 		if (msgId != 0) data["quote"] = msgId;
 
-		auto res = http_client_.Post("/sendTempMessage", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/sendTempMessage", data.dump(), CONTENT_TYPE.c_str());
 		json re_json = ParseOrThrowException(res);
 		MessageId_t msg_id = re_json["messageId"].get<int>();
 		return msg_id;
@@ -191,13 +234,13 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "sessionKey", sessionKey_ },
+			{ "sessionKey", pmem->sessionKey },
 			{ "target", target },
 			{ "subject", subject_id },
 			{ "kind" , kind }
 		};
 
-		auto res = http_client_.Post("/sendNudge", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/sendNudge", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 	}
 
@@ -227,11 +270,11 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "sessionKey", sessionKey_ },
+			{ "sessionKey", pmem->sessionKey },
 			{ "target", target }
 		};
 
-		auto res = http_client_.Post("/setEssence", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/setEssence", data.dump(), CONTENT_TYPE.c_str());
 		json re_json = ParseOrThrowException(res);
 	}
 
@@ -241,12 +284,12 @@ namespace Cyan
 		string img_data = ReadFile(filename);
 		httplib::MultipartFormDataItems items =
 		{
-		  { "sessionKey", sessionKey_, "", "" },
+		  { "sessionKey", pmem->sessionKey, "", "" },
 		  { "type", type, "", "" },
 		  { "img", img_data, base_filename, "image/png" }
 		};
 
-		auto res = http_client_.Post("/uploadImage", items);
+		auto res = pmem->httpClient->Post("/uploadImage", items);
 		json re_json = ParseOrThrowException(res);
 		MiraiImage img;
 		img.Id = re_json["imageId"].get<string>();
@@ -276,12 +319,12 @@ namespace Cyan
 		string voice_data = ReadFile(filename);
 		httplib::MultipartFormDataItems items =
 		{
-		  { "sessionKey", sessionKey_, "", "" },
+		  { "sessionKey", pmem->sessionKey, "", "" },
 		  { "type", type, "", "" },
 		  { "voice", voice_data, base_filename, "application/octet-stream"  }
 		};
 
-		auto res = http_client_.Post("/uploadVoice", items);
+		auto res = pmem->httpClient->Post("/uploadVoice", items);
 		json re_json = ParseOrThrowException(res);
 		MiraiVoice result;
 		result.Id = re_json["voiceId"].get<string>();
@@ -302,14 +345,14 @@ namespace Cyan
 		string file_data = ReadFile(filename);
 		httplib::MultipartFormDataItems items =
 		{
-		  { "sessionKey", sessionKey_, "", "" },
+		  { "sessionKey", pmem->sessionKey, "", "" },
 		  { "type", type, "", "" },
 		  { "target", to_string(target), "", "" },
 		  { "path", "/" + base_filename, "", "" },
 		  { "file", file_data, base_filename, "application/octet-stream"  }
 		};
 
-		auto res = http_client_.Post("/uploadFileAndSend", items);
+		auto res = pmem->httpClient->Post("/uploadFileAndSend", items);
 		json re_json = ParseOrThrowException(res);
 		MiraiFile result;
 		result.FileSize = file_data.size();
@@ -325,7 +368,7 @@ namespace Cyan
 
 	vector<Friend_t> MiraiBot::GetFriendList()
 	{
-		auto res = http_client_.Get(("/friendList?sessionKey=" + sessionKey_).data());
+		auto res = pmem->httpClient->Get(("/friendList?sessionKey=" + pmem->sessionKey).data());
 		json re_json = ParseOrThrowException(res);
 		vector<Friend_t> result;
 		for (const auto& ele : re_json["data"])
@@ -340,7 +383,7 @@ namespace Cyan
 
 	vector<Group_t> MiraiBot::GetGroupList()
 	{
-		auto res = http_client_.Get(("/groupList?sessionKey=" + sessionKey_).data());
+		auto res = pmem->httpClient->Get(("/groupList?sessionKey=" + pmem->sessionKey).data());
 		json re_json = ParseOrThrowException(res);
 		vector<Group_t> result;
 		for (const auto& ele : re_json["data"])
@@ -358,10 +401,10 @@ namespace Cyan
 		stringstream api_url;
 		api_url
 			<< "/memberList?sessionKey="
-			<< sessionKey_
+			<< pmem->sessionKey
 			<< "&target="
 			<< target;
-		auto res = http_client_.Get(api_url.str().data());
+		auto res = pmem->httpClient->Get(api_url.str().data());
 		json re_json = ParseOrThrowException(res);
 		vector<GroupMember_t> result;
 		for (const auto& ele : re_json["data"])
@@ -379,12 +422,12 @@ namespace Cyan
 		stringstream api_url;
 		api_url
 			<< "/memberInfo?sessionKey="
-			<< sessionKey_
+			<< pmem->sessionKey
 			<< "&target="
 			<< int64_t(gid)
 			<< "&memberId="
 			<< int64_t(memberId);
-		auto res = http_client_.Get(api_url.str().data());
+		auto res = pmem->httpClient->Get(api_url.str().data());
 		json re_json = ParseOrThrowException(res);
 		GroupMemberInfo result;
 		result.Set(re_json);
@@ -395,13 +438,13 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "sessionKey", sessionKey_ },
+			{ "sessionKey", pmem->sessionKey },
 			{ "target", int64_t(gid)},
 			{ "memberId", int64_t(memberId)}
 		};
 		data["info"] = memberInfo.ToJson();
 
-		auto res = http_client_.Post("/memberInfo", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/memberInfo", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 		return true;
 	}
@@ -425,10 +468,10 @@ namespace Cyan
 		stringstream api_url;
 		api_url
 			<< "/groupFileList?sessionKey="
-			<< sessionKey_
+			<< pmem->sessionKey
 			<< "&target="
 			<< int64_t(gid);
-		auto res = http_client_.Get(api_url.str().data());
+		auto res = pmem->httpClient->Get(api_url.str().data());
 		json re_json = ParseOrThrowException(res);
 		vector<GroupFile> result;
 		for (const auto& item : re_json)
@@ -445,12 +488,12 @@ namespace Cyan
 		stringstream api_url;
 		api_url
 			<< "/groupFileInfo?sessionKey="
-			<< sessionKey_
+			<< pmem->sessionKey
 			<< "&target="
 			<< int64_t(gid)
 			<< "&id="
 			<< groupFile.Id;
-		auto res = http_client_.Get(api_url.str().data());
+		auto res = pmem->httpClient->Get(api_url.str().data());
 		json re_json = ParseOrThrowException(res);
 		GroupFileInfo result;
 		result.Set(re_json);
@@ -461,13 +504,13 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "sessionKey", sessionKey_ },
+			{ "sessionKey", pmem->sessionKey },
 			{ "target", int64_t(gid) },
 			{ "id", groupFile.Id },
 			{ "rename", newName }
 		};
 
-		auto res = http_client_.Post("/groupFileRename", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/groupFileRename", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 	}
 
@@ -475,13 +518,13 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "sessionKey", sessionKey_ },
+			{ "sessionKey", pmem->sessionKey },
 			{ "target", int64_t(gid) },
 			{ "id", groupFile.Id },
 			{ "movePath", moveToPath }
 		};
 
-		auto res = http_client_.Post("/groupFileMove", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/groupFileMove", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 	}
 
@@ -489,12 +532,12 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "sessionKey", sessionKey_ },
+			{ "sessionKey", pmem->sessionKey },
 			{ "target", int64_t(gid) },
 			{ "id", groupFile.Id }
 		};
 
-		auto res = http_client_.Post("/groupFileDelete", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/groupFileDelete", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 	}
 
@@ -502,11 +545,11 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "sessionKey", sessionKey_ },
+			{ "sessionKey", pmem->sessionKey },
 			{ "target", int64_t(target)}
 		};
 
-		auto res = http_client_.Post("/muteAll", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/muteAll", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 		return true;
 	}
@@ -516,11 +559,11 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "sessionKey", sessionKey_ },
+			{ "sessionKey", pmem->sessionKey },
 			{ "target", int64_t(target)}
 		};
 
-		auto res = http_client_.Post("/unmuteAll", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/unmuteAll", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 		return true;
 	}
@@ -530,13 +573,13 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "sessionKey", sessionKey_ },
+			{ "sessionKey", pmem->sessionKey },
 			{ "target", int64_t(gid)},
 			{ "memberId", int64_t(memberId)},
 			{ "time", time_seconds}
 		};
 
-		auto res = http_client_.Post("/mute", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/mute", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 		return true;
 	}
@@ -546,12 +589,12 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "sessionKey", sessionKey_ },
+			{ "sessionKey", pmem->sessionKey },
 			{ "target", int64_t(gid)},
 			{ "memberId", int64_t(memberId)}
 		};
 
-		auto res = http_client_.Post("/unmute", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/unmute", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 		return true;
 	}
@@ -561,13 +604,13 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "sessionKey", sessionKey_ },
+			{ "sessionKey", pmem->sessionKey },
 			{ "target", int64_t(gid)},
 			{ "memberId", int64_t(memberId)},
 			{ "reason_msg" , reason_msg}
 		};
 
-		auto res = http_client_.Post("/kick", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/kick", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 		return true;
 	}
@@ -577,11 +620,11 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "sessionKey", sessionKey_ },
+			{ "sessionKey", pmem->sessionKey },
 			{ "target", int64_t(mid)}
 		};
 
-		auto res = http_client_.Post("/recall", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/recall", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 		return true;
 	}
@@ -590,11 +633,11 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "sessionKey", sessionKey_ },
+			{ "sessionKey", pmem->sessionKey },
 			{ "target", int64_t(group)}
 		};
 
-		auto res = http_client_.Post("/quit", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/quit", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 		return true;
 	}
@@ -604,10 +647,10 @@ namespace Cyan
 		stringstream api_url;
 		api_url
 			<< "/groupConfig?sessionKey="
-			<< sessionKey_
+			<< pmem->sessionKey
 			<< "&target="
 			<< int64_t(group);
-		auto res = http_client_.Get(api_url.str().data());
+		auto res = pmem->httpClient->Get(api_url.str().data());
 		json re_json = ParseOrThrowException(res);
 		GroupConfig group_config;
 		group_config.Set(re_json);
@@ -619,12 +662,12 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "sessionKey", sessionKey_ },
+			{ "sessionKey", pmem->sessionKey },
 			{ "target", int64_t(group) }
 		};
 		data["config"] = groupConfig.ToJson();
 
-		auto res = http_client_.Post("/groupConfig", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/groupConfig", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 		return true;
 	}
@@ -634,10 +677,10 @@ namespace Cyan
 		stringstream api_url;
 		api_url
 			<< "/messageFromId?sessionKey="
-			<< sessionKey_
+			<< pmem->sessionKey
 			<< "&id="
 			<< mid;
-		auto res = http_client_.Get(api_url.str().data());
+		auto res = pmem->httpClient->Get(api_url.str().data());
 		json re_json = ParseOrThrowException(res);
 		FriendMessage result;
 		result.Set(re_json["data"]);
@@ -650,11 +693,11 @@ namespace Cyan
 		stringstream api_url;
 		api_url
 			<< "/messageFromId?sessionKey="
-			<< sessionKey_
+			<< pmem->sessionKey
 			<< "&id="
 			<< mid;
 
-		auto res = http_client_.Get(api_url.str().data());
+		auto res = pmem->httpClient->Get(api_url.str().data());
 		json re_json = ParseOrThrowException(res);
 		GroupMessage result;
 		result.Set(re_json["data"]);
@@ -669,13 +712,13 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "verifyKey", verifyKey_ },
+			{ "verifyKey", pmem->sessionOptions->VerifyKey.Get() },
 			{ "name", commandName },
 			{ "alias", json(alias) },
 			{ "description", description },
 			{ "usage", helpMessage }
 		};
-		auto res = http_client_.Post("/command/register", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/command/register", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 	}
 
@@ -683,11 +726,11 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "verifyKey", verifyKey_ },
+			{ "verifyKey", pmem->sessionOptions->VerifyKey.Get() },
 			{ "name", commandName },
 			{ "args", json(args) }
 		};
-		auto res = http_client_.Post("/command/send", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/command/send", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 	}
 
@@ -695,7 +738,7 @@ namespace Cyan
 	{
 		stringstream api_url;
 		api_url << "/managers?qq=" << GetBotQQ().ToInt64();
-		auto res = http_client_.Get(api_url.str().data());
+		auto res = pmem->httpClient->Get(api_url.str().data());
 		json re_json = ParseOrThrowException(res);
 		vector<QQ_t> result;
 		if (re_json.is_array())
@@ -709,268 +752,164 @@ namespace Cyan
 	}
 
 
-	MiraiBot& MiraiBot::SetCacheSize(int cacheSize)
-	{
-		cacheSize_ = cacheSize;
-		SessionConfigure(cacheSize_, ws_enabled_);
-		return *this;
-	}
-
-	MiraiBot& MiraiBot::UseWebSocket()
-	{
-		this->ws_enabled_ = true;
-		SessionConfigure(cacheSize_, ws_enabled_);
-		return *this;
-	}
-
-	MiraiBot& MiraiBot::UseHttp()
-	{
-		this->ws_enabled_ = false;
-		SessionConfigure(cacheSize_, ws_enabled_);
-		return *this;
-	}
-
-	void MiraiBot::EventLoop(function<void(const char*)> errLogger)
-	{
-		const unsigned count_per_loop = 20;
-		const unsigned time_interval = 100;
-		SessionConfigure(cacheSize_, ws_enabled_);
-		while (true)
-		{
-			try
-			{
-				if (ws_enabled_)
-					FetchEventsWs();
-				else
-					FetchEventsHttp(count_per_loop);
-			}
-			catch (const std::exception& ex)
-			{
-				if (errLogger == nullptr)
-				{
-					std::cerr << ex.what() << std::endl;
-				}
-				else
-				{
-					errLogger(ex.what());
-				}
-			}
-			SleepMilliseconds(time_interval);
-		}
-
-	}
 
 
-	bool MiraiBot::SessionBind()
-	{
-		json data =
-		{
-			{ "sessionKey", sessionKey_ },
-			{ "qq", int64_t(qq_)}
-		};
+	//unsigned int MiraiBot::FetchEventsHttp(unsigned int count)
+	//{
+	//	stringstream api_url;
+	//	api_url
+	//		<< "/fetchMessage?sessionKey="
+	//		<< pmem->sessionKey
+	//		<< "&count="
+	//		<< count;
+	//	pmem->httpClient->set_timeout_sec(10);
+	//	auto res = pmem->httpClient->Get(api_url.str().data());
+	//	if (!res)
+	//		throw NetworkException();
+	//		if (res->status != 200)
+	//			throw MiraiApiHttpException(-1, res->body);
+	//	json re_json = json::parse(res->body);
+	//	int code = re_json["code"].get<int>();
 
-		auto res = http_client_.Post("/bind", data.dump(), CONTENT_TYPE.c_str());
-		ParseOrThrowException(res);
-		return true;
-	}
+	//	if (code != 0)
+	//	{
+	//		// 特判，code=3为session失效，releas后重新verify
+	//		if (code == 3)
+	//		{
+	//			Release();
+	//			Verify(verifyKey_, qq_);
+	//			throw std::runtime_error("失去与mirai的连接，已重新连接。");
+	//		}
+	//		string msg = re_json["msg"].get<string>();
+	//		throw runtime_error(msg);
+	//	}
 
+	//	int received_count = 0;
+	//	for (const auto& ele : re_json["data"])
+	//	{
+	//		HandlingSingleEvent(ele);
+	//		received_count++;
+	//	}
+	//	return received_count;
+	//}
 
-	bool MiraiBot::SessionRelease()
-	{
-		json data =
-		{
-			{ "sessionKey", sessionKey_ },
-			{ "qq", int64_t(qq_)}
-		};
+	//void MiraiBot::FetchEventsWs()
+	//{
+	//	using namespace cyanray;
 
-		auto res = http_client_.Post("/release", data.dump(), CONTENT_TYPE.c_str());
-		ParseOrThrowException(res);
-		return true;
-	}
+	//	std::queue<string> event_queue;
+	//	mutex mutex_event_queue;
+	//	condition_variable cv;
 
-	bool MiraiBot::SessionConfigure(int cacheSize, bool enableWebsocket)
-	{
-		json data =
-		{
-			{ "sessionKey", sessionKey_ },
-			{ "cacheSize", cacheSize },
-			{ "enableWebsocket", enableWebsocket }
-		};
+	//	stringstream all_events_url;
+	//	all_events_url << "ws://" << host_ << ":" << port_ << "/all?sessionKey=" << pmem->sessionKey;
+	//	WebSocketClient events_client;
 
-		auto res = http_client_.Post("/config", data.dump(), CONTENT_TYPE.c_str());
-		ParseOrThrowException(res);
-		return true;
-	}
-
-
-	unsigned int MiraiBot::FetchEventsHttp(unsigned int count)
-	{
-		stringstream api_url;
-		api_url
-			<< "/fetchMessage?sessionKey="
-			<< sessionKey_
-			<< "&count="
-			<< count;
-		http_client_.set_timeout_sec(10);
-		auto res = http_client_.Get(api_url.str().data());
-		if (!res)
-			throw NetworkException();
-			if (res->status != 200)
-				throw MiraiApiHttpException(-1, res->body);
-		json re_json = json::parse(res->body);
-		int code = re_json["code"].get<int>();
-
-		if (code != 0)
-		{
-			// 特判，code=3为session失效，releas后重新verify
-			if (code == 3)
-			{
-				Release();
-				Verify(verifyKey_, qq_);
-				throw std::runtime_error("失去与mirai的连接，已重新连接。");
-			}
-			string msg = re_json["msg"].get<string>();
-			throw runtime_error(msg);
-		}
-
-		int received_count = 0;
-		for (const auto& ele : re_json["data"])
-		{
-			HandlingSingleEvent(ele);
-			received_count++;
-		}
-		return received_count;
-	}
-
-	void MiraiBot::FetchEventsWs()
-	{
-		using namespace cyanray;
-
-		std::queue<string> event_queue;
-		mutex mutex_event_queue;
-		condition_variable cv;
-
-		stringstream all_events_url;
-		all_events_url << "ws://" << host_ << ":" << port_ << "/all?sessionKey=" << sessionKey_;
-		WebSocketClient events_client;
-
-		events_client.Connect(all_events_url.str());
-		events_client.OnTextReceived([&](WebSocketClient& client, string text)
-			{
-				lock_guard<mutex> lock(mutex_event_queue);
-				event_queue.emplace(text);
-				cv.notify_one();
-			});
-		events_client.OnLostConnection([&](WebSocketClient& client, int code)
-			{
-				cv.notify_one();
-			});
+	//	events_client.Connect(all_events_url.str());
+	//	events_client.OnTextReceived([&](WebSocketClient& client, string text)
+	//		{
+	//			lock_guard<mutex> lock(mutex_event_queue);
+	//			event_queue.emplace(text);
+	//			cv.notify_one();
+	//		});
+	//	events_client.OnLostConnection([&](WebSocketClient& client, int code)
+	//		{
+	//			cv.notify_one();
+	//		});
 
 
-		stringstream command_url;
-		command_url << "ws://" << host_ << ":" << port_ << "/command?verifyKey=" << verifyKey_;
-		WebSocketClient command_client;
+	//	stringstream command_url;
+	//	command_url << "ws://" << host_ << ":" << port_ << "/command?verifyKey=" << verifyKey_;
+	//	WebSocketClient command_client;
 
-		command_client.Connect(command_url.str());
-		command_client.OnTextReceived([&](WebSocketClient& client, string text)
-			{
-				lock_guard<mutex> lock(mutex_event_queue);
-				event_queue.emplace(text);
-				cv.notify_one();
-			});
-		command_client.OnLostConnection([&](WebSocketClient& client, int code)
-			{
-				cv.notify_one();
-			});
+	//	command_client.Connect(command_url.str());
+	//	command_client.OnTextReceived([&](WebSocketClient& client, string text)
+	//		{
+	//			lock_guard<mutex> lock(mutex_event_queue);
+	//			event_queue.emplace(text);
+	//			cv.notify_one();
+	//		});
+	//	command_client.OnLostConnection([&](WebSocketClient& client, int code)
+	//		{
+	//			cv.notify_one();
+	//		});
 
 
-		// 循环处理事件队列(WebSocket库不可执行耗时操作，因此在此线程处理事件)
-		while (true)
-		{
-			if (event_queue.empty() &&
-				(events_client.GetStatus() != WebSocketClient::Status::Open ||
-					command_client.GetStatus() != WebSocketClient::Status::Open))
-			{
-				events_client.Shutdown();
-				command_client.Shutdown();
-				break;
-			}
-			unique_lock<mutex> lock(mutex_event_queue);
-			if (event_queue.empty())
-			{
-				cv.wait(lock);
-			}
-			if (event_queue.empty()) continue;
-			string event_text = event_queue.front();
-			event_queue.pop();
-			lock.unlock();
-			ProcessEvent(event_text);
-			std::this_thread::yield();
-		}
+	//	// 循环处理事件队列(WebSocket库不可执行耗时操作，因此在此线程处理事件)
+	//	while (true)
+	//	{
+	//		if (event_queue.empty() &&
+	//			(events_client.GetStatus() != WebSocketClient::Status::Open ||
+	//				command_client.GetStatus() != WebSocketClient::Status::Open))
+	//		{
+	//			events_client.Shutdown();
+	//			command_client.Shutdown();
+	//			break;
+	//		}
+	//		unique_lock<mutex> lock(mutex_event_queue);
+	//		if (event_queue.empty())
+	//		{
+	//			cv.wait(lock);
+	//		}
+	//		if (event_queue.empty()) continue;
+	//		string event_text = event_queue.front();
+	//		event_queue.pop();
+	//		lock.unlock();
+	//		ProcessEvent(event_text);
+	//		std::this_thread::yield();
+	//	}
 
-	}
+	//}
 
-	void MiraiBot::ProcessEvent(std::string& event_json_str)
-	{
+	//void MiraiBot::ProcessEvent(std::string& event_json_str)
+	//{
 
-		if (!event_json_str.empty())
-		{
-			json j = json::parse(event_json_str);
-			// code 不存在，说明没错误，处理事件/消息
-			if (j.find("code") == j.end())
-			{
-				HandlingSingleEvent(j);
-			}
-			// code 存在，按照 code 进行错误处理
-			else if (j["code"].get<int>() == 3 || j["code"].get<int>() == 4)
-			{
-				Release();
-				Verify(verifyKey_, qq_);
-				SessionConfigure(cacheSize_, ws_enabled_);
-				throw std::runtime_error("失去与mirai的连接，已重新连接。");
-			}
-		}
-	}
+	//	if (!event_json_str.empty())
+	//	{
+	//		json j = json::parse(event_json_str);
+	//		// code 不存在，说明没错误，处理事件/消息
+	//		if (j.find("code") == j.end())
+	//		{
+	//			HandlingSingleEvent(j);
+	//		}
+	//		// code 存在，按照 code 进行错误处理
+	//		else if (j["code"].get<int>() == 3 || j["code"].get<int>() == 4)
+	//		{
+	//			Release();
+	//			Verify(verifyKey_, qq_);
+	//			SessionConfigure(cacheSize_, ws_enabled_);
+	//			throw std::runtime_error("失去与mirai的连接，已重新连接。");
+	//		}
+	//	}
+	//}
 
-	void MiraiBot::HandlingSingleEvent(const nlohmann::json& ele)
-	{
-		MiraiEvent mirai_event;
-		// 要么是事件要么是指令，不应该是别的
-		if (ele.find("type") != ele.end())
-		{
-			string event_name = ele["type"].get<string>();
-			mirai_event = MiraiEventStr(event_name);
-		}
-		else
-			mirai_event = MiraiEvent::Command;
-		// 寻找能处理事件的 Processor
-		auto range = processors_.equal_range(mirai_event);
-		for (auto it = range.first; it != range.second; ++it)
-		{
-			auto executor = it->second;
-			// 给 executor 传入 nullptr 可以创建一个 WeakEvent
-			WeakEvent pevent = executor(nullptr);
-			pevent->SetMiraiBot(this);
-			pevent->Set(ele);
+	//void MiraiBot::HandlingSingleEvent(const nlohmann::json& ele)
+	//{
+	//	MiraiEvent mirai_event;
+	//	// 要么是事件要么是指令，不应该是别的
+	//	if (ele.find("type") != ele.end())
+	//	{
+	//		string event_name = ele["type"].get<string>();
+	//		mirai_event = MiraiEventStr(event_name);
+	//	}
+	//	else
+	//		mirai_event = MiraiEvent::Command;
+	//	// 寻找能处理事件的 Processor
+	//	auto range = processors_.equal_range(mirai_event);
+	//	for (auto it = range.first; it != range.second; ++it)
+	//	{
+	//		auto executor = it->second;
+	//		// 给 executor 传入 nullptr 可以创建一个 WeakEvent
+	//		WeakEvent pevent = executor(nullptr);
+	//		pevent->SetMiraiBot(this);
+	//		pevent->Set(ele);
 
-			pool_.enqueue([=]()
-				{
-					executor(pevent);
-				});
-		}
-	}
+	//		pool_.enqueue([=]()
+	//			{
+	//				executor(pevent);
+	//			});
+	//	}
+	//}
 
-	bool MiraiBot::Release() noexcept
-	{
-		try
-		{
-			return SessionRelease();
-		}
-		catch (...)
-		{
-			return false;
-		}
-
-	}
 
 } // namespace Cyan

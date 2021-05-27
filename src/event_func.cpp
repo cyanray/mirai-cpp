@@ -5,6 +5,17 @@
 #include "mirai/events/events.hpp"
 #include "mirai/third-party/httplib.h"
 
+// fu*k windows.h
+#ifdef max
+#undef max
+#endif
+#ifdef SendMessage
+#undef SendMessage
+#endif
+#ifdef CreateEvent
+#undef CreateEvent
+#endif
+
 namespace Cyan
 {
 

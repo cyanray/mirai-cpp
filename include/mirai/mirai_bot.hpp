@@ -9,9 +9,7 @@
 #include <unordered_map>
 #include <memory>
 // third-party
-#include "mirai/third-party/ThreadPool.h"
 #include "mirai/third-party/nlohmann/json.hpp"
-#include "mirai/third-party/httplib.h"
 // mirai header files
 #include "mirai/exported.h"
 #include "mirai/defs/defs.hpp"
@@ -20,6 +18,7 @@
 #include "mirai/events/group_message.hpp"
 #include "mirai/events/message_event.hpp"
 #include "mirai/events/lost_connection.hpp"
+#include "mirai/SessionOptions.hpp"
 
 using std::string;
 using std::vector;
@@ -37,66 +36,68 @@ using nlohmann::json;
 #undef CreateEvent
 #endif
 
+// 前置声明
+namespace httplib
+{
+	class Client;
+}
+
 namespace Cyan
 {
 	class EXPORTED MiraiBot
 	{
 	public:
 		MiraiBot();
-		/**
-		 * \brief
-		 * \param host hostname
-		 * \param port port
-		 */
-		MiraiBot(const string& host, int port);
-		/**
-		 * \brief 
-		 * \param host hostname
-		 * \param port port
-		 * \param threadNums 线程池线程数
-		 */
-		MiraiBot(const string& host, int port, int threadNums);
+		~MiraiBot();
 		MiraiBot(const MiraiBot&) = delete;
 		MiraiBot& operator=(const MiraiBot&) = delete;
-		~MiraiBot();
 
 		/**
 		 * \brief 获得 mirai-cpp 的版本号
 		 * \return 用字符串表示的版本号，如："1.6.5"
 		 */
-		string GetMiraiCppVersion() const
+		inline string GetMiraiCppVersion() const
 		{
-			// mirai-api-http v1.6.5
 			return "2.0.0";
 		}
+
+		std::shared_ptr<httplib::Client> GetHttpClient();
 
 		/**
 		 * \brief 获得 mirai-api-http 插件的版本
 		 * \return 用字符串表示的版本号，如："1.6.5"
 		 */
 		string GetMiraiApiHttpVersion();
+
 		/**
 		 * \brief 获得验证后的 SessionKey
 		 * \return SessionKey
 		 */
 		string GetSessionKey() const;
+
+		/**
+		 * @brief 获取 SessionOptions
+		 * @return SessionOptions
+		*/
+		const SessionOptions& GetSessionOptions() const;
+
+		/**
+		 * @brief 与 mirai-api-http 建立连接
+		 * @param opts 
+		*/
+		void Connect(const SessionOptions& opts);
+
+		/**
+		 * @brief 释放 Session，程序结束前请必须执行一次此函数，否则可能导致 mirai-api-http 内存泄漏.
+		*/
+		void Release();
+
 		/**
 		 * \brief 获得验证后的 QQ 号码
 		 * \return QQ_t
 		 */
 		QQ_t GetBotQQ() const;
-		/**
-		 * \brief 获得用于访问 mirai-api-http 的 HttpClient
-		 * \return httplib::Client
-		 */
-		httplib::Client* GetHttpClient();
-		/**
-		 * \brief 验证 VerifyKey 并自动验证 Session Key
-		 * \param verifyKey VerifyKey
-		 * \param qq Bot QQ
-		 * \return 始终为 true (失败会抛出异常)
-		 */
-		bool Verify(const string& verifyKey, QQ_t qq);
+
 		/**
 		 * \brief 发送私聊消息
 		 * \param target 发送对象(QQ_t)
@@ -105,6 +106,7 @@ namespace Cyan
 		 * \return 用于引用或撤回的消息 ID (MessageId)
 		 */
 		MessageId_t SendMessage(QQ_t target, const MessageChain& messageChain, MessageId_t msgId = 0);
+
 		/**
 		 * \brief 发送群聊消息
 		 * \param target 发送对象(GID_t)
@@ -113,6 +115,7 @@ namespace Cyan
 		 * \return 用于引用或撤回的消息 ID (MessageId)
 		 */
 		MessageId_t SendMessage(GID_t target, const MessageChain& messageChain, MessageId_t msgId = 0);
+
 		/**
 		 * \brief 发送临时消息
 		 * \param gid 群组(GID)
@@ -122,53 +125,62 @@ namespace Cyan
 		 * \return 用于引用或撤回的消息 ID (MessageId)
 		 */
 		MessageId_t SendMessage(GID_t gid, QQ_t qq, const MessageChain& messageChain, MessageId_t msgId = 0);
+
 		/**
 		 * @brief 发送戳一戳
 		 * @param target 目标QQ，可以是好友或者Bot的QQ
 		 * @param subject_id 戳一戳接收主体，好友QQ
 		*/
 		void SendNudge(QQ_t target, QQ_t subject_id);
+
 		/**
 		 * @brief 发送戳一戳
 		 * @param target 目标QQ，可以是好友或者Bot的QQ
 		 * @param subject_id 戳一戳接收主体，群号码
 		*/
 		void SendNudge(QQ_t target, GID_t subject_id);
+
 		/**
 		 * @brief 发送戳一戳
 		 * @param target 目标QQ，可以是好友或者Bot的QQ
 		 * @param subject_id 戳一戳接收主体
 		*/
 		void SendNudge(QQ_t target, const UID_t& subject_id);
+
 		/**
 		 * @brief 设置精华消息
 		 * @param target 群消息的 MessageId
 		*/
 		void SetEssence(MessageId_t target);
+
 		/**
 		 * \brief 上传可以发送给好友的图片
 		 * \param fileName 文件名
 		 * \return 好友图片
 		 */
 		FriendImage UploadFriendImage(const string& fileName);
+
 		/**
 		 * \brief 上传可以发送给群组的图片
 		 * \param fileName 文件名
 		 * \return 群组图片
 		 */
 		GroupImage UploadGroupImage(const string& fileName);
+
 		/**
 		 * \brief 上传可以发送给临时消息的图片
 		 * \param fileName 文件名
 		 * \return 临时消息图片
 		 */
 		TempImage UploadTempImage(const string& fileName);
+
 		/**
 		 * @brief 上传可以发给群组的语音
 		 * @param filename 文件名(amr文件)
 		 * @return MiraiVoice
 		*/
 		MiraiVoice UploadGroupVoice(const string& filename);
+
 		/**
 		 * @brief 上传并发送群文件
 		 * @param gid 目标群
@@ -176,22 +188,26 @@ namespace Cyan
 		 * @return MiraiFile
 		*/
 		MiraiFile UploadFileAndSend(GID_t gid, const string& filename);
+
 		/**
 		 * \brief 获得好友列表
 		 * \return vector<Friend_t>
 		 */
 		vector<Friend_t> GetFriendList();
+
 		/**
 		 * \brief 获得群组列表
 		 * \return vector<Group_t>
 		 */
 		vector<Group_t> GetGroupList();
+
 		/**
 		 * \brief 获得群组的群成员列表
 		 * \param target 群组(GID_t)
 		 * \return vector<GroupMember_t>
 		 */
 		vector<GroupMember_t> GetGroupMembers(GID_t target);
+
 		/**
 		 * \brief 获得群成员的群名片和群头衔信息
 		 * \param gid 群组(GID_t)
@@ -199,12 +215,14 @@ namespace Cyan
 		 * \return GroupMemberInfo
 		 */
 		GroupMemberInfo GetGroupMemberInfo(GID_t gid, QQ_t memberId);
+
 		/**
 		 * @brief 获取群文件列表
 		 * @param gid 群组(GID_t)
 		 * @return 群文件列表
 		*/
 		vector<GroupFile> GetGroupFiles(GID_t gid);
+
 		/**
 		 * @brief 获取群文件详细信息
 		 * @param gid 群组(GID_t)
@@ -212,6 +230,7 @@ namespace Cyan
 		 * @return GroupFileInfo
 		*/
 		GroupFileInfo GetGroupFileInfo(GID_t gid, const GroupFile& groupFile);
+
 		/**
 		 * @brief 重命名群文件
 		 * @param gid 群组(GID_t)
@@ -219,6 +238,7 @@ namespace Cyan
 		 * @param newName 新群文件名
 		*/
 		void GroupFileRename(GID_t gid, const GroupFile& groupFile, const string& newName);
+
 		/**
 		 * @brief 移动群文件
 		 * @param gid 群组(GID_t)
@@ -226,12 +246,14 @@ namespace Cyan
 		 * @param moveToPath 移动目标路径, "/" 为根目录
 		*/
 		void GroupFileMove(GID_t gid, const GroupFile& groupFile, const string& moveToPath = "/");
+
 		/**
 		 * @brief 删除群文件
 		 * @param gid 群组(GID_t)
 		 * @param groupFile 群文件(GroupFile)
 		*/
 		void GroupFileDelete(GID_t gid, const GroupFile& groupFile);
+
 		/**
 		 * \brief 设置群成员的群名片和群头衔信息
 		 * \param gid 群组(GID_t)
@@ -240,6 +262,7 @@ namespace Cyan
 		 * \return 始终为 true 出错会抛出异常
 		 */
 		bool SetGroupMemberInfo(GID_t gid, QQ_t memberId, const GroupMemberInfo& memberInfo);
+
 		/**
 		 * \brief 设置群成员的群名片
 		 * \param gid 群组(GID_t)
@@ -248,6 +271,7 @@ namespace Cyan
 		 * \return 始终为 true 出错会抛出异常
 		 */
 		bool SetGroupMemberName(GID_t gid, QQ_t memberId, const string& name);
+
 		/**
 		 * \brief 设置群成员的群头衔
 		 * \param gid 群组(GID_t)
@@ -256,18 +280,21 @@ namespace Cyan
 		 * \return 始终为 true 出错会抛出异常
 		 */
 		bool SetGroupMemberSpecialTitle(GID_t gid, QQ_t memberId, const string& title);
+
 		/**
 		 * \brief 全体禁言
 		 * \param target 群组(GID_t)
 		 * \return 始终为 true 出错会抛出异常
 		 */
 		bool MuteAll(GID_t target);
+
 		/**
 		 * \brief 取消全体禁言
 		 * \param target 群组(GID_t)
 		 * \return 始终为 true 出错会抛出异常
 		 */
 		bool UnMuteAll(GID_t target);
+
 		/**
 		 * \brief 禁言群成员
 		 * \param gid 群组(GID_t)
@@ -276,6 +303,7 @@ namespace Cyan
 		 * \return 始终为 true 出错会抛出异常
 		 */
 		bool Mute(GID_t gid, QQ_t memberId, unsigned int time_seconds);
+
 		/**
 		 * \brief 取消禁言群成员
 		 * \param gid 群组(GID_t)
@@ -283,6 +311,7 @@ namespace Cyan
 		 * \return 始终为 true 出错会抛出异常
 		 */
 		bool UnMute(GID_t gid, QQ_t memberId);
+
 		/**
 		 * \brief 将群成员踢出群组
 		 * \param gid 群组(GID_t)
@@ -291,24 +320,28 @@ namespace Cyan
 		 * \return 始终为 true 出错会抛出异常
 		 */
 		bool Kick(GID_t gid, QQ_t memberId, const string& reason_msg = "");
+
 		/**
 		 * \brief 撤回一条消息
 		 * \param mid 消息ID(MessageId)
 		 * \return 始终为 true 出错会抛出异常
 		 */
 		bool Recall(MessageId_t mid);
+
 		/**
 		 * \brief 让 Bot 退出一个群
 		 * \param group 要退出的群(GID_t)
 		 * \return 始终为 true 出错会抛出异常
 		 */
 		bool Quit(GID_t group);
+
 		/**
 		 * \brief 获取群设置
 		 * \param group 群(GID_t)
 		 * \return 群设置
 		 */
 		GroupConfig GetGroupConfig(GID_t group);
+
 		/**
 		 * \brief 设置群设置
 		 * \param group 群(GID_t)
@@ -316,12 +349,14 @@ namespace Cyan
 		 * \return 始终为 true 出错会抛出异常
 		 */
 		bool SetGroupConfig(GID_t group, GroupConfig groupConfig);
+
 		/**
 		 * \brief 根据消息ID(MessageId)获取对应的好友消息
 		 * \param mid 消息ID(MessageId)
 		 * \return 始终为 true 出错会抛出异常
 		 */
 		FriendMessage GetFriendMessageFromId(MessageId_t mid);
+
 		/**
 		 * \brief 根据消息ID(MessageId)获取对应的群组消息
 		 * \param mid 消息ID(MessageId)
@@ -397,32 +432,41 @@ namespace Cyan
 		}
 
 		/**
-		 * \brief 设置缓存消息的条数(默认为 4096 条, 过小可能会导致撤回/引用失败)
-		 * \param cacheSize 缓存消息的条数
-		 * \return MiraiBot 引用
-		 */
-		MiraiBot& SetCacheSize(int cacheSize);
-		/**
-		 * \brief 使用WebSocket获取消息和事件
-		 * \return MiraiBot 引用
-		 */
-		MiraiBot& UseWebSocket();
-		/**
-		 * \brief 使用HTTP轮询获取消息和事件
-		 * \return MiraiBot 引用
-		 */
-		MiraiBot& UseHttp();
-		/**
 		 * \brief 阻塞当前线程,轮询/等待消息
 		 * \param errLogger 可选, 错误信息处理函数
 		 */
 		void EventLoop(function<void(const char*)> errLogger = nullptr);
 	private:
+		// 私有成员变量
+		struct pimpl;
+		std::unique_ptr<pimpl> pmem = nullptr;
+		std::unordered_multimap<MiraiEvent, CallbackInvoker> processors_;
+
 		// 私有成员函数
+		/**
+		 * \brief 验证 VerifyKey
+		 * \param verifyKey VerifyKey
+		 * \return 如果成功, 返回 SessionKey.
+		 */
+		string Verify(const string& verifyKey);
+
+		/**
+		 * @brief 绑定 Bot QQ 到 Session
+		 * @param sessionKey 通过 Verify 得到的 SessionKey.
+		 * @param qq Bot QQ
+		 * @return true
+		*/
+		bool SessionBind(const string& sessionKey, const QQ_t& qq);
+
+		/**
+		 * @brief 释放 Session.
+		 * @param sessionKey 通过 Verify 得到的 SessionKey.
+		 * @param qq Bot QQ
+		 * @return true
+		*/
+		bool SessionRelease(const string& sessionKey, const QQ_t& qq);
+
 		void SendNudge(int64_t target, int64_t subject_id, const string& kind);
-		bool SessionBind();
-		bool SessionRelease();
-		bool SessionConfigure(int cacheSize, bool enableWebsocket);
 		unsigned int FetchEventsHttp(unsigned int count = 10);
 		void FetchEventsWs();
 		void ProcessEvent(std::string& event_json_str);
@@ -430,7 +474,7 @@ namespace Cyan
 		MiraiImage UploadImage(const string& fileName, const string& type);
 		MiraiVoice UploadVoice(const string& filename, const string& type);
 		MiraiFile UploadFileAndSend(int64_t target, const string& filename, const string& type);
-		bool Release() noexcept;
+
 		EventCallback<LostConnection> LostConnectionCallback;
 
 		template <typename T>
@@ -457,18 +501,6 @@ namespace Cyan
 		
 		template <typename T>
 		void StoreCallbackInvoker(CallbackInvoker);
-
-		// 私有成员变量
-		string host_;
-		int port_;
-		string verifyKey_;
-		QQ_t qq_;
-		string sessionKey_;
-		int cacheSize_;
-		bool ws_enabled_;
-		httplib::Client http_client_;
-		ThreadPool pool_;
-		std::unordered_multimap<MiraiEvent, CallbackInvoker> processors_;
 	};
 
 	template<typename T>
