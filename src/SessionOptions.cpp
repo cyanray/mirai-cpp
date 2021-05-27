@@ -46,6 +46,22 @@ namespace Cyan
 			opt.WebSocketHostname = hostname;
 			opt.HttpHostname = hostname;
 		}
+		if (json.contains("httpHostname"))
+		{
+			opt.HttpHostname = json["httpHostname"].get<string>();
+		}
+		if (json.contains("http-hostname"))
+		{
+			opt.HttpHostname = json["http-hostname"].get<string>();
+		}
+		if (json.contains("webscoketHostname"))
+		{
+			opt.WebSocketHostname = json["webscoketHostname"].get<string>();
+		}
+		if (json.contains("websocket-hostname"))
+		{
+			opt.WebSocketHostname = json["websocket-hostname"].get<string>();
+		}
 		if (json.contains("port"))
 		{
 			auto &json_port = json["port"];
@@ -60,6 +76,22 @@ namespace Cyan
 			}
 			opt.HttpPort = port;
 			opt.WebSocketPort = port;
+		}
+		if (json.contains("httpPort"))
+		{
+			opt.HttpPort = json["httpPort"].get<short>();
+		}
+		if (json.contains("http-port"))
+		{
+			opt.HttpPort = stoi(json["http-port"].get<string>());
+		}
+		if (json.contains("webscoketPort"))
+		{
+			opt.WebSocketPort = json["webscoketPort"].get<short>();
+		}
+		if (json.contains("websocket-port"))
+		{
+			opt.WebSocketPort = stoi(json["websocket-port"].get<string>());
 		}
 		if (json.contains("botQQ"))
 		{
@@ -77,6 +109,40 @@ namespace Cyan
 		if (json.contains("verify-key"))
 		{
 			opt.VerifyKey = json["verify-key"].get<string>();
+		}
+		if (json.contains("enableVerify"))
+		{
+			opt.EnableVerify = json["enableVerify"].get<bool>();
+		}
+		if (json.contains("enable-verify"))
+		{
+			string tmp = json["enable-verify"].get<string>();
+			opt.EnableVerify = (tmp == "1" || tmp == "true");
+		}
+		if (json.contains("singleMode"))
+		{
+			opt.SingleMode = json["singleMode"].get<bool>();
+		}
+		if (json.contains("single-mode"))
+		{
+			string tmp = json["single-mode"].get<string>();
+			opt.SingleMode = (tmp == "1" || tmp == "true");
+		}
+		if (json.contains("reservedSyncId"))
+		{
+			opt.ReservedSyncId = json["reservedSyncId"].get<string>();
+		}
+		if (json.contains("reserved-sync-id"))
+		{
+			opt.ReservedSyncId = json["reserved-sync-id"].get<string>();
+		}
+		if (json.contains("cacheSize"))
+		{
+			opt.CacheSize = json["cacheSize"].get<int>();
+		}
+		if (json.contains("cache-size"))
+		{
+			opt.CacheSize = stoi(json["cache-size"].get<string>());
 		}
 		return opt;
 	}

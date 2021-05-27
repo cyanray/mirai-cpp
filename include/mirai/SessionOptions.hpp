@@ -35,9 +35,9 @@ namespace Cyan
 		Property<short> WebSocketPort = 8080;
 
 		/**
-		 * @brief WebSocket 通信保留的同步ID(默认为-1).
+		 * @brief WebSocket 通信保留的同步ID(默认为"-1").
 		*/
-		Property<int> ReservedSyncId = -1;
+		Property<string> ReservedSyncId = "-1";
 
 		/**
 		 * @brief mirai-api-http 历史消息缓存容量, 过小可能导致撤回消息失败, 默认值为 4096.
