@@ -84,12 +84,15 @@ namespace Cyan
 		std::unique_ptr<ThreadPool> threadPool;
 	};
 
-	MiraiBot::MiraiBot() = default;
-	MiraiBot::~MiraiBot() = default;
+	MiraiBot::MiraiBot() {};
+	MiraiBot::~MiraiBot() 
+	{
+		delete pmem;
+	};
 
 	void MiraiBot::Connect(const SessionOptions& opts)
 	{
-		pmem = std::make_unique<pimpl>();
+		pmem = new pimpl();
 		pmem->sessionOptions = std::make_shared<SessionOptions>(opts);
 		pmem->threadPool = std::make_unique<ThreadPool>(opts.ThreadPoolSize.Get());
 		pmem->httpClient = std::make_shared<httplib::Client>(opts.HttpHostname.Get(), opts.HttpPort.Get());

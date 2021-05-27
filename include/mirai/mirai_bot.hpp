@@ -439,7 +439,7 @@ namespace Cyan
 	private:
 		// 私有成员变量
 		struct pimpl;
-		std::unique_ptr<pimpl> pmem = nullptr;
+		pimpl* pmem = nullptr;
 		std::unordered_multimap<MiraiEvent, CallbackInvoker> processors_;
 
 		// 私有成员函数
