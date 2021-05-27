@@ -45,6 +45,11 @@ namespace Cyan
 		Property<int> CacheSize = 4096;
 
 		/**
+		 * @brief mirai-cpp 线程池的容量, 建议设置为 CPU 核心数 * 3.
+		*/
+		Property<short> ThreadPoolSize = 6;
+
+		/**
 		 * @brief 机器人的QQ号(SingleMode=true时忽略此设置).
 		*/
 		Property<QQ_t> BotQQ;

@@ -144,6 +144,14 @@ namespace Cyan
 		{
 			opt.CacheSize = stoi(json["cache-size"].get<string>());
 		}
+		if (json.contains("threadPoolSize"))
+		{
+			opt.ThreadPoolSize = json["threadPoolSize"].get<short>();
+		}
+		if (json.contains("thread-pool-size"))
+		{
+			opt.ThreadPoolSize = stoi(json["thread-pool-size"].get<string>());
+		}
 		return opt;
 	}
 }
