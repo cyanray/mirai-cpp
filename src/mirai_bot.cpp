@@ -19,6 +19,7 @@
 #ifdef max
 #undef max
 #endif
+
 #ifdef SendMessage
 #undef SendMessage
 #endif
@@ -26,8 +27,8 @@
 #undef CreateEvent
 #endif
 
-using std::runtime_error;
-using std::stringstream;
+using namespace std;
+using namespace cyanray;
 
 namespace
 {
@@ -82,10 +83,11 @@ namespace Cyan
 		std::shared_ptr<SessionOptions> sessionOptions;
 		std::shared_ptr<httplib::Client> httpClient;
 		std::unique_ptr<ThreadPool> threadPool;
+		WebSocketClient eventClient;
 	};
 
 	MiraiBot::MiraiBot() {};
-	MiraiBot::~MiraiBot() 
+	MiraiBot::~MiraiBot()
 	{
 		delete pmem;
 	};
@@ -106,6 +108,33 @@ namespace Cyan
 		{
 			SessionBind(sessionKey, opts.BotQQ.Get());
 		}
+
+		pmem->eventClient.Connect(
+			opts.WebSocketHostname.Get(),
+			opts.WebSocketPort.Get(),
+			"/all?verifyKey="s.append(opts.VerifyKey.Get()).append("&sessionKey=").append(sessionKey));
+
+		pmem->eventClient.OnTextReceived([&](WebSocketClient& client, string text)
+			{
+				json event_json = json::parse(text)["data"];
+				if (!event_json.contains("type")) return;
+				string event_name = event_json["type"].get<string>();
+				MiraiEvent mirai_event = MiraiEventStr(event_name);
+				auto range = processors_.equal_range(mirai_event);
+				for (auto& it = range.first; it != range.second; ++it)
+				{
+					auto& executor = it->second;
+					// 给 executor 传入 nullptr 可以创建一个 WeakEvent
+					WeakEvent pevent = executor(nullptr);
+					pevent->SetMiraiBot(this);
+					pevent->Set(event_json);
+
+					pmem->threadPool->enqueue([=]()
+						{
+							executor(pevent);
+						});
+				}
+			});
 	}
 
 	void MiraiBot::Release()
@@ -753,166 +782,4 @@ namespace Cyan
 		}
 		return result;
 	}
-
-
-
-
-	//unsigned int MiraiBot::FetchEventsHttp(unsigned int count)
-	//{
-	//	stringstream api_url;
-	//	api_url
-	//		<< "/fetchMessage?sessionKey="
-	//		<< pmem->sessionKey
-	//		<< "&count="
-	//		<< count;
-	//	pmem->httpClient->set_timeout_sec(10);
-	//	auto res = pmem->httpClient->Get(api_url.str().data());
-	//	if (!res)
-	//		throw NetworkException();
-	//		if (res->status != 200)
-	//			throw MiraiApiHttpException(-1, res->body);
-	//	json re_json = json::parse(res->body);
-	//	int code = re_json["code"].get<int>();
-
-	//	if (code != 0)
-	//	{
-	//		// 特判，code=3为session失效，releas后重新verify
-	//		if (code == 3)
-	//		{
-	//			Release();
-	//			Verify(verifyKey_, qq_);
-	//			throw std::runtime_error("失去与mirai的连接，已重新连接。");
-	//		}
-	//		string msg = re_json["msg"].get<string>();
-	//		throw runtime_error(msg);
-	//	}
-
-	//	int received_count = 0;
-	//	for (const auto& ele : re_json["data"])
-	//	{
-	//		HandlingSingleEvent(ele);
-	//		received_count++;
-	//	}
-	//	return received_count;
-	//}
-
-	//void MiraiBot::FetchEventsWs()
-	//{
-	//	using namespace cyanray;
-
-	//	std::queue<string> event_queue;
-	//	mutex mutex_event_queue;
-	//	condition_variable cv;
-
-	//	stringstream all_events_url;
-	//	all_events_url << "ws://" << host_ << ":" << port_ << "/all?sessionKey=" << pmem->sessionKey;
-	//	WebSocketClient events_client;
-
-	//	events_client.Connect(all_events_url.str());
-	//	events_client.OnTextReceived([&](WebSocketClient& client, string text)
-	//		{
-	//			lock_guard<mutex> lock(mutex_event_queue);
-	//			event_queue.emplace(text);
-	//			cv.notify_one();
-	//		});
-	//	events_client.OnLostConnection([&](WebSocketClient& client, int code)
-	//		{
-	//			cv.notify_one();
-	//		});
-
-
-	//	stringstream command_url;
-	//	command_url << "ws://" << host_ << ":" << port_ << "/command?verifyKey=" << verifyKey_;
-	//	WebSocketClient command_client;
-
-	//	command_client.Connect(command_url.str());
-	//	command_client.OnTextReceived([&](WebSocketClient& client, string text)
-	//		{
-	//			lock_guard<mutex> lock(mutex_event_queue);
-	//			event_queue.emplace(text);
-	//			cv.notify_one();
-	//		});
-	//	command_client.OnLostConnection([&](WebSocketClient& client, int code)
-	//		{
-	//			cv.notify_one();
-	//		});
-
-
-	//	// 循环处理事件队列(WebSocket库不可执行耗时操作，因此在此线程处理事件)
-	//	while (true)
-	//	{
-	//		if (event_queue.empty() &&
-	//			(events_client.GetStatus() != WebSocketClient::Status::Open ||
-	//				command_client.GetStatus() != WebSocketClient::Status::Open))
-	//		{
-	//			events_client.Shutdown();
-	//			command_client.Shutdown();
-	//			break;
-	//		}
-	//		unique_lock<mutex> lock(mutex_event_queue);
-	//		if (event_queue.empty())
-	//		{
-	//			cv.wait(lock);
-	//		}
-	//		if (event_queue.empty()) continue;
-	//		string event_text = event_queue.front();
-	//		event_queue.pop();
-	//		lock.unlock();
-	//		ProcessEvent(event_text);
-	//		std::this_thread::yield();
-	//	}
-
-	//}
-
-	//void MiraiBot::ProcessEvent(std::string& event_json_str)
-	//{
-
-	//	if (!event_json_str.empty())
-	//	{
-	//		json j = json::parse(event_json_str);
-	//		// code 不存在，说明没错误，处理事件/消息
-	//		if (j.find("code") == j.end())
-	//		{
-	//			HandlingSingleEvent(j);
-	//		}
-	//		// code 存在，按照 code 进行错误处理
-	//		else if (j["code"].get<int>() == 3 || j["code"].get<int>() == 4)
-	//		{
-	//			Release();
-	//			Verify(verifyKey_, qq_);
-	//			SessionConfigure(cacheSize_, ws_enabled_);
-	//			throw std::runtime_error("失去与mirai的连接，已重新连接。");
-	//		}
-	//	}
-	//}
-
-	//void MiraiBot::HandlingSingleEvent(const nlohmann::json& ele)
-	//{
-	//	MiraiEvent mirai_event;
-	//	// 要么是事件要么是指令，不应该是别的
-	//	if (ele.find("type") != ele.end())
-	//	{
-	//		string event_name = ele["type"].get<string>();
-	//		mirai_event = MiraiEventStr(event_name);
-	//	}
-	//	else
-	//		mirai_event = MiraiEvent::Command;
-	//	// 寻找能处理事件的 Processor
-	//	auto range = processors_.equal_range(mirai_event);
-	//	for (auto it = range.first; it != range.second; ++it)
-	//	{
-	//		auto executor = it->second;
-	//		// 给 executor 传入 nullptr 可以创建一个 WeakEvent
-	//		WeakEvent pevent = executor(nullptr);
-	//		pevent->SetMiraiBot(this);
-	//		pevent->Set(ele);
-
-	//		pool_.enqueue([=]()
-	//			{
-	//				executor(pevent);
-	//			});
-	//	}
-	//}
-
-
 } // namespace Cyan
