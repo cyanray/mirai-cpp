@@ -10,14 +10,32 @@
 namespace Cyan
 {
 
-	// 群组成员格式
+	/**
+	 * @brief QQ群成员
+	*/
 	class GroupMember_t : public ISerializable
 	{
 	public:
+		/**
+		 * @brief QQ号码
+		*/
 		QQ_t QQ;
+
+		/**
+		 * @brief 群名片
+		*/
 		string MemberName;
+
+		/**
+		 * @brief QQ群成员在该群的权限
+		*/
 		GroupPermission Permission = GroupPermission::Member;
+
+		/**
+		 * @brief QQ群
+		*/
 		Group_t Group;
+
 		virtual bool Set(const json& j) override
 		{
 			QQ = (QQ_t)(j["id"].get<int64_t>());
@@ -26,6 +44,7 @@ namespace Cyan
 			Group.Set(j["group"]);
 			return true;
 		}
+
 		virtual json ToJson() const override
 		{
 			json j = json::object();
