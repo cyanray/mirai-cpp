@@ -420,11 +420,6 @@ namespace Cyan
 			std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 		}
 
-		/**
-		 * \brief 阻塞当前线程,轮询/等待消息
-		 * \param errLogger 可选, 错误信息处理函数
-		 */
-		void EventLoop(function<void(const char*)> errLogger = nullptr);
 	private:
 		// 私有成员变量
 		struct pimpl;
