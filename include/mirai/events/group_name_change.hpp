@@ -18,7 +18,7 @@ namespace Cyan
 		string OriginName;
 		string CurrentName;
 		Group_t Group;
-		GroupMember_t Operator;
+		GroupMember Operator;
 
 		static MiraiEvent GetMiraiEvent()
 		{

@@ -19,7 +19,7 @@ namespace Cyan
 		QQ_t AuthorQQ;
 		Cyan::MessageId_t MessageId;
 		Group_t Group;
-		GroupMember_t Operator;
+		GroupMember Operator;
 
 		static MiraiEvent GetMiraiEvent()
 		{

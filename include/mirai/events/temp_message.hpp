@@ -18,7 +18,7 @@ namespace Cyan
 	{
 	public:
 		Cyan::MessageChain MessageChain;
-		GroupMember_t Sender;
+		GroupMember Sender;
 
 		static MiraiEvent GetMiraiEvent()
 		{

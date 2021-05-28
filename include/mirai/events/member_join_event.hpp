@@ -15,7 +15,7 @@ namespace Cyan
 	class MemberJoinEvent : public EventBase
 	{
 	public:
-		GroupMember_t NewMember;
+		GroupMember NewMember;
 
 		static MiraiEvent GetMiraiEvent()
 		{

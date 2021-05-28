@@ -18,7 +18,7 @@ namespace Cyan
 		bool Origin;
 		bool Current;
 		Group_t Group;
-		GroupMember_t Operator;
+		GroupMember Operator;
 
 		static MiraiEvent GetMiraiEvent()
 		{

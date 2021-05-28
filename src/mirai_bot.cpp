@@ -439,7 +439,7 @@ namespace Cyan
 	}
 
 
-	vector<GroupMember_t> MiraiBot::GetGroupMembers(GID_t target)
+	vector<GroupMember> MiraiBot::GetGroupMembers(GID_t target)
 	{
 		stringstream api_url;
 		api_url
@@ -449,17 +449,17 @@ namespace Cyan
 			<< target;
 		auto res = pmem->httpClient->Get(api_url.str().data());
 		json re_json = ParseOrThrowException(res);
-		vector<GroupMember_t> result;
+		vector<GroupMember> result;
 		for (const auto& ele : re_json["data"])
 		{
-			GroupMember_t f;
+			GroupMember f;
 			f.Set(ele);
 			result.push_back(f);
 		}
 		return result;
 	}
 
-	GroupMember_t MiraiBot::GetGroupMemberInfo(GID_t gid, QQ_t memberId)
+	GroupMember MiraiBot::GetGroupMemberInfo(GID_t gid, QQ_t memberId)
 	{
 		stringstream api_url;
 		api_url
@@ -471,7 +471,7 @@ namespace Cyan
 			<< int64_t(memberId);
 		auto res = pmem->httpClient->Get(api_url.str().data());
 		json re_json = ParseOrThrowException(res);
-		GroupMember_t result;
+		GroupMember result;
 		result.Set(re_json);
 		return result;
 	}

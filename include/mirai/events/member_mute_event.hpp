@@ -15,8 +15,8 @@ namespace Cyan
 	{
 	public:
 		int DurationSeconds = 0;
-		GroupMember_t Member;
-		GroupMember_t Operator;
+		GroupMember Member;
+		GroupMember Operator;
 
 		static MiraiEvent GetMiraiEvent()
 		{

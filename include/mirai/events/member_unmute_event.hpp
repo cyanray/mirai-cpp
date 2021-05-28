@@ -14,8 +14,8 @@ namespace Cyan
 	class MemberUnmuteEvent : public EventBase
 	{
 	public:
-		GroupMember_t Member;
-		GroupMember_t Operator;
+		GroupMember Member;
+		GroupMember Operator;
 
 		static MiraiEvent GetMiraiEvent()
 		{

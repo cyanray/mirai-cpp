@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
 	// 获取一个好友用于测试
 	QQ_t friendQQ = bot.GetFriendList().front().QQ;
 	// 获取一个群成员用于测试
-	GroupMember_t groupMember;
+	GroupMember groupMember;
 	for (const auto& group : bot.GetGroupList())
 	{
 		auto members = bot.GetGroupMembers(group.GID);

@@ -13,7 +13,7 @@ namespace Cyan
 	/**
 	 * @brief QQ群成员
 	*/
-	class GroupMember_t : public ISerializable
+	class GroupMember : public ISerializable
 	{
 	public:
 		/**

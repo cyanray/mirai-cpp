@@ -14,7 +14,7 @@ namespace Cyan
 	class MemberLeaveEventQuit : public EventBase
 	{
 	public:
-		GroupMember_t Member;
+		GroupMember Member;
 
 		static MiraiEvent GetMiraiEvent()
 		{

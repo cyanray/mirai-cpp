@@ -14,7 +14,7 @@ namespace Cyan
 	class BotUnmuteEvent : public EventBase
 	{
 	public:
-		GroupMember_t Operator;
+		GroupMember Operator;
 
 		static MiraiEvent GetMiraiEvent()
 		{
