@@ -468,10 +468,6 @@ namespace Cyan
 		bool SessionRelease(const string& sessionKey, const QQ_t& qq);
 
 		void SendNudge(int64_t target, int64_t subject_id, const string& kind);
-		unsigned int FetchEventsHttp(unsigned int count = 10);
-		void FetchEventsWs();
-		void ProcessEvent(std::string& event_json_str);
-		void HandlingSingleEvent(const json& ele);
 		MiraiImage UploadImage(const string& fileName, const string& type);
 		MiraiVoice UploadVoice(const string& filename, const string& type);
 		MiraiFile UploadFileAndSend(int64_t target, const string& filename, const string& type);
