@@ -150,6 +150,7 @@ namespace Cyan
 
 	void MiraiBot::Release()
 	{
+		pmem->eventClient.Shutdown();
 		SessionRelease(pmem->sessionKey, pmem->botQQ);
 	}
 
