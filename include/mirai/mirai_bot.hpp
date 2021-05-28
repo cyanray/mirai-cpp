@@ -25,17 +25,6 @@ using std::vector;
 using std::function;
 using nlohmann::json;
 
-// fu*k windows.h
-#ifdef max
-#undef max
-#endif
-#ifdef SendMessage
-#undef SendMessage
-#endif
-#ifdef CreateEvent
-#undef CreateEvent
-#endif
-
 // 前置声明
 namespace httplib
 {

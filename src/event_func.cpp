@@ -105,7 +105,7 @@ namespace Cyan
 		return true;
 	}
 
-	bool Cyan::BotInvitedJoinGroupRequestEvent::Response(int operate, const string& message)
+	bool BotInvitedJoinGroupRequestEvent::Response(int operate, const string& message)
 	{
 		json data =
 		{

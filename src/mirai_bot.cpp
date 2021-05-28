@@ -19,7 +19,6 @@
 #ifdef max
 #undef max
 #endif
-
 #ifdef SendMessage
 #undef SendMessage
 #endif
