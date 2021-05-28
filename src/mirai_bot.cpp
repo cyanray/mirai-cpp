@@ -120,7 +120,7 @@ namespace Cyan
 				if (!event_json.contains("type")) return;
 				string event_name = event_json["type"].get<string>();
 				MiraiEvent mirai_event = MiraiEventStr(event_name);
-				auto range = processors_.equal_range(mirai_event);
+				auto range = processors.equal_range(mirai_event);
 				for (auto& it = range.first; it != range.second; ++it)
 				{
 					auto& executor = it->second;

@@ -440,7 +440,8 @@ namespace Cyan
 		// 私有成员变量
 		struct pimpl;
 		pimpl* pmem = nullptr;
-		std::unordered_multimap<MiraiEvent, CallbackInvoker> processors_;
+		EventCallback<LostConnection> lostConnectionCallback;
+		std::unordered_multimap<MiraiEvent, CallbackInvoker> processors;
 
 		// 私有成员函数
 		/**
@@ -475,8 +476,6 @@ namespace Cyan
 		MiraiVoice UploadVoice(const string& filename, const string& type);
 		MiraiFile UploadFileAndSend(int64_t target, const string& filename, const string& type);
 
-		EventCallback<LostConnection> LostConnectionCallback;
-
 		template <typename T>
 		CallbackInvoker GetCallbackInvoker(const EventCallback<T>& ep)
 		{
@@ -506,15 +505,15 @@ namespace Cyan
 	template<typename T>
 	inline void MiraiBot::StoreCallbackInvoker(CallbackInvoker func)
 	{
-		processors_.insert({ T::GetMiraiEvent(), func });
+		processors.insert({ T::GetMiraiEvent(), func });
 	}
 
 	template<>
 	inline void MiraiBot::StoreCallbackInvoker<Message>(CallbackInvoker func)
 	{
-		processors_.insert({ MiraiEvent::FriendMessage, func });
-		processors_.insert({ MiraiEvent::GroupMessage, func });
-		processors_.insert({ MiraiEvent::TempMessage, func });
+		processors.insert({ MiraiEvent::FriendMessage, func });
+		processors.insert({ MiraiEvent::GroupMessage, func });
+		processors.insert({ MiraiEvent::TempMessage, func });
 	}
 
 	template <typename T>
@@ -528,7 +527,7 @@ namespace Cyan
 	template<>
 	inline MiraiBot& MiraiBot::OnEventReceived<LostConnection>(const EventCallback<LostConnection>& cb)
 	{
-		LostConnectionCallback = cb;
+		lostConnectionCallback = cb;
 		return *this;
 	}
 
