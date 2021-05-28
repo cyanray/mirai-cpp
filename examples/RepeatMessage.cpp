@@ -56,6 +56,25 @@ int main(int argc, char* argv[])
 			m.Reply(m.MessageChain);
 		});
 
+	bot.On<LostConnection>([&](LostConnection e)
+		{
+			cout << e.ErrorMessage << " (" << e.Code << ")" << endl;
+			while (true)
+			{
+				try
+				{
+					bot.Connect(opts);
+					break;
+				}
+				catch (const std::exception& ex)
+				{
+					cout << ex.what() << endl;
+				}
+				MiraiBot::SleepSeconds(1);
+			}
+			cout << "与 mirai-api-http 重新建立连接!" << endl;
+		});
+
 	string command;
 	while (cin >> command)
 	{

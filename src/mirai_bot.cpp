@@ -135,6 +135,17 @@ namespace Cyan
 						});
 				}
 			});
+
+		pmem->eventClient.OnLostConnection([&](WebSocketClient& client, int code)
+			{
+				pmem->threadPool->enqueue([=]()
+					{
+						LostConnection result;
+						result.Code = code;
+						result.ErrorMessage = "与 mirai-api-http 失去连接.";
+						lostConnectionCallback(result);
+					});
+			});
 	}
 
 	void MiraiBot::Release()
