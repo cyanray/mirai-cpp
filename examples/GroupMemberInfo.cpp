@@ -3,43 +3,56 @@
 // 使用静态库必须要在引入 mirai.h 前定义这个宏
 #define MIRAICPP_STATICLIB
 #include <mirai.h>
+#include <mirai/exceptions/exceptions.hpp>
 
-int main()
+using namespace std;
+using namespace Cyan;
+
+int main(int argc, char* argv[])
 {
-	using namespace std;
-	using namespace Cyan;
+
 	system("chcp 65001");
-	MiraiBot bot("127.0.0.1", 539);
-	while (true)
-	{
-		try
-		{
-			bot.Verify("INITKEY7A3O1a9v", 1589588851_qq);
-			break;
-		}
-		catch (const std::exception& ex)
-		{
-			cout << ex.what() << endl;
-		}
-		MiraiBot::SleepSeconds(1);
-	}
-	cout << "成功登录 bot。" << endl;
+	MiraiBot bot;
+	SessionOptions opts = SessionOptions::FromCommandLine(argc, argv);
+	bot.Connect(opts);
 
 	srand(time(0));
 
-	auto gid = 1029259687_gid;
-	auto qq = 1589588851_qq;
+	auto gid = 1013323391_gid;
+	auto& qq = opts.BotQQ.Get();
 
 	auto memberInfo = bot.GetGroupMemberInfo(gid, qq);
-	cout << "群名片: " << memberInfo.Name << ", 群头衔: " << memberInfo.SpecialTitle << endl;
-	// 设置新的群昵称
-	bot.SetGroupMemberName(gid, qq, "name_" + to_string(rand() % 1000));
-	// 设置新的群头衔 (仅群主有权限, 没有权限会抛出异常)
-	bot.SetGroupMemberSpecialTitle(gid, qq, "title_" + to_string(rand() % 1000));
+	cout << "群名片: " << memberInfo.MemberName << ", 群头衔: " << memberInfo.SpecialTitle << endl;
 
-	// 也可以修改了 memberInfo 之后,使用 SetGroupMemberInfo 方法
-	// bot.SetGroupMemberInfo(gid, qq, memberInfo);
+	try
+	{
+		// 设置新的群昵称
+		bot.SetGroupMemberName(gid, qq, "name_" + to_string(rand() % 1000));
 
-	bot.EventLoop();
+		// 设置新的群头衔 (仅群主有权限, 没有权限会抛出异常)
+		bot.SetGroupMemberSpecialTitle(gid, qq, "title_" + to_string(rand() % 1000));
+	}
+	catch (const NetworkException& ex)
+	{
+		cout << "出现网络错误!" << endl;
+	}
+	catch (const MiraiApiHttpException& ex)
+	{
+		cout << "mirai-api-http 报告错误:" << ex.what() << endl;
+	}
+	catch (...)
+	{
+		cout << "出现未知错误." << endl;
+	}
+
+	string command;
+	while (cin >> command)
+	{
+		if (command == "exit")
+		{
+			bot.Release();
+			break;
+		}
+	}
 	return 0;
 }
