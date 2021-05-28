@@ -461,7 +461,6 @@ namespace Cyan
 
 	GroupMember_t MiraiBot::GetGroupMemberInfo(GID_t gid, QQ_t memberId)
 	{
-
 		stringstream api_url;
 		api_url
 			<< "/memberInfo?sessionKey="
@@ -477,34 +476,79 @@ namespace Cyan
 		return result;
 	}
 
-	bool MiraiBot::SetGroupMemberInfo(GID_t gid, QQ_t memberId, const GroupMemberInfo& memberInfo)
+	Profile MiraiBot::GetBotProfile()
 	{
-		json data =
-		{
-			{ "sessionKey", pmem->sessionKey },
-			{ "target", int64_t(gid)},
-			{ "memberId", int64_t(memberId)}
-		};
-		data["info"] = memberInfo.ToJson();
-
-		auto res = pmem->httpClient->Post("/memberInfo", data.dump(), CONTENT_TYPE.c_str());
-		ParseOrThrowException(res);
-		return true;
+		stringstream api_url;
+		api_url
+			<< "/botProfile?sessionKey="
+			<< pmem->sessionKey;
+		auto res = pmem->httpClient->Get(api_url.str().data());
+		json re_json = ParseOrThrowException(res);
+		Profile result;
+		result.Set(re_json);
+		return result;
 	}
 
-	bool MiraiBot::SetGroupMemberName(GID_t gid, QQ_t memberId, const string& name)
+	Profile MiraiBot::GetFriendProfile(const QQ_t& qq)
 	{
-		auto member_info = this->GetGroupMemberInfo(gid, memberId);
-		member_info.Name = name;
-		return this->SetGroupMemberInfo(gid, memberId, member_info);
+		stringstream api_url;
+		api_url
+			<< "/friendProfile?sessionKey="
+			<< pmem->sessionKey
+			<< "&target="
+			<< int64_t(qq);
+		auto res = pmem->httpClient->Get(api_url.str().data());
+		json re_json = ParseOrThrowException(res);
+		Profile result;
+		result.Set(re_json);
+		return result;
 	}
 
-	bool MiraiBot::SetGroupMemberSpecialTitle(GID_t gid, QQ_t memberId, const string& title)
+	Profile MiraiBot::GetGroupMemberProfile(const GID_t& gid, const QQ_t& memberQQ)
 	{
-		auto member_info = this->GetGroupMemberInfo(gid, memberId);
-		member_info.SpecialTitle = title;
-		return this->SetGroupMemberInfo(gid, memberId, member_info);
+		stringstream api_url;
+		api_url
+			<< "/memberProfile?sessionKey="
+			<< pmem->sessionKey
+			<< "&target="
+			<< int64_t(gid)
+			<< "&memberId="
+			<< int64_t(memberQQ);
+		auto res = pmem->httpClient->Get(api_url.str().data());
+		json re_json = ParseOrThrowException(res);
+		Profile result;
+		result.Set(re_json);
+		return result;
 	}
+
+	//bool MiraiBot::SetGroupMemberInfo(GID_t gid, QQ_t memberId, const GroupMemberInfo& memberInfo)
+	//{
+	//	json data =
+	//	{
+	//		{ "sessionKey", pmem->sessionKey },
+	//		{ "target", int64_t(gid)},
+	//		{ "memberId", int64_t(memberId)}
+	//	};
+	//	data["info"] = memberInfo.ToJson();
+
+	//	auto res = pmem->httpClient->Post("/memberInfo", data.dump(), CONTENT_TYPE.c_str());
+	//	ParseOrThrowException(res);
+	//	return true;
+	//}
+
+	//bool MiraiBot::SetGroupMemberName(GID_t gid, QQ_t memberId, const string& name)
+	//{
+	//	auto member_info = this->GetGroupMemberInfo(gid, memberId);
+	//	member_info.Name = name;
+	//	return this->SetGroupMemberInfo(gid, memberId, member_info);
+	//}
+
+	//bool MiraiBot::SetGroupMemberSpecialTitle(GID_t gid, QQ_t memberId, const string& title)
+	//{
+	//	auto member_info = this->GetGroupMemberInfo(gid, memberId);
+	//	member_info.SpecialTitle = title;
+	//	return this->SetGroupMemberInfo(gid, memberId, member_info);
+	//}
 
 	vector<GroupFile> MiraiBot::GetGroupFiles(GID_t gid)
 	{

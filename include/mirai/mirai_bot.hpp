@@ -244,13 +244,34 @@ namespace Cyan
 		void GroupFileDelete(GID_t gid, const GroupFile& groupFile);
 
 		/**
+		 * @brief 获取 Bot 账号的个人简介
+		 * @return Profile
+		*/
+		Profile GetBotProfile();
+
+		/**
+		 * @brief 获取好友的个人简介
+		 * @param qq 好友 QQ
+		 * @return Profile
+		*/
+		Profile GetFriendProfile(const QQ_t& qq);
+
+		/**
+		 * @brief 获取群成员的个人简介
+		 * @param gid 群号码
+		 * @param memberQQ 群成员QQ
+		 * @return Profile
+		*/
+		Profile GetGroupMemberProfile(const GID_t& gid, const QQ_t& memberQQ);
+
+		/**
 		 * \brief 设置群成员的群名片和群头衔信息
 		 * \param gid 群组(GID_t)
 		 * \param memberId 群成员(QQ_t)
 		 * \param memberInfo 群成员信息
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		bool SetGroupMemberInfo(GID_t gid, QQ_t memberId, const GroupMemberInfo& memberInfo);
+		//bool SetGroupMemberInfo(GID_t gid, QQ_t memberId, const GroupMemberInfo& memberInfo);
 
 		/**
 		 * \brief 设置群成员的群名片
