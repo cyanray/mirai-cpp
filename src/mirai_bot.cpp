@@ -83,9 +83,66 @@ namespace Cyan
 		std::shared_ptr<httplib::Client> httpClient;
 		std::unique_ptr<ThreadPool> threadPool;
 		WebSocketClient eventClient;
+
+		/**
+		 * \brief 验证 VerifyKey
+		 * \param verifyKey VerifyKey
+		 * \return 如果成功, 返回 SessionKey.
+		 */
+		string Verify(const string& verifyKey);
+
+		/**
+		 * @brief 绑定 Bot QQ 到 Session
+		 * @param sessionKey 通过 Verify 得到的 SessionKey.
+		 * @param qq Bot QQ
+		 * @return true
+		*/
+		bool SessionBind(const string& sessionKey, const QQ_t& qq);
+
+		/**
+		 * @brief 释放 Session.
+		 * @param sessionKey 通过 Verify 得到的 SessionKey.
+		 * @param qq Bot QQ
+		 * @return true
+		*/
+		bool SessionRelease(const string& sessionKey, const QQ_t& qq);
+
+		/**
+		 * @brief 发送“戳一戳”
+		 * @param target 聊天目标 (私聊为聊天对象QQ号，群聊为群号码)
+		 * @param subject_id 受体目标 (私聊为自己或对象的QQ号码，群聊为群成员QQ号码)
+		 * @param kind 类型 (Friend | Group)
+		*/
+		void SendNudge(int64_t target, int64_t subject_id, const string& kind);
+
+		/**
+		 * @brief 上传图像
+		 * @param fileName 文件路径
+		 * @param type 类型 (Friend | Group | Temp)
+		 * @return 
+		*/
+		MiraiImage UploadImage(const string& fileName, const string& type);
+
+		/**
+		 * @brief 上传声音
+		 * @param filename 文件路径
+		 * @param type 类型 (Friend | Group)
+		 * @return 
+		*/
+		MiraiVoice UploadVoice(const string& filename, const string& type);
+
+		/**
+		 * @brief 上传文件并发送
+		 * @param target 发送目标(好友或群组)
+		 * @param filename 文件路径
+		 * @param type 类型 (Friend | Group)
+		 * @return 
+		*/
+		MiraiFile UploadFileAndSend(int64_t target, const string& filename, const string& type);
 	};
 
 	MiraiBot::MiraiBot() {};
+
 	MiraiBot::~MiraiBot()
 	{
 		delete pmem;
@@ -101,11 +158,11 @@ namespace Cyan
 		string& sessionKey = pmem->sessionKey;
 		if (opts.EnableVerify.Get())
 		{
-			sessionKey = Verify(opts.VerifyKey.Get());
+			sessionKey = pmem->Verify(opts.VerifyKey.Get());
 		}
 		if (!opts.SingleMode.Get())
 		{
-			SessionBind(sessionKey, opts.BotQQ.Get());
+			pmem->SessionBind(sessionKey, opts.BotQQ.Get());
 		}
 
 		pmem->eventClient.Connect(
@@ -150,7 +207,7 @@ namespace Cyan
 	void MiraiBot::Release()
 	{
 		pmem->eventClient.Shutdown();
-		SessionRelease(pmem->sessionKey, pmem->botQQ);
+		pmem->SessionRelease(pmem->sessionKey, pmem->botQQ);
 	}
 
 	string MiraiBot::GetSessionKey() const
@@ -186,18 +243,18 @@ namespace Cyan
 		throw runtime_error(msg);
 	}
 
-	string MiraiBot::Verify(const string& verifyKey)
+	string MiraiBot::pimpl::Verify(const string& verifyKey)
 	{
 		json data =
 		{
 			{ "verifyKey", verifyKey }
 		};
-		auto res = pmem->httpClient->Post("/verify", data.dump(), CONTENT_TYPE.c_str());
+		auto res = httpClient->Post("/verify", data.dump(), CONTENT_TYPE.c_str());
 		json re_json = ParseOrThrowException(res);
 		return re_json["session"].get<string>();
 	}
 
-	bool MiraiBot::SessionBind(const string& sessionKey, const QQ_t& qq)
+	bool MiraiBot::pimpl::SessionBind(const string& sessionKey, const QQ_t& qq)
 	{
 		json data =
 		{
@@ -205,12 +262,12 @@ namespace Cyan
 			{ "qq", int64_t(qq)}
 		};
 
-		auto res = pmem->httpClient->Post("/bind", data.dump(), CONTENT_TYPE.c_str());
+		auto res = httpClient->Post("/bind", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 		return true;
 	}
 
-	bool MiraiBot::SessionRelease(const string& sessionKey, const QQ_t& qq)
+	bool MiraiBot::pimpl::SessionRelease(const string& sessionKey, const QQ_t& qq)
 	{
 		json data =
 		{
@@ -218,7 +275,7 @@ namespace Cyan
 			{ "qq", int64_t(qq)}
 		};
 
-		auto res = pmem->httpClient->Post("/release", data.dump(), CONTENT_TYPE.c_str());
+		auto res = httpClient->Post("/release", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 		return true;
 	}
@@ -273,28 +330,28 @@ namespace Cyan
 		return msg_id;
 	}
 
-	void MiraiBot::SendNudge(int64_t target, int64_t subject_id, const string& kind)
+	void MiraiBot::pimpl::SendNudge(int64_t target, int64_t subject_id, const string& kind)
 	{
 		json data =
 		{
-			{ "sessionKey", pmem->sessionKey },
+			{ "sessionKey", sessionKey },
 			{ "target", target },
 			{ "subject", subject_id },
 			{ "kind" , kind }
 		};
 
-		auto res = pmem->httpClient->Post("/sendNudge", data.dump(), CONTENT_TYPE.c_str());
+		auto res = httpClient->Post("/sendNudge", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 	}
 
 	void MiraiBot::SendNudge(QQ_t target, QQ_t subject_id)
 	{
-		SendNudge(target.ToInt64(), subject_id.ToInt64(), "Friend");
+		pmem->SendNudge(target.ToInt64(), subject_id.ToInt64(), "Friend");
 	}
 
 	void MiraiBot::SendNudge(QQ_t target, GID_t subject_id)
 	{
-		SendNudge(target.ToInt64(), subject_id.ToInt64(), "Group");
+		pmem->SendNudge(target.ToInt64(), subject_id.ToInt64(), "Group");
 	}
 
 	void MiraiBot::SendNudge(QQ_t target, const UID_t& subject_id)
@@ -321,18 +378,18 @@ namespace Cyan
 		json re_json = ParseOrThrowException(res);
 	}
 
-	MiraiImage MiraiBot::UploadImage(const string& filename, const string& type)
+	MiraiImage MiraiBot::pimpl::UploadImage(const string& filename, const string& type)
 	{
 		string base_filename = filename.substr(filename.find_last_of("/\\") + 1);
 		string img_data = ReadFile(filename);
 		httplib::MultipartFormDataItems items =
 		{
-		  { "sessionKey", pmem->sessionKey, "", "" },
+		  { "sessionKey", sessionKey, "", "" },
 		  { "type", type, "", "" },
 		  { "img", img_data, base_filename, "image/png" }
 		};
 
-		auto res = pmem->httpClient->Post("/uploadImage", items);
+		auto res = httpClient->Post("/uploadImage", items);
 		json re_json = ParseOrThrowException(res);
 		MiraiImage img;
 		img.Id = re_json["imageId"].get<string>();
@@ -343,31 +400,31 @@ namespace Cyan
 
 	FriendImage MiraiBot::UploadFriendImage(const string& filename)
 	{
-		return UploadImage(filename, "friend");
+		return pmem->UploadImage(filename, "friend");
 	}
 
 	GroupImage MiraiBot::UploadGroupImage(const string& filename)
 	{
-		return UploadImage(filename, "group");
+		return pmem->UploadImage(filename, "group");
 	}
 
 	TempImage MiraiBot::UploadTempImage(const string& filename)
 	{
-		return UploadImage(filename, "temp");
+		return pmem->UploadImage(filename, "temp");
 	}
 
-	MiraiVoice MiraiBot::UploadVoice(const string& filename, const string& type)
+	MiraiVoice MiraiBot::pimpl::UploadVoice(const string& filename, const string& type)
 	{
 		string base_filename = filename.substr(filename.find_last_of("/\\") + 1);
 		string voice_data = ReadFile(filename);
 		httplib::MultipartFormDataItems items =
 		{
-		  { "sessionKey", pmem->sessionKey, "", "" },
+		  { "sessionKey", sessionKey, "", "" },
 		  { "type", type, "", "" },
 		  { "voice", voice_data, base_filename, "application/octet-stream"  }
 		};
 
-		auto res = pmem->httpClient->Post("/uploadVoice", items);
+		auto res = httpClient->Post("/uploadVoice", items);
 		json re_json = ParseOrThrowException(res);
 		MiraiVoice result;
 		result.Id = re_json["voiceId"].get<string>();
@@ -379,23 +436,23 @@ namespace Cyan
 
 	MiraiVoice MiraiBot::UploadGroupVoice(const string& filename)
 	{
-		return UploadVoice(filename, "group");
+		return pmem->UploadVoice(filename, "group");
 	}
 
-	MiraiFile MiraiBot::UploadFileAndSend(int64_t target, const string& filename, const string& type)
+	MiraiFile MiraiBot::pimpl::UploadFileAndSend(int64_t target, const string& filename, const string& type)
 	{
 		string base_filename = filename.substr(filename.find_last_of("/\\") + 1);
 		string file_data = ReadFile(filename);
 		httplib::MultipartFormDataItems items =
 		{
-		  { "sessionKey", pmem->sessionKey, "", "" },
+		  { "sessionKey", sessionKey, "", "" },
 		  { "type", type, "", "" },
 		  { "target", to_string(target), "", "" },
 		  { "path", "/" + base_filename, "", "" },
 		  { "file", file_data, base_filename, "application/octet-stream"  }
 		};
 
-		auto res = pmem->httpClient->Post("/uploadFileAndSend", items);
+		auto res = httpClient->Post("/uploadFileAndSend", items);
 		json re_json = ParseOrThrowException(res);
 		MiraiFile result;
 		result.FileSize = file_data.size();
@@ -406,7 +463,7 @@ namespace Cyan
 
 	MiraiFile MiraiBot::UploadFileAndSend(GID_t gid, const string& filename)
 	{
-		return UploadFileAndSend(gid.ToInt64(), filename, "Group");
+		return pmem->UploadFileAndSend(gid.ToInt64(), filename, "Group");
 	}
 
 	vector<Friend_t> MiraiBot::GetFriendList()

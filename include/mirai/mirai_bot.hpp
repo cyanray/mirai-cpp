@@ -442,40 +442,10 @@ namespace Cyan
 		}
 
 	private:
-		// 私有成员变量
 		struct pimpl;
 		pimpl* pmem = nullptr;
 		EventCallback<LostConnection> lostConnectionCallback;
 		std::unordered_multimap<MiraiEvent, CallbackInvoker> processors;
-
-		// 私有成员函数
-		/**
-		 * \brief 验证 VerifyKey
-		 * \param verifyKey VerifyKey
-		 * \return 如果成功, 返回 SessionKey.
-		 */
-		string Verify(const string& verifyKey);
-
-		/**
-		 * @brief 绑定 Bot QQ 到 Session
-		 * @param sessionKey 通过 Verify 得到的 SessionKey.
-		 * @param qq Bot QQ
-		 * @return true
-		*/
-		bool SessionBind(const string& sessionKey, const QQ_t& qq);
-
-		/**
-		 * @brief 释放 Session.
-		 * @param sessionKey 通过 Verify 得到的 SessionKey.
-		 * @param qq Bot QQ
-		 * @return true
-		*/
-		bool SessionRelease(const string& sessionKey, const QQ_t& qq);
-
-		void SendNudge(int64_t target, int64_t subject_id, const string& kind);
-		MiraiImage UploadImage(const string& fileName, const string& type);
-		MiraiVoice UploadVoice(const string& filename, const string& type);
-		MiraiFile UploadFileAndSend(int64_t target, const string& filename, const string& type);
 
 		template <typename T>
 		CallbackInvoker GetCallbackInvoker(const EventCallback<T>& ep)
