@@ -459,7 +459,7 @@ namespace Cyan
 		return result;
 	}
 
-	GroupMemberInfo MiraiBot::GetGroupMemberInfo(GID_t gid, QQ_t memberId)
+	GroupMember_t MiraiBot::GetGroupMemberInfo(GID_t gid, QQ_t memberId)
 	{
 
 		stringstream api_url;
@@ -472,7 +472,7 @@ namespace Cyan
 			<< int64_t(memberId);
 		auto res = pmem->httpClient->Get(api_url.str().data());
 		json re_json = ParseOrThrowException(res);
-		GroupMemberInfo result;
+		GroupMember_t result;
 		result.Set(re_json);
 		return result;
 	}

@@ -27,6 +27,27 @@ namespace Cyan
 		string MemberName;
 
 		/**
+		 * @brief 群头衔
+		*/
+		string SpecialTitle;
+
+
+		/**
+		 * @brief 入群时间戳
+		*/
+		int64_t JoinTimestamp;
+
+		/**
+		 * @brief 上次发言时间戳
+		*/
+		int64_t LastSpeakTimestamp;
+
+		/**
+		 * @brief 剩余禁言时间
+		*/
+		int MuteTimeRemaining;
+
+		/**
 		 * @brief QQ群成员在该群的权限
 		*/
 		GroupPermission Permission = GroupPermission::Member;
@@ -40,6 +61,10 @@ namespace Cyan
 		{
 			QQ = (QQ_t)(j["id"].get<int64_t>());
 			MemberName = j["memberName"].get<string>();
+			SpecialTitle = j["specialTitle"].get<string>();
+			JoinTimestamp = j["joinTimestamp"].get<int64_t>();
+			LastSpeakTimestamp = j["lastSpeakTimestamp"].get<int64_t>();
+			MuteTimeRemaining = j["muteTimeRemaining"].get<int>();
 			Permission = GroupPermissionStr(j["permission"].get<string>());
 			Group.Set(j["group"]);
 			return true;
@@ -51,6 +76,10 @@ namespace Cyan
 			j["id"] = int64_t(QQ);
 			j["memberName"] = MemberName;
 			j["permission"] = GroupPermissionStr(Permission);
+			j["specialTitle"] = SpecialTitle;
+			j["joinTimestamp"] = JoinTimestamp;
+			j["lastSpeakTimestamp"] = LastSpeakTimestamp;
+			j["muteTimeRemaining"] = MuteTimeRemaining;
 			j["group"] = Group.ToJson();
 			return j;
 		}

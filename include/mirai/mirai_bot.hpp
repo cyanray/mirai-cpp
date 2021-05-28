@@ -198,12 +198,12 @@ namespace Cyan
 		vector<GroupMember_t> GetGroupMembers(GID_t target);
 
 		/**
-		 * \brief 获得群成员的群名片和群头衔信息
+		 * \brief 获得群成员的信息
 		 * \param gid 群组(GID_t)
 		 * \param memberId 群成员(QQ_t)
-		 * \return GroupMemberInfo
+		 * \return GroupMember_t
 		 */
-		GroupMemberInfo GetGroupMemberInfo(GID_t gid, QQ_t memberId);
+		GroupMember_t GetGroupMemberInfo(GID_t gid, QQ_t memberId);
 
 		/**
 		 * @brief 获取群文件列表
