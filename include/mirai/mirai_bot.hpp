@@ -265,22 +265,13 @@ namespace Cyan
 		Profile GetGroupMemberProfile(const GID_t& gid, const QQ_t& memberQQ);
 
 		/**
-		 * \brief 设置群成员的群名片和群头衔信息
-		 * \param gid 群组(GID_t)
-		 * \param memberId 群成员(QQ_t)
-		 * \param memberInfo 群成员信息
-		 * \return 始终为 true 出错会抛出异常
-		 */
-		//bool SetGroupMemberInfo(GID_t gid, QQ_t memberId, const GroupMemberInfo& memberInfo);
-
-		/**
 		 * \brief 设置群成员的群名片
 		 * \param gid 群组(GID_t)
 		 * \param memberId 群成员(QQ_t)
 		 * \param name 新的群名片
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		bool SetGroupMemberName(GID_t gid, QQ_t memberId, const string& name);
+		bool SetGroupMemberName(const GID_t& gid, const QQ_t& memberId, const string& name);
 
 		/**
 		 * \brief 设置群成员的群头衔
@@ -289,7 +280,7 @@ namespace Cyan
 		 * \param title 新的群头衔
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		bool SetGroupMemberSpecialTitle(GID_t gid, QQ_t memberId, const string& title);
+		bool SetGroupMemberSpecialTitle(const GID_t& gid, const QQ_t& memberId, const string& title);
 
 		/**
 		 * \brief 全体禁言

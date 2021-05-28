@@ -119,7 +119,7 @@ namespace Cyan
 		 * @brief 上传图像
 		 * @param fileName 文件路径
 		 * @param type 类型 (Friend | Group | Temp)
-		 * @return 
+		 * @return
 		*/
 		MiraiImage UploadImage(const string& fileName, const string& type);
 
@@ -127,7 +127,7 @@ namespace Cyan
 		 * @brief 上传声音
 		 * @param filename 文件路径
 		 * @param type 类型 (Friend | Group)
-		 * @return 
+		 * @return
 		*/
 		MiraiVoice UploadVoice(const string& filename, const string& type);
 
@@ -136,9 +136,37 @@ namespace Cyan
 		 * @param target 发送目标(好友或群组)
 		 * @param filename 文件路径
 		 * @param type 类型 (Friend | Group)
-		 * @return 
+		 * @return
 		*/
 		MiraiFile UploadFileAndSend(int64_t target, const string& filename, const string& type);
+
+		/**
+		 * @brief 更新群成员信息（群名片和群头衔）
+		 * @param gid 群号码
+		 * @param memberId 群成员QQ
+		 * @param name 群名片
+		 * @param specialTitle 群头衔
+		 * @return 
+		*/
+		bool SetGroupMemberInfo(GID_t gid, QQ_t memberId, const string& name, const string& specialTitle)
+		{
+			json data =
+			{
+				{ "sessionKey", sessionKey },
+				{ "target", int64_t(gid)},
+				{ "memberId", int64_t(memberId)},
+				{ "info",
+					{
+						{ "name", name },
+						{ "specialTitle", specialTitle } 
+					} 
+				}
+			};
+
+			auto res = httpClient->Post("/memberInfo", data.dump(), CONTENT_TYPE.c_str());
+			ParseOrThrowException(res);
+			return true;
+		}
 	};
 
 	MiraiBot::MiraiBot() {};
@@ -578,34 +606,17 @@ namespace Cyan
 		return result;
 	}
 
-	//bool MiraiBot::SetGroupMemberInfo(GID_t gid, QQ_t memberId, const GroupMemberInfo& memberInfo)
-	//{
-	//	json data =
-	//	{
-	//		{ "sessionKey", pmem->sessionKey },
-	//		{ "target", int64_t(gid)},
-	//		{ "memberId", int64_t(memberId)}
-	//	};
-	//	data["info"] = memberInfo.ToJson();
+	bool MiraiBot::SetGroupMemberName(const GID_t& gid, const QQ_t& memberId, const string& name)
+	{
+		auto member_info = this->GetGroupMemberInfo(gid, memberId);
+		return pmem->SetGroupMemberInfo(gid, memberId, name, member_info.SpecialTitle);
+	}
 
-	//	auto res = pmem->httpClient->Post("/memberInfo", data.dump(), CONTENT_TYPE.c_str());
-	//	ParseOrThrowException(res);
-	//	return true;
-	//}
-
-	//bool MiraiBot::SetGroupMemberName(GID_t gid, QQ_t memberId, const string& name)
-	//{
-	//	auto member_info = this->GetGroupMemberInfo(gid, memberId);
-	//	member_info.Name = name;
-	//	return this->SetGroupMemberInfo(gid, memberId, member_info);
-	//}
-
-	//bool MiraiBot::SetGroupMemberSpecialTitle(GID_t gid, QQ_t memberId, const string& title)
-	//{
-	//	auto member_info = this->GetGroupMemberInfo(gid, memberId);
-	//	member_info.SpecialTitle = title;
-	//	return this->SetGroupMemberInfo(gid, memberId, member_info);
-	//}
+	bool MiraiBot::SetGroupMemberSpecialTitle(const GID_t& gid, const QQ_t& memberId, const string& title)
+	{
+		auto member_info = this->GetGroupMemberInfo(gid, memberId);
+		return pmem->SetGroupMemberInfo(gid, memberId, member_info.MemberName, title);
+	}
 
 	vector<GroupFile> MiraiBot::GetGroupFiles(GID_t gid)
 	{
