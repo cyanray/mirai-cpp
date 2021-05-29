@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
 		[&](Message m)
 		{
 			cout << int64_t(m.Sender) << " 发来一条消息." << m.MessageChain.ToString() << endl;
-			m.Reply(MessageChain().Dice(1));
+			m.Reply(m.MessageChain);
 		});
 
 	bot.On<LostConnection>([&](LostConnection e)
