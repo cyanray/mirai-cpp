@@ -57,12 +57,6 @@ int main(int argc, char* argv[])
 			m.Reply(m.MessageChain);
 		});
 
-	bot.On<OtherClientMessage>([&](OtherClientMessage m)
-		{
-			cout << m.Sender.ToString() << endl;
-			cout << m.MessageChain.ToString() << endl;
-		});
-
 	bot.On<LostConnection>([&](LostConnection e)
 		{
 			cout << e.ErrorMessage << " (" << e.Code << ")" << endl;
