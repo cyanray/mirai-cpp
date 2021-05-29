@@ -38,7 +38,8 @@ namespace Cyan
 		BotInvitedJoinGroupRequestEvent,		// Bot被邀请入群申请
 		MemberCardChangeEvent,				// 群成员群名片被修改事件
 		Command,								// 指令事件
-		NudgeEvent							// 戳一戳(头像)事件
+		NudgeEvent,							// 戳一戳(头像)事件
+		StrangerMessage						// 陌生人消息
 	};
 
 	inline MiraiEvent MiraiEventStr(const std::string& miraiEvent)
@@ -71,6 +72,7 @@ namespace Cyan
 		if (miraiEvent == "MemberCardChangeEvent") return MiraiEvent::MemberCardChangeEvent;
 		if (miraiEvent == "Command") return MiraiEvent::Command;
 		if (miraiEvent == "NudgeEvent") return MiraiEvent::NudgeEvent;
+		if (miraiEvent == "StrangerMessage") return MiraiEvent::StrangerMessage;
 		return MiraiEvent::Default;
 	}
 
@@ -147,6 +149,9 @@ namespace Cyan
 			break;
 		case Cyan::MiraiEvent::NudgeEvent:
 			result = "NudgeEvent";
+			break;
+		case Cyan::MiraiEvent::StrangerMessage:
+			result = "StrangerMessage";
 			break;
 		default:
 			result = "Default";
