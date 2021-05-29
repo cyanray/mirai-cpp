@@ -1,19 +1,6 @@
 #include "mirai/defs/message_chain.hpp"
 #include "mirai/defs/simple_reflect.hpp"
-#include "mirai/messages/AppMessage.hpp"
-#include "mirai/messages/AtAllMessage.hpp"
-#include "mirai/messages/AtMessage.hpp"
-#include "mirai/messages/DiceMessage.hpp"
-#include "mirai/messages/FaceMessage.hpp"
-#include "mirai/messages/FileMessage.hpp"
-#include "mirai/messages/FlashImageMessage.hpp"
-#include "mirai/messages/ImageMessage.hpp"
-#include "mirai/messages/JsonMessage.hpp"
-#include "mirai/messages/PlainMessage.hpp"
-#include "mirai/messages/PokeMessage.hpp"
-#include "mirai/messages/QuoteMessage.hpp"
-#include "mirai/messages/VoiceMessage.hpp"
-#include "mirai/messages/XmlMessage.hpp"
+#include "mirai/messages/messages.hpp"
 
 namespace Cyan
 {
