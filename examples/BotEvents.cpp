@@ -44,6 +44,7 @@ int main()
 		[&](BotUnmuteEvent e)
 		{
 			bot.SendMessage(e.Operator.Group.GID,
+
 				MessageChain().Plain("👴 出狱了!"));
 		});
 

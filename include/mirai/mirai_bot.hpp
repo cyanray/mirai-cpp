@@ -94,7 +94,7 @@ namespace Cyan
 		 * \param msgId 可选, 如果不为空则发送引用消息
 		 * \return 用于引用或撤回的消息 ID (MessageId)
 		 */
-		MessageId_t SendMessage(QQ_t target, const MessageChain& messageChain, MessageId_t msgId = 0);
+		MessageId_t SendMessage(const QQ_t& target, const MessageChain& messageChain, MessageId_t msgId = 0);
 
 		/**
 		 * \brief 发送群聊消息
@@ -103,7 +103,7 @@ namespace Cyan
 		 * \param msgId 可选, 如果不为空则发送引用消息
 		 * \return 用于引用或撤回的消息 ID (MessageId)
 		 */
-		MessageId_t SendMessage(GID_t target, const MessageChain& messageChain, MessageId_t msgId = 0);
+		MessageId_t SendMessage(const GID_t& target, const MessageChain& messageChain, MessageId_t msgId = 0);
 
 		/**
 		 * \brief 发送临时消息
@@ -113,28 +113,28 @@ namespace Cyan
 		 * \param msgId 可选, 如果不为空则发送引用消息
 		 * \return 用于引用或撤回的消息 ID (MessageId)
 		 */
-		MessageId_t SendMessage(GID_t gid, QQ_t qq, const MessageChain& messageChain, MessageId_t msgId = 0);
+		MessageId_t SendMessage(const GID_t& gid, const QQ_t& qq, const MessageChain& messageChain, MessageId_t msgId = 0);
 
 		/**
 		 * @brief 发送戳一戳
 		 * @param target 目标QQ，可以是好友或者Bot的QQ
 		 * @param subject_id 戳一戳接收主体，好友QQ
 		*/
-		void SendNudge(QQ_t target, QQ_t subject_id);
+		void SendNudge(const QQ_t& target, const QQ_t& subject_id);
 
 		/**
 		 * @brief 发送戳一戳
 		 * @param target 目标QQ，可以是好友或者Bot的QQ
 		 * @param subject_id 戳一戳接收主体，群号码
 		*/
-		void SendNudge(QQ_t target, GID_t subject_id);
+		void SendNudge(const QQ_t& target, const GID_t& subject_id);
 
 		/**
 		 * @brief 发送戳一戳
 		 * @param target 目标QQ，可以是好友或者Bot的QQ
 		 * @param subject_id 戳一戳接收主体
 		*/
-		void SendNudge(QQ_t target, const UID_t& subject_id);
+		void SendNudge(const QQ_t& target, const UID_t& subject_id);
 
 		/**
 		 * @brief 设置精华消息
@@ -176,7 +176,7 @@ namespace Cyan
 		 * @param filename 文件名
 		 * @return MiraiFile
 		*/
-		MiraiFile UploadFileAndSend(GID_t gid, const string& filename);
+		MiraiFile UploadFileAndSend(const GID_t& gid, const string& filename);
 
 		/**
 		 * \brief 获得好友列表
@@ -195,7 +195,7 @@ namespace Cyan
 		 * \param target 群组(GID_t)
 		 * \return vector<GroupMember>
 		 */
-		vector<GroupMember> GetGroupMembers(GID_t target);
+		vector<GroupMember> GetGroupMembers(const GID_t& target);
 
 		/**
 		 * \brief 获得群成员的信息
@@ -203,7 +203,7 @@ namespace Cyan
 		 * \param memberId 群成员(QQ_t)
 		 * \return GroupMember
 		 */
-		GroupMember GetGroupMemberInfo(GID_t gid, QQ_t memberId);
+		GroupMember GetGroupMemberInfo(const GID_t& gid, const QQ_t& memberId);
 
 		/**
 		 * @brief 获取群文件列表
@@ -287,14 +287,14 @@ namespace Cyan
 		 * \param target 群组(GID_t)
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		void MuteAll(GID_t target);
+		void MuteAll(const GID_t& target);
 
 		/**
 		 * \brief 取消全体禁言
 		 * \param target 群组(GID_t)
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		void UnMuteAll(GID_t target);
+		void UnMuteAll(const GID_t& target);
 
 		/**
 		 * \brief 禁言群成员
@@ -303,7 +303,7 @@ namespace Cyan
 		 * \param time_seconds 时长(秒)
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		void Mute(GID_t gid, QQ_t memberId, unsigned int time_seconds);
+		void Mute(const GID_t& gid, const QQ_t& memberId, unsigned int time_seconds);
 
 		/**
 		 * \brief 取消禁言群成员
@@ -311,7 +311,7 @@ namespace Cyan
 		 * \param memberId 群成员(QQ_t)
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		void UnMute(GID_t gid, QQ_t memberId);
+		void UnMute(const GID_t& gid, const QQ_t& memberId);
 
 		/**
 		 * \brief 将群成员踢出群组
@@ -320,7 +320,7 @@ namespace Cyan
 		 * \param reason_msg 可选, 填写踢人理由, 默认为空
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		void Kick(GID_t gid, QQ_t memberId, const string& reason_msg = "");
+		void Kick(const GID_t& gid, const QQ_t& memberId, const string& reason_msg = "");
 
 		/**
 		 * \brief 撤回一条消息
@@ -334,20 +334,20 @@ namespace Cyan
 		 * \param group 要退出的群(GID_t)
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		void QuitGroup(GID_t group);
+		void QuitGroup(const GID_t& group);
 
 		/**
 		 * @brief 删除好友
 		 * @param  friendQQ 好友QQ
 		*/
-		void DeleteFriend(QQ_t friendQQ);
+		void DeleteFriend(const QQ_t& friendQQ);
 
 		/**
 		 * \brief 获取群设置
 		 * \param group 群(GID_t)
 		 * \return 群设置
 		 */
-		GroupConfig GetGroupConfig(GID_t group);
+		GroupConfig GetGroupConfig(const GID_t& group);
 
 		/**
 		 * \brief 设置群设置
@@ -355,7 +355,7 @@ namespace Cyan
 		 * \param groupConfig 群设置
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		void SetGroupConfig(GID_t group, GroupConfig groupConfig);
+		void SetGroupConfig(const GID_t& group, const GroupConfig& groupConfig);
 
 		/**
 		 * \brief 根据消息ID(MessageId)获取对应的好友消息

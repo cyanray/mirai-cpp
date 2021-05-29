@@ -37,6 +37,7 @@ int main()
 			string memberName = e.NewMember.MemberName;
 			cout << memberName << endl;
 			bot.SendMessage(e.NewMember.Group.GID,
+
 				MessageChain().Plain("欢迎 " + memberName + " 加入本群!"));
 		});
 

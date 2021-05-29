@@ -305,7 +305,7 @@ namespace Cyan
 		ParseOrThrowException(res);
 	}
 
-	MessageId_t MiraiBot::SendMessage(QQ_t target, const MessageChain& messageChain, MessageId_t msgId)
+	MessageId_t MiraiBot::SendMessage(const QQ_t& target, const MessageChain& messageChain, MessageId_t msgId)
 	{
 		json data =
 		{
@@ -322,7 +322,7 @@ namespace Cyan
 	}
 
 
-	MessageId_t MiraiBot::SendMessage(GID_t target, const MessageChain& messageChain, MessageId_t msgId)
+	MessageId_t MiraiBot::SendMessage(const GID_t& target, const MessageChain& messageChain, MessageId_t msgId)
 	{
 		json data =
 		{
@@ -338,7 +338,7 @@ namespace Cyan
 		return msg_id;
 	}
 
-	MessageId_t MiraiBot::SendMessage(GID_t gid, QQ_t qq, const MessageChain& messageChain, MessageId_t msgId)
+	MessageId_t MiraiBot::SendMessage(const GID_t& gid, const QQ_t& qq, const MessageChain& messageChain, MessageId_t msgId)
 	{
 		json data =
 		{
@@ -369,17 +369,17 @@ namespace Cyan
 		ParseOrThrowException(res);
 	}
 
-	void MiraiBot::SendNudge(QQ_t target, QQ_t subject_id)
+	void MiraiBot::SendNudge(const QQ_t& target, const QQ_t& subject_id)
 	{
 		pmem->SendNudge(target.ToInt64(), subject_id.ToInt64(), "Friend");
 	}
 
-	void MiraiBot::SendNudge(QQ_t target, GID_t subject_id)
+	void MiraiBot::SendNudge(const QQ_t& target, const GID_t& subject_id)
 	{
 		pmem->SendNudge(target.ToInt64(), subject_id.ToInt64(), "Group");
 	}
 
-	void MiraiBot::SendNudge(QQ_t target, const UID_t& subject_id)
+	void MiraiBot::SendNudge(const QQ_t& target, const UID_t& subject_id)
 	{
 		if (typeid(subject_id) == typeid(GID_t))
 		{
@@ -486,7 +486,7 @@ namespace Cyan
 		return result;
 	}
 
-	MiraiFile MiraiBot::UploadFileAndSend(GID_t gid, const string& filename)
+	MiraiFile MiraiBot::UploadFileAndSend(const GID_t& gid, const string& filename)
 	{
 		return pmem->UploadFileAndSend(gid.ToInt64(), filename, "Group");
 	}
@@ -521,7 +521,7 @@ namespace Cyan
 	}
 
 
-	vector<GroupMember> MiraiBot::GetGroupMembers(GID_t target)
+	vector<GroupMember> MiraiBot::GetGroupMembers(const GID_t& target)
 	{
 		stringstream api_url;
 		api_url
@@ -541,7 +541,7 @@ namespace Cyan
 		return result;
 	}
 
-	GroupMember MiraiBot::GetGroupMemberInfo(GID_t gid, QQ_t memberId)
+	GroupMember MiraiBot::GetGroupMemberInfo(const GID_t& gid, const QQ_t& memberId)
 	{
 		stringstream api_url;
 		api_url
@@ -693,7 +693,7 @@ namespace Cyan
 		ParseOrThrowException(res);
 	}
 
-	void MiraiBot::MuteAll(GID_t target)
+	void MiraiBot::MuteAll(const GID_t& target)
 	{
 		json data =
 		{
@@ -706,7 +706,7 @@ namespace Cyan
 	}
 
 
-	void MiraiBot::UnMuteAll(GID_t target)
+	void MiraiBot::UnMuteAll(const GID_t& target)
 	{
 		json data =
 		{
@@ -719,7 +719,7 @@ namespace Cyan
 	}
 
 
-	void MiraiBot::Mute(GID_t gid, QQ_t memberId, unsigned int time_seconds)
+	void MiraiBot::Mute(const GID_t& gid, const QQ_t& memberId, unsigned int time_seconds)
 	{
 		json data =
 		{
@@ -734,7 +734,7 @@ namespace Cyan
 	}
 
 
-	void MiraiBot::UnMute(GID_t gid, QQ_t memberId)
+	void MiraiBot::UnMute(const GID_t& gid, const QQ_t& memberId)
 	{
 		json data =
 		{
@@ -748,7 +748,7 @@ namespace Cyan
 	}
 
 
-	void MiraiBot::Kick(GID_t gid, QQ_t memberId, const string& reason_msg)
+	void MiraiBot::Kick(const GID_t& gid, const QQ_t& memberId, const string& reason_msg)
 	{
 		json data =
 		{
@@ -775,7 +775,7 @@ namespace Cyan
 		ParseOrThrowException(res);
 	}
 
-	void MiraiBot::QuitGroup(GID_t group)
+	void MiraiBot::QuitGroup(const GID_t& group)
 	{
 		json data =
 		{
@@ -787,7 +787,7 @@ namespace Cyan
 		ParseOrThrowException(res);
 	}
 
-	void MiraiBot::DeleteFriend(QQ_t friendQQ)
+	void MiraiBot::DeleteFriend(const QQ_t& friendQQ)
 	{
 		json data =
 		{
@@ -799,7 +799,7 @@ namespace Cyan
 		ParseOrThrowException(res);
 	}
 
-	GroupConfig MiraiBot::GetGroupConfig(GID_t group)
+	GroupConfig MiraiBot::GetGroupConfig(const GID_t& group)
 	{
 		stringstream api_url;
 		api_url
@@ -814,7 +814,7 @@ namespace Cyan
 		return group_config;
 	}
 
-	void MiraiBot::SetGroupConfig(GID_t group, GroupConfig groupConfig)
+	void MiraiBot::SetGroupConfig(const GID_t& group, const GroupConfig& groupConfig)
 	{
 		json data =
 		{
