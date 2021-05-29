@@ -49,17 +49,17 @@ namespace Cyan
 		return bot_->SendMessage(Sender.Group.GID, mc, MessageId());
 	}
 
-	bool GroupMessage::Recall() const
+	void GroupMessage::Recall() const
 	{
-		return bot_->Recall(MessageId());
+		bot_->Recall(MessageId());
 	}
 
-	bool GroupMessage::AtMe() const
+	void GroupMessage::AtMe() const
 	{
 		auto at = MessageChain.GetAll<AtMessage>();
 		auto it = std::find_if(at.begin(), at.end(), [&](AtMessage a) {return a.Target() == bot_->GetBotQQ(); });
-		if (it != at.end()) return true;
-		else return false;
+		if (it != at.end()) return;
+		else return;
 	}
 
 	bool NewFriendRequestEvent::Response(int operate, const string& message)
