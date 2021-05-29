@@ -40,7 +40,8 @@ namespace Cyan
 		Command,								// 指令事件
 		NudgeEvent,							// 戳一戳(头像)事件
 		StrangerMessage,						// 陌生人消息
-		OtherClientMessage					// 其他客户端消息
+		OtherClientMessage,					// 其他客户端消息
+		FriendInputStatusChangedEvent		// 好友输入状态改变事件
 	};
 
 	inline MiraiEvent MiraiEventStr(const std::string& miraiEvent)
@@ -75,6 +76,7 @@ namespace Cyan
 		if (miraiEvent == "NudgeEvent") return MiraiEvent::NudgeEvent;
 		if (miraiEvent == "StrangerMessage") return MiraiEvent::StrangerMessage;
 		if (miraiEvent == "OtherClientMessage") return MiraiEvent::OtherClientMessage;
+		if (miraiEvent == "FriendInputStatusChangedEvent") return MiraiEvent::FriendInputStatusChangedEvent;
 		return MiraiEvent::Default;
 	}
 
@@ -157,6 +159,9 @@ namespace Cyan
 			break;
 		case Cyan::MiraiEvent::OtherClientMessage:
 			result = "OtherClientMessage";
+			break;
+		case Cyan::MiraiEvent::FriendInputStatusChangedEvent:
+			result = "FriendInputStatusChangedEvent";
 			break;
 		default:
 			result = "Default";
