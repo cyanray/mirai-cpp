@@ -1,9 +1,11 @@
 ﻿#include <iostream>
 // 使用静态库必须要在引入 mirai.h 前定义这个宏
 #define MIRAICPP_STATICLIB
-#include <mirai.h>
+// 按需引用头文件
+// 你也可以使用 #include <mirai.h> 引用所有头文件(可能导致编译缓慢)
+#include <mirai/mirai_bot.hpp>
 #include <mirai/events/OtherClientMessage.hpp>
-#include <mirai/defs/messages/DiceMessage.hpp>
+#include <mirai/messages/DiceMessage.hpp>
 using namespace std;
 using namespace Cyan;
 

@@ -14,10 +14,10 @@
 #include "mirai/exported.h"
 #include "mirai/defs/defs.hpp"
 #include "mirai/events/event_processer.hpp"
-#include "mirai/events/friend_message.hpp"
-#include "mirai/events/group_message.hpp"
-#include "mirai/events/message_event.hpp"
-#include "mirai/events/lost_connection.hpp"
+#include "mirai/events/FriendMessage.hpp"
+#include "mirai/events/GroupMessage.hpp"
+#include "mirai/events/Message.hpp"
+#include "mirai/events/LostConnection.hpp"
 #include "mirai/SessionOptions.hpp"
 
 using std::string;

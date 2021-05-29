@@ -6,7 +6,7 @@
 #include "mirai/defs/qq_types.hpp"
 #include "FriendMessage.hpp"
 #include "GroupMessage.hpp"
-#include "temp_message.hpp"
+#include "TempMessage.hpp"
 #include "event_interface.hpp"
 #include "mirai/exported.h"
 
