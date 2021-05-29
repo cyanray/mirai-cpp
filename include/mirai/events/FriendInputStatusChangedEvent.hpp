@@ -34,6 +34,7 @@ namespace Cyan
 		virtual json ToJson() const override
 		{
 			json j = json::object();
+			j["type"] = "FriendInputStatusChangedEvent";
 			j["inputting"] = this->Inputting;
 			j["friend"] = this->Friend.ToJson();
 			return j;
