@@ -1,6 +1,6 @@
 #pragma once
-#ifndef mirai_cpp_events_bot_mute_event_hpp_H_
-#define mirai_cpp_events_bot_mute_event_hpp_H_
+#ifndef mirai_cpp_events_BotUnmuteEvent_hpp_H_
+#define mirai_cpp_events_BotUnmuteEvent_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
 #include "mirai/defs/group_member.hpp"
@@ -8,32 +8,28 @@
 
 namespace Cyan
 {
-
 	/**
-	 * \brief bot 被禁言事件
+	 * \brief bot 被解除禁言事件
 	 */
-	class BotMuteEvent : public EventBase
+	class BotUnmuteEvent : public EventBase
 	{
 	public:
-		int DurationSeconds = 0;
 		GroupMember Operator;
 
 		static MiraiEvent GetMiraiEvent()
 		{
-			return MiraiEvent::BotMuteEvent;
+			return MiraiEvent::BotUnmuteEvent;
 		}
 
 		virtual bool Set(const json& j) override
 		{
-			this->DurationSeconds = j["durationSeconds"].get<int>();
 			this->Operator.Set(j["operator"]);
 			return true;
 		}
 		virtual json ToJson() const override
 		{
 			json j = json::object();
-			j["type"] = "BotMuteEvent";
-			j["durationSeconds"] = this->DurationSeconds;
+			j["type"] = "BotUnmuteEvent";
 			j["operator"] = this->Operator.ToJson();
 			return j;
 		}
@@ -42,4 +38,4 @@ namespace Cyan
 
 }
 
-#endif // !mirai_cpp_events_bot_mute_event_hpp_H_
+#endif

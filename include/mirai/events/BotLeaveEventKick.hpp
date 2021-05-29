@@ -1,6 +1,6 @@
 #pragma once
-#ifndef mirai_cpp_events_bot_leave_active_hpp_H_
-#define mirai_cpp_events_bot_leave_active_hpp_H_
+#ifndef mirai_cpp_events_BotLeaveEventKick_hpp_H_
+#define mirai_cpp_events_BotLeaveEventKick_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
 #include "mirai/defs/group.hpp"
@@ -10,16 +10,16 @@ namespace Cyan
 {
 
 	/**
-	 * \brief bot 主动退群
+	 * \brief bot 被踢出群
 	 */
-	class BotLeaveEventActive : public EventBase
+	class BotLeaveEventKick : public EventBase
 	{
 	public:
 		Group_t Group;
 
 		static MiraiEvent GetMiraiEvent()
 		{
-			return MiraiEvent::BotLeaveEventActive;
+			return MiraiEvent::BotLeaveEventKick;
 		}
 
 		virtual bool Set(const json& j) override
@@ -30,12 +30,13 @@ namespace Cyan
 		virtual json ToJson() const override
 		{
 			json j = json::object();
-			j["type"] = "BotLeaveEventActive";
+			j["type"] = "BotLeaveEventKick";
 			j["group"] = this->Group.ToJson();
 			return j;
 		}
+
 	};
 
 }
 
-#endif // !mirai_cpp_events_bot_leave_active_hpp_H_
+#endif

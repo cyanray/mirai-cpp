@@ -1,6 +1,6 @@
 #pragma once
-#ifndef mirai_cpp_events_bot_join_group_hpp_H_
-#define mirai_cpp_events_bot_join_group_hpp_H_
+#ifndef mirai_cpp_events_BotJoinGroupEvent_hpp_H_
+#define mirai_cpp_events_BotJoinGroupEvent_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
 #include "event_interface.hpp"
@@ -39,4 +39,4 @@ namespace Cyan
 
 }
 
-#endif // !mirai_cpp_events_bot_join_group_hpp_H_
+#endif

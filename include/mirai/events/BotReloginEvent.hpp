@@ -1,6 +1,6 @@
 #pragma once
-#ifndef mirai_cpp_events_bot_offline_force_hpp_H_
-#define mirai_cpp_events_bot_offline_force_hpp_H_
+#ifndef mirai_cpp_events_BotReloginEvent_hpp_H_
+#define mirai_cpp_events_BotReloginEvent_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
 #include "mirai/defs/qq_types.hpp"
@@ -9,16 +9,16 @@
 namespace Cyan
 {
 	/**
-	 * \brief bot 被挤下线事件
+	 * \brief bot 主动重新登录事件
 	 */
-	class BotOfflineEventForce : public EventBase
+	class BotReloginEvent : public EventBase
 	{
 	public:
 		QQ_t QQ;
 
 		static MiraiEvent GetMiraiEvent()
 		{
-			return MiraiEvent::BotOfflineEventForce;
+			return MiraiEvent::BotReloginEvent;
 		}
 
 		virtual bool Set(const json& j) override
@@ -29,7 +29,7 @@ namespace Cyan
 		virtual json ToJson() const override
 		{
 			json j = json::object();
-			j["type"] = "BotOfflineEventForce";
+			j["type"] = "BotReloginEvent";
 			j["qq"] = (int64_t)this->QQ;
 			return j;
 		}
@@ -37,4 +37,4 @@ namespace Cyan
 
 }
 
-#endif // !mirai_cpp_events_bot_offline_force_hpp_H_
+#endif
