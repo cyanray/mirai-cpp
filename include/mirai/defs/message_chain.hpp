@@ -10,20 +10,12 @@
 #include "qq_types.hpp"
 #include "serializable.hpp"
 #include "message_interface.hpp"
-#include "messages/PlainMessage.hpp"
-#include "messages/ImageMessage.hpp"
-#include "messages/FlashImageMessage.hpp"
-#include "messages/AtMessage.hpp"
-#include "messages/AtAllMessage.hpp"
-#include "messages/FaceMessage.hpp"
-#include "messages/XmlMessage.hpp"
-#include "messages/AppMessage.hpp"
-#include "messages/JsonMessage.hpp"
-#include "messages/PokeMessage.hpp"
-#include "messages/QuoteMessage.hpp"
-#include "messages/VoiceMessage.hpp"
-#include "messages/FileMessage.hpp"
-#include "messages/DiceMessage.hpp"
+#include "mirai/messages/PlainMessage.hpp"
+#include "mirai/messages/ImageMessage.hpp"
+#include "mirai/messages/FlashImageMessage.hpp"
+#include "mirai/messages/AtMessage.hpp"
+#include "mirai/messages/AtAllMessage.hpp"
+#include "mirai/messages/FaceMessage.hpp"
 
 using std::vector;
 
@@ -184,36 +176,6 @@ namespace Cyan
 		MessageChain& FlashImage(const MiraiImage& Image)
 		{
 			return this->Add<FlashImageMessage>(Image);
-		}
-
-		MessageChain& Xml(const string& xml_str)
-		{
-			return this->Add<XmlMessage>(xml_str);
-		}
-
-		MessageChain& Json(const string& json_str)
-		{
-			return this->Add<JsonMessage>(json_str);
-		}
-
-		MessageChain& App(const string& app_str)
-		{
-			return this->Add<AppMessage>(app_str);
-		}
-
-		MessageChain& Poke(PokeType poke)
-		{
-			return this->Add<PokeMessage>(poke);
-		}
-
-		MessageChain& Voice(const VoiceMessage& voice)
-		{
-			return this->Add<VoiceMessage>(voice);
-		}
-
-		MessageChain& Dice(const int& value)
-		{
-			return this->Add<DiceMessage>(value);
 		}
 
 		string GetPlainText() const;
