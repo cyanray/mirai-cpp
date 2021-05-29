@@ -6,6 +6,9 @@
 #include "event_interface.hpp"
 #include "mirai/defs/group.hpp"
 #include "mirai/defs/group_member.hpp"
+#include <optional>
+using std::optional;
+using std::nullopt;
 
 namespace Cyan
 {
@@ -18,16 +21,11 @@ namespace Cyan
 		bool Origin;
 		bool Current;
 		Group_t Group;
-		GroupMember Operator;
+		std::optional<GroupMember> Operator;
 
 		static MiraiEvent GetMiraiEvent()
 		{
 			return MiraiEvent::GroupMuteAllEvent;
-		}
-
-		bool OperatorIsBot() const
-		{
-			return operator_is_null_;
 		}
 
 		virtual bool Set(const json& j) override
@@ -37,8 +35,9 @@ namespace Cyan
 			this->Group.Set(j["group"]);
 			if (!j["operator"].is_null())
 			{
-				this->Operator.Set(j["operator"]);
-				this->operator_is_null_ = false;
+				GroupMember tmp;
+				tmp.Set(j["operator"]);
+				Operator = tmp;
 			}
 			return true;
 		}
@@ -49,15 +48,9 @@ namespace Cyan
 			j["origin"] = this->Origin;
 			j["current"] = this->Current;
 			j["group"] = this->Group.ToJson();
-			if (!operator_is_null_)
-				j["operator"] = this->Operator.ToJson();
-			else
-				j["operator"] = nullptr;
+			j["operator"] = (Operator != std::nullopt) ? this->Operator->ToJson() : nullptr;
 			return j;
 		}
-
-	private:
-		bool operator_is_null_ = true;
 	};
 
 }

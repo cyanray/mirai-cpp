@@ -5,6 +5,9 @@
 #include "mirai/third-party/nlohmann/json.hpp"
 #include "event_interface.hpp"
 #include "mirai/defs/group_member.hpp"
+#include <optional>
+using std::optional;
+using std::nullopt;
 
 namespace Cyan
 {
@@ -15,16 +18,11 @@ namespace Cyan
 	{
 	public:
 		GroupMember Member;
-		GroupMember Operator;
+		std::optional<GroupMember> Operator;
 
 		static MiraiEvent GetMiraiEvent()
 		{
 			return MiraiEvent::MemberLeaveEventKick;
-		}
-
-		bool OperatorIsBot() const
-		{
-			return operator_is_null_;
 		}
 		
 		virtual bool Set(const json& j) override
@@ -32,8 +30,9 @@ namespace Cyan
 			this->Member.Set(j["member"]);
 			if (!j["operator"].is_null())
 			{
-				this->Operator.Set(j["operator"]);
-				this->operator_is_null_ = false;
+				GroupMember tmp;
+				tmp.Set(j["operator"]);
+				Operator = tmp;
 			}
 			return true;
 		}
@@ -42,14 +41,9 @@ namespace Cyan
 			json j = json::object();
 			j["type"] = "MemberLeaveEventKick";
 			j["member"] = this->Member.ToJson();
-			if (!operator_is_null_)
-				j["operator"] = this->Operator.ToJson();
-			else
-				j["operator"] = nullptr;
+			j["operator"] = (Operator != std::nullopt) ? this->Operator->ToJson() : nullptr;
 			return j;
 		}
-	private:
-		bool operator_is_null_ = true;
 	};
 
 }
