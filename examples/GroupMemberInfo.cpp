@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
 	{
 		if (command == "exit")
 		{
-			bot.Release();
+			bot.Disconnect();
 			break;
 		}
 	}

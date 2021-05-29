@@ -10,7 +10,7 @@
 
 本项目为 mirai-api-http 的 C++ 封装，方便使用 C++ 开发基于 mirai-api-http 的插件。
 
-在使用 mirai-cpp 和基于 mirai-cpp 的插件之前，你需要配置好 [mirai-console](https://github.com/mamoe/mirai-console) 并且安装 [mirai-api-http](https://github.com/project-mirai/mirai-api-http) 插件。
+**在使用 mirai-cpp 和基于 mirai-cpp 的插件之前，你需要配置好 [mirai-console](https://github.com/mamoe/mirai-console) 并且安装 [mirai-api-http](https://github.com/project-mirai/mirai-api-http) 插件。**
 
 ## 0x02 项目文档
 

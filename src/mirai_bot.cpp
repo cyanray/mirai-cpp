@@ -231,7 +231,7 @@ namespace Cyan
 			});
 	}
 
-	void MiraiBot::Release()
+	void MiraiBot::Disconnect()
 	{
 		pmem->eventClient.Shutdown();
 		pmem->SessionRelease(pmem->sessionKey, pmem->botQQ);

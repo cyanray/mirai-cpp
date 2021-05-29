@@ -79,7 +79,7 @@ namespace Cyan
 		/**
 		 * @brief 释放 Session，程序结束前请必须执行一次此函数，否则可能导致 mirai-api-http 内存泄漏.
 		*/
-		void Release();
+		void Disconnect();
 
 		/**
 		 * \brief 获得验证后的 QQ 号码

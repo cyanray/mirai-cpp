@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
 	}
 
 	// 程序结束前必须释放 Session, 否则会导致 mirai-api-http 内存泄漏
-	bot.Release();
+	bot.Disconnect();
 
 	return 0;
 }
