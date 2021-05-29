@@ -1,41 +1,39 @@
 #pragma once
-#ifndef mirai_cpp_events_group_recall_event_hpp_H_
-#define mirai_cpp_events_group_recall_event_hpp_H_
+#ifndef mirai_cpp_events_GroupMuteAllEvent_hpp_H_
+#define mirai_cpp_events_GroupMuteAllEvent_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
 #include "event_interface.hpp"
+#include "mirai/defs/group.hpp"
 #include "mirai/defs/group_member.hpp"
-#include "mirai/defs/qq_types.hpp"
 
 namespace Cyan
 {
 	/**
-	 * \brief 群成员消息撤回事件
+	 * \brief 群全体禁言事件
 	 */
-	class GroupRecallEvent : public EventBase
+	class GroupMuteAllEvent : public EventBase
 	{
 	public:
-		int64_t Time = 0;
-		QQ_t AuthorQQ;
-		Cyan::MessageId_t MessageId;
+		bool Origin;
+		bool Current;
 		Group_t Group;
 		GroupMember Operator;
 
 		static MiraiEvent GetMiraiEvent()
 		{
-			return MiraiEvent::GroupRecallEvent;
+			return MiraiEvent::GroupMuteAllEvent;
 		}
 
 		bool OperatorIsBot() const
 		{
 			return operator_is_null_;
 		}
-		
+
 		virtual bool Set(const json& j) override
 		{
-			this->Time = j["time"].get<int64_t>();
-			this->AuthorQQ = (QQ_t)j["authorId"].get<int64_t>();
-			this->MessageId = j["messageId"].get<int64_t>();
+			this->Origin = j["origin"].get<bool>();
+			this->Current = j["current"].get<bool>();
 			this->Group.Set(j["group"]);
 			if (!j["operator"].is_null())
 			{
@@ -47,10 +45,9 @@ namespace Cyan
 		virtual json ToJson() const override
 		{
 			json j = json::object();
-			j["type"] = "GroupRecallEvent";
-			j["time"] = this->Time;
-			j["authorId"] = (int64_t)this->AuthorQQ;
-			j["messageId"] = this->MessageId;
+			j["type"] = "GroupMuteAllEvent";
+			j["origin"] = this->Origin;
+			j["current"] = this->Current;
 			j["group"] = this->Group.ToJson();
 			if (!operator_is_null_)
 				j["operator"] = this->Operator.ToJson();
@@ -58,10 +55,11 @@ namespace Cyan
 				j["operator"] = nullptr;
 			return j;
 		}
+
 	private:
 		bool operator_is_null_ = true;
 	};
 
 }
 
-#endif // !mirai_cpp_events_group_recall_event_hpp_H_
+#endif

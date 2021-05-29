@@ -1,6 +1,6 @@
 #pragma once
-#ifndef mirai_cpp_events_nudge_event_hpp_H_
-#define mirai_cpp_events_nudge_event_hpp_H_
+#ifndef mirai_cpp_events_NudgeEvent_hpp_H_
+#define mirai_cpp_events_NudgeEvent_hpp_H_
 
 #include <exception>
 #include "mirai/third-party/nlohmann/json.hpp"
@@ -90,4 +90,4 @@ namespace Cyan
 
 }
 
-#endif // !mirai_cpp_events_nudge_event_hpp_H_
+#endif

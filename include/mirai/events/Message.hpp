@@ -1,11 +1,11 @@
 #pragma once
-#ifndef mirai_cpp_events_message_hpp_H_
-#define mirai_cpp_events_message_hpp_H_
+#ifndef mirai_cpp_events_Message_hpp_H_
+#define mirai_cpp_events_Message_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
 #include "mirai/defs/qq_types.hpp"
-#include "friend_message.hpp"
-#include "group_message.hpp"
+#include "FriendMessage.hpp"
+#include "GroupMessage.hpp"
 #include "temp_message.hpp"
 #include "event_interface.hpp"
 #include "mirai/exported.h"
@@ -111,4 +111,4 @@ namespace Cyan
 	};
 }
 
-#endif // !mirai_cpp_events_message_hpp_H_
+#endif

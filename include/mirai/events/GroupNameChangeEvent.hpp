@@ -1,25 +1,28 @@
 #pragma once
-#ifndef mirai_cpp_events_member_unmute_event_hpp_H_
-#define mirai_cpp_events_member_unmute_event_hpp_H_
+#ifndef mirai_cpp_events_GroupNameChangeEvent_hpp_H_
+#define mirai_cpp_events_GroupNameChangeEvent_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
 #include "event_interface.hpp"
+#include "mirai/defs/group.hpp"
 #include "mirai/defs/group_member.hpp"
 
 namespace Cyan
 {
 	/**
-	 * \brief 群成员被取消禁言事件
+	 * \brief 群名称被改变
 	 */
-	class MemberUnmuteEvent : public EventBase
+	class GroupNameChangeEvent : public EventBase
 	{
 	public:
-		GroupMember Member;
+		string OriginName;
+		string CurrentName;
+		Group_t Group;
 		GroupMember Operator;
 
 		static MiraiEvent GetMiraiEvent()
 		{
-			return MiraiEvent::MemberUnmuteEvent;
+			return MiraiEvent::GroupNameChangeEvent;
 		}
 
 		bool OperatorIsBot() const
@@ -29,7 +32,9 @@ namespace Cyan
 
 		virtual bool Set(const json& j) override
 		{
-			this->Member.Set(j["member"]);
+			this->OriginName = j["origin"].get<string>();
+			this->CurrentName = j["current"].get<string>();
+			this->Group.Set(j["group"]);
 			if (!j["operator"].is_null())
 			{
 				this->Operator.Set(j["operator"]);
@@ -40,8 +45,10 @@ namespace Cyan
 		virtual json ToJson() const override
 		{
 			json j = json::object();
-			j["type"] = "MemberUnmuteEvent";
-			j["member"] = this->Member.ToJson();
+			j["type"] = "GroupNameChangeEvent";
+			j["origin"] = this->OriginName;
+			j["current"] = this->CurrentName;
+			j["group"] = this->Group.ToJson();
 			if (!operator_is_null_)
 				j["operator"] = this->Operator.ToJson();
 			else
@@ -55,4 +62,4 @@ namespace Cyan
 
 }
 
-#endif // !mirai_cpp_events_member_unmute_event_hpp_H_
+#endif

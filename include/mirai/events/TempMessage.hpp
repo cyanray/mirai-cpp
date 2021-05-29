@@ -1,20 +1,20 @@
 #pragma once
-#ifndef mirai_cpp_events_group_message_hpp_H_
-#define mirai_cpp_events_group_message_hpp_H_
+#ifndef mirai_cpp_events_TempMessage_hpp_H_
+#define mirai_cpp_events_TempMessage_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
 #include "mirai/defs/qq_types.hpp"
 #include "mirai/defs/message_chain.hpp"
 #include "mirai/defs/group_member.hpp"
-#include "event_interface.hpp"
 #include "mirai/exported.h"
+#include "event_interface.hpp"
 
 namespace Cyan
 {
 	/**
-	 * \brief 群组发来的消息
+	 * \brief 由群组发来的临时消息
 	 */
-	class EXPORTED GroupMessage : public EventBase
+	class EXPORTED TempMessage : public EventBase
 	{
 	public:
 		Cyan::MessageChain MessageChain;
@@ -22,7 +22,7 @@ namespace Cyan
 
 		static MiraiEvent GetMiraiEvent()
 		{
-			return MiraiEvent::GroupMessage;
+			return MiraiEvent::TempMessage;
 		}
 
 		MessageId_t MessageId() const
@@ -37,8 +37,6 @@ namespace Cyan
 
 		MessageId_t Reply(const Cyan::MessageChain& mc) const;
 		MessageId_t QuoteReply(const Cyan::MessageChain& mc) const;
-		void Recall() const;
-		void AtMe() const;
 
 		virtual bool Set(const json& j) override
 		{
@@ -54,6 +52,9 @@ namespace Cyan
 			return j;
 		}
 	};
+
+
+
 }
 
-#endif // !mirai_cpp_events_group_message_hpp_H_
+#endif

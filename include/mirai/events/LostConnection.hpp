@@ -1,6 +1,6 @@
 #pragma once
-#ifndef mirai_cpp_events_lost_connection_event_hpp_H_
-#define mirai_cpp_events_lost_connection_event_hpp_H_
+#ifndef mirai_cpp_events_LostConnection_hpp_H_
+#define mirai_cpp_events_LostConnection_hpp_H_
 
 #include <string>
 #include "mirai/exported.h"
@@ -12,7 +12,7 @@ namespace Cyan
 	/**
 	 * \brief mirai-cpp 与 mirai-api-http 失去连接的事件
 	 */
-	class EXPORTED LostConnection : public EventBase
+	class LostConnection : public EventBase
 	{
 	public:
 		int Code;
@@ -36,4 +36,4 @@ namespace Cyan
 
 }
 
-#endif // !mirai_cpp_events_lost_connection_event_hpp_H_
+#endif

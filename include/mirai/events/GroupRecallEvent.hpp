@@ -1,25 +1,29 @@
 #pragma once
-#ifndef mirai_cpp_events_member_leave_kick_event_hpp_H_
-#define mirai_cpp_events_member_leave_kick_event_hpp_H_
+#ifndef mirai_cpp_events_GroupRecallEvent_hpp_H_
+#define mirai_cpp_events_GroupRecallEvent_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
 #include "event_interface.hpp"
 #include "mirai/defs/group_member.hpp"
+#include "mirai/defs/qq_types.hpp"
 
 namespace Cyan
 {
 	/**
-	 * \brief 群成员被踢出群事件
+	 * \brief 群成员消息撤回事件
 	 */
-	class MemberLeaveEventKick : public EventBase
+	class GroupRecallEvent : public EventBase
 	{
 	public:
-		GroupMember Member;
+		int64_t Time = 0;
+		QQ_t AuthorQQ;
+		Cyan::MessageId_t MessageId;
+		Group_t Group;
 		GroupMember Operator;
 
 		static MiraiEvent GetMiraiEvent()
 		{
-			return MiraiEvent::MemberLeaveEventKick;
+			return MiraiEvent::GroupRecallEvent;
 		}
 
 		bool OperatorIsBot() const
@@ -29,7 +33,10 @@ namespace Cyan
 		
 		virtual bool Set(const json& j) override
 		{
-			this->Member.Set(j["member"]);
+			this->Time = j["time"].get<int64_t>();
+			this->AuthorQQ = (QQ_t)j["authorId"].get<int64_t>();
+			this->MessageId = j["messageId"].get<int64_t>();
+			this->Group.Set(j["group"]);
 			if (!j["operator"].is_null())
 			{
 				this->Operator.Set(j["operator"]);
@@ -40,8 +47,11 @@ namespace Cyan
 		virtual json ToJson() const override
 		{
 			json j = json::object();
-			j["type"] = "MemberLeaveEventKick";
-			j["member"] = this->Member.ToJson();
+			j["type"] = "GroupRecallEvent";
+			j["time"] = this->Time;
+			j["authorId"] = (int64_t)this->AuthorQQ;
+			j["messageId"] = this->MessageId;
+			j["group"] = this->Group.ToJson();
 			if (!operator_is_null_)
 				j["operator"] = this->Operator.ToJson();
 			else
@@ -54,4 +64,4 @@ namespace Cyan
 
 }
 
-#endif // !mirai_cpp_events_member_leave_kick_event_hpp_H_
+#endif
