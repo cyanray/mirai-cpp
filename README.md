@@ -16,11 +16,11 @@
 ## 0x02 特性
 
 * C++17;
-* 内置所有依赖;
+* 内置所有依赖库;
 * 与 mirai-api-http 同步更新(使用相同版本号);
 * 对 mirai-api-http 进行完全地封装;
 
-## 0x03 用法概览
+## 0x03 快速入门
 
 使用 mirai-cpp 需要你熟悉 C++ 最基本的用法。
 
@@ -58,7 +58,12 @@ int main(int argc, char* argv[])
 
 因为其中的函数数量比较多，而且作者精力有限，因此不提供详细的使用文档，具体如何使用请查看 [MiraiBot](https://github.com/cyanray/mirai-cpp/blob/master/include/mirai/mirai_bot.hpp) 类的注释以及 [examples](https://github.com/cyanray/mirai-cpp/tree/master/examples) 目录里的示例。
 
-
+你可能想了解：
+* [详细文档](doc/Documentation.md)
+* [如何与mirai-api-http建立连接](doc/Documentation.md#如何与mirai-api-http建立连接)
+* [如何接收、处理事件](doc/Documentation.md#如何接收、处理事件)
+* [如何发送消息、引用回复、撤回消息](doc/Documentation.md#如何发送消息、引用回复、撤回消息)
+* [如何处理失去连接的情况](doc/Documentation.md#处理失去连接的情况)
 
 ## 0x04 如何编译、调试 mirai-cpp
 
