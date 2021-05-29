@@ -797,6 +797,18 @@ namespace Cyan
 		return true;
 	}
 
+	void MiraiBot::DeleteFriend(QQ_t friendQQ)
+	{
+		json data =
+		{
+			{ "sessionKey", pmem->sessionKey },
+			{ "target", int64_t(friendQQ)}
+		};
+
+		auto res = pmem->httpClient->Post("/deleteFriend", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
+	}
+
 	GroupConfig MiraiBot::GetGroupConfig(GID_t group)
 	{
 		stringstream api_url;

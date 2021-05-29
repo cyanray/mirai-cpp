@@ -337,6 +337,12 @@ namespace Cyan
 		bool QuitGroup(GID_t group);
 
 		/**
+		 * @brief 删除好友
+		 * @param  friendQQ 好友QQ
+		*/
+		void DeleteFriend(QQ_t friendQQ);
+
+		/**
 		 * \brief 获取群设置
 		 * \param group 群(GID_t)
 		 * \return 群设置
