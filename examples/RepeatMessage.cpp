@@ -4,8 +4,6 @@
 // 按需引用头文件
 // 你也可以使用 #include <mirai.h> 引用所有头文件(可能导致编译缓慢)
 #include <mirai/mirai_bot.hpp>
-#include <mirai/events/OtherClientMessage.hpp>
-#include <mirai/messages/DiceMessage.hpp>
 using namespace std;
 using namespace Cyan;
 
