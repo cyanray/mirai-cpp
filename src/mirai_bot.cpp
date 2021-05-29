@@ -784,7 +784,7 @@ namespace Cyan
 		return true;
 	}
 
-	bool MiraiBot::Quit(GID_t group)
+	bool MiraiBot::QuitGroup(GID_t group)
 	{
 		json data =
 		{
