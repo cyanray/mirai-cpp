@@ -1,6 +1,6 @@
 #pragma once
-#ifndef mirai_cpp_events_friend_message_hpp_H_
-#define mirai_cpp_events_friend_message_hpp_H_
+#ifndef mirai_cpp_events_FriendMessage_hpp_H_
+#define mirai_cpp_events_FriendMessage_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
 #include "mirai/defs/qq_types.hpp"
@@ -56,4 +56,4 @@ namespace Cyan
 
 }
 
-#endif // !mirai_cpp_events_friend_message_hpp_H_
+#endif
