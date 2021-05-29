@@ -48,7 +48,7 @@ namespace Cyan
 			j["origin"] = this->Origin;
 			j["current"] = this->Current;
 			j["group"] = this->Group.ToJson();
-			j["operator"] = (Operator != std::nullopt) ? this->Operator->ToJson() : nullptr;
+			j["operator"] = (Operator != std::nullopt) ? this->Operator->ToJson() : json(nullptr);
 			return j;
 		}
 	};

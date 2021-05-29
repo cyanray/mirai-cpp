@@ -41,7 +41,7 @@ namespace Cyan
 			json j = json::object();
 			j["type"] = "MemberUnmuteEvent";
 			j["member"] = this->Member.ToJson();
-			j["operator"] = (Operator != std::nullopt) ? this->Operator->ToJson() : nullptr;
+			j["operator"] = (Operator != std::nullopt) ? this->Operator->ToJson() : json(nullptr);
 			return j;
 		}
 	};

@@ -52,7 +52,7 @@ namespace Cyan
 			j["authorId"] = (int64_t)this->AuthorQQ;
 			j["messageId"] = this->MessageId;
 			j["group"] = this->Group.ToJson();
-			j["operator"] = (Operator != std::nullopt) ? this->Operator->ToJson() : nullptr;
+			j["operator"] = (Operator != std::nullopt) ? this->Operator->ToJson() : json(nullptr);
 			return j;
 		}
 	};
