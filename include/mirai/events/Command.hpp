@@ -25,7 +25,7 @@ namespace Cyan
 	public:
 		string CommandName;
 		std::optional<Friend_t> Friend;
-		std::optional<GroupMember> GroupMember;
+		std::optional<GroupMember> Member;
 		vector<string> Args;
 
 		static MiraiEvent GetMiraiEvent()
@@ -38,8 +38,8 @@ namespace Cyan
 			CommandName = j["name"].get<string>();
 			Friend = Friend_t();
 			Friend->Set(j["friend"]);
-			GroupMember = Cyan::GroupMember();
-			GroupMember->Set(j["member"]);
+			Member = GroupMember();
+			Member->Set(j["member"]);
 			Args = j["args"].get<vector<string>>();
 			return true;
 		}
@@ -50,7 +50,7 @@ namespace Cyan
 			{
 				{ "name" , CommandName },
 				{ "friend" , Friend->ToJson() },
-				{ "member" , GroupMember->ToJson() },
+				{ "member" , Member->ToJson() },
 				{ "args" , json(Args) }
 			};
 		}
