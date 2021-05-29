@@ -271,7 +271,7 @@ namespace Cyan
 		 * \param name 新的群名片
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		bool SetGroupMemberName(const GID_t& gid, const QQ_t& memberId, const string& name);
+		void SetGroupMemberName(const GID_t& gid, const QQ_t& memberId, const string& name);
 
 		/**
 		 * \brief 设置群成员的群头衔
@@ -280,21 +280,21 @@ namespace Cyan
 		 * \param title 新的群头衔
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		bool SetGroupMemberSpecialTitle(const GID_t& gid, const QQ_t& memberId, const string& title);
+		void SetGroupMemberSpecialTitle(const GID_t& gid, const QQ_t& memberId, const string& title);
 
 		/**
 		 * \brief 全体禁言
 		 * \param target 群组(GID_t)
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		bool MuteAll(GID_t target);
+		void MuteAll(GID_t target);
 
 		/**
 		 * \brief 取消全体禁言
 		 * \param target 群组(GID_t)
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		bool UnMuteAll(GID_t target);
+		void UnMuteAll(GID_t target);
 
 		/**
 		 * \brief 禁言群成员
@@ -303,7 +303,7 @@ namespace Cyan
 		 * \param time_seconds 时长(秒)
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		bool Mute(GID_t gid, QQ_t memberId, unsigned int time_seconds);
+		void Mute(GID_t gid, QQ_t memberId, unsigned int time_seconds);
 
 		/**
 		 * \brief 取消禁言群成员
@@ -311,7 +311,7 @@ namespace Cyan
 		 * \param memberId 群成员(QQ_t)
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		bool UnMute(GID_t gid, QQ_t memberId);
+		void UnMute(GID_t gid, QQ_t memberId);
 
 		/**
 		 * \brief 将群成员踢出群组
@@ -320,21 +320,21 @@ namespace Cyan
 		 * \param reason_msg 可选, 填写踢人理由, 默认为空
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		bool Kick(GID_t gid, QQ_t memberId, const string& reason_msg = "");
+		void Kick(GID_t gid, QQ_t memberId, const string& reason_msg = "");
 
 		/**
 		 * \brief 撤回一条消息
 		 * \param mid 消息ID(MessageId)
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		bool Recall(MessageId_t mid);
+		void Recall(MessageId_t mid);
 
 		/**
 		 * \brief 让 Bot 退出一个群
 		 * \param group 要退出的群(GID_t)
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		bool QuitGroup(GID_t group);
+		void QuitGroup(GID_t group);
 
 		/**
 		 * @brief 删除好友
@@ -355,7 +355,7 @@ namespace Cyan
 		 * \param groupConfig 群设置
 		 * \return 始终为 true 出错会抛出异常
 		 */
-		bool SetGroupConfig(GID_t group, GroupConfig groupConfig);
+		void SetGroupConfig(GID_t group, GroupConfig groupConfig);
 
 		/**
 		 * \brief 根据消息ID(MessageId)获取对应的好友消息

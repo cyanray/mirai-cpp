@@ -97,7 +97,7 @@ namespace Cyan
 		 * @param qq Bot QQ
 		 * @return true
 		*/
-		bool SessionBind(const string& sessionKey, const QQ_t& qq);
+		void SessionBind(const string& sessionKey, const QQ_t& qq);
 
 		/**
 		 * @brief 释放 Session.
@@ -105,7 +105,7 @@ namespace Cyan
 		 * @param qq Bot QQ
 		 * @return true
 		*/
-		bool SessionRelease(const string& sessionKey, const QQ_t& qq);
+		void SessionRelease(const string& sessionKey, const QQ_t& qq);
 
 		/**
 		 * @brief 发送“戳一戳”
@@ -148,7 +148,7 @@ namespace Cyan
 		 * @param specialTitle 群头衔
 		 * @return 
 		*/
-		bool SetGroupMemberInfo(GID_t gid, QQ_t memberId, const string& name, const string& specialTitle)
+		void SetGroupMemberInfo(GID_t gid, QQ_t memberId, const string& name, const string& specialTitle)
 		{
 			json data =
 			{
@@ -165,7 +165,6 @@ namespace Cyan
 
 			auto res = httpClient->Post("/memberInfo", data.dump(), CONTENT_TYPE.c_str());
 			ParseOrThrowException(res);
-			return true;
 		}
 	};
 
@@ -282,7 +281,7 @@ namespace Cyan
 		return re_json["session"].get<string>();
 	}
 
-	bool MiraiBot::pimpl::SessionBind(const string& sessionKey, const QQ_t& qq)
+	void MiraiBot::pimpl::SessionBind(const string& sessionKey, const QQ_t& qq)
 	{
 		json data =
 		{
@@ -292,10 +291,9 @@ namespace Cyan
 
 		auto res = httpClient->Post("/bind", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
-		return true;
 	}
 
-	bool MiraiBot::pimpl::SessionRelease(const string& sessionKey, const QQ_t& qq)
+	void MiraiBot::pimpl::SessionRelease(const string& sessionKey, const QQ_t& qq)
 	{
 		json data =
 		{
@@ -305,7 +303,6 @@ namespace Cyan
 
 		auto res = httpClient->Post("/release", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
-		return true;
 	}
 
 	MessageId_t MiraiBot::SendMessage(QQ_t target, const MessageChain& messageChain, MessageId_t msgId)
@@ -606,16 +603,16 @@ namespace Cyan
 		return result;
 	}
 
-	bool MiraiBot::SetGroupMemberName(const GID_t& gid, const QQ_t& memberId, const string& name)
+	void MiraiBot::SetGroupMemberName(const GID_t& gid, const QQ_t& memberId, const string& name)
 	{
 		auto member_info = this->GetGroupMemberInfo(gid, memberId);
-		return pmem->SetGroupMemberInfo(gid, memberId, name, member_info.SpecialTitle);
+		pmem->SetGroupMemberInfo(gid, memberId, name, member_info.SpecialTitle);
 	}
 
-	bool MiraiBot::SetGroupMemberSpecialTitle(const GID_t& gid, const QQ_t& memberId, const string& title)
+	void MiraiBot::SetGroupMemberSpecialTitle(const GID_t& gid, const QQ_t& memberId, const string& title)
 	{
 		auto member_info = this->GetGroupMemberInfo(gid, memberId);
-		return pmem->SetGroupMemberInfo(gid, memberId, member_info.MemberName, title);
+		pmem->SetGroupMemberInfo(gid, memberId, member_info.MemberName, title);
 	}
 
 	vector<GroupFile> MiraiBot::GetGroupFiles(GID_t gid)
@@ -696,7 +693,7 @@ namespace Cyan
 		ParseOrThrowException(res);
 	}
 
-	bool MiraiBot::MuteAll(GID_t target)
+	void MiraiBot::MuteAll(GID_t target)
 	{
 		json data =
 		{
@@ -706,11 +703,10 @@ namespace Cyan
 
 		auto res = pmem->httpClient->Post("/muteAll", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
-		return true;
 	}
 
 
-	bool MiraiBot::UnMuteAll(GID_t target)
+	void MiraiBot::UnMuteAll(GID_t target)
 	{
 		json data =
 		{
@@ -720,11 +716,10 @@ namespace Cyan
 
 		auto res = pmem->httpClient->Post("/unmuteAll", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
-		return true;
 	}
 
 
-	bool MiraiBot::Mute(GID_t gid, QQ_t memberId, unsigned int time_seconds)
+	void MiraiBot::Mute(GID_t gid, QQ_t memberId, unsigned int time_seconds)
 	{
 		json data =
 		{
@@ -736,11 +731,10 @@ namespace Cyan
 
 		auto res = pmem->httpClient->Post("/mute", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
-		return true;
 	}
 
 
-	bool MiraiBot::UnMute(GID_t gid, QQ_t memberId)
+	void MiraiBot::UnMute(GID_t gid, QQ_t memberId)
 	{
 		json data =
 		{
@@ -751,11 +745,10 @@ namespace Cyan
 
 		auto res = pmem->httpClient->Post("/unmute", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
-		return true;
 	}
 
 
-	bool MiraiBot::Kick(GID_t gid, QQ_t memberId, const string& reason_msg)
+	void MiraiBot::Kick(GID_t gid, QQ_t memberId, const string& reason_msg)
 	{
 		json data =
 		{
@@ -767,11 +760,10 @@ namespace Cyan
 
 		auto res = pmem->httpClient->Post("/kick", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
-		return true;
 	}
 
 
-	bool MiraiBot::Recall(MessageId_t mid)
+	void MiraiBot::Recall(MessageId_t mid)
 	{
 		json data =
 		{
@@ -781,10 +773,9 @@ namespace Cyan
 
 		auto res = pmem->httpClient->Post("/recall", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
-		return true;
 	}
 
-	bool MiraiBot::QuitGroup(GID_t group)
+	void MiraiBot::QuitGroup(GID_t group)
 	{
 		json data =
 		{
@@ -794,7 +785,6 @@ namespace Cyan
 
 		auto res = pmem->httpClient->Post("/quit", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
-		return true;
 	}
 
 	void MiraiBot::DeleteFriend(QQ_t friendQQ)
@@ -822,10 +812,9 @@ namespace Cyan
 		GroupConfig group_config;
 		group_config.Set(re_json);
 		return group_config;
-
 	}
 
-	bool MiraiBot::SetGroupConfig(GID_t group, GroupConfig groupConfig)
+	void MiraiBot::SetGroupConfig(GID_t group, GroupConfig groupConfig)
 	{
 		json data =
 		{
@@ -836,7 +825,6 @@ namespace Cyan
 
 		auto res = pmem->httpClient->Post("/groupConfig", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
-		return true;
 	}
 
 	FriendMessage MiraiBot::GetFriendMessageFromId(MessageId_t mid)
