@@ -37,7 +37,7 @@ namespace Cyan
 		Message,								// 通用消息事件
 		BotInvitedJoinGroupRequestEvent,		// Bot被邀请入群申请
 		MemberCardChangeEvent,				// 群成员群名片被修改事件
-		Command,								// 指令事件
+		CommandExecutedEvent,				// 指令事件
 		NudgeEvent,							// 戳一戳(头像)事件
 		StrangerMessage,						// 陌生人消息
 		OtherClientMessage,					// 其他客户端消息

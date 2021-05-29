@@ -867,7 +867,7 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "verifyKey", pmem->sessionOptions->VerifyKey.Get() },
+			{ "sessionKey", pmem->sessionKey },
 			{ "name", commandName },
 			{ "alias", json(alias) },
 			{ "description", description },
@@ -881,28 +881,11 @@ namespace Cyan
 	{
 		json data =
 		{
-			{ "verifyKey", pmem->sessionOptions->VerifyKey.Get() },
+			{ "sessionKey", pmem->sessionKey },
 			{ "name", commandName },
 			{ "args", json(args) }
 		};
 		auto res = pmem->httpClient->Post("/command/send", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
-	}
-
-	vector<QQ_t> MiraiBot::GetManagers()
-	{
-		stringstream api_url;
-		api_url << "/managers?qq=" << GetBotQQ().ToInt64();
-		auto res = pmem->httpClient->Get(api_url.str().data());
-		json re_json = ParseOrThrowException(res);
-		vector<QQ_t> result;
-		if (re_json.is_array())
-		{
-			for (const auto& qq : re_json)
-			{
-				result.emplace_back(qq.get<int64_t>());
-			}
-		}
-		return result;
 	}
 } // namespace Cyan

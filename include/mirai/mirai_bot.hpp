@@ -394,12 +394,6 @@ namespace Cyan
 		void SendCommand(const string& commandName, const vector<string>& args);
 
 		/**
-		 * @brief 获得 Managers
-		 * @return Managers
-		*/
-		vector<QQ_t> GetManagers();
-
-		/**
 		 * \brief 监听事件
 		 * \tparam T 事件类型
 		 * \param ep 事件处理函数

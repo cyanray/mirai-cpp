@@ -43,6 +43,6 @@
 #include "mirai_event.hpp"
 #include "event_interface.hpp"
 // 指令事件
-#include "command_event.hpp"
+#include "Command.hpp"
 
 #endif // !mirai_cpp_events_events_hpp_H_
