@@ -23,6 +23,7 @@
 #include "messages/QuoteMessage.hpp"
 #include "messages/VoiceMessage.hpp"
 #include "messages/FileMessage.hpp"
+#include "messages/DiceMessage.hpp"
 
 using std::vector;
 
@@ -208,6 +209,11 @@ namespace Cyan
 		MessageChain& Voice(const VoiceMessage& voice)
 		{
 			return this->Add<VoiceMessage>(voice);
+		}
+
+		MessageChain& Dice(const int& value)
+		{
+			return this->Add<DiceMessage>(value);
 		}
 
 		string GetPlainText() const;

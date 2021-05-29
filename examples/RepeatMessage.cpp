@@ -3,6 +3,7 @@
 #define MIRAICPP_STATICLIB
 #include <mirai.h>
 #include <mirai/events/OtherClientMessage.hpp>
+#include <mirai/defs/messages/DiceMessage.hpp>
 using namespace std;
 using namespace Cyan;
 
@@ -54,7 +55,7 @@ int main(int argc, char* argv[])
 		[&](Message m)
 		{
 			cout << int64_t(m.Sender) << " 发来一条消息." << m.MessageChain.ToString() << endl;
-			m.Reply(m.MessageChain);
+			m.Reply(MessageChain().Dice(1));
 		});
 
 	bot.On<LostConnection>([&](LostConnection e)
