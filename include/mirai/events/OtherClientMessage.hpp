@@ -1,27 +1,47 @@
 #pragma once
-#ifndef mirai_cpp_events_StrangerMessage_hpp_H_
-#define mirai_cpp_events_StrangerMessage_hpp_H_
+#ifndef mirai_cpp_events_OtherClientMessage_hpp_H_
+#define mirai_cpp_events_OtherClientMessage_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
 #include "mirai/defs/qq_types.hpp"
 #include "mirai/defs/message_chain.hpp"
-#include "mirai/defs/friend.hpp"
 #include "event_interface.hpp"
 
 namespace Cyan
 {
 	/**
-	 * \brief 陌生人发来的消息
+	 * \brief 其他客户端消息
 	 */
-	class StrangerMessage : public EventBase
+	class OtherClientMessage : public EventBase
 	{
 	public:
 		Cyan::MessageChain MessageChain;
-		Friend_t Sender;
+		class Sender : public ISerializable
+		{
+		public:
+			int Id;
+			string Platform;
+
+			virtual bool Set(const json& j) override
+			{
+				Id = j["id"].get<int>();
+				Platform = j["platform"].get<string>();
+				return true;
+			}
+
+			virtual json ToJson() const override
+			{
+				return
+				{
+					{ "id", Id },
+					{ "platform", Platform }
+				};
+			}
+		} Sender;
 
 		static MiraiEvent GetMiraiEvent()
 		{
-			return MiraiEvent::StrangerMessage;
+			return MiraiEvent::OtherClientMessage;
 		}
 
 		MessageId_t MessageId() const

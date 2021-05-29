@@ -2,6 +2,7 @@
 // 使用静态库必须要在引入 mirai.h 前定义这个宏
 #define MIRAICPP_STATICLIB
 #include <mirai.h>
+#include <mirai/events/OtherClientMessage.hpp>
 using namespace std;
 using namespace Cyan;
 
@@ -54,6 +55,12 @@ int main(int argc, char* argv[])
 		{
 			cout << int64_t(m.Sender) << " 发来一条消息." << m.MessageChain.ToString() << endl;
 			m.Reply(m.MessageChain);
+		});
+
+	bot.On<OtherClientMessage>([&](OtherClientMessage m)
+		{
+			cout << m.Sender.ToString() << endl;
+			cout << m.MessageChain.ToString() << endl;
 		});
 
 	bot.On<LostConnection>([&](LostConnection e)
