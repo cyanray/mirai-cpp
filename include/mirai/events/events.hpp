@@ -40,6 +40,7 @@
 #include "GroupEntranceAnnouncementChangeEvent.hpp"
 #include "GroupAllowAnonymousChatEvent.hpp"
 #include "GroupAllowConfessTalkEvent.hpp"
+#include "GroupAllowMemberInviteEvent.hpp"
 // 其他事件
 #include "NudgeEvent.hpp"
 // 一些定义
