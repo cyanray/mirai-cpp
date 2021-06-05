@@ -19,10 +19,12 @@
 #include "NewFriendRequestEvent.hpp"
 #include "FriendRecallEvent.hpp"
 #include "FriendInputStatusChangedEvent.hpp"
+#include "FriendNickChangedEvent.hpp"
 // 群组相关事件
 #include "GroupRecallEvent.hpp"
 #include "GroupMuteAllEvent.hpp"
 #include "MemberCardChangeEvent.hpp"
+#include "MemberSpecialTitleChangeEvent.hpp"
 #include "MemberJoinRequestEvent.hpp"
 #include "MemberJoinEvent.hpp"
 #include "MemberLeaveEventKick.hpp"
@@ -36,6 +38,10 @@
 #include "BotLeaveEventKick.hpp"
 #include "BotInvitedJoinGroupRequestEvent.hpp"
 #include "GroupNameChangeEvent.hpp"
+#include "GroupEntranceAnnouncementChangeEvent.hpp"
+#include "GroupAllowAnonymousChatEvent.hpp"
+#include "GroupAllowConfessTalkEvent.hpp"
+#include "GroupAllowMemberInviteEvent.hpp"
 // 其他事件
 #include "NudgeEvent.hpp"
 // 一些定义

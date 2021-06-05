@@ -1,6 +1,6 @@
 #pragma once
-#ifndef mirai_cpp_events_FriendInputStatusChangedEvent_hpp_H_
-#define mirai_cpp_events_FriendInputStatusChangedEvent_hpp_H_
+#ifndef mirai_cpp_events_FriendNickChangedEvent_hpp_H_
+#define mirai_cpp_events_FriendNickChangedEvent_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
 #include "mirai/defs/qq_types.hpp"
@@ -11,32 +11,35 @@
 namespace Cyan
 {
 	/**
-	 * \brief 好友输入状态改变事件
+	 * \brief 好友昵称改变事件
 	 */
-	class FriendInputStatusChangedEvent : public EventBase
+	class FriendNickChangedEvent : public EventBase
 	{
 	public:
 		Friend_t Friend;
-		bool Inputting;
+		string From;
+		string To;
 
 		static MiraiEvent GetMiraiEvent()
 		{
-			return MiraiEvent::FriendInputStatusChangedEvent;
+			return MiraiEvent::FriendNickChangedEvent;
 		}
 
 		virtual bool Set(const json& j) override
 		{
-			this->Inputting = j["inputting"].get<bool>();
 			this->Friend.Set(j["friend"]);
+			this->From = j["from"].get<string>();
+			this->To = j["to"].get<string>();
 			return true;
 		}
 
 		virtual json ToJson() const override
 		{
 			json j = json::object();
-			j["type"] = "FriendInputStatusChangedEvent";
-			j["inputting"] = this->Inputting;
+			j["type"] = "FriendNickChangedEvent";
 			j["friend"] = this->Friend.ToJson();
+			j["from"] = this->From;
+			j["to"] = this->To;
 			return j;
 		}
 	};
