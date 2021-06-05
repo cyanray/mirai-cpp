@@ -37,6 +37,7 @@
 #include "BotLeaveEventKick.hpp"
 #include "BotInvitedJoinGroupRequestEvent.hpp"
 #include "GroupNameChangeEvent.hpp"
+#include "GroupEntranceAnnouncementChangeEvent.hpp"
 // 其他事件
 #include "NudgeEvent.hpp"
 // 一些定义

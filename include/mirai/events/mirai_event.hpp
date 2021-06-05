@@ -42,7 +42,8 @@ namespace Cyan
 		StrangerMessage,						// 陌生人消息
 		OtherClientMessage,					// 其他客户端消息
 		FriendInputStatusChangedEvent,		// 好友输入状态改变事件
-		FriendNickChangedEvent				// 好友昵称改变事件
+		FriendNickChangedEvent,				// 好友昵称改变事件
+		GroupEntranceAnnouncementChangeEvent// 某群入群公告改变
 	};
 
 	MiraiEvent MiraiEventStr(const std::string& miraiEvent);
