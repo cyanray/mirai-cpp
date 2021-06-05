@@ -46,7 +46,8 @@ namespace Cyan
 		GroupEntranceAnnouncementChangeEvent,	// 某群入群公告改变
 		GroupAllowAnonymousChatEvent,		// 群匿名聊天权限改变
 		GroupAllowConfessTalkEvent,			// 群坦白说权限改变
-		GroupAllowMemberInviteEvent			// 群员邀请好友加群权限改变
+		GroupAllowMemberInviteEvent,		// 群员邀请好友加群权限改变
+		MemberSpecialTitleChangeEvent		// 群头衔改动事件
 	};
 
 	MiraiEvent MiraiEventStr(const std::string& miraiEvent);

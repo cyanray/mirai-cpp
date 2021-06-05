@@ -24,6 +24,7 @@
 #include "GroupRecallEvent.hpp"
 #include "GroupMuteAllEvent.hpp"
 #include "MemberCardChangeEvent.hpp"
+#include "MemberSpecialTitleChangeEvent.hpp"
 #include "MemberJoinRequestEvent.hpp"
 #include "MemberJoinEvent.hpp"
 #include "MemberLeaveEventKick.hpp"
