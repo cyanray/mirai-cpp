@@ -38,6 +38,7 @@
 #include "BotInvitedJoinGroupRequestEvent.hpp"
 #include "GroupNameChangeEvent.hpp"
 #include "GroupEntranceAnnouncementChangeEvent.hpp"
+#include "GroupAllowAnonymousChatEvent.hpp"
 // 其他事件
 #include "NudgeEvent.hpp"
 // 一些定义
