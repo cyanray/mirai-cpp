@@ -1,6 +1,6 @@
 #pragma once
-#ifndef mirai_cpp_events_StrangerMessage_hpp_H_
-#define mirai_cpp_events_StrangerMessage_hpp_H_
+#ifndef mirai_cpp_events_FriendInputStatusChangedEvent_hpp_H_
+#define mirai_cpp_events_FriendInputStatusChangedEvent_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
 #include "mirai/defs/qq_types.hpp"
