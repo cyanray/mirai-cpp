@@ -41,7 +41,8 @@ namespace Cyan
 		NudgeEvent,							// 戳一戳(头像)事件
 		StrangerMessage,						// 陌生人消息
 		OtherClientMessage,					// 其他客户端消息
-		FriendInputStatusChangedEvent		// 好友输入状态改变事件
+		FriendInputStatusChangedEvent,		// 好友输入状态改变事件
+		FriendNickChangedEvent				// 好友昵称改变事件
 	};
 
 	MiraiEvent MiraiEventStr(const std::string& miraiEvent);

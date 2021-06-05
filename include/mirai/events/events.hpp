@@ -19,6 +19,7 @@
 #include "NewFriendRequestEvent.hpp"
 #include "FriendRecallEvent.hpp"
 #include "FriendInputStatusChangedEvent.hpp"
+#include "FriendNickChangedEvent.hpp"
 // 群组相关事件
 #include "GroupRecallEvent.hpp"
 #include "GroupMuteAllEvent.hpp"
