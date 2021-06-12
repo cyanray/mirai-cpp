@@ -214,6 +214,7 @@ namespace Cyan
 		return mc;
 	}
 
+	using MessageChain_t = MessageChain;
 }
 
 

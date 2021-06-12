@@ -16,5 +16,7 @@
 #include "mirai/messages/QuoteMessage.hpp"
 #include "mirai/messages/VoiceMessage.hpp"
 #include "mirai/messages/XmlMessage.hpp"
+#include "mirai/messages/ForwardMessage.hpp"
+#include "mirai/messages/MusicShare.hpp"
 
 #endif
