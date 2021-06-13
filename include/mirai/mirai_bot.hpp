@@ -210,7 +210,7 @@ namespace Cyan
 		 * @param gid 群组(GID_t)
 		 * @return 群文件列表
 		*/
-		vector<GroupFile> GetGroupFiles(GID_t gid);
+		vector<GroupFile> GetGroupFiles(const GID_t& gid, const string& parentId = "");
 
 		/**
 		 * @brief 获取群文件详细信息

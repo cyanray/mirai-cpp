@@ -615,18 +615,22 @@ namespace Cyan
 		pmem->SetGroupMemberInfo(gid, memberId, member_info.MemberName, title);
 	}
 
-	vector<GroupFile> MiraiBot::GetGroupFiles(GID_t gid)
+	vector<GroupFile> MiraiBot::GetGroupFiles(const GID_t& gid, const string& parentId)
 	{
 		stringstream api_url;
 		api_url
-			<< "/groupFileList?sessionKey="
+			<< "/file/list?sessionKey="
 			<< pmem->sessionKey
 			<< "&target="
-			<< int64_t(gid);
+			<< int64_t(gid)
+			<< "&id="
+			<< parentId;
+		// 取文件列表响应比较慢
+		pmem->httpClient->set_read_timeout(60,0);
 		auto res = pmem->httpClient->Get(api_url.str().data());
 		json re_json = ParseOrThrowException(res);
 		vector<GroupFile> result;
-		for (const auto& item : re_json)
+		for (const auto& item : re_json["data"])
 		{
 			GroupFile f;
 			f.Set(item);
