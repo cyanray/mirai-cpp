@@ -25,6 +25,7 @@ namespace Cyan
 			factory_.Register<FileMessage>("File");
 			factory_.Register<DiceMessage>("Dice");
 			factory_.Register<ForwardMessage>("Forward");
+			factory_.Register<MusicShare>("MusicShare");
 		}
 	}
 
