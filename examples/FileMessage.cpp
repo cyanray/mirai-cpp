@@ -13,7 +13,7 @@ int main()
 	{
 		try
 		{
-			bot.Auth("AuthKeyASDEWQ", 1589588851_qq);
+			bot.Verify("VerifyKeyASDEWQ", 1589588851_qq);
 			break;
 		}
 		catch (const std::exception& ex)

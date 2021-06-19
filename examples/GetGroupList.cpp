@@ -3,48 +3,44 @@
 #define MIRAICPP_STATICLIB
 #include <mirai.h>
 
-int main()
+using namespace std;
+using namespace Cyan;
+
+int main(int argc, char* argv[])
 {
-	using namespace std;
-	using namespace Cyan;
 	system("chcp 65001");
-	MiraiBot bot("127.0.0.1", 539);
-	while (true)
-	{
-		try
-		{
-			bot.Auth("INITKEY7A3O1a9v", 1589588851_qq);
-			break;
-		}
-		catch (const std::exception& ex)
-		{
-			cout << ex.what() << endl;
-		}
-		MiraiBot::SleepSeconds(1);
-	}
-	cout << "成功登录 bot。" << endl;
+
+	MiraiBot bot;
+	SessionOptions opts = SessionOptions::FromCommandLine(argc, argv);
+	bot.Connect(opts);
+
+	cout << "Bot working..." << endl;
 
 	// 获取群组列表
 	auto groups = bot.GetGroupList();
-	int i = 1;
-	for (const auto& g : groups)
+	for (const auto& group : groups)
 	{
-		cout << (i++) << ". " << g.GID << ", " << g.Name << ", " << GroupPermissionStr(g.Permission) << endl;
-		// 获取群成员列表
-		auto gMembers = bot.GetGroupMembers(g.GID);
-		for (const auto& gMem : gMembers)
+		cout << "* " << group.GID << ", " << group.Name << ", " << GroupPermissionStr(group.Permission) << endl;
+		auto members = bot.GetGroupMembers(group.GID);
+		int i = 1;
+		for (const auto& member : members)
 		{
-			cout << " | " << gMem.QQ << ", " << gMem.MemberName << ", " << GroupPermissionStr(gMem.Permission);
-			// 获取群成员的信息（群名片、群头衔）
-			auto info = bot.GetGroupMemberInfo(gMem.Group.GID, gMem.QQ);
-			cout << ", 群名片: " << (info.Name.empty() ? "无" : info.Name)
-				 << ", 群头衔: " << (info.SpecialTitle.empty() ? "无" : info.SpecialTitle) << endl;
+			cout << "   " << (i++) << ". " << member.MemberName << "(" << member.QQ << ") " << GroupPermissionStr(member.Permission);
+			cout << ", " << (member.MemberName.empty() ? "无" : member.MemberName)		// 群名片
+				 << ", " << (member.SpecialTitle.empty() ? "无" : member.SpecialTitle)	// 群头衔
+				 << endl;
 		}
+		cout << endl;
 	}
 
-
-	bot.EventLoop();
-
-
+	string command;
+	while (cin >> command)
+	{
+		if (command == "exit")
+		{
+			bot.Disconnect();
+			break;
+		}
+	}
 	return 0;
 }

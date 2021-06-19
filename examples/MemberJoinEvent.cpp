@@ -13,7 +13,7 @@ int main()
 	{
 		try
 		{
-			bot.Auth("INITKEY7A3O1a9v", 1589588851_qq);
+			bot.Verify("INITKEY7A3O1a9v", 1589588851_qq);
 			break;
 		}
 		catch (const std::exception& ex)
@@ -37,6 +37,7 @@ int main()
 			string memberName = e.NewMember.MemberName;
 			cout << memberName << endl;
 			bot.SendMessage(e.NewMember.Group.GID,
+
 				MessageChain().Plain("欢迎 " + memberName + " 加入本群!"));
 		});
 

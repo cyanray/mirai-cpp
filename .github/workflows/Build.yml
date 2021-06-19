@@ -22,11 +22,11 @@ jobs:
             cc: cl
             cxx: cl
             cmake_args: ""
-          - name: Windows Latest MinGW
-            os: windows-latest
-            cc: gcc
-            cxx: g++
-            cmake_args: -G "MinGW Makefiles" -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
+          #- name: Windows Latest MinGW
+          #  os: windows-latest
+          #  cc: gcc
+          #  cxx: g++
+          #  cmake_args: -G "MinGW Makefiles" -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
           - name: Ubuntu Latest GCC
             os: ubuntu-latest
             cc: gcc
