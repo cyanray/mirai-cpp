@@ -44,6 +44,7 @@
 #include "GroupAllowMemberInviteEvent.hpp"
 #include "BotGroupPermissionChangeEvent.hpp"
 #include "MemberPermissionChangeEvent.hpp"
+#include "MemberHonorChangeEvent.hpp"
 // 其他事件
 #include "NudgeEvent.hpp"
 // 一些定义
