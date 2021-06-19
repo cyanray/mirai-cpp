@@ -36,7 +36,7 @@ namespace Cyan
 		{
 			json j = json::object();
 			j["type"] = "MemberPermissionChangeEvent";
-			j["member"] = this->Group.ToJson();
+			j["member"] = this->Member.ToJson();
 			j["origin"] = GroupPermissionStr(Origin);
 			j["current"] = GroupPermissionStr(Current);
 			return j;
