@@ -31,7 +31,7 @@ namespace Cyan
 		ifstream json_file(filename);
 		if (!json_file.is_open())
 		{
-			throw std::runtime_error("´ò¿ªÎÄ¼þÊ±³ö´í!");
+			throw std::runtime_error("æ‰“å¼€æ–‡ä»¶æ—¶å‡ºé”™!");
 		}
 		json config_json = json::parse(json_file);
 		return SessionOptions::FromJson(config_json);

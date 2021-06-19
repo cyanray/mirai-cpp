@@ -11,7 +11,7 @@ namespace Cyan
 		{
 			return result.value();
 		}
-		throw std::runtime_error("δ֪�� MemberHonorChangeEvent::HonorAction.");
+		throw std::runtime_error("未知的 MemberHonorChangeEvent::HonorAction.");
 	}
 
 	std::string MemberHonorChangeEvent::HonorActionStr(MemberHonorChangeEvent::HonorAction v)

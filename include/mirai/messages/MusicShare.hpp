@@ -35,7 +35,7 @@ namespace Cyan
 		{
 			if (json["type"].is_null() || json["type"].get<string>() != this->GetType())
 			{
-				throw std::runtime_error("¸ø¶¨µÄjson²»ÕıÈ·");
+				throw std::runtime_error("ç»™å®šçš„jsonä¸æ­£ç¡®");
 			}
 			kind_ = MusicShareKindStr(json["kind"].get<string>());
 			title_ = json["title"].get<string>();

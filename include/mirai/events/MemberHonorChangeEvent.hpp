@@ -24,8 +24,8 @@ namespace Cyan
 			Lose			// 失去称号
 		};
 
-		HonorAction HonorActionStr(const string& str);
-		string HonorActionStr(HonorAction v);
+		static HonorAction HonorActionStr(const string& str);
+		static string HonorActionStr(HonorAction v);
 
 		/**
 		 * @brief 称号行为

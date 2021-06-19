@@ -95,12 +95,12 @@ namespace Cyan
 		{
 			if (json["type"].is_null() || json["type"].get<string>() != this->GetType())
 			{
-				throw std::runtime_error("¸ø¶¨µÄjson²»ÕıÈ·");
+				throw std::runtime_error("ç»™å®šçš„jsonä¸æ­£ç¡®");
 			}
 			auto& nodeListJson = json["nodeList"];
 			if (!nodeListJson.is_array())
 			{
-				throw std::runtime_error("¸ø¶¨µÄjson²»ÕıÈ·");
+				throw std::runtime_error("ç»™å®šçš„jsonä¸æ­£ç¡®");
 			}
 			for (int i = 0; i < nodeListJson.size(); ++i)
 			{

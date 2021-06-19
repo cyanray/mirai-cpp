@@ -153,8 +153,8 @@ namespace Cyan
 				this->messageId_ = 0;
 				this->timestamp_ = 0;
 			}
-			// ForwardMessage::Node ÖĞµÄ MessageChain Ã»ÓĞ Source
-			// Òò´Ë´Ó 0 ¿ªÊ¼£¬·ÀÖ¹Â©µôÏûÏ¢
+			// ForwardMessage::Node ä¸­çš„ MessageChain æ²¡æœ‰ Source
+			// å› æ­¤ä» 0 å¼€å§‹ï¼Œé˜²æ­¢æ¼æ‰æ¶ˆæ¯
 			for (size_t i = 0; i < j.size(); i++)
 			{
 				auto msg_ptr = factory_.DynamicCreate(j[i]["type"]);

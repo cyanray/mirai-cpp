@@ -11,7 +11,7 @@ namespace Cyan
 		{
 			return kind.value();
 		}
-		throw std::runtime_error("δ֪�� MusicShareKind.");
+		throw std::runtime_error("未知的 MusicShareKind.");
 	}
 
 	std::string MusicShareKindStr(MusicShareKind musicShareKind)
