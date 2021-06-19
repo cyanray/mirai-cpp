@@ -877,19 +877,23 @@ namespace Cyan
 			{ "description", description },
 			{ "usage", helpMessage }
 		};
-		auto res = pmem->httpClient->Post("/command/register", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/cmd/register", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 	}
 
-	void MiraiBot::SendCommand(const string& commandName, const vector<string>& args)
+	void MiraiBot::SendCommand(const vector<string>& command)
 	{
+		MessageChain mc;
+		for (const auto& val : command)
+		{
+			mc.Plain(val);
+		}
 		json data =
 		{
 			{ "sessionKey", pmem->sessionKey },
-			{ "name", commandName },
-			{ "args", json(args) }
+			{ "command", mc.ToJson() }
 		};
-		auto res = pmem->httpClient->Post("/command/send", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/cmd/execute", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 	}
 } // namespace Cyan

@@ -26,7 +26,7 @@ namespace Cyan
 		string CommandName;
 		std::optional<Friend_t> Friend;
 		std::optional<GroupMember> Member;
-		vector<string> Args;
+		MessageChain Args;
 
 		static MiraiEvent GetMiraiEvent()
 		{
@@ -36,11 +36,17 @@ namespace Cyan
 		virtual bool Set(const json& j) override
 		{
 			CommandName = j["name"].get<string>();
-			Friend = Friend_t();
-			Friend->Set(j["friend"]);
-			Member = GroupMember();
-			Member->Set(j["member"]);
-			Args = j["args"].get<vector<string>>();
+			if (!j["friend"].is_null())
+			{
+				Friend = Friend_t();
+				Friend->Set(j["friend"]);
+			}
+			if (!j["member"].is_null())
+			{
+				Member = GroupMember();
+				Member->Set(j["member"]);
+			}
+			Args.Set(j["args"]);
 			return true;
 		}
 
@@ -49,9 +55,9 @@ namespace Cyan
 			return
 			{
 				{ "name" , CommandName },
-				{ "friend" , Friend->ToJson() },
-				{ "member" , Member->ToJson() },
-				{ "args" , json(Args) }
+				{ "friend" , Friend.has_value() ? Friend->ToJson() : json(nullptr) },
+				{ "member" , Member.has_value() ? Member->ToJson() : json(nullptr) },
+				{ "args" , Args.ToJson() }
 			};
 		}
 

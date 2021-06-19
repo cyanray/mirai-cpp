@@ -377,7 +377,6 @@ namespace Cyan
 		 * @param alias 指令别名
 		 * @param description 指令描述
 		 * @param helpMessage 指令帮助，执行出错时显示
-		 * @return *this
 		*/
 		void RegisterCommand(
 			const string& commandName,
@@ -387,11 +386,9 @@ namespace Cyan
 
 		/**
 		 * @brief 发送指令
-		 * @param commandName 指令名称
-		 * @param args 参数
-		 * @return *this
+		 * @param command 指令，第一个元素为指令名称，后面的元素为指令参数
 		*/
-		void SendCommand(const string& commandName, const vector<string>& args);
+		void SendCommand(const vector<string>& command);
 
 		/**
 		 * \brief 监听事件
@@ -486,6 +483,9 @@ namespace Cyan
 		return *this;
 	}
 
+	/**
+	 * @brief 对 LostConnection 的偏特化
+	*/
 	template<>
 	inline MiraiBot& MiraiBot::OnEventReceived<LostConnection>(const EventCallback<LostConnection>& cb)
 	{
