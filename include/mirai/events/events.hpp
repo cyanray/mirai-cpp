@@ -43,6 +43,7 @@
 #include "GroupAllowConfessTalkEvent.hpp"
 #include "GroupAllowMemberInviteEvent.hpp"
 #include "BotGroupPermissionChangeEvent.hpp"
+#include "MemberPermissionChangeEvent.hpp"
 // 其他事件
 #include "NudgeEvent.hpp"
 // 一些定义
