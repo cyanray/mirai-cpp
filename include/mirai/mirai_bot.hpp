@@ -213,6 +213,14 @@ namespace Cyan
 		vector<GroupFile> GetGroupFiles(const GID_t& gid, const string& parentId = "");
 
 		/**
+		 * @brief 通过群文件Id获取GroupFile对象
+		 * @param gid 群组(GID_t)
+		 * @param groupFileId 群文件Id
+		 * @return GroupFile
+		*/
+		GroupFile GetGroupFilById(const GID_t& gid, const string& groupFileId);
+
+		/**
 		 * @brief 获取群文件详细信息
 		 * @param gid 群组(GID_t)
 		 * @param groupFile 群文件(GroupFile)

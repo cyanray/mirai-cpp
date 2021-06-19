@@ -639,6 +639,24 @@ namespace Cyan
 		return result;
 	}
 
+	GroupFile MiraiBot::GetGroupFilById(const GID_t& gid, const string& groupFileId)
+	{
+		stringstream api_url;
+		api_url
+			<< "/file/info?sessionKey="
+			<< pmem->sessionKey
+			<< "&target="
+			<< int64_t(gid)
+			<< "&id="
+			<< groupFileId;
+		auto res = pmem->httpClient->Get(api_url.str().data());
+		json re_json = ParseOrThrowException(res);
+		GroupFile result;
+		result.Set(re_json);
+		return result;
+
+	}
+
 	GroupFileInfo MiraiBot::GetGroupFileInfo(GID_t gid, const GroupFile& groupFile)
 	{
 		stringstream api_url;
