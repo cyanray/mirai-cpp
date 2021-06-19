@@ -47,7 +47,7 @@ namespace Cyan
 		 */
 		inline string GetMiraiCppVersion() const
 		{
-			return "2.0.0";
+			return "2.0.2";
 		}
 
 		std::shared_ptr<httplib::Client> GetHttpClient();
@@ -220,28 +220,34 @@ namespace Cyan
 		*/
 		GroupFileInfo GetGroupFileInfo(GID_t gid, const GroupFile& groupFile);
 
+		
+		/**
+		 * @brief 创建群文件夹
+		 * @param target 目标群(GID_t)
+		 * @param dictionaryName 文件夹名称
+		 * @return 群文件夹(GroupFile)
+		*/
+		GroupFile GroupFileMakeDirectory(const GID_t& target, const string& dictionaryName);
+
 		/**
 		 * @brief 重命名群文件
-		 * @param gid 群组(GID_t)
 		 * @param groupFile 群文件(GroupFile)
 		 * @param newName 新群文件名
 		*/
-		void GroupFileRename(GID_t gid, const GroupFile& groupFile, const string& newName);
+		void GroupFileRename(const GroupFile& groupFile, const string& newName);
 
 		/**
 		 * @brief 移动群文件
-		 * @param gid 群组(GID_t)
 		 * @param groupFile 群文件(GroupFile)
-		 * @param moveToPath 移动目标路径, "/" 为根目录
+		 * @param targetId 目标文件夹的ID
 		*/
-		void GroupFileMove(GID_t gid, const GroupFile& groupFile, const string& moveToPath = "/");
+		void GroupFileMove(const GroupFile& groupFile, const string& targetId);
 
 		/**
 		 * @brief 删除群文件
-		 * @param gid 群组(GID_t)
 		 * @param groupFile 群文件(GroupFile)
 		*/
-		void GroupFileDelete(GID_t gid, const GroupFile& groupFile);
+		void GroupFileDelete(const GroupFile& groupFile);
 
 		/**
 		 * @brief 获取 Bot 账号的个人简介

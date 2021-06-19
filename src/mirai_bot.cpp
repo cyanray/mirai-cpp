@@ -656,44 +656,60 @@ namespace Cyan
 		return result;
 	}
 
-	void MiraiBot::GroupFileRename(GID_t gid, const GroupFile& groupFile, const string& newName)
+	GroupFile MiraiBot::GroupFileMakeDirectory(const GID_t& target, const string& dictionaryName)
 	{
 		json data =
 		{
 			{ "sessionKey", pmem->sessionKey },
-			{ "target", int64_t(gid) },
-			{ "id", groupFile.Id },
-			{ "rename", newName }
+			{ "group", int64_t(target) },
+			{ "dictionaryName", dictionaryName }
 		};
 
-		auto res = pmem->httpClient->Post("/groupFileRename", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/file/mkdir", data.dump(), CONTENT_TYPE.c_str());
+		auto re_json = ParseOrThrowException(res);
+		GroupFile result;
+		result.Set(re_json);
+		return result;
+	}
+
+	void MiraiBot::GroupFileRename(const GroupFile& groupFile, const string& newName)
+	{
+		json data =
+		{
+			{ "sessionKey", pmem->sessionKey },
+			{ "target", int64_t(groupFile.Group.GID) },
+			{ "id", groupFile.Id },
+			{ "renameTo", newName }
+		};
+
+		auto res = pmem->httpClient->Post("/file/rename", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 	}
 
-	void MiraiBot::GroupFileMove(GID_t gid, const GroupFile& groupFile, const string& moveToPath)
+	void MiraiBot::GroupFileMove(const GroupFile& groupFile, const string& targetId)
 	{
 		json data =
 		{
 			{ "sessionKey", pmem->sessionKey },
-			{ "target", int64_t(gid) },
+			{ "target", int64_t(groupFile.Group.GID) },
 			{ "id", groupFile.Id },
-			{ "movePath", moveToPath }
+			{ "moveTo", targetId }
 		};
 
-		auto res = pmem->httpClient->Post("/groupFileMove", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/file/move", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 	}
 
-	void MiraiBot::GroupFileDelete(GID_t gid, const GroupFile& groupFile)
+	void MiraiBot::GroupFileDelete(const GroupFile& groupFile)
 	{
 		json data =
 		{
 			{ "sessionKey", pmem->sessionKey },
-			{ "target", int64_t(gid) },
+			{ "target", int64_t(groupFile.Group.GID) },
 			{ "id", groupFile.Id }
 		};
 
-		auto res = pmem->httpClient->Post("/groupFileDelete", data.dump(), CONTENT_TYPE.c_str());
+		auto res = pmem->httpClient->Post("/file/delete", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 	}
 
