@@ -17,8 +17,9 @@
 
 * C++17;
 * 内置所有依赖库;
-* 与 mirai-api-http 同步更新(使用相同版本号);
-* 对 mirai-api-http 进行完全地封装;
+* 容易使用，丰富的示例；
+* 与 mirai-api-http 同步更新(使用相同版本号，保证兼容性);
+* 对 mirai-api-http 进行完全地封装(支持其所有功能、事件);
 
 ## 0x03 快速入门
 
@@ -54,7 +55,7 @@ int main(int argc, char* argv[])
 
 你需要重点关注 `MiraiBot` 类以及它的 `On<T>` 函数。
 
-[MiraiBot](https://github.com/cyanray/mirai-cpp/blob/master/include/mirai/mirai_bot.hpp) 类提供了诸如发送消息、获取好友列表等函数，这个函数列表可以在 [mirai-api-http](https://github.com/project-mirai/mirai-api-http/blob/dev-2.0/docs/api/API.md) 的文档里查到。
+[MiraiBot](https://github.com/cyanray/mirai-cpp/blob/master/include/mirai/mirai_bot.hpp) 类提供了诸如发送消息、获取好友列表等函数，这个函数列表可以在 [mirai-api-http](https://github.com/project-mirai/mirai-api-http/blob/master/docs/api/API.md) 的文档里查到。
 
 因为其中的函数数量比较多，而且作者精力有限，因此不提供详细的使用文档，具体如何使用请查看 [MiraiBot](https://github.com/cyanray/mirai-cpp/blob/master/include/mirai/mirai_bot.hpp) 类的注释以及 [examples](https://github.com/cyanray/mirai-cpp/tree/master/examples) 目录里的示例。
 
@@ -68,38 +69,45 @@ int main(int argc, char* argv[])
 ## 0x04 如何编译、调试 mirai-cpp
 
 ### 1. 快速尝试 (运行 examples、参与开发)
+<details>
 
 #### (1) 使用 Visual Studio
 
 1. 完整克隆/下载本仓库。
 
-2. 如图所示，使用 Visual Studio 2019 直接打开这个文件夹。
-
-3. 如果一切顺利，你可以直接运行我写好的示例，或者进行修改编写自己的机器人。
-
-<details>
+2. 如图所示，使用 Visual Studio 2019/2022 直接打开这个文件夹。
 
 ![使用 VS 直接打开 mirai-cpp 文件夹](./doc/pic/vs_1.png)
+
+3. 如果要尝试 examples 请确保 MIRAI_CPP_BUILD_EXAMPLES 被勾上。
 
 ![项目配置](./doc/pic/vs_3.png)
 
 ![勾上 MIRAI_CPP_BUILD_EXAMPLES](./doc/pic/vs_4.png)
 
+4. 由于所有的 examples 都从命令行读取配置，在调试之前需要编辑一下调试命令行。
+
+![找到设置调试配置的菜单](./doc/pic/vs_5.png)
+
+5. 根据你的 mirai-api-http 设置，填入以下配置。
+
+```json
+"args": [
+  "--hostname=localhost",
+  "--port=8080",
+  "--bot-qq=123456789",
+  "--verify-key=VerifyKey"
+]
+```
+
+![编辑调试命令行](./doc/pic/vs_6.png)
+
+6. 如果一切顺利，你可以直接运行我写好的示例，或者进行修改编写自己的机器人。
+
 ![开始运行 examples](./doc/pic/vs_2.png)
 
 </details>
 
-#### (2) 使用 Visual Studio Code
-
-1. 完整克隆/下载本仓库。
-
-2. 使用 VS Code 直接打开这个文件夹。
-
-3. 安装 CMake Tools 扩展。
-
-4. 如图，可以直接开始调试
-
-![vsc 开始调试](./doc/pic/vsc.png)
 
 ### **2. 创建自己的机器人项目**
 
@@ -107,9 +115,6 @@ int main(int argc, char* argv[])
 
 具体参考 [mirai-cpp-template](https://github.com/cyanray/mirai-cpp-template) 的说明。
 
-#### (2) 在 Visual Studio 项目中使用 (VS 解决方案, sln)
-
-// TODO: 编写如何在 Visual Studio 解决方案中使用 mirai-cpp
 
 ### 3. 其他使用方式
 
@@ -134,6 +139,8 @@ int main(int argc, char* argv[])
 </details>
 
 #### (2) 使用 vcpkg 安装 mirai-cpp
+
+> 不推荐，因精力有限 vcpkg 的更新可能不及时
 
 要使用 vcpkg 管理 mirai-cpp，你需要将 [https://github.com/cyanray/mirai-cpp-vcpkg-port](https://github.com/cyanray/mirai-cpp-vcpkg-port) 中的 **mirai-cpp** 文件夹复制到 vcpkg 安装目录下的 **ports** 文件夹中。
 

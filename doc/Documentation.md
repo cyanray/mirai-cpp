@@ -25,7 +25,9 @@
 - [关于异常](#关于异常)
 - [关于MiraiBot类](#关于MiraiBot类)
 - [处理失去连接的情况](#处理失去连接的情况)
-- [其他](#其他)
+- [其他](#其他) 
+  * [ToJson和ToString](#ToJson和ToSting)
+  * [枚举](#枚举)
 
 ## 项目结构
 
@@ -214,36 +216,53 @@ json文件示例：
 
 MiraiBot 类提供了 On 方法和 OnEventReceived 方法，这两个方法是等价的。mirai-cpp 做了许多工作，让你可以轻松地接收某个事件。
 
-你只需要知道一个事件的名称就可以接收并读取事件的属性。这些事件的名称可以在  [mirai-api-http 的文档](https://github.com/project-mirai/mirai-api-http/blob/master/docs/EventType.md) 里找到。
+你只需要知道一个事件的名称就可以接收并读取事件的属性。这些事件的名称可以在  [mirai-api-http 的文档](https://github.com/project-mirai/mirai-api-http/blob/master/docs/api/EventType.md) 或者 [enum class MiraiEvent](https://github.com/cyanray/mirai-cpp/blob/master/include/mirai/events/mirai_event.hpp) 里找到。
 
 ### mirai-cpp已经支持的事件
 
 |     名称                        |     描述             |
 |---------------------------------|----------------------|
-| BotJoinGroupEvent               | 机器人加入群组       |
-| BotLeaveEventKick               | 机器人被踢出群       |
-| BotOfflineEventDropped          | 机器人掉线           |
-| BotReloginEvent                 | 机器人重新登录       |
-| GroupNameChangeEvent            | 群组名称改变         |
-| MemberJoinEvent                 | 新群成员加入         |
-| MemberLeaveEventKick            | 群成员被踢出群       |
-| MemberMuteEvent                 | 群成员禁言           |
-| MemberUnmuteEvent               | 群成员解除禁言       |
-| GroupMuteAllEvent               | 全体禁言             |
-| GroupRecallEvent                | 群消息被撤回         |
-| FriendRecallEvent               | 好友消息被撤回       |
-| BotOfflineEventForce            | 机器人强制下线       |
-| MemberJoinRequestEvent          | 申请加群             |
-| NewFriendRequestEvent           | 申请加为好友         |
-| BotOnlineEvent                  | 机器人登录           |
-| BotMuteEvent                    | 机器人被禁言         |
-| BotUnmuteEvent                  | 机器人被解除禁言     |
-| BotInvitedJoinGroupRequestEvent | 邀请机器人入群       |
-| MemberLeaveEventQuit            | 群成员退群           |
-| BotLeaveEventActive             | 机器人主动退群       |
-| BotOfflineEventActive           | 机器人主动下线       |
-| MemberCardChangeEvent           | 群昵称改变（不可靠） |
-| NudgeEvent                      | 戳一戳事件           |
+| BotOnlineEvent,							| Bot 登录成功                  |
+| BotOfflineEventActive,					| Bot 主动离线                  |
+| BotOfflineEventForce,					    | Bot 被挤下线                  |
+| BotOfflineEventDropped,					| Bot 被挤下线                  |
+| BotReloginEvent,						    | Bot 主动重新登录              |
+| FriendMessage,							| 好友消息                      |
+| GroupMessage,							    | 群组消息                      |
+| TempMessage,							    | 临时消息                      |
+| GroupRecallEvent,						    | 群消息撤回                    |
+| FriendRecallEvent,						| 好友消息撤回                  |
+| BotMuteEvent,							    | Bot被禁言                     |
+| BotUnmuteEvent,							| Bot被取消禁言                 |
+| BotJoinGroupEvent,						| Bot加入了一个新群              |
+| GroupNameChangeEvent,					    | 某个群名称改变                 |
+| GroupMuteAllEvent,						| 群全员禁言                     |
+| MemberJoinEvent,						    | 新人入群事件                   |
+| MemberLeaveEventKick,					    | 成员被踢出群(该成员不是Bot)     |
+| MemberLeaveEventQuit,					    | 成员主动离开群组                |
+| MemberMuteEvent,						    | 群成员被禁言(该成员不是Bot)     |
+| MemberUnmuteEvent,						| 群成员被取消禁言(该成员不是Bot)  |
+| NewFriendRequestEvent,					| 添加好友申请                    |
+| MemberJoinRequestEvent,					| 用户入群申请                    |
+| BotLeaveEventActive,					    | Bot 主动离开群                  |
+| BotLeaveEventKick,						| Bot 被剔出群                    |
+| Message,								    | 通用消息事件                     |
+| BotInvitedJoinGroupRequestEvent,		    | Bot被邀请入群申请                |
+| MemberCardChangeEvent,					| 群成员群名片被修改事件            |
+| CommandExecutedEvent,					    | 指令事件                         |
+| NudgeEvent,								| 戳一戳(头像)事件                  |
+| StrangerMessage,						    | 陌生人消息                       |
+| OtherClientMessage,						| 其他客户端消息                    |
+| FriendInputStatusChangedEvent,			| 好友输入状态改变事件              |
+| FriendNickChangedEvent,					| 好友昵称改变事件                  |
+| GroupEntranceAnnouncementChangeEvent,	    | 某群入群公告改变                  |
+| GroupAllowAnonymousChatEvent,			    | 群匿名聊天权限改变                |
+| GroupAllowConfessTalkEvent,				| 群坦白说权限改变                  |
+| GroupAllowMemberInviteEvent,			    | 群员邀请好友加群权限改变           |
+| MemberSpecialTitleChangeEvent,			| 群头衔改动事件                    |
+| BotGroupPermissionChangeEvent,			| bot 群权限改变事件                |
+| MemberPermissionChangeEvent,			    | 群成员权限改变事件                 |
+| MemberHonorChangeEvent					| 群成员称号改变事件                |
 
 
 
@@ -564,7 +583,7 @@ MiraiBot 中的方法几乎都会抛出异常，建议捕捉起来。**在事件
 mirai-cpp 中的异常大概可分为 3 类：NetworkException、MiraiApiHttpException 和其他异常。
 
 导致 NetworkException 的可能原因是网络请求超时，这个时候可以尝试重新发起请求。
-导致 MiraiApiHttpException 的原因是 mirai-api-http 无法处理请求，可能原因有权限不足、操作对象不存在等。可以根据状态码(该异常的 Code 字段)来判断具体原因，状态码描述可见 [mirai-api-http 的文档](https://github.com/project-mirai/mirai-api-http/blob/dev-2.0/docs/api/API.md#%E7%8A%B6%E6%80%81%E7%A0%81)。
+导致 MiraiApiHttpException 的原因是 mirai-api-http 无法处理请求，可能原因有权限不足、操作对象不存在等。可以根据状态码(该异常的 Code 字段)来判断具体原因，状态码描述可见 [mirai-api-http 的文档](https://github.com/project-mirai/mirai-api-http/blob/master/docs/api/API.md#%E7%8A%B6%E6%80%81%E7%A0%81)。
 
 ## 关于MiraiBot类
 
@@ -610,8 +629,34 @@ bot.On<LostConnection>([&](LostConnection e)
 
 ## 其他
 
+### ToJson和ToSting
+
 mirai-cpp 几乎所有类型(类)都继承自 `ISerializable` 类。因此它们都实现了 `ToJson()` 和 `ToString()` 函数。
 
 **ToJson()** 返回的是 nlohmann::json 对象，这是一个第三方 json 库的类型。
 
 **ToString()** 一般返回 std::string 类型的 json 字符串，常用于调试。
+
+### 枚举
+
+mirai-cpp 中所有的枚举(enum)，都提供了相应的函数用于 enum 和 string 的相互转换。
+
+比如表示群组权限的枚举：
+
+```c++
+enum class GroupPermission
+{
+	Member,
+	Administrator,
+	Owner
+};
+```
+
+提供了函数 `GroupPermissionStr` 来进行枚举值和字符串的互相转换。
+
+```c++
+string GroupPermissionStr(GroupPermission gp);
+GroupPermission GroupPermissionStr(const string& gp);
+```
+
+同样的，对于 `MusicShareKind` 枚举，也提供了 `MusicShareKindStr` 函数。
