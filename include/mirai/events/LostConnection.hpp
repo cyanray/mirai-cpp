@@ -15,7 +15,7 @@ namespace Cyan
 	class LostConnection : public EventBase
 	{
 	public:
-		int Code;
+		int Code = 0;
 		string ErrorMessage;
 
 		static MiraiEvent GetMiraiEvent()

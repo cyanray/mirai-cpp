@@ -18,12 +18,12 @@ namespace Cyan
 		/**
 		 * @brief 年龄
 		*/
-		int Age;
+		int Age = 0;
 
 		/**
 		 * @brief QQ账号等级
 		*/
-		int Level;
+		int Level = 0;
 
 		/**
 		 * @brief 个性签名

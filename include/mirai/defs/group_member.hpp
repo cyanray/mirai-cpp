@@ -35,17 +35,17 @@ namespace Cyan
 		/**
 		 * @brief 入群时间戳
 		*/
-		int64_t JoinTimestamp;
+		int64_t JoinTimestamp = 0;
 
 		/**
 		 * @brief 上次发言时间戳
 		*/
-		int64_t LastSpeakTimestamp;
+		int64_t LastSpeakTimestamp = 0;
 
 		/**
 		 * @brief 剩余禁言时间
 		*/
-		int MuteTimeRemaining;
+		int MuteTimeRemaining = 0;
 
 		/**
 		 * @brief QQ群成员在该群的权限
