@@ -168,7 +168,9 @@ namespace Cyan
 		}
 	};
 
-	MiraiBot::MiraiBot() {};
+	MiraiBot::MiraiBot(): pmem(nullptr) 
+	{
+	}
 
 	MiraiBot::~MiraiBot()
 	{
@@ -177,6 +179,7 @@ namespace Cyan
 
 	void MiraiBot::Connect(const SessionOptions& opts)
 	{
+		delete pmem;
 		pmem = new pimpl();
 		pmem->sessionOptions = std::make_shared<SessionOptions>(opts);
 		pmem->threadPool = std::make_unique<ThreadPool>(opts.ThreadPoolSize.Get());
