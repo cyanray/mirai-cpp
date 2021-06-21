@@ -614,7 +614,8 @@ bot.On<LostConnection>([&](LostConnection e)
         {
             try
             {
-                bot.Connect(opts);
+                cout << "尝试与 mirai-api-http 重新建立连接..." << endl;
+                bot.Reconnect(opts);
                 break;
             }
             catch (const std::exception& ex)
@@ -623,7 +624,7 @@ bot.On<LostConnection>([&](LostConnection e)
             }
             MiraiBot::SleepSeconds(1);
         }
-        cout << "与 mirai-api-http 重新建立连接!" << endl;
+        cout << "成功与 mirai-api-http 重新建立连接!" << endl;
     });
 ```
 
