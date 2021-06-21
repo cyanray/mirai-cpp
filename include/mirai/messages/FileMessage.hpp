@@ -10,22 +10,19 @@ namespace Cyan
 	class FileMessage : public IMessage
 	{
 	public:
-		FileMessage() : id_(), name_(), internalId_(-1), size_(0) {}
+		FileMessage() : id_(), name_(), size_(0) {}
 		FileMessage(const FileMessage& m) : 
 			id_(m.id_), 
 			name_(m.name_), 
-			internalId_(m.internalId_), 
 			size_(m.size_) {}
 		FileMessage(const MiraiFile& m) :
 			id_(m.Id),
 			name_(m.FileName),
-			internalId_(m.InternalId),
 			size_(m.FileSize) {}
 		FileMessage(FileMessage&& m) noexcept
 		{
 			std::swap(this->id_, m.id_);
 			std::swap(this->name_, m.name_);
-			std::swap(this->internalId_, m.internalId_);
 			std::swap(this->size_, m.size_);
 		}
 		virtual const string& GetType() const override
@@ -48,7 +45,6 @@ namespace Cyan
 
 			id_ = json["id"].get<string>();
 			name_ = json["name"].get<string>();
-			internalId_ = json["internalId"].get<int>();
 			size_ = json["size"].get<size_t>();
 			return true;
 		}
@@ -59,7 +55,6 @@ namespace Cyan
 				{ "type", type_ },
 				{ "id", id_ },
 				{ "name", name_ },
-				{ "internalId", internalId_ },
 				{ "size", size_  }
 			};
 		}
@@ -70,9 +65,6 @@ namespace Cyan
 		const string& Name() const { return name_; }
 		void Name(const string& name) { name_ = name; }
 
-		int InternalId() const { return internalId_; }
-		void InternalId(int id) { internalId_ = id; }
-
 		size_t FileSize() const { return size_; }
 		void FileSize(size_t size) { size_ = size; }
 
@@ -80,7 +72,6 @@ namespace Cyan
 		const string type_ = "File";
 		string id_;
 		string name_;
-		int internalId_;
 		size_t size_;
 	};
 
