@@ -236,6 +236,7 @@ namespace Cyan
 
 	void MiraiBot::Reconnect()
 	{
+		pmem->eventClient.Shutdown();
 		auto& opts = *pmem->sessionOptions;
 		auto& sessionKey = pmem->sessionKey;
 		if (opts.EnableVerify.Get())
