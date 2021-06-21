@@ -65,7 +65,8 @@ int main(int argc, char* argv[])
 			{
 				try
 				{
-					bot.Connect(opts);
+					cout << "尝试与 mirai-api-http 重新建立连接..." << endl;
+					bot.Reconnect();
 					break;
 				}
 				catch (const std::exception& ex)
@@ -74,7 +75,7 @@ int main(int argc, char* argv[])
 				}
 				MiraiBot::SleepSeconds(1);
 			}
-			cout << "与 mirai-api-http 重新建立连接!" << endl;
+			cout << "成功与 mirai-api-http 重新建立连接!" << endl;
 		});
 
 	string command;
