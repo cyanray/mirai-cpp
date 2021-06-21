@@ -77,6 +77,11 @@ namespace Cyan
 		void Connect(const SessionOptions& opts);
 
 		/**
+		 * @brief 与 mirai-api-http 重新建立连接
+		*/
+		void Reconnect();
+
+		/**
 		 * @brief 释放 Session，程序结束前请必须执行一次此函数，否则可能导致 mirai-api-http 内存泄漏.
 		*/
 		void Disconnect();

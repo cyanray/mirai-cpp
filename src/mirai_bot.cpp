@@ -231,6 +231,27 @@ namespace Cyan
 			});
 	}
 
+	void MiraiBot::Reconnect()
+	{
+		pmem->eventClient.Shutdown();
+		auto& opts = *pmem->sessionOptions;
+		auto& sessionKey = pmem->sessionKey;
+		if (opts.EnableVerify.Get())
+		{
+			sessionKey = pmem->Verify(opts.VerifyKey.Get());
+		}
+		if (!opts.SingleMode.Get())
+		{
+			pmem->SessionBind(sessionKey, opts.BotQQ.Get());
+		}
+
+		pmem->eventClient.Connect(
+			opts.WebSocketHostname.Get(),
+			opts.WebSocketPort.Get(),
+			"/all?verifyKey="s.append(opts.VerifyKey.Get()).append("&sessionKey=").append(sessionKey));
+
+	}
+
 	void MiraiBot::Disconnect()
 	{
 		pmem->eventClient.Shutdown();
@@ -240,6 +261,11 @@ namespace Cyan
 	string MiraiBot::GetSessionKey() const
 	{
 		return pmem->sessionKey;
+	}
+
+	const SessionOptions& MiraiBot::GetSessionOptions() const
+	{
+		return *pmem->sessionOptions;
 	}
 
 	QQ_t MiraiBot::GetBotQQ() const
