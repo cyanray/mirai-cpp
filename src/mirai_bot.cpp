@@ -146,7 +146,7 @@ namespace Cyan
 		 * @param memberId 群成员QQ
 		 * @param name 群名片
 		 * @param specialTitle 群头衔
-		 * @return 
+		 * @return
 		*/
 		void SetGroupMemberInfo(GID_t gid, QQ_t memberId, const string& name, const string& specialTitle)
 		{
@@ -158,8 +158,8 @@ namespace Cyan
 				{ "info",
 					{
 						{ "name", name },
-						{ "specialTitle", specialTitle } 
-					} 
+						{ "specialTitle", specialTitle }
+					}
 				}
 			};
 
@@ -168,7 +168,7 @@ namespace Cyan
 		}
 	};
 
-	MiraiBot::MiraiBot(): pmem(nullptr) 
+	MiraiBot::MiraiBot() : pmem(nullptr)
 	{
 	}
 
@@ -224,13 +224,10 @@ namespace Cyan
 
 		pmem->eventClient.OnLostConnection([&](WebSocketClient& client, int code)
 			{
-				pmem->threadPool->enqueue([=]()
-					{
-						LostConnection result;
-						result.Code = code;
-						result.ErrorMessage = "与 mirai-api-http 失去连接.";
-						lostConnectionCallback(result);
-					});
+				LostConnection result;
+				result.Code = code;
+				result.ErrorMessage = "与 mirai-api-http 失去连接.";
+				lostConnectionCallback(result);
 			});
 	}
 
@@ -629,7 +626,7 @@ namespace Cyan
 			<< "&id="
 			<< parentId;
 		// 取文件列表响应比较慢
-		pmem->httpClient->set_read_timeout(60,0);
+		pmem->httpClient->set_read_timeout(60, 0);
 		auto res = pmem->httpClient->Get(api_url.str().data());
 		json re_json = ParseOrThrowException(res);
 		vector<GroupFile> result;
