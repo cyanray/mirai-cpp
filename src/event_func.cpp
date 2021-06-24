@@ -54,12 +54,11 @@ namespace Cyan
 		bot_->Recall(MessageId());
 	}
 
-	void GroupMessage::AtMe() const
+	bool GroupMessage::AtMe() const
 	{
 		auto at = MessageChain.GetAll<AtMessage>();
-		auto it = std::find_if(at.begin(), at.end(), [&](AtMessage a) {return a.Target() == bot_->GetBotQQ(); });
-		if (it != at.end()) return;
-		else return;
+		auto it = std::find_if(at.begin(), at.end(), [&](const AtMessage& a) { return a.Target() == bot_->GetBotQQ(); });
+		return it != at.end();
 	}
 
 	bool NewFriendRequestEvent::Response(int operate, const string& message)

@@ -38,7 +38,12 @@ namespace Cyan
 		MessageId_t Reply(const Cyan::MessageChain& mc) const;
 		MessageId_t QuoteReply(const Cyan::MessageChain& mc) const;
 		void Recall() const;
-		void AtMe() const;
+
+		/**
+		 * @brief 检查是否有\@机器人.
+		 * @return 如果有那么返回 true, 反之返回 false.
+		*/
+		bool AtMe() const;
 
 		virtual bool Set(const json& j) override
 		{
