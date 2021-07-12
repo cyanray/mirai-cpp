@@ -458,11 +458,8 @@ namespace Cyan
 		json re_json = ParseOrThrowException(res);
 		MiraiImage img;
 		img.Id = re_json["imageId"].get<string>();
-		img.Url = re_json["url"].get<string>();
-		if (!re_json["path"].is_null())
-		{
-			img.Path = re_json["path"].get<string>();
-		}
+		img.Url = re_json.value("url", "");
+		img.Path = re_json.value("path", "");
 		return img;
 	}
 
