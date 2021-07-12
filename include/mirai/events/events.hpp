@@ -54,4 +54,7 @@
 // 指令事件
 #include "Command.hpp"
 
+#include "LostConnection.hpp"
+#include "EventParsingError.hpp"
+
 #endif // !mirai_cpp_events_events_hpp_H_

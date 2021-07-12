@@ -18,6 +18,7 @@
 #include "mirai/events/GroupMessage.hpp"
 #include "mirai/events/Message.hpp"
 #include "mirai/events/LostConnection.hpp"
+#include "mirai/events/EventParsingError.hpp"
 #include "mirai/SessionOptions.hpp"
 
 using std::string;
@@ -452,6 +453,7 @@ namespace Cyan
 		struct pimpl;
 		pimpl* pmem = nullptr;
 		EventCallback<LostConnection> lostConnectionCallback;
+		EventCallback<EventParsingError> eventParsingErrorCallback;
 		std::unordered_multimap<MiraiEvent, CallbackInvoker> processors;
 
 		template <typename T>
@@ -509,6 +511,16 @@ namespace Cyan
 	inline MiraiBot& MiraiBot::OnEventReceived<LostConnection>(const EventCallback<LostConnection>& cb)
 	{
 		lostConnectionCallback = cb;
+		return *this;
+	}
+
+	/**
+	* @brief 对 EventParsingError 的偏特化
+	*/
+	template<>
+	inline MiraiBot& MiraiBot::OnEventReceived<EventParsingError>(const EventCallback<EventParsingError>& cb)
+	{
+		eventParsingErrorCallback = cb;
 		return *this;
 	}
 

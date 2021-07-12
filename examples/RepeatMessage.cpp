@@ -78,6 +78,18 @@ int main(int argc, char* argv[])
 			cout << "成功与 mirai-api-http 重新建立连接!" << endl;
 		});
 
+	bot.On<EventParsingError>([&](EventParsingError e)
+		{
+			try
+			{
+				e.Rethrow();
+			}
+			catch (const std::exception& ex)
+			{
+				cout << "解析事件时出现错误: " << ex.what() << endl;
+			}
+		});
+
 	string command;
 	while (cin >> command)
 	{

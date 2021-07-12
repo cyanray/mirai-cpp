@@ -202,32 +202,46 @@ namespace Cyan
 
 		pmem->eventClient.OnTextReceived([&](WebSocketClient& client, string text)
 			{
-				json event_json = json::parse(text)["data"];
-				if (!event_json.contains("type")) return;
-				string event_name = event_json["type"].get<string>();
-				MiraiEvent mirai_event = MiraiEventStr(event_name);
-				auto range = processors.equal_range(mirai_event);
-				for (auto& it = range.first; it != range.second; ++it)
+				try
 				{
-					auto& executor = it->second;
-					// 给 executor 传入 nullptr 可以创建一个 WeakEvent
-					WeakEvent pevent = executor(nullptr);
-					pevent->SetMiraiBot(this);
-					pevent->Set(event_json);
+					json event_json = json::parse(text)["data"];
+					if (!event_json.contains("type")) return;
+					string event_name = event_json["type"].get<string>();
+					MiraiEvent mirai_event = MiraiEventStr(event_name);
+					auto range = processors.equal_range(mirai_event);
+					for (auto& it = range.first; it != range.second; ++it)
+					{
+						auto& executor = it->second;
+						// 给 executor 传入 nullptr 可以创建一个 WeakEvent
+						WeakEvent pevent = executor(nullptr);
+						pevent->SetMiraiBot(this);
+						pevent->Set(event_json);
 
-					pmem->threadPool->enqueue([=]()
-						{
-							executor(pevent);
-						});
+						pmem->threadPool->enqueue([=]()
+							{
+								executor(pevent);
+							});
+					}
+
+				}
+				catch (...)
+				{
+					if (eventParsingErrorCallback)
+					{
+						eventParsingErrorCallback(EventParsingError(std::current_exception()));
+					}
 				}
 			});
 
 		pmem->eventClient.OnLostConnection([&](WebSocketClient& client, int code)
 			{
-				LostConnection result;
-				result.Code = code;
-				result.ErrorMessage = "与 mirai-api-http 失去连接.";
-				lostConnectionCallback(result);
+				if (lostConnectionCallback)
+				{
+					LostConnection result;
+					result.Code = code;
+					result.ErrorMessage = "与 mirai-api-http 失去连接.";
+					lostConnectionCallback(result);
+				}
 			});
 	}
 
