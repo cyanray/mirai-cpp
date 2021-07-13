@@ -9,7 +9,7 @@ using std::string;
 namespace Cyan
 {
 	/**
-	 * \brief 解析事件错误 (一般因为与MAH版本不同导致)
+	 * \brief 瑙ｆ瀽浜嬩欢閿欒 (涓�鑸洜涓轰笌MAH鐗堟湰涓嶅悓瀵艰嚧)
 	 */
 	class EventParsingError : public EventBase
 	{
