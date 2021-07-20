@@ -10,9 +10,11 @@ endif(MSVC)
 macro(api_exe target)
     add_executable(${target} ${target}.cpp)
     target_link_libraries(${target} mirai-cpp)
-    # gcc 要连接 pthread
     if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    target_link_libraries(${target} pthread)
+        # 链接 pthread
+        target_link_libraries(${target} pthread)
+        # 静态链接 libgcc 和 libstdc++
+        target_link_libraries(${target} -static-libgcc -static-libstdc++)
     endif()
 endmacro()
 
