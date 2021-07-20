@@ -628,6 +628,27 @@ bot.On<LostConnection>([&](LostConnection e)
     });
 ```
 
+此外，在解析事件时可能会遇到异常（比如收到了错误的 JSON），这些异常默认会被捕捉然后丢弃，你也可以使用 On 函数捕获 EventParsingError 事件来了解这些异常。
+这个事件并不常用，一般用于调试的需要。
+比如 mirai 收到了一个事件，但是 mirai-cpp 没有触发对应的事件处理函数，那么可能是因为这个事件没能被 mirai-cpp 解析。
+
+下面的代码使用 `Rethrow()` 函数重新抛出了解析事件时的异常。
+
+```c++
+	bot.On<EventParsingError>([&](EventParsingError e)
+		{
+			try
+			{
+				e.Rethrow();
+			}
+			catch (const std::exception& ex)
+			{
+				cout << "解析事件时出现错误: " << ex.what() << endl;
+			}
+		});
+```
+
+
 ## 其他
 
 ### ToJson和ToSting

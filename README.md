@@ -60,6 +60,7 @@ int main(int argc, char* argv[])
 因为其中的函数数量比较多，而且作者精力有限，因此不提供详细的使用文档，具体如何使用请查看 [MiraiBot](https://github.com/cyanray/mirai-cpp/blob/master/include/mirai/mirai_bot.hpp) 类的注释以及 [examples](https://github.com/cyanray/mirai-cpp/tree/master/examples) 目录里的示例。
 
 你可能想了解：
+* [详细示例(简易复读机Bot)](https://github.com/cyanray/mirai-cpp/blob/master/examples/RepeatMessage.cpp)
 * [详细文档](doc/Documentation.md)
 * [如何与mirai-api-http建立连接](doc/Documentation.md#如何与mirai-api-http建立连接)
 * [如何接收、处理事件](doc/Documentation.md#如何接收、处理事件)
