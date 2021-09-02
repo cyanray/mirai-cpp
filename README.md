@@ -170,5 +170,5 @@ mirai-cpp 目前还有许多不足，欢迎提出 issues 或 pull requests。
 
 > 如果你愿意分享你开发的程序，欢迎提出 issues 或 pull requests 在下方分享你的程序
 
-1. [MocliaMusic](https://github.com/Moclia-Developer-Team/MocliaMusic) : 基于Mirai-Api-Http和Mirai-cpp的点歌项目
+1. [MocliaParseBot](https://github.com/Moclia-Developer-Team/MocliaParseBot) : 基于Mirai-Api-Http和Mirai-cpp的全平台网络服务群QQ解析项目
 
