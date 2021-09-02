@@ -490,7 +490,7 @@ if(a==b) // true
 
 ```c++
 MessageChain a = MessageChain().Plain("你好!").Face(14);
-for(std::shared_ptr<IMessage> m : mc)
+for(std::shared_ptr<IMessage> m : a)
 {
     // ...
 }
