@@ -2,9 +2,11 @@
 #ifndef mirai_cpp_defs_group_file_hpp_H_
 #define mirai_cpp_defs_group_file_hpp_H_
 #include <memory>
+#include <optional>
 #include "mirai/third-party/nlohmann/json.hpp"
 #include "mirai/defs/qq_types.hpp"
 #include "serializable.hpp"
+#include "FileDownloadInfo.hpp"
 using std::shared_ptr;
 
 namespace Cyan
@@ -17,6 +19,11 @@ namespace Cyan
 		 * @brief 是否为目录
 		*/
 		bool IsDirectory = false;
+
+		/**
+		 * @brief 文件大小
+		*/
+		int Size = 0;
 
 		/**
 		 * @brief 文件名称
@@ -43,8 +50,14 @@ namespace Cyan
 		*/
 		std::shared_ptr<GroupFile> ParentDirectory = nullptr;
 
+		/**
+		 * @brief 文件下载信息
+		*/
+		std::optional<FileDownloadInfo> DownloadInfo = std::nullopt;
+
 		virtual bool Set(const json& j) override
 		{
+			Size = j["size"].get<int64_t>();
 			Name = j["name"].get<string>();
 			Id = j["id"].get<string>();
 			Path = j["path"].get<string>();
@@ -55,6 +68,12 @@ namespace Cyan
 				ParentDirectory = std::make_shared<GroupFile>();
 				ParentDirectory->Set(j["parent"]);
 			}
+			if (!j["downloadInfo"].is_null())
+			{
+				FileDownloadInfo t;
+				t.Set(j["downloadInfo"]);
+				DownloadInfo = t;
+			}
 			return true;
 		}
 		virtual json ToJson() const override
@@ -64,10 +83,12 @@ namespace Cyan
 				{ "name", Name },
 				{ "id", Id },
 				{ "path", Path },
+				{ "size", Size },
 				{ "contact", Group.ToJson() },
 				{ "isFile", !IsDirectory },
-				{ "isDictionary", IsDirectory },
-				{ "parent", ParentDirectory != nullptr ? ParentDirectory->ToJson() : RootDirectoryJson() }
+				{ "isDirectory", IsDirectory },
+				{ "parent", ParentDirectory != nullptr ? ParentDirectory->ToJson() : RootDirectoryJson() },
+				{ "downloadInfo", DownloadInfo ? DownloadInfo->ToJson() : json(nullptr) }
 			};
 		}
 	private:
@@ -77,10 +98,12 @@ namespace Cyan
 			{
 				{ "id", json(nullptr) },
 				{ "parent", json(nullptr) },
+				{ "downloadInfo", json(nullptr) },
 				{ "name", "" },
 				{ "path", "/" },
+				{ "Size", 0 },
 				{ "isFile", false },
-				{ "isDictionary", true },
+				{ "isDirectory", true },
 				{ "contact", Group.ToJson() }
 			};
 		}

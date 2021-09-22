@@ -48,7 +48,7 @@ namespace Cyan
 		 */
 		inline string GetMiraiCppVersion() const
 		{
-			return "2.0.2";
+			return "2.2.0";
 		}
 
 		std::shared_ptr<httplib::Client> GetHttpClient();
@@ -73,7 +73,7 @@ namespace Cyan
 
 		/**
 		 * @brief 与 mirai-api-http 建立连接
-		 * @param opts 
+		 * @param opts
 		*/
 		void Connect(const SessionOptions& opts);
 
@@ -214,27 +214,23 @@ namespace Cyan
 		/**
 		 * @brief 获取群文件列表
 		 * @param gid 群组(GID_t)
+		 * @param offset 分页偏移
+		 * @param size 分页大小
+		 * @param parentId 父目录ID
+		 * @param withDownloadInfo 获取下载信息(需要较长时间)
 		 * @return 群文件列表
 		*/
-		vector<GroupFile> GetGroupFiles(const GID_t& gid, const string& parentId = "");
+		vector<GroupFile> GetGroupFiles(const GID_t& gid, bool withDownloadInfo = false, int offset = 0, int size = 20, const string& parentId = "");
 
 		/**
 		 * @brief 通过群文件Id获取GroupFile对象
 		 * @param gid 群组(GID_t)
 		 * @param groupFileId 群文件Id
+		 * @param withDownloadInfo 获取下载信息(需要较长时间)
 		 * @return GroupFile
 		*/
-		GroupFile GetGroupFilById(const GID_t& gid, const string& groupFileId);
+		GroupFile GetGroupFilById(const GID_t& gid, const string& groupFileId, bool withDownloadInfo = false);
 
-		/**
-		 * @brief 获取群文件详细信息
-		 * @param gid 群组(GID_t)
-		 * @param groupFile 群文件(GroupFile)
-		 * @return GroupFileInfo
-		*/
-		GroupFileInfo GetGroupFileInfo(GID_t gid, const GroupFile& groupFile);
-
-		
 		/**
 		 * @brief 创建群文件夹
 		 * @param target 目标群(GID_t)
@@ -483,7 +479,7 @@ namespace Cyan
 				}
 			};
 		}
-		
+
 		template <typename T>
 		void StoreCallbackInvoker(CallbackInvoker);
 	};

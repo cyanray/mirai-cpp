@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
 			// 取群列表的第一个群
 			auto& group = groups.front();
 			// 获取该群的群文件列表
-			vector<GroupFile> fileList = bot.GetGroupFiles(group.GID);
+			vector<GroupFile> fileList = bot.GetGroupFiles(group.GID, true);
 			if (fileList.empty())
 			{
 				cout << "这个群没有群文件!" << endl;
@@ -33,6 +33,10 @@ int main(int argc, char* argv[])
 			for (int i = 0; i < fileList.size(); i++)
 			{
 				cout << i << ". " << fileList[i].Name << endl;
+				if (fileList[i].DownloadInfo)
+				{
+					cout << fileList[i].DownloadInfo->ToString() << endl;
+				}
 			}
 		}
 		else
