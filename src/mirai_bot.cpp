@@ -184,7 +184,7 @@ namespace Cyan
 		pmem->sessionOptions = std::make_shared<SessionOptions>(opts);
 		pmem->threadPool = std::make_unique<ThreadPool>(opts.ThreadPoolSize.Get());
 		pmem->httpClient = std::make_shared<httplib::Client>(opts.HttpHostname.Get(), opts.HttpPort.Get());
-		pmem->botQQ = opts.BotQQ.Get();
+
 		string& sessionKey = pmem->sessionKey;
 		if (opts.EnableVerify.Get())
 		{
@@ -192,7 +192,14 @@ namespace Cyan
 		}
 		if (!opts.SingleMode.Get())
 		{
+			pmem->botQQ = opts.BotQQ.Get();
 			pmem->SessionBind(sessionKey, opts.BotQQ.Get());
+		}
+		else
+		{
+			auto info = GetSessionInfo();
+			pmem->sessionOptions->BotQQ = info.QQ;
+			pmem->botQQ = info.QQ;
 		}
 
 		pmem->eventClient.Connect(
@@ -970,4 +977,15 @@ namespace Cyan
 		auto res = pmem->httpClient->Post("/cmd/execute", data.dump(), CONTENT_TYPE.c_str());
 		ParseOrThrowException(res);
 	}
+
+	Friend_t MiraiBot::GetSessionInfo()
+	{
+		auto res = pmem->httpClient->Get("/sessionInfo?sessionKey="s.append(pmem->sessionKey).data());
+		json re_json = ParseOrThrowException(res);
+		Friend_t result;
+		result.Set(re_json["data"]["qq"]);
+		return result;
+
+	}
+
 } // namespace Cyan

@@ -411,6 +411,12 @@ namespace Cyan
 		void SendCommand(const vector<string>& command);
 
 		/**
+		 * @brief 获取 Session 信息
+		 * @return 关于 Bot 的信息
+		*/
+		Friend_t GetSessionInfo();
+
+		/**
 		 * \brief 监听事件
 		 * \tparam T 事件类型
 		 * \param ep 事件处理函数
