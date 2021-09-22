@@ -48,7 +48,7 @@ namespace Cyan
 		 */
 		inline string GetMiraiCppVersion() const
 		{
-			return "2.0.2";
+			return "2.1.0";
 		}
 
 		std::shared_ptr<httplib::Client> GetHttpClient();
