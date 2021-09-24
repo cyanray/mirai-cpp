@@ -19,7 +19,7 @@ namespace Cyan
 	{
 	public:
 		Group_t Group;
-		std::optional<GroupMember> Inviter;
+		std::optional<GroupMember> Operator;
 
 		static MiraiEvent GetMiraiEvent()
 		{
@@ -29,11 +29,11 @@ namespace Cyan
 		virtual bool Set(const json& j) override
 		{
 			this->Group.Set(j["group"]);
-			if (!j["invitor"].is_null())
+			if (!j["operator"].is_null())
 			{
 				GroupMember tmp;
-				tmp.Set(j["invitor"]);
-				this->Inviter = tmp;
+				tmp.Set(j["operator"]);
+				this->Operator = tmp;
 			}
 			return true;
 		}
@@ -42,8 +42,7 @@ namespace Cyan
 			json j = json::object();
 			j["type"] = "BotLeaveEventKick";
 			j["group"] = this->Group.ToJson();
-			// Not a typo, MAH made a typo.
-			j["invitor"] = (Inviter ? this->Inviter->ToJson() : json(nullptr));
+			j["operator"] = (Operator ? this->Operator->ToJson() : json(nullptr));
 			return j;
 		}
 
