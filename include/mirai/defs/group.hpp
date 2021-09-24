@@ -9,13 +9,27 @@
 namespace Cyan
 {
 
-	// 群组数据格式
+	/**
+	 * @brief QQ群
+	*/
 	class Group_t : public ISerializable
 	{
 	public:
+		/**
+		 * @brief 群号码
+		*/
 		GID_t GID;
+
+		/**
+		 * @brief 群昵称
+		*/
 		string Name;
+
+		/**
+		 * @brief 机器人在该群的权限
+		*/
 		GroupPermission Permission = GroupPermission::Member;
+
 		virtual bool Set(const json& j) override
 		{
 			GID = GID_t(j["id"].get<int64_t>());

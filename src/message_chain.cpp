@@ -1,5 +1,6 @@
 #include "mirai/defs/message_chain.hpp"
 #include "mirai/defs/simple_reflect.hpp"
+#include "mirai/messages/messages.hpp"
 
 namespace Cyan
 {
@@ -22,6 +23,9 @@ namespace Cyan
 			factory_.Register<PokeMessage>("Poke");
 			factory_.Register<QuoteMessage>("Quote");
 			factory_.Register<FileMessage>("File");
+			factory_.Register<DiceMessage>("Dice");
+			factory_.Register<ForwardMessage>("Forward");
+			factory_.Register<MusicShare>("MusicShare");
 		}
 	}
 
@@ -101,7 +105,7 @@ namespace Cyan
 	{
 		using std::stringstream;
 		stringstream ss;
-		for (auto m : messages_)
+		for (const auto& m : messages_)
 		{
 			if (m->GetType() == "Plain")
 			{
@@ -118,7 +122,7 @@ namespace Cyan
 
 	string MessageChain::GetPlainTextFirst() const
 	{
-		for (auto m : messages_)
+		for (const auto& m : messages_)
 		{
 			if (m->GetType() == "Plain")
 			{
@@ -149,8 +153,9 @@ namespace Cyan
 				this->messageId_ = 0;
 				this->timestamp_ = 0;
 			}
-
-			for (size_t i = 1; i < j.size(); i++)
+			// ForwardMessage::Node 中的 MessageChain 没有 Source
+			// 因此从 0 开始，防止漏掉消息
+			for (size_t i = 0; i < j.size(); i++)
 			{
 				auto msg_ptr = factory_.DynamicCreate(j[i]["type"]);
 				if (msg_ptr)

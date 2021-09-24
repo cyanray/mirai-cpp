@@ -9,13 +9,27 @@
 namespace Cyan
 {
 
-	// 好友数据格式
+	/**
+	 * @brief QQ好友
+	*/
 	class Friend_t : public ISerializable
 	{
 	public:
+		/**
+		 * @brief QQ号
+		*/
 		QQ_t QQ;
+
+		/**
+		 * @brief 昵称
+		*/
 		string NickName;
+
+		/**
+		 * @brief 备注
+		*/
 		string Remark;
+
 		virtual bool Set(const json& j) override
 		{
 			QQ = QQ_t(j["id"].get<int64_t>());

@@ -7,16 +7,42 @@
 
 namespace Cyan
 {
-	// 群设置
+	/**
+	 * @brief 群设置
+	*/
 	class GroupConfig : public ISerializable
 	{
 	public:
+		/**
+		 * @brief 群名称
+		*/
 		string Name;
+
+		/**
+		 * @brief 群公告
+		*/
 		string Announcement;
+
+		/**
+		 * @brief 是否允许坦白说
+		*/
 		bool ConfessTalk = false;
+
+		/**
+		 * @brief 是否允许群成员邀请入群
+		*/
 		bool AllowMemberInvite = false;
+
+		/**
+		 * @brief 是否自动批准入群
+		*/
 		bool AutoApprove = false;
+
+		/**
+		 * @brief 是否允许匿名聊天
+		*/
 		bool AnonymousChat = false;
+
 		virtual bool Set(const json& j) override
 		{
 			Name = j["name"].get<string>();
@@ -27,6 +53,7 @@ namespace Cyan
 			AnonymousChat = j["anonymousChat"].get<bool>();
 			return true;
 		}
+
 		virtual json ToJson() const override
 		{
 			json j = json::object();

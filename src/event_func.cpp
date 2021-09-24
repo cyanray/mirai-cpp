@@ -5,6 +5,17 @@
 #include "mirai/events/events.hpp"
 #include "mirai/third-party/httplib.h"
 
+// fu*k windows.h
+#ifdef max
+#undef max
+#endif
+#ifdef SendMessage
+#undef SendMessage
+#endif
+#ifdef CreateEvent
+#undef CreateEvent
+#endif
+
 namespace Cyan
 {
 
@@ -38,17 +49,16 @@ namespace Cyan
 		return bot_->SendMessage(Sender.Group.GID, mc, MessageId());
 	}
 
-	bool GroupMessage::Recall() const
+	void GroupMessage::Recall() const
 	{
-		return bot_->Recall(MessageId());
+		bot_->Recall(MessageId());
 	}
 
 	bool GroupMessage::AtMe() const
 	{
 		auto at = MessageChain.GetAll<AtMessage>();
-		auto it = std::find_if(at.begin(), at.end(), [&](AtMessage a) {return a.Target() == bot_->GetBotQQ(); });
-		if (it != at.end()) return true;
-		else return false;
+		auto it = std::find_if(at.begin(), at.end(), [&](const AtMessage& a) { return a.Target() == bot_->GetBotQQ(); });
+		return it != at.end();
 	}
 
 	bool NewFriendRequestEvent::Response(int operate, const string& message)
@@ -94,7 +104,7 @@ namespace Cyan
 		return true;
 	}
 
-	bool Cyan::BotInvitedJoinGroupRequestEvent::Response(int operate, const string& message)
+	bool BotInvitedJoinGroupRequestEvent::Response(int operate, const string& message)
 	{
 		json data =
 		{
@@ -137,14 +147,4 @@ namespace Cyan
 		}
 	}
 	
-	bool Command::SenderIsManager()
-	{
-		// 控制台发来的指令，算作是Manager
-		if (this->Sender.ToInt64() == 0) return true;
-		vector<QQ_t> managers = this->GetMiraiBot().GetManagers();
-		auto it = std::find_if(managers.begin(), managers.end(), 
-			[&](QQ_t q) { return q.ToInt64() == this->Sender.ToInt64(); });
-		return it != managers.end();
-	}
-
 }

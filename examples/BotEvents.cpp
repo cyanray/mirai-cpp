@@ -2,37 +2,26 @@
 // 使用静态库必须要在引入 mirai.h 前定义这个宏
 #define MIRAICPP_STATICLIB
 #include <mirai/mirai_bot.hpp>
-#include <mirai/events/bot_join_group.hpp>
-#include <mirai/events/bot_mute_event.hpp>
-#include <mirai/events/bot_unmute_event.hpp>
-#include <mirai/events/bot_leave_kick.hpp>
-#include <mirai/events/bot_online_event.hpp>
-#include <mirai/events/bot_offline_active.hpp>
-#include <mirai/events/bot_offline_force.hpp>
-#include <mirai/events/bot_offline_dropped.hpp>
-#include <mirai/events/bot_relogin_event.hpp>
-#include <mirai/events/bot_invited_join_group_request_event.hpp>
+#include <mirai/events/BotJoinGroupEvent.hpp>
+#include <mirai/events/BotMuteEvent.hpp>
+#include <mirai/events/BotUnmuteEvent.hpp>
+#include <mirai/events/BotLeaveEventKick.hpp>
+#include <mirai/events/BotOnlineEvent.hpp>
+#include <mirai/events/BotOfflineEventActive.hpp>
+#include <mirai/events/BotOfflineEventForce.hpp>
+#include <mirai/events/BotOfflineEventDropped.hpp>
+#include <mirai/events/BotReloginEvent.hpp>
+#include <mirai/events/BotInvitedJoinGroupRequestEvent.hpp>
+using namespace std;
+using namespace Cyan;
 
-int main()
+int main(int argc, char* argv[])
 {
-	using namespace std;
-	using namespace Cyan;
 	system("chcp 65001");
-	MiraiBot bot("127.0.0.1", 539);
-	while (true)
-	{
-		try
-		{
-			bot.Auth("INITKEY7A3O1a9v", 1589588851_qq);
-			break;
-		}
-		catch (const std::exception& ex)
-		{
-			cout << ex.what() << endl;
-		}
-		MiraiBot::SleepSeconds(1);
-	}
-	cout << "成功登录 bot。" << endl;
+	MiraiBot bot;
+	SessionOptions opts = SessionOptions::FromCommandLine(argc, argv);
+	bot.Connect(opts);
+	cout << "Bot working..." << endl;
 
 	bot.On<BotMuteEvent>(
 		[&](BotMuteEvent e)
@@ -44,6 +33,7 @@ int main()
 		[&](BotUnmuteEvent e)
 		{
 			bot.SendMessage(e.Operator.Group.GID,
+
 				MessageChain().Plain("👴 出狱了!"));
 		});
 
@@ -98,7 +88,14 @@ int main()
 			e.Accept();
 		});
 
-	bot.EventLoop();
-
+	string command;
+	while (cin >> command)
+	{
+		if (command == "exit")
+		{
+			bot.Disconnect();
+			break;
+		}
+	}
 	return 0;
 }
