@@ -413,6 +413,14 @@ namespace Cyan
 		Friend_t GetSessionInfo();
 
 		/**
+		 * @brief 设置群成员管理员
+		 * @param group 群号码
+		 * @param member 成员号码
+		 * @param assign 赋值(true: 设置为管理员; false: 取消管理员;)
+		*/
+		void SetGroupAdmin(const GID_t& group, const QQ_t& member, bool assign);
+
+		/**
 		 * \brief 监听事件
 		 * \tparam T 事件类型
 		 * \param ep 事件处理函数

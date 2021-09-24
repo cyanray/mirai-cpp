@@ -976,7 +976,19 @@ namespace Cyan
 		Friend_t result;
 		result.Set(re_json["data"]["qq"]);
 		return result;
+	}
 
+	void MiraiBot::SetGroupAdmin(const GID_t& group, const QQ_t& member, bool assign)
+	{
+		json data =
+		{
+			{ "sessionKey", pmem->sessionKey },
+			{ "target", int64_t(group) },
+			{ "memberId", int64_t(member) },
+			{ "assign", assign }
+		};
+		auto res = pmem->httpClient->Post("/memberAdmin", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
 	}
 
 } // namespace Cyan
