@@ -41,7 +41,12 @@ namespace Cyan
 				{
 					return (m_ptr->path_ == this->path_);
 				}
-				// 三个参数都为空，两个空的 ImageMessage 当然是相等的：
+				// 如果 path 都为空，那么用 base64 再判断一下
+				if (!m_ptr->base64_.empty() || !this->base64_.empty())
+				{
+					return (m_ptr->base64_ == this->base64_);
+				}
+				// 所有参数都为空，两个空的 ImageMessage 当然是相等的：
 				return true;
 			}
 			// 类型都不同，直接不相等：
@@ -61,16 +66,19 @@ namespace Cyan
 				url_ = json["url"].get<string>();
 			if (!json["path"].is_null())
 				path_ = json["path"].get<string>();
+			if (!json["base64"].is_null())
+				base64_ = json["base64"].get<string>();
 			return true;
 		}
 		virtual json ToJson() const override
 		{
 			return
 			{
-				{ "type", type_ },
+				{ "type", GetType() },
 				{ "imageId", imageId_ },
 				{ "url", url_ },
-				{ "path", path_ }
+				{ "path", path_ },
+				{ "base64", base64_ }
 			};
 		}
 		virtual ~ImageMessage() {}
@@ -84,12 +92,23 @@ namespace Cyan
 			return tmp;
 		}
 
+		string Base64() const
+		{
+			return base64_;
+		}
+
+		void Base64(const string& v)
+		{
+			base64_ = v;
+		}
+
 	private:
 		const string type_ = "Image";
 	protected:
 		string imageId_;
 		string url_;
 		string path_;
+		string base64_;
 	};
 
 }
