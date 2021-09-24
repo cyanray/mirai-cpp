@@ -2,8 +2,13 @@
 #ifndef mirai_cpp_defs_messages_file_message_hpp_H_
 #define mirai_cpp_defs_messages_file_message_hpp_H_
 
+#include <string>
+#include <string_view>
 #include "mirai/defs/message_interface.hpp"
 #include "mirai/defs/qq_types.hpp"
+using std::string;
+using std::string_view;
+
 
 namespace Cyan
 {
@@ -60,10 +65,10 @@ namespace Cyan
 		}
 
 		const string& Id() const { return id_; }
-		void Id(const string& id) { id_ = id; }
+		void Id(std::string_view id) { id_ = id; }
 
 		const string& Name() const { return name_; }
-		void Name(const string& name) { name_ = name; }
+		void Name(std::string_view name) { name_ = name; }
 
 		size_t FileSize() const { return size_; }
 		void FileSize(size_t size) { size_ = size; }

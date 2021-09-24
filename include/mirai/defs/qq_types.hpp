@@ -134,6 +134,10 @@ namespace Cyan
 		string Id;
 		string Url;
 		string Path;
+		/**
+		 * @brief 语音长度
+		*/
+		size_t Length;
 	};
 
 	/**
@@ -143,6 +147,9 @@ namespace Cyan
 	{
 		string Id;
 		string FileName;
+		/**
+		 * @brief 文件大小
+		*/
 		size_t FileSize = 0;
 		int InternalId = 102;
 	};

@@ -12,6 +12,6 @@
 #include "profile.hpp"
 #include "group_config.hpp"
 #include "group_file.hpp"
-#include "group_file_info.hpp"
+#include "FileDownloadInfo.hpp"
 
 #endif // !mirai_cpp_defs_defs_hpp_H_

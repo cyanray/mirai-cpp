@@ -2,7 +2,11 @@
 #ifndef mirai_cpp_defs_messages_plain_message_hpp_H_
 #define mirai_cpp_defs_messages_plain_message_hpp_H_
 
+#include <string>
+#include <string_view>
 #include "mirai/defs/message_interface.hpp"
+using std::string;
+using std::string_view;
 
 namespace Cyan
 {
@@ -10,9 +14,7 @@ namespace Cyan
 	{
 	public:
 		PlainMessage() : text_() {}
-		template<int N>
-		PlainMessage(const char(&text)[N] ) : text_(text, N) {}
-		PlainMessage(const string& text) : text_(text) {}
+		PlainMessage(std::string_view text) : text_(text) {}
 		PlainMessage(const PlainMessage& m) :text_(m.text_) {}
 		PlainMessage(PlainMessage&& m) noexcept
 		{
@@ -52,7 +54,7 @@ namespace Cyan
 		virtual ~PlainMessage() {}
 
 		const string& Text() const { return text_; }
-		void Text(const string& text) { this->text_ = text; }
+		void Text(std::string_view text) { this->text_ = text; }
 
 	private:
 		const string type_ = "Plain";

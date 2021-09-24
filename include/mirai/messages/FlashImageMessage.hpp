@@ -17,16 +17,6 @@ namespace Cyan
 		{
 			return type_;
 		}
-		virtual json ToJson() const override
-		{
-			return
-			{
-				{ "type", type_ },
-				{ "imageId", ImageMessage::imageId_ },
-				{ "url", ImageMessage::url_ },
-				{ "path", ImageMessage::path_ }
-			};
-		}
 	private:
 		const string type_ = "FlashImage";
 	};

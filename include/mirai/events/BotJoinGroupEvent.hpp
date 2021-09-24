@@ -2,9 +2,12 @@
 #ifndef mirai_cpp_events_BotJoinGroupEvent_hpp_H_
 #define mirai_cpp_events_BotJoinGroupEvent_hpp_H_
 
+#include <optional>
 #include "mirai/third-party/nlohmann/json.hpp"
 #include "event_interface.hpp"
 #include "mirai/defs/group.hpp"
+#include "mirai/defs/group_member.hpp"
+using std::optional;
 
 namespace Cyan
 {
@@ -16,6 +19,7 @@ namespace Cyan
 	{
 	public:
 		Group_t Group;
+		std::optional<GroupMember> Inviter;
 
 		static MiraiEvent GetMiraiEvent()
 		{
@@ -25,6 +29,12 @@ namespace Cyan
 		virtual bool Set(const json& j) override
 		{
 			this->Group.Set(j["group"]);
+			if (!j["invitor"].is_null())
+			{
+				GroupMember tmp;
+				tmp.Set(j["invitor"]);
+				this->Inviter = tmp;
+			}
 			return true;
 		}
 		
@@ -33,6 +43,9 @@ namespace Cyan
 			json j = json::object();
 			j["type"] = "BotJoinGroupEvent";
 			j["group"] = this->Group.ToJson();
+			// Not a typo, MAH made a typo.
+			j["invitor"] = (Inviter ? this->Inviter->ToJson() : json(nullptr));
+			
 			return j;
 		}
 	};

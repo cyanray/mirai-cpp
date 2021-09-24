@@ -1,7 +1,12 @@
 #pragma once
 #ifndef mirai_cpp_defs_messages_app_message_hpp_H_
 #define mirai_cpp_defs_messages_app_message_hpp_H_
+
+#include <string>
+#include <string_view>
 #include "mirai/defs/message_interface.hpp"
+using std::string;
+using std::string_view;
 
 namespace Cyan
 {
@@ -9,7 +14,7 @@ namespace Cyan
 	{
 	public:
 		AppMessage() : content_() {}
-		AppMessage(const string& content) : content_(content) {}
+		AppMessage(std::string_view content) : content_(content) {}
 		AppMessage(const AppMessage& m) : content_(m.content_) {}
 		AppMessage(AppMessage&& m) noexcept
 		{
@@ -49,7 +54,7 @@ namespace Cyan
 		virtual ~AppMessage() {}
 
 		const string& Content() const { return content_; }
-		void Content(const string& content) { this->content_ = content; }
+		void Content(std::string_view content) { this->content_ = content; }
 
 	private:
 		const string type_ = "App";

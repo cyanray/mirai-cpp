@@ -18,6 +18,8 @@ namespace Cyan
 			std::swap(this->voiceId_, m.voiceId_);
 			std::swap(this->url_, m.url_);
 			std::swap(this->path_, m.path_);
+			std::swap(this->base64_, m.base64_);
+			std::swap(this->length_, m.length_);
 		}
 		virtual const string& GetType() const override
 		{
@@ -42,7 +44,12 @@ namespace Cyan
 				{
 					return (m_ptr->path_ == this->path_);
 				}
-				// 三个参数都为空，两个空的 VoiceMessage 当然是相等的：
+				// 如果 path 都为空，那么用 base64 再判断一下
+				if (!m_ptr->base64_.empty() || !this->base64_.empty())
+				{
+					return (m_ptr->base64_ == this->base64_);
+				}
+				// 所有参数都为空，两个空的 VoiceMessage 当然是相等的：
 				return true;
 			}
 			// 类型都不同，直接不相等：
@@ -62,6 +69,10 @@ namespace Cyan
 				url_ = json["url"].get<string>();
 			if (!json["path"].is_null())
 				path_ = json["path"].get<string>();
+			if (!json["base64"].is_null())
+				base64_ = json["base64"].get<string>();
+			if (!json["length"].is_null())
+				length_ = json["length"].get<size_t>();
 			return true;
 		}
 		virtual json ToJson() const override
@@ -71,7 +82,9 @@ namespace Cyan
 				{ "type", type_ },
 				{ "voiceId", voiceId_ },
 				{ "url", url_ },
-				{ "path", path_ }
+				{ "path", path_ },
+				{ "base64", base64_ },
+				{ "length", length_ }
 			};
 		}
 		virtual ~VoiceMessage() {}
@@ -82,15 +95,34 @@ namespace Cyan
 			tmp.Id = voiceId_;
 			tmp.Url = url_;
 			tmp.Path = path_;
+			tmp.Length = length_;
 			return tmp;
 		}
+
+		const string& Id() const { return voiceId_; }
+		void Id(std::string_view id) { voiceId_ = id; }
+
+		const string& Url() const { return url_; }
+		void Url(std::string_view url) { url_ = url; }
+
+		const string& Path() const { return path_; }
+		void Path(std::string_view path) { path_ = path; }
+
+		const string& Base64() const { return base64_; }
+		void Base64(const string& v) { base64_ = v; }
+
+		size_t Length() const { return length_; }
+		void Length(size_t v) { length_ = v; }
+
 
 	private:
 		const string type_ = "Voice";
 	protected:
+		size_t length_;
 		string voiceId_;
 		string url_;
 		string path_;
+		string base64_;
 	};
 
 }
