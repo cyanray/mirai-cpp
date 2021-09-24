@@ -7,7 +7,7 @@
 #include "event_interface.hpp"
 #include "mirai/defs/group.hpp"
 #include "mirai/defs/group_member.hpp"
-std::optional;
+using std::optional;
 
 namespace Cyan
 {
