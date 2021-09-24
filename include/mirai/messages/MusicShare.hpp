@@ -1,10 +1,13 @@
 #pragma once
 #ifndef mirai_cpp_defs_messages_MusicShare_hpp_H_
 #define mirai_cpp_defs_messages_MusicShare_hpp_H_
+
+#include <string>
+#include <string_view>
 #include "mirai/defs/message_interface.hpp"
 #include "mirai/defs/MusicShareKind.hpp"
-#include <string>
 using std::string;
+using std::string_view;
 
 namespace Cyan
 {
@@ -69,22 +72,22 @@ namespace Cyan
 		void Kind(MusicShareKind value) { kind_ = value; }
 
 		string Title() const { return title_; }
-		void Title(const string& value) { title_ = value; }
+		void Title(std::string_view value) { title_ = value; }
 
 		string Summary() const { return summary_; }
-		void Summary(const string& value) { summary_ = value; }
+		void Summary(std::string_view value) { summary_ = value; }
 
 		string Brief() const { return brief_; }
-		void Brief(const string& value) { brief_ = value; }
+		void Brief(std::string_view value) { brief_ = value; }
 
 		string JumUrl() const { return jumpUrl_; }
-		void JumUrl(const string& value) { jumpUrl_ = value; }
+		void JumUrl(std::string_view value) { jumpUrl_ = value; }
 
 		string PictureUrl() const { return pictureUrl_; }
-		void PictureUrl(const string& value) { pictureUrl_ = value; }
+		void PictureUrl(std::string_view value) { pictureUrl_ = value; }
 
 		string MusicUrl() const { return musicUrl_; }
-		void MusicUrl(const string& value) { musicUrl_ = value; }
+		void MusicUrl(std::string_view value) { musicUrl_ = value; }
 
 	private:
 		const string type_ = "MusicShare";

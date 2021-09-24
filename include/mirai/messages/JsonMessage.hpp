@@ -2,7 +2,11 @@
 #ifndef mirai_cpp_defs_messages_json_message_hpp_H_
 #define mirai_cpp_defs_messages_json_message_hpp_H_
 
+#include <string>
+#include <string_view>
 #include "mirai/defs/message_interface.hpp"
+using std::string;
+using std::string_view;
 
 namespace Cyan
 {
@@ -10,7 +14,7 @@ namespace Cyan
 	{
 	public:
 		JsonMessage() : json_() {}
-		JsonMessage(const string& json) : json_(json) {}
+		JsonMessage(std::string_view json) : json_(json) {}
 		JsonMessage(const JsonMessage& m) : json_(m.json_) {}
 		JsonMessage(JsonMessage&& m) noexcept
 		{
@@ -50,7 +54,7 @@ namespace Cyan
 		virtual ~JsonMessage() {}
 
 		const string& Json() const { return json_; }
-		void Json(const string& json) { this->json_ = json; }
+		void Json(std::string_view json) { this->json_ = json; }
 
 	private:
 		const string type_ = "Plain";

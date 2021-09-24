@@ -92,15 +92,17 @@ namespace Cyan
 			return tmp;
 		}
 
-		string Base64() const
-		{
-			return base64_;
-		}
+		const string& Id() const { return imageId_; }
+		void Id(std::string_view id) { imageId_ = id; }
 
-		void Base64(const string& v)
-		{
-			base64_ = v;
-		}
+		const string& Url() const { return url_; }
+		void Url(std::string_view url) { url_ = url; }
+
+		const string& Path() const { return path_; }
+		void Path(std::string_view path) { path_ = path; }
+
+		const string& Base64() const { return base64_; }
+		void Base64(const string& v) { base64_ = v; }
 
 	private:
 		const string type_ = "Image";

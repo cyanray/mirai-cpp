@@ -2,7 +2,11 @@
 #ifndef mirai_cpp_defs_messages_xml_message_hpp_H_
 #define mirai_cpp_defs_messages_xml_message_hpp_H_
 
+#include <string>
+#include <string_view>
 #include "mirai/defs/message_interface.hpp"
+using std::string;
+using std::string_view;
 
 namespace Cyan
 {
@@ -10,9 +14,7 @@ namespace Cyan
 	{
 	public:
 		XmlMessage() : xml_() {}
-		XmlMessage(const string& xml) : xml_(xml) {}
-		template<int N>
-		XmlMessage(const char(&xml)[N]) : xml_(xml, N) {}
+		XmlMessage(std::string_view xml) : xml_(xml) {}
 		XmlMessage(const XmlMessage& m) : xml_(m.xml_) {}
 		XmlMessage(XmlMessage&& m) noexcept
 		{
@@ -52,7 +54,7 @@ namespace Cyan
 		virtual ~XmlMessage() {}
 
 		const string& Xml() const { return xml_; }
-		void Xml(const string& xml) { this->xml_ = xml; }
+		void Xml(std::string_view xml) { this->xml_ = xml; }
 
 	private:
 		const string type_ = "Xml";
