@@ -229,7 +229,7 @@ namespace Cyan
 		 * @param withDownloadInfo 获取下载信息(需要较长时间)
 		 * @return GroupFile
 		*/
-		GroupFile GetGroupFilById(const GID_t& gid, const string& groupFileId, bool withDownloadInfo = false);
+		GroupFile GetGroupFileById(const GID_t& gid, const string& groupFileId, bool withDownloadInfo = false);
 
 		/**
 		 * @brief 创建群文件夹
