@@ -21,7 +21,7 @@ namespace Cyan
 		/**
 		 * @brief 群公告
 		*/
-		string Announcement;
+//		string Announcement;
 
 		/**
 		 * @brief 是否允许坦白说
@@ -46,7 +46,7 @@ namespace Cyan
 		virtual bool Set(const json& j) override
 		{
 			Name = j["name"].get<string>();
-			Announcement = j["announcement"].get<string>();
+//			Announcement = j["announcement"].get<string>();
 			ConfessTalk = j["confessTalk"].get<bool>();
 			AllowMemberInvite = j["allowMemberInvite"].get<bool>();
 			AutoApprove = j["autoApprove"].get<bool>();
@@ -58,7 +58,7 @@ namespace Cyan
 		{
 			json j = json::object();
 			j["name"] = Name;
-			j["announcement"] = Announcement;
+//			j["announcement"] = Announcement;
 			j["confessTalk"] = ConfessTalk;
 			j["allowMemberInvite"] = AllowMemberInvite;
 			j["autoApprove"] = AutoApprove;
