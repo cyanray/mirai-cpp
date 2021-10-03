@@ -137,7 +137,7 @@ namespace Cyan
 		/**
 		 * @brief 语音长度
 		*/
-		size_t Length;
+		size_t Length = 0;
 	};
 
 	/**
