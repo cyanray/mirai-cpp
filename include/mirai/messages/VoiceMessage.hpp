@@ -11,8 +11,8 @@ namespace Cyan
 	{
 	public:
 		VoiceMessage() {}
-		VoiceMessage(const MiraiVoice& m) : voiceId_(m.Id), url_(m.Url), path_(m.Path) {}
-		VoiceMessage(const VoiceMessage& m) : voiceId_(m.voiceId_), url_(m.voiceId_), path_(m.path_) {}
+		VoiceMessage(const MiraiVoice& m) : voiceId_(m.Id), url_(m.Url), path_(m.Path), length_(0) {}
+		VoiceMessage(const VoiceMessage& m) : voiceId_(m.voiceId_), url_(m.voiceId_), path_(m.path_), length_(m.length_) {}
 		VoiceMessage(VoiceMessage&& m) noexcept
 		{
 			std::swap(this->voiceId_, m.voiceId_);
