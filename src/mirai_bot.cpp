@@ -692,7 +692,7 @@ namespace Cyan
 		return result;
 	}
 
-	GroupFile MiraiBot::GetGroupFilById(const GID_t& gid, const string& groupFileId, bool withDownloadInfo)
+	GroupFile MiraiBot::GetGroupFileById(const GID_t& gid, const string& groupFileId, bool withDownloadInfo)
 	{
 		stringstream api_url;
 		api_url

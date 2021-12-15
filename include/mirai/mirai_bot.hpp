@@ -48,7 +48,7 @@ namespace Cyan
 		 */
 		inline string GetMiraiCppVersion() const
 		{
-			return "2.2.0";
+			return "2.3.1";
 		}
 
 		std::shared_ptr<httplib::Client> GetHttpClient();
@@ -229,7 +229,7 @@ namespace Cyan
 		 * @param withDownloadInfo 获取下载信息(需要较长时间)
 		 * @return GroupFile
 		*/
-		GroupFile GetGroupFilById(const GID_t& gid, const string& groupFileId, bool withDownloadInfo = false);
+		GroupFile GetGroupFileById(const GID_t& gid, const string& groupFileId, bool withDownloadInfo = false);
 
 		/**
 		 * @brief 创建群文件夹
