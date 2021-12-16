@@ -27,11 +27,11 @@ jobs:
           #  cc: gcc
           #  cxx: g++
           #  cmake_args: -G "MinGW Makefiles" -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
-          #- name: Ubuntu Latest GCC
-          #  os: ubuntu-latest
-          #  cc: gcc
-          #  cxx: g++
-          #  cmake_args: -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
+          - name: Ubuntu Latest GCC
+            os: ubuntu-latest
+            cc: gcc
+            cxx: g++
+            cmake_args: -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
           - name: macOS Latest Clang
             os: macos-latest
             cc: clang
