@@ -5,7 +5,7 @@
 #include "mirai/third-party/nlohmann/json.hpp"
 #include "mirai/defs/QQType.hpp"
 #include "mirai/defs/MessageChain.hpp"
-#include "mirai/defs/friend.hpp"
+#include "mirai/defs/Friend.hpp"
 #include "EventBase.hpp"
 
 namespace Cyan
