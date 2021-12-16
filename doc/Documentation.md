@@ -43,7 +43,7 @@
 
 如果你更喜欢按需引用头文件，或者要参与到 mirai-cpp 的开发中，那么我先介绍 mirai-cpp 的项目结构。
 
-**MiraiBot 类**的声明位于 **mirai/mirai_bot.hpp** 文件中。
+**MiraiBot 类**的声明位于 **mirai/MiraiBot.hpp** 文件中。
 
 mirai-cpp 各种**类型**(比如 QQ_t、GID_t、Group_t、GroupFile 等类型)的声明和定义在 **mirai/defs/** 目录下。
 
