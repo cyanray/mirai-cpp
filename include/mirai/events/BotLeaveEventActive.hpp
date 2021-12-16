@@ -4,7 +4,7 @@
 
 #include "mirai/third-party/nlohmann/json.hpp"
 #include "mirai/defs/group.hpp"
-#include "event_interface.hpp"
+#include "EventBase.hpp"
 
 namespace Cyan
 {

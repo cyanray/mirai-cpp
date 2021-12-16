@@ -6,6 +6,6 @@
 #include "mirai/messages/messages.hpp"
 #include "mirai/events/events.hpp"
 #include "mirai/exceptions/exceptions.hpp"
-#include "mirai/mirai_bot.hpp"
+#include "mirai/MiraiBot.hpp"
 
 #endif // !mirai_cpp__mirai_h_H_

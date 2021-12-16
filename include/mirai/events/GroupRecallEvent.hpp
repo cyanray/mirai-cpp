@@ -3,9 +3,9 @@
 #define mirai_cpp_events_GroupRecallEvent_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
-#include "event_interface.hpp"
-#include "mirai/defs/group_member.hpp"
-#include "mirai/defs/qq_types.hpp"
+#include "EventBase.hpp"
+#include "mirai/defs/GroupMember.hpp"
+#include "mirai/defs/QQType.hpp"
 #include <optional>
 using std::optional;
 using std::nullopt;

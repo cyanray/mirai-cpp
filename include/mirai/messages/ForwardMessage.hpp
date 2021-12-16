@@ -3,9 +3,9 @@
 #define mirai_cpp_defs_messages_ForwardMessage_hpp_H_
 #include <vector>
 #include <optional>
-#include "mirai/defs/message_interface.hpp"
-#include "mirai/defs/qq_types.hpp"
-#include "mirai/defs/message_chain.hpp"
+#include "mirai/defs/IMessage.hpp"
+#include "mirai/defs/QQType.hpp"
+#include "mirai/defs/MessageChain.hpp"
 using std::optional;
 
 namespace Cyan
