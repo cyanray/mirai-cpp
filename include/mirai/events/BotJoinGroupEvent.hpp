@@ -4,9 +4,9 @@
 
 #include <optional>
 #include "mirai/third-party/nlohmann/json.hpp"
-#include "event_interface.hpp"
-#include "mirai/defs/group.hpp"
-#include "mirai/defs/group_member.hpp"
+#include "EventBase.hpp"
+#include "mirai/defs/Group.hpp"
+#include "mirai/defs/GroupMember.hpp"
 using std::optional;
 
 namespace Cyan

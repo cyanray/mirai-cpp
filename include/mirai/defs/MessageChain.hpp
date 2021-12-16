@@ -7,9 +7,9 @@
 #include <vector>
 #include <memory>
 #include "mirai/exported.h"
-#include "qq_types.hpp"
-#include "serializable.hpp"
-#include "message_interface.hpp"
+#include "QQType.hpp"
+#include "ISerializable.hpp"
+#include "IMessage.hpp"
 #include "mirai/messages/PlainMessage.hpp"
 #include "mirai/messages/ImageMessage.hpp"
 #include "mirai/messages/FlashImageMessage.hpp"

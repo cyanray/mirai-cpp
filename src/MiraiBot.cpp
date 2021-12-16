@@ -7,13 +7,13 @@
 #include <exception>
 #include <locale>
 #include <codecvt>
-#include "mirai/mirai_bot.hpp"
+#include "mirai/MiraiBot.hpp"
 #include "mirai/third-party/ThreadPool.h"
 #include "mirai/third-party/httplib.h"
 #include "mirai/third-party/WebSocketClient.h"
 #include "mirai/third-party/WebSocketClient.cpp"
-#include "mirai/exceptions/network_exception.hpp"
-#include "mirai/exceptions/mirai_api_http_exception.hpp"
+#include "mirai/exceptions/NetworkException.hpp"
+#include "mirai/exceptions/MiraiApiHttpException.hpp"
 
 // fu*k windows.h
 #ifdef max

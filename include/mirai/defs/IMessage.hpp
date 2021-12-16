@@ -3,7 +3,7 @@
 #define mirai_cpp_defs_message_interface_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
-#include "serializable.hpp"
+#include "ISerializable.hpp"
 
 namespace Cyan
 {

@@ -4,8 +4,8 @@
 #include <memory>
 #include <optional>
 #include "mirai/third-party/nlohmann/json.hpp"
-#include "mirai/defs/qq_types.hpp"
-#include "serializable.hpp"
+#include "mirai/defs/QQType.hpp"
+#include "ISerializable.hpp"
 #include "FileDownloadInfo.hpp"
 using std::shared_ptr;
 

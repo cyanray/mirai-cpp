@@ -1,4 +1,4 @@
-#include "mirai/events/mirai_event.hpp"
+#include "mirai/events/MiraiEvent.hpp"
 #include "mirai/third-party/magic_enum.hpp"
 
 namespace Cyan

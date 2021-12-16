@@ -2,7 +2,7 @@
 #ifndef mirai_cpp_defs_messages_face_message_hpp_H_
 #define mirai_cpp_defs_messages_face_message_hpp_H_
 #include <utility>
-#include "mirai/defs/message_interface.hpp"
+#include "mirai/defs/IMessage.hpp"
 
 namespace Cyan
 {

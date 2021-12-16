@@ -4,7 +4,7 @@
 
 #include <string>
 #include "mirai/third-party/nlohmann/json.hpp"
-#include "serializable.hpp"
+#include "ISerializable.hpp"
 
 
 namespace Cyan

@@ -7,8 +7,8 @@
 #include <optional>
 #include "mirai/exported.h"
 #include "mirai/third-party/nlohmann/json.hpp"
-#include "mirai/defs/qq_types.hpp"
-#include "event_interface.hpp"
+#include "mirai/defs/QQType.hpp"
+#include "EventBase.hpp"
 
 using std::optional;
 using std::nullopt;

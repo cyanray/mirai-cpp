@@ -1,9 +1,9 @@
 ﻿#pragma once
 #ifndef mirai_cpp_events_event_interface_hpp_H_
 #define mirai_cpp_events_event_interface_hpp_H_
-#include "mirai_event.hpp"
-#include "mirai/defs/serializable.hpp"
-#include "mirai/defs/qq_types.hpp"
+#include "MiraiEvent.hpp"
+#include "mirai/defs/ISerializable.hpp"
+#include "mirai/defs/QQType.hpp"
 namespace Cyan
 {
 	class EventBase : public ISerializable

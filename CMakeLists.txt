@@ -21,7 +21,17 @@ endif()
 
 aux_source_directory(./src SRCS)
 
-add_library(${PROJECT_NAME} ${LIBRARY_TYPE} ${SRCS})
+add_library(
+    ${PROJECT_NAME} 
+    ${LIBRARY_TYPE} 
+    src/EventHelperFunctions.cpp
+    src/MemberHonorChangeEvent.cpp
+    src/MessageChain.cpp
+    src/MiraiEvent.cpp
+    src/MiraiBot.cpp
+    src/MusicShareKind.cpp
+    src/SessionOptions.cpp
+)
 target_include_directories(${PROJECT_NAME} PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>

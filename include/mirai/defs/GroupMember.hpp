@@ -3,9 +3,9 @@
 #define mirai_cpp_defs_group_member_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
-#include "qq_types.hpp"
-#include "serializable.hpp"
-#include "group.hpp"
+#include "QQType.hpp"
+#include "ISerializable.hpp"
+#include "Group.hpp"
 
 namespace Cyan
 {

@@ -1,8 +1,8 @@
 #pragma once
 #ifndef mirai_cpp_defs_messages_image_message_hpp_H_
 #define mirai_cpp_defs_messages_image_message_hpp_H_
-#include "mirai/defs/message_interface.hpp"
-#include "mirai/defs/qq_types.hpp"
+#include "mirai/defs/IMessage.hpp"
+#include "mirai/defs/QQType.hpp"
 
 namespace Cyan
 {

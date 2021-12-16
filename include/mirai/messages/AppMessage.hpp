@@ -4,7 +4,7 @@
 
 #include <string>
 #include <string_view>
-#include "mirai/defs/message_interface.hpp"
+#include "mirai/defs/IMessage.hpp"
 using std::string;
 using std::string_view;
 
