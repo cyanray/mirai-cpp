@@ -5,28 +5,32 @@
 namespace Cyan
 {
 
-	static Cyan::Reflection<IMessage> factory_;
+	Cyan::Reflection<IMessage>& GetMessageReflection()
+	{
+		static Cyan::Reflection<IMessage> reflection;
+		if (reflection.size() <= 0)
+		{
+			reflection.Register<PlainMessage>("Plain");
+			reflection.Register<ImageMessage>("Image");
+			reflection.Register<FlashImageMessage>("FlashImage");
+			reflection.Register<AtMessage>("At");
+			reflection.Register<AtAllMessage>("AtAll");
+			reflection.Register<AppMessage>("App");
+			reflection.Register<JsonMessage>("Json");
+			reflection.Register<XmlMessage>("Xml");
+			reflection.Register<FaceMessage>("Face");
+			reflection.Register<PokeMessage>("Poke");
+			reflection.Register<QuoteMessage>("Quote");
+			reflection.Register<FileMessage>("File");
+			reflection.Register<DiceMessage>("Dice");
+			reflection.Register<ForwardMessage>("Forward");
+			reflection.Register<MusicShare>("MusicShare");
+		}
+		return reflection;
+	}
 
 	MessageChain::MessageChain() :messages_(), messageId_(0), timestamp_(0)
 	{
-		if (factory_.size() <= 0)
-		{
-			factory_.Register<PlainMessage>("Plain");
-			factory_.Register<ImageMessage>("Image");
-			factory_.Register<FlashImageMessage>("FlashImage");
-			factory_.Register<AtMessage>("At");
-			factory_.Register<AtAllMessage>("AtAll");
-			factory_.Register<AppMessage>("App");
-			factory_.Register<JsonMessage>("Json");
-			factory_.Register<XmlMessage>("Xml");
-			factory_.Register<FaceMessage>("Face");
-			factory_.Register<PokeMessage>("Poke");
-			factory_.Register<QuoteMessage>("Quote");
-			factory_.Register<FileMessage>("File");
-			factory_.Register<DiceMessage>("Dice");
-			factory_.Register<ForwardMessage>("Forward");
-			factory_.Register<MusicShare>("MusicShare");
-		}
 	}
 
 	MessageChain::MessageChain(const MessageChain& mc)
@@ -157,7 +161,7 @@ namespace Cyan
 			// 因此从 0 开始，防止漏掉消息
 			for (size_t i = 0; i < j.size(); i++)
 			{
-				auto msg_ptr = factory_.DynamicCreate(j[i]["type"]);
+				auto msg_ptr = GetMessageReflection().DynamicCreate(j[i]["type"]);
 				if (msg_ptr)
 				{
 					msg_ptr->Set(j[i]);
