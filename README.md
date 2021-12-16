@@ -170,5 +170,6 @@ mirai-cpp 目前还有许多不足，欢迎提出 issues 或 pull requests。
 
 > 如果你愿意分享你开发的程序，欢迎提出 issues 或 pull requests 在下方分享你的程序
 
-1. [MocliaParseBot](https://github.com/Moclia-Developer-Team/MocliaParseBot) : 基于Mirai-Api-Http和Mirai-cpp的全平台网络服务群QQ解析项目
+1. [MocliaParseBot](https://github.com/Moclia-Developer-Team/MocliaParseBot): 基于Mirai-Api-Http和Mirai-cpp的全平台网络服务群QQ解析项目
+2. [LGTBot-Mirai](https://github.com/Slontia/lgtbot-mirai): 基于mirai-cpp的游戏裁判机器人，可以在聊天室中开展游戏
 
