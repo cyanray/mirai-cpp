@@ -4,7 +4,7 @@
 
 #include <string>
 #include "mirai/third-party/nlohmann/json.hpp"
-#include "event_interface.hpp"
+#include "EventBase.hpp"
 using std::string;
 namespace Cyan
 {

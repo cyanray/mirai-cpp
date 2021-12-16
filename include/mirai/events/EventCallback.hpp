@@ -4,7 +4,7 @@
 
 #include <functional>
 #include <memory>
-#include "event_interface.hpp"
+#include "EventBase.hpp"
 
 namespace Cyan
 {

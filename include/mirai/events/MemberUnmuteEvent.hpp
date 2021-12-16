@@ -3,8 +3,8 @@
 #define mirai_cpp_events_MemberUnmuteEvent_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
-#include "event_interface.hpp"
-#include "mirai/defs/group_member.hpp"
+#include "EventBase.hpp"
+#include "mirai/defs/GroupMember.hpp"
 #include <optional>
 using std::optional;
 using std::nullopt;

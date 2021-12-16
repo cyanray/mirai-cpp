@@ -3,15 +3,15 @@
 #define mirai_cpp_defs_defs_hpp_H_
 
 // 基础定义
-#include "serializable.hpp"
-#include "qq_types.hpp"
-#include "group.hpp"
-#include "friend.hpp"
-#include "group_member.hpp"
-#include "message_chain.hpp"
-#include "profile.hpp"
-#include "group_config.hpp"
-#include "group_file.hpp"
+#include "ISerializable.hpp"
+#include "QQType.hpp"
+#include "Group.hpp"
+#include "Friend.hpp"
+#include "GroupMember.hpp"
+#include "MessageChain.hpp"
+#include "Profile.hpp"
+#include "GroupConfig.hpp"
+#include "GroupFile.hpp"
 #include "FileDownloadInfo.hpp"
 
 #endif // !mirai_cpp_defs_defs_hpp_H_

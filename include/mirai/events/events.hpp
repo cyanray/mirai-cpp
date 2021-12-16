@@ -48,9 +48,9 @@
 // 其他事件
 #include "NudgeEvent.hpp"
 // 一些定义
-#include "event_processer.hpp"
-#include "mirai_event.hpp"
-#include "event_interface.hpp"
+#include "EventCallback.hpp"
+#include "MiraiEvent.hpp"
+#include "EventBase.hpp"
 // 指令事件
 #include "Command.hpp"
 

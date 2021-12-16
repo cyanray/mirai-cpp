@@ -3,8 +3,8 @@
 #define mirai_cpp_events_BotOfflineEventDropped_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
-#include "mirai/defs/qq_types.hpp"
-#include "event_interface.hpp"
+#include "mirai/defs/QQType.hpp"
+#include "EventBase.hpp"
 
 namespace Cyan
 {

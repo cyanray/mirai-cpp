@@ -1,5 +1,5 @@
-#include "mirai/defs/message_chain.hpp"
-#include "mirai/defs/simple_reflect.hpp"
+#include "mirai/defs/MessageChain.hpp"
+#include "mirai/defs/SimpleReflect.hpp"
 #include "mirai/messages/messages.hpp"
 
 namespace Cyan

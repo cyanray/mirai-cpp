@@ -3,11 +3,11 @@
 #define mirai_cpp_events_Message_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
-#include "mirai/defs/qq_types.hpp"
+#include "mirai/defs/QQType.hpp"
 #include "FriendMessage.hpp"
 #include "GroupMessage.hpp"
 #include "TempMessage.hpp"
-#include "event_interface.hpp"
+#include "EventBase.hpp"
 #include "mirai/exported.h"
 
 namespace Cyan

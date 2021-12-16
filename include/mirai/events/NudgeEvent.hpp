@@ -4,8 +4,8 @@
 
 #include <exception>
 #include "mirai/third-party/nlohmann/json.hpp"
-#include "mirai/defs/qq_types.hpp"
-#include "event_interface.hpp"
+#include "mirai/defs/QQType.hpp"
+#include "EventBase.hpp"
 
 namespace Cyan
 {
