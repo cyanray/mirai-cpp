@@ -61,6 +61,12 @@ namespace Cyan
 		{
 			if (json["type"].is_null() || json["type"].get<string>() != this->GetType())
 				throw std::runtime_error("给定的json不正确");
+
+			imageId_ = "";
+			url_ = "";
+			path_ = "";
+			base64_ = "";
+
 			if (!json["imageId"].is_null())
 				imageId_ = json["imageId"].get<string>();
 			if (!json["url"].is_null())
@@ -76,10 +82,10 @@ namespace Cyan
 			return
 			{
 				{ "type", GetType() },
-				{ "imageId", imageId_ },
-				{ "url", url_ },
-				{ "path", path_ },
-				{ "base64", base64_ }
+				{ "imageId", imageId_.empty()? nullptr : imageId_ },
+				{ "url", url_.empty()? nullptr : url_ },
+				{ "path", path_.empty()? nullptr : path_ },
+				{ "base64", base64_.empty()? nullptr : base64_ }
 			};
 		}
 		virtual ~ImageMessage() {}

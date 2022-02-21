@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #ifndef mirai_cpp__mirai_bot_hpp_H_
 #define mirai_cpp__mirai_bot_hpp_H_
 // std libraries
@@ -279,6 +279,13 @@ namespace Cyan
 		 * @return Profile
 		*/
 		Profile GetGroupMemberProfile(const GID_t& gid, const QQ_t& memberQQ);
+
+		/**
+		 * @brief 获取QQ用户的个人简介
+		 * @param qq 用户QQ
+		 * @return Profile
+		*/
+		Profile GetUserProfile(const QQ_t& qq);
 
 		/**
 		 * \brief 设置群成员的群名片
