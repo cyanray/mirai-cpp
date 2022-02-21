@@ -18,6 +18,7 @@ namespace Cyan
 			reflection.Register<AppMessage>("App");
 			reflection.Register<JsonMessage>("Json");
 			reflection.Register<XmlMessage>("Xml");
+			reflection.Register<MarketFaceMessage>("MarketFace");
 			reflection.Register<FaceMessage>("Face");
 			reflection.Register<PokeMessage>("Poke");
 			reflection.Register<QuoteMessage>("Quote");
