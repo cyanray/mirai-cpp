@@ -82,10 +82,10 @@ namespace Cyan
 			return
 			{
 				{ "type", GetType() },
-				{ "imageId", imageId_.empty()? nullptr : imageId_ },
-				{ "url", url_.empty()? nullptr : url_ },
-				{ "path", path_.empty()? nullptr : path_ },
-				{ "base64", base64_.empty()? nullptr : base64_ }
+				{ "imageId", imageId_ },
+				{ "url", url_ },
+				{ "path", path_ },
+				{ "base64", base64_ }
 			};
 		}
 		virtual ~ImageMessage() {}
