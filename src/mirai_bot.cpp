@@ -54,11 +54,11 @@ namespace
 		return result;
 	}
 
-	json ParseOrThrowException(const shared_ptr<httplib::Response>& response)
+	json ParseOrThrowException(const httplib::Result& result)
 	{
 		using namespace Cyan;
-		if (!response) throw NetworkException();
-		json re_json = json::parse(response->body);
+		if (!result) throw NetworkException();
+		json re_json = json::parse(result->body);
 		if (re_json.contains("code"))
 		{
 			int code = re_json["code"].get<int>();
