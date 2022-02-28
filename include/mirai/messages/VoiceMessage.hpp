@@ -84,15 +84,28 @@ namespace Cyan
 		}
 		virtual json ToJson() const override
 		{
-			return
+			json result = 
 			{
 				{ "type", type_ },
-				{ "voiceId", voiceId_.empty()? nullptr : voiceId_ },
-				{ "url", url_.empty()? nullptr : url_ },
-				{ "path", path_.empty()? nullptr : path_ },
-				{ "base64", base64_.empty()? nullptr : base64_ },
 				{ "length", length_ }
 			};
+
+			voiceId_.empty()
+				? result["voiceId"] = json(nullptr)
+				: result["voiceId"] = voiceId_;
+
+			url_.empty()
+				? result["url"] = json(nullptr)
+				: result["url"] = url_;
+
+			path_.empty()
+				? result["path"] = json(nullptr)
+				: result["path"] = path_;
+
+			base64_.empty()
+				? result["base64"] = json(nullptr)
+				: result["base64"] = base64_;
+			return result;
 		}
 		virtual ~VoiceMessage() {}
 
