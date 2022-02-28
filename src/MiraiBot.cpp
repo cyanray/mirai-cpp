@@ -1,4 +1,4 @@
-﻿#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
+#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 
 #include <iostream>
 #include <queue>
@@ -7,13 +7,13 @@
 #include <exception>
 #include <locale>
 #include <codecvt>
-#include "mirai/mirai_bot.hpp"
+#include "mirai/MiraiBot.hpp"
 #include "mirai/third-party/ThreadPool.h"
 #include "mirai/third-party/httplib.h"
 #include "mirai/third-party/WebSocketClient.h"
 #include "mirai/third-party/WebSocketClient.cpp"
-#include "mirai/exceptions/network_exception.hpp"
-#include "mirai/exceptions/mirai_api_http_exception.hpp"
+#include "mirai/exceptions/NetworkException.hpp"
+#include "mirai/exceptions/MiraiApiHttpException.hpp"
 
 // fu*k windows.h
 #ifdef max
@@ -643,6 +643,21 @@ namespace Cyan
 			<< int64_t(gid)
 			<< "&memberId="
 			<< int64_t(memberQQ);
+		auto res = pmem->httpClient->Get(api_url.str().data());
+		json re_json = ParseOrThrowException(res);
+		Profile result;
+		result.Set(re_json);
+		return result;
+	}
+
+	Profile MiraiBot::GetUserProfile(const QQ_t& qq)
+	{
+		stringstream api_url;
+		api_url
+			<< "/userProfile?sessionKey="
+			<< pmem->sessionKey
+			<< "&target="
+			<< int64_t(qq);
 		auto res = pmem->httpClient->Get(api_url.str().data());
 		json re_json = ParseOrThrowException(res);
 		Profile result;

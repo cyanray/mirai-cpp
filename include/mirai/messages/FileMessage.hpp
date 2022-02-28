@@ -4,8 +4,8 @@
 
 #include <string>
 #include <string_view>
-#include "mirai/defs/message_interface.hpp"
-#include "mirai/defs/qq_types.hpp"
+#include "mirai/defs/IMessage.hpp"
+#include "mirai/defs/QQType.hpp"
 using std::string;
 using std::string_view;
 

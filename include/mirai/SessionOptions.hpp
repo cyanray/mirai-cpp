@@ -3,7 +3,7 @@
 #define mirai_cpp__SessionOptions_hpp_H_
 
 #include <string>
-#include "mirai/defs/qq_types.hpp"
+#include "mirai/defs/QQType.hpp"
 #include "mirai/Property.hpp"
 
 using std::string;

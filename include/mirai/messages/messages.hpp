@@ -6,6 +6,7 @@
 #include "mirai/messages/AtAllMessage.hpp"
 #include "mirai/messages/AtMessage.hpp"
 #include "mirai/messages/DiceMessage.hpp"
+#include "mirai/messages/MarketFaceMessage.hpp"
 #include "mirai/messages/FaceMessage.hpp"
 #include "mirai/messages/FileMessage.hpp"
 #include "mirai/messages/FlashImageMessage.hpp"

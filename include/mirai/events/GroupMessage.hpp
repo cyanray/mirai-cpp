@@ -3,10 +3,10 @@
 #define mirai_cpp_events_GroupMessage_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
-#include "mirai/defs/qq_types.hpp"
-#include "mirai/defs/message_chain.hpp"
-#include "mirai/defs/group_member.hpp"
-#include "event_interface.hpp"
+#include "mirai/defs/QQType.hpp"
+#include "mirai/defs/MessageChain.hpp"
+#include "mirai/defs/GroupMember.hpp"
+#include "EventBase.hpp"
 #include "mirai/exported.h"
 
 namespace Cyan

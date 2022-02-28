@@ -1,7 +1,7 @@
 #include <exception>
 #include <algorithm>
-#include "mirai/mirai_bot.hpp"
-#include "mirai/defs/message_chain.hpp"
+#include "mirai/MiraiBot.hpp"
+#include "mirai/defs/MessageChain.hpp"
 #include "mirai/events/events.hpp"
 #include "mirai/third-party/httplib.h"
 

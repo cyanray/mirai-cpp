@@ -54,9 +54,9 @@ namespace Cyan
 		{
 			opt.HttpHostname = json["http-hostname"].get<string>();
 		}
-		if (json.contains("webscoketHostname"))
+		if (json.contains("websocketHostname"))
 		{
-			opt.WebSocketHostname = json["webscoketHostname"].get<string>();
+			opt.WebSocketHostname = json["websocketHostname"].get<string>();
 		}
 		if (json.contains("websocket-hostname"))
 		{
@@ -85,9 +85,9 @@ namespace Cyan
 		{
 			opt.HttpPort = stoi(json["http-port"].get<string>());
 		}
-		if (json.contains("webscoketPort"))
+		if (json.contains("websocketPort"))
 		{
-			opt.WebSocketPort = json["webscoketPort"].get<short>();
+			opt.WebSocketPort = json["websocketPort"].get<short>();
 		}
 		if (json.contains("websocket-port"))
 		{

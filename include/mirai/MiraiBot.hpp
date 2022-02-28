@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #ifndef mirai_cpp__mirai_bot_hpp_H_
 #define mirai_cpp__mirai_bot_hpp_H_
 // std libraries
@@ -13,7 +13,7 @@
 // mirai header files
 #include "mirai/exported.h"
 #include "mirai/defs/defs.hpp"
-#include "mirai/events/event_processer.hpp"
+#include "mirai/events/EventCallback.hpp"
 #include "mirai/events/FriendMessage.hpp"
 #include "mirai/events/GroupMessage.hpp"
 #include "mirai/events/Message.hpp"
@@ -48,7 +48,7 @@ namespace Cyan
 		 */
 		inline string GetMiraiCppVersion() const
 		{
-			return "2.3.3";
+			return "2.4.0";
 		}
 
 		std::shared_ptr<httplib::Client> GetHttpClient();
@@ -279,6 +279,13 @@ namespace Cyan
 		 * @return Profile
 		*/
 		Profile GetGroupMemberProfile(const GID_t& gid, const QQ_t& memberQQ);
+
+		/**
+		 * @brief 获取QQ用户的个人简介
+		 * @param qq 用户QQ
+		 * @return Profile
+		*/
+		Profile GetUserProfile(const QQ_t& qq);
 
 		/**
 		 * \brief 设置群成员的群名片

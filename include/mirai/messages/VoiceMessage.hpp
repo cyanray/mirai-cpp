@@ -2,8 +2,8 @@
 #ifndef mirai_cpp_defs_messages_voice_message_hpp_H_
 #define mirai_cpp_defs_messages_voice_message_hpp_H_
 #include <utility>
-#include "mirai/defs/message_interface.hpp"
-#include "mirai/defs/qq_types.hpp"
+#include "mirai/defs/IMessage.hpp"
+#include "mirai/defs/QQType.hpp"
 
 namespace Cyan
 {
@@ -63,6 +63,13 @@ namespace Cyan
 		{
 			if (json["type"].is_null() || json["type"].get<string>() != this->GetType())
 				throw std::runtime_error("给定的json不正确");
+
+			voiceId_ = "";
+			url_ = "";
+			path_ = "";
+			base64_ = "";
+			length_ = 0;
+
 			if (!json["voiceId"].is_null())
 				voiceId_ = json["voiceId"].get<string>();
 			if (!json["url"].is_null())
@@ -80,10 +87,10 @@ namespace Cyan
 			return
 			{
 				{ "type", type_ },
-				{ "voiceId", voiceId_ },
-				{ "url", url_ },
-				{ "path", path_ },
-				{ "base64", base64_ },
+				{ "voiceId", voiceId_.empty()? nullptr : voiceId_ },
+				{ "url", url_.empty()? nullptr : url_ },
+				{ "path", path_.empty()? nullptr : path_ },
+				{ "base64", base64_.empty()? nullptr : base64_ },
 				{ "length", length_ }
 			};
 		}

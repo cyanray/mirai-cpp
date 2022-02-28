@@ -1,8 +1,8 @@
 #pragma once
 #ifndef mirai_cpp_defs_messages_image_message_hpp_H_
 #define mirai_cpp_defs_messages_image_message_hpp_H_
-#include "mirai/defs/message_interface.hpp"
-#include "mirai/defs/qq_types.hpp"
+#include "mirai/defs/IMessage.hpp"
+#include "mirai/defs/QQType.hpp"
 
 namespace Cyan
 {
@@ -11,12 +11,13 @@ namespace Cyan
 	public:
 		ImageMessage() {}
 		ImageMessage(const MiraiImage& m) : imageId_(m.Id), url_(m.Url), path_(m.Path) {}
-		ImageMessage(const ImageMessage& m) : imageId_(m.imageId_), url_(m.url_), path_(m.path_) {}
+		ImageMessage(const ImageMessage& m) : imageId_(m.imageId_), url_(m.url_), path_(m.path_), base64_(m.base64_) {}
 		ImageMessage(ImageMessage&& m) noexcept
 		{
 			std::swap(this->imageId_, m.imageId_);
 			std::swap(this->url_, m.url_);
 			std::swap(this->path_, m.path_);
+			std::swap(this->base64_, m.base64_);
 		}
 		virtual const string& GetType() const override
 		{
@@ -60,6 +61,12 @@ namespace Cyan
 		{
 			if (json["type"].is_null() || json["type"].get<string>() != this->GetType())
 				throw std::runtime_error("给定的json不正确");
+
+			imageId_ = "";
+			url_ = "";
+			path_ = "";
+			base64_ = "";
+
 			if (!json["imageId"].is_null())
 				imageId_ = json["imageId"].get<string>();
 			if (!json["url"].is_null())

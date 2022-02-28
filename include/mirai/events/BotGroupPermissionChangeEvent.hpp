@@ -3,8 +3,8 @@
 #define mirai_cpp_events_BotGroupPermissionChangeEvent_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
-#include "event_interface.hpp"
-#include "mirai/defs/group.hpp"
+#include "EventBase.hpp"
+#include "mirai/defs/Group.hpp"
 
 namespace Cyan
 {

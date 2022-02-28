@@ -3,8 +3,8 @@
 #define mirai_cpp_defs_file_download_info_hpp_H_
 
 #include "mirai/third-party/nlohmann/json.hpp"
-#include "mirai/defs/qq_types.hpp"
-#include "serializable.hpp"
+#include "mirai/defs/QQType.hpp"
+#include "ISerializable.hpp"
 
 namespace Cyan
 {
