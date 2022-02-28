@@ -50,7 +50,11 @@ namespace Cyan
 		MemberSpecialTitleChangeEvent,			// 群头衔改动事件
 		BotGroupPermissionChangeEvent,			// bot 群权限改变事件
 		MemberPermissionChangeEvent,			// 群成员权限改变事件
-		MemberHonorChangeEvent					// 群成员称号改变事件
+		MemberHonorChangeEvent,					// 群成员称号改变事件
+		FriendSyncMessage,						// Bot在其他客户端发送给好友的消息
+		GroupSyncMessage,						// Bot在其他客户端发送给群组的消息
+		TempSyncMessage,						// Bot在其他客户端发送给群成员的临时消息
+		StrangerSyncMessage						// Bot在其他客户端发送给陌生人的消息
 	};
 
 	MiraiEvent MiraiEventStr(const std::string& miraiEvent);

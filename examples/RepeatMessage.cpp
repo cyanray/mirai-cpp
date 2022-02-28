@@ -4,6 +4,8 @@
 // 按需引用头文件
 // 你也可以使用 #include <mirai.h> 引用所有头文件(可能导致编译缓慢)
 #include <mirai/MiraiBot.hpp>
+#include <mirai/events/OtherClientMessage.hpp>
+#include <mirai/events/FriendSyncMessage.hpp>
 using namespace std;
 using namespace Cyan;
 
@@ -55,7 +57,17 @@ int main(int argc, char* argv[])
 		[&](Message m)
 		{
 			cout << int64_t(m.Sender) << " 发来一条消息." << m.MessageChain.ToString() << endl;
-			m.Reply(m.MessageChain);
+			// m.Reply(m.MessageChain);
+		});
+
+	bot.On<OtherClientMessage>([&](OtherClientMessage m)
+		{
+			cout << m.MessageChain.ToString() << endl;
+		});
+
+	bot.On<FriendSyncMessage>([&](FriendSyncMessage m)
+		{
+			cout << m.MessageChain.ToString() << endl;
 		});
 
 	bot.On<LostConnection>([&](LostConnection e)
