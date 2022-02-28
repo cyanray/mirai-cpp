@@ -9,6 +9,10 @@
 #include "TempMessage.hpp"
 #include "StrangerMessage.hpp"
 #include "OtherClientMessage.hpp"
+#include "FriendSyncMessage.hpp"
+#include "GroupSyncMessage.hpp"
+#include "TempSyncMessage.hpp"
+#include "StrangerSyncMessage.hpp"
 // 机器人相关事件
 #include "BotOnlineEvent.hpp"
 #include "BotOfflineEventActive.hpp"
