@@ -890,6 +890,48 @@ namespace Cyan
 		ParseOrThrowException(res);
 	}
 
+	std::vector<GroupAnnouncement> MiraiBot::GetGroupAnnouncement(const GID_t& group, int offset, int size)
+	{
+		stringstream api_url;
+		api_url
+			<< "/anno/list?sessionKey="
+			<< pmem->sessionKey
+			<< "&id="
+			<< int64_t(group)
+			<< "&offset="
+			<< offset
+			<< "&size="
+			<< size;
+		auto res = pmem->httpClient->Get(api_url.str().data());
+		json re_json = ParseOrThrowException(res);
+		vector<GroupAnnouncement> result;
+		for (const auto& item : re_json["data"])
+		{
+			GroupAnnouncement tmp;
+			tmp.Set(item);
+			result.emplace_back(std::move(tmp));
+		}
+		return result;
+	}
+
+	void MiraiBot::DeleteGroupAnnoencement(const GID_t& group, const string& announcementId)
+	{
+		json data =
+		{
+			{ "sessionKey", pmem->sessionKey },
+			{ "id", int64_t(group) },
+			{ "fid", announcementId }
+		};
+
+		auto res = pmem->httpClient->Post("/anno/delete", data.dump(), CONTENT_TYPE.c_str());
+		ParseOrThrowException(res);
+	}
+
+	void MiraiBot::DeleteGroupAnnoencement(const GroupAnnouncement& announcement)
+	{
+		return DeleteGroupAnnoencement(announcement.Group.GID, announcement.AnnouncementId);
+	}
+
 	GroupConfig MiraiBot::GetGroupConfig(const GID_t& group)
 	{
 		stringstream api_url;

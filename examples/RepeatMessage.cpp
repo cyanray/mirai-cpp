@@ -53,6 +53,12 @@ int main(int argc, char* argv[])
 
 	cout << "Bot Working..." << endl;
 
+	auto result = bot.GetGroupAnnouncement(767473146_gid);
+	for (auto&& item : result)
+	{
+		cout << item.Content << endl;
+	}
+
 	bot.On<Message>(
 		[&](Message m)
 		{

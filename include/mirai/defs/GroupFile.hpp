@@ -57,7 +57,7 @@ namespace Cyan
 
 		virtual bool Set(const json& j) override
 		{
-			Size = j["size"].get<int64_t>();
+			Size = j["size"].get<int>();
 			Name = j["name"].get<string>();
 			Id = j["id"].get<string>();
 			Path = j["path"].get<string>();

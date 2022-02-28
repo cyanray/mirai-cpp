@@ -381,6 +381,28 @@ namespace Cyan
 		void SetGroupConfig(const GID_t& group, const GroupConfig& groupConfig);
 
 		/**
+		 * @brief 获取群公告
+		 * @param group 群(GID_t)
+		 * @param offset 分页偏移
+		 * @param size 分页大小
+		 * @return std::vector<Announcement>
+		*/
+		std::vector<GroupAnnouncement> GetGroupAnnouncement(const GID_t& group, int offset = 0, int size = 10);
+
+		/**
+		 * @brief 删除群公告
+		 * @param group 群(GID_t)
+		 * @param announcementId 群公告ID 
+		*/
+		void DeleteGroupAnnoencement(const GID_t& group, const string& announcementId);
+
+		/**
+		 * @brief 删除群公告
+		 * @param announcement 群公告对象
+		*/
+		void DeleteGroupAnnoencement(const GroupAnnouncement& announcement);
+
+		/**
 		 * \brief 根据消息ID(MessageId)获取对应的好友消息
 		 * \param mid 消息ID(MessageId)
 		 * \return 始终为 true 出错会抛出异常
