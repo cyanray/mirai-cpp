@@ -79,14 +79,26 @@ namespace Cyan
 		}
 		virtual json ToJson() const override
 		{
-			return
+			json result = 
 			{
-				{ "type", GetType() },
-				{ "imageId", imageId_ },
-				{ "url", url_ },
-				{ "path", path_ },
-				{ "base64", base64_ }
+				{ "type", GetType() }
 			};
+			imageId_.empty() 
+				? result["imageId"] = json(nullptr) 
+				: result["imageId"] = imageId_;
+
+			url_.empty()
+				? result["url"] = json(nullptr)
+				: result["url"] = url_;
+
+			path_.empty()
+				? result["path"] = json(nullptr)
+				: result["path"] = path_;
+
+			base64_.empty()
+				? result["base64"] = json(nullptr)
+				: result["base64"] = base64_;
+			return result;
 		}
 		virtual ~ImageMessage() {}
 

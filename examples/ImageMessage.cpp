@@ -13,16 +13,15 @@ int main(int argc, char* argv[])
 	bot.Connect(opts);
 	cout << "Bot working..." << endl;
 
-	FriendImage img = bot.UploadFriendImage("D:\\test.png");
-	GroupImage gImg = bot.UploadGroupImage("D:\\test.png");
-	TempImage tImg = bot.UploadTempImage("D:\\test.png");
+	string ImagePath("E:/test.png");
 
 	bot.On<FriendMessage>(
-		[&](FriendMessage fm)
+		[&](FriendMessage m)
 		{
 			try
 			{
-				fm.Reply(MessageChain().Image(img));
+				FriendImage img = bot.UploadFriendImage(ImagePath);
+				m.Reply(MessageChain().Image(img));
 			}
 			catch (const std::exception& ex)
 			{
@@ -31,11 +30,12 @@ int main(int argc, char* argv[])
 		});
 
 	bot.On<GroupMessage>(
-		[&](GroupMessage gm)
+		[&](GroupMessage m)
 		{
 			try
 			{
-				bot.SendMessage(gm.Sender.Group.GID, MessageChain().Image(gImg));
+				GroupImage gImg = bot.UploadGroupImage(ImagePath);
+				bot.SendMessage(m.Sender.Group.GID, MessageChain().Image(gImg));
 			}
 			catch (const std::exception& ex)
 			{
@@ -44,11 +44,12 @@ int main(int argc, char* argv[])
 		});
 
 	bot.On<TempMessage>(
-		[&](TempMessage gm)
+		[&](TempMessage m)
 		{
 			try
 			{
-				gm.Reply(MessageChain().Image(tImg));
+				TempImage tImg = bot.UploadTempImage(ImagePath);
+				m.Reply(MessageChain().Image(tImg));
 			}
 			catch (const std::exception& ex)
 			{
