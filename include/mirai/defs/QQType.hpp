@@ -124,6 +124,7 @@ namespace Cyan
 		string Id;
 		string Url;
 		string Path;
+		string Base64;
 	} FriendImage, GroupImage, TempImage;
 
 	/**
@@ -134,6 +135,7 @@ namespace Cyan
 		string Id;
 		string Url;
 		string Path;
+		string Base64;
 		/**
 		 * @brief 语音长度
 		*/

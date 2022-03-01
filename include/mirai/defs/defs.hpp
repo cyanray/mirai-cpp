@@ -12,5 +12,6 @@
 #include "MessageChain.hpp"
 #include "Profile.hpp"
 #include "FileDownloadInfo.hpp"
+#include "GroupAnnouncement.hpp"
 
 #endif // !mirai_cpp_defs_defs_hpp_H_

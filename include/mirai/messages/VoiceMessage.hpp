@@ -11,8 +11,18 @@ namespace Cyan
 	{
 	public:
 		VoiceMessage() {}
-		VoiceMessage(const MiraiVoice& m) : voiceId_(m.Id), url_(m.Url), path_(m.Path), length_(0) {}
-		VoiceMessage(const VoiceMessage& m) : voiceId_(m.voiceId_), url_(m.voiceId_), path_(m.path_), length_(m.length_) {}
+		VoiceMessage(const MiraiVoice& m) : 
+			voiceId_(m.Id), 
+			url_(m.Url), 
+			path_(m.Path), 
+			base64_(m.Base64), 
+			length_(0) {}
+		VoiceMessage(const VoiceMessage& m) : 
+			voiceId_(m.voiceId_), 
+			url_(m.voiceId_), 
+			path_(m.path_), 
+			base64_(m.base64_), 
+			length_(m.length_) {}
 		VoiceMessage(VoiceMessage&& m) noexcept
 		{
 			std::swap(this->voiceId_, m.voiceId_);
@@ -87,6 +97,10 @@ namespace Cyan
 			json result = 
 			{
 				{ "type", type_ },
+				{ "voiceId", voiceId_.empty() ? nullptr : voiceId_ },
+				{ "url", url_.empty() ? nullptr : url_ },
+				{ "path", path_.empty() ? nullptr : path_ },
+				{ "base64", base64_.empty() ? nullptr : base64_ },
 				{ "length", length_ }
 			};
 
@@ -116,6 +130,7 @@ namespace Cyan
 			tmp.Url = url_;
 			tmp.Path = path_;
 			tmp.Length = length_;
+			tmp.Base64 = base64_;
 			return tmp;
 		}
 

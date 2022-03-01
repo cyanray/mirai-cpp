@@ -19,7 +19,7 @@ namespace Cyan
 		class Sender : public ISerializable
 		{
 		public:
-			int Id;
+			int Id = -1;
 			string Platform;
 
 			virtual bool Set(const json& j) override
