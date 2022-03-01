@@ -10,7 +10,7 @@ namespace Cyan
 	{
 	public:
 		ImageMessage() {}
-		ImageMessage(const MiraiImage& m) : imageId_(m.Id), url_(m.Url), path_(m.Path) {}
+		ImageMessage(const MiraiImage& m) : imageId_(m.Id), url_(m.Url), path_(m.Path), base64_(m.Base64) {}
 		ImageMessage(const ImageMessage& m) : imageId_(m.imageId_), url_(m.url_), path_(m.path_), base64_(m.base64_) {}
 		ImageMessage(ImageMessage&& m) noexcept
 		{
@@ -108,6 +108,7 @@ namespace Cyan
 			tmp.Id = imageId_;
 			tmp.Url = url_;
 			tmp.Path = path_;
+			tmp.Base64 = base64_;
 			return tmp;
 		}
 

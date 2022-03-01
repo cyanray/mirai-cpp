@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 // 使用静态库必须要在引入 mirai.h 前定义这个宏
 #define MIRAICPP_STATICLIB
 // 按需引用头文件
@@ -53,22 +53,28 @@ int main(int argc, char* argv[])
 
 	cout << "Bot Working..." << endl;
 
-	bot.On<Message>(
-		[&](Message m)
+	// 修改 groupId 以测试发送群公告！
+	auto groupId = 12345678_gid;
+	if (groupId != 12345678_gid)
+	{
+		try
 		{
-			cout << int64_t(m.Sender) << " 发来一条消息." << m.MessageChain.ToString() << endl;
-			// m.Reply(m.MessageChain);
-		});
-
-	bot.On<OtherClientMessage>([&](OtherClientMessage m)
+			MiraiImage img;
+			// 设置 img 的 Path、Base64 或 Url 以设置群公告图片（设置 Id 无效）
+			// img.Base64 = "...";
+			auto options = GroupAnnouncement::PublishFlags::Pinned | GroupAnnouncement::PublishFlags::RequireConfirmation;
+			auto result = bot.PublishGroupAnnouncement(groupId, "测试测试222", options, img);
+			cout << "已经发送群公告：" << result.Content << endl;
+		}
+		catch (const std::exception& ex)
 		{
-			cout << m.MessageChain.ToString() << endl;
-		});
-
-	bot.On<FriendSyncMessage>([&](FriendSyncMessage m)
-		{
-			cout << m.MessageChain.ToString() << endl;
-		});
+			cout << ex.what() << endl;
+		}
+	}
+	else
+	{
+		cout << "修改 groupId 以测试发送群公告！" << endl;
+	}
 
 	bot.On<LostConnection>([&](LostConnection e)
 		{
