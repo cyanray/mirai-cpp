@@ -11,14 +11,18 @@ namespace Cyan
 	class ISerializable
 	{
 	public:
-		ISerializable() {}
+		ISerializable() = default;
 		virtual bool Set(const json& json) = 0;
 		virtual json ToJson() const = 0;
 		virtual string ToString() const
 		{
 			return ToJson().dump();
 		}
-		virtual ~ISerializable() {}
+		virtual explicit operator string() const
+		{
+			return ToJson().dump();
+		}
+		virtual ~ISerializable() = default;
 	};
 
 
