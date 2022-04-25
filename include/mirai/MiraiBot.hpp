@@ -409,13 +409,13 @@ namespace Cyan
          * @param group 群(GID_t)
          * @param announcementId 群公告ID 
         */
-        void DeleteGroupAnnoencement(const GID_t& group, const string& announcementId);
+        void DeleteGroupAnnouncement(const GID_t& group, const string& announcementId);
 
         /**
          * @brief 删除群公告
          * @param announcement 群公告对象
         */
-        void DeleteGroupAnnoencement(const GroupAnnouncement& announcement);
+        void DeleteGroupAnnouncement(const GroupAnnouncement& announcement);
 
         /**
          * \brief 根据消息ID(MessageId)获取对应的好友消息

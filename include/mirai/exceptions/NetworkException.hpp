@@ -2,7 +2,7 @@
 #ifndef mirai_cpp_exceptions_network_exception_hpp_H_
 #define mirai_cpp_exceptions_network_exception_hpp_H_
 
-#include <exception>
+#include <stdexcept>
 
 namespace Cyan
 {

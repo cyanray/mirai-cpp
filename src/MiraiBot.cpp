@@ -949,7 +949,7 @@ namespace Cyan
         return result;
     }
 
-    void MiraiBot::DeleteGroupAnnoencement(const GID_t& group, const string& announcementId)
+    void MiraiBot::DeleteGroupAnnouncement(const GID_t& group, const string& announcementId)
     {
         json data =
         {
@@ -962,9 +962,9 @@ namespace Cyan
         ParseOrThrowException(res);
     }
 
-    void MiraiBot::DeleteGroupAnnoencement(const GroupAnnouncement& announcement)
+    void MiraiBot::DeleteGroupAnnouncement(const GroupAnnouncement& announcement)
     {
-        return DeleteGroupAnnoencement(announcement.Group.GID, announcement.AnnouncementId);
+        return DeleteGroupAnnouncement(announcement.Group.GID, announcement.AnnouncementId);
     }
 
     GroupConfig MiraiBot::GetGroupConfig(const GID_t& group)
