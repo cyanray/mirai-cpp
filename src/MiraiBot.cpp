@@ -854,12 +854,13 @@ namespace Cyan
     }
 
 
-    void MiraiBot::Recall(MessageId_t mid)
+    void MiraiBot::Recall(MessageId_t mid,int64_t tid)
     {
         json data =
         {
             { "sessionKey", pmem->sessionKey },
-            { "target", int64_t(mid)}
+            { "target", tid},
+            {"messageId",mid}
         };
 
         auto res = pmem->httpClient->Post("/recall", data.dump(), CONTENT_TYPE.c_str());
