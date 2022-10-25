@@ -854,7 +854,7 @@ namespace Cyan
     }
 
 
-    void MiraiBot::Recall(MessageId_t mid, const UID_t& target target)
+    void MiraiBot::Recall(MessageId_t mid, const UID_t& target)
     {
         json data =
         {
