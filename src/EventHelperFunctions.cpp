@@ -51,7 +51,7 @@ namespace Cyan
 
 	void GroupMessage::Recall() const
 	{
-		bot_->Recall(MessageId(), Sender.Group.GID.ToInt64());
+		bot_->Recall(MessageId(), Sender.Group.GID);
 	}
 
 	bool GroupMessage::AtMe() const
