@@ -117,11 +117,12 @@ namespace Cyan
 
         /**
          * @brief 上传图像
-         * @param fileName 文件路径
+         * @param ResourceAddr 文件路径/文件URL
          * @param type 类型 (Friend | Group | Temp)
+         * @param is_url 是否为URL
          * @return
         */
-        MiraiImage UploadImage(const string& fileName, const string& type);
+        MiraiImage UploadImage(const string& ResourceAddr, const string& type,bool is_url);
 
         /**
          * @brief 上传声音
@@ -450,10 +451,15 @@ namespace Cyan
         json re_json = ParseOrThrowException(res);
     }
 
-    MiraiImage MiraiBot::pimpl::UploadImage(const string& filename, const string& type)
+    MiraiImage MiraiBot::pimpl::UploadImage(const string& ResourceAddr, const string& type,bool is_url)
     {
-        string base_filename = filename.substr(filename.find_last_of("/\\") + 1);
-        string img_data = ReadFile(filename);
+        if (is_url) {
+            MiraiImage img;
+            img.Url = ResourceAddr;
+            return img;
+        }
+        string base_filename = ResourceAddr.substr(ResourceAddr.find_last_of("/\\") + 1);
+        string img_data = ReadFile(ResourceAddr);
         httplib::MultipartFormDataItems items =
         {
           { "sessionKey", sessionKey, "", "" },
@@ -470,19 +476,19 @@ namespace Cyan
         return img;
     }
 
-    FriendImage MiraiBot::UploadFriendImage(const string& filename)
+    FriendImage MiraiBot::UploadFriendImage(const string& ResourceAddr, bool is_url)
     {
-        return pmem->UploadImage(filename, "friend");
+        return pmem->UploadImage(ResourceAddr, "friend",is_url);
     }
 
-    GroupImage MiraiBot::UploadGroupImage(const string& filename)
+    GroupImage MiraiBot::UploadGroupImage(const string& ResourceAddr,bool is_url)
     {
-        return pmem->UploadImage(filename, "group");
+        return pmem->UploadImage(ResourceAddr, "group",is_url);
     }
 
-    TempImage MiraiBot::UploadTempImage(const string& filename)
+    TempImage MiraiBot::UploadTempImage(const string& ResourceAddr, bool is_url)
     {
-        return pmem->UploadImage(filename, "temp");
+        return pmem->UploadImage(ResourceAddr, "temp", is_url);
     }
 
     MiraiVoice MiraiBot::pimpl::UploadVoice(const string& filename, const string& type)
