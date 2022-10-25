@@ -400,7 +400,8 @@ MessageId_t msg_id = bot.SendMessage(123456_gid, msg);
 // 在群组发送引用回复(好友、临时消息同理)
 bot.SendMessage(123456_gid, msg, msg_id);
 // 撤回消息
-bot.Recall(msg_id);
+bot.Recall(msg_id,123456_gid);//群消息
+bot.Recall(msg_id,123456_qq);//好友消息
 ```
 
 大多数时候，机器人都是被动发送消息，即收到消息事件后进行回复。为了避免代码冗长，消息事件中提供了一些回复消息的函数:
@@ -420,7 +421,7 @@ void GroupMsgProcessor(GroupMessage m)
 
     // 直接撤回
     m.Recall();
-    // 等价于: bot.Recall(m.GetMessageId());
+    // 等价于: bot.Recall(m.GetMessageId(),m.Sender.Group.GID);
 
     // 判断有没有 At 我 (仅限 GroupMessage)
     m.AtMe()

@@ -351,7 +351,7 @@ namespace Cyan
          * \param mid 消息ID(MessageId)
          * \return 始终为 true 出错会抛出异常
          */
-        void Recall(MessageId_t mid);
+        void Recall(MessageId_t mid, const UID_t& target);
 
         /**
          * \brief 让 Bot 退出一个群
