@@ -439,7 +439,9 @@ bot.On<GroupMessage>(GroupMsgProcessor);
 使用 UploadFriendImage 、UploadGroupImage 或 UploadTempImage 方法上传图片，得到 MiraiImage 结构体。（旧版本的 mirai 不支持好友图片发给群组、群组图片发给好友。使用mirai 2.0以上版本支持三种类型的图片互相转发。）
 
 ```C++
-GroupImage img = UploadGroupImage("D:\\test.png");
+GroupImage img = UploadGroupImage("D:\\test.png",false);//false意味着传入的不是URL
+也可以使用
+GroupImage img= UploadGroupImage("https://i0.hdslb.com/bfs/album/67fc4e6b417d9c68ef98ba71d5e79505bbad97a1.png",true);//传入一个URL
 // 普通图片
 MessageChain msg = MessageChain().Image(img);
 // 闪照

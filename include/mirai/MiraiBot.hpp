@@ -151,24 +151,27 @@ namespace Cyan
 
         /**
          * \brief 上传可以发送给好友的图片
-         * \param fileName 文件名
+         * \param ResourceAddr 文件名/文件链接
+         * \param is_url 是否为URL
          * \return 好友图片
          */
-        FriendImage UploadFriendImage(const string& fileName);
+        FriendImage UploadFriendImage(const string& ResourceAddr, bool is_url);
 
         /**
          * \brief 上传可以发送给群组的图片
-         * \param fileName 文件名
+         * \param ResourceAddr 文件名/文件链接
+         * \param is_url 是否为URL
          * \return 群组图片
          */
-        GroupImage UploadGroupImage(const string& fileName);
+        GroupImage UploadGroupImage(const string& ResourceAddr, bool is_url);
 
         /**
          * \brief 上传可以发送给临时消息的图片
-         * \param fileName 文件名
+         * \param ResourceAddr 文件名/文件链接
+         * \param is_url 是否为URL
          * \return 临时消息图片
          */
-        TempImage UploadTempImage(const string& fileName);
+        TempImage UploadTempImage(const string& ResourceAddr, bool is_url);
 
         /**
          * @brief 上传可以发给群组的语音
