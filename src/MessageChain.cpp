@@ -26,6 +26,7 @@ namespace Cyan
 			reflection.Register<DiceMessage>("Dice");
 			reflection.Register<ForwardMessage>("Forward");
 			reflection.Register<MusicShare>("MusicShare");
+			reflection.Register<VoiceMessage>("Voice");
 		}
 		return reflection;
 	}
