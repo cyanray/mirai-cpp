@@ -19,7 +19,7 @@ namespace Cyan
 			length_(0) {}
 		VoiceMessage(const VoiceMessage& m) : 
 			voiceId_(m.voiceId_), 
-			url_(m.voiceId_), 
+			url_(m.url_), 
 			path_(m.path_), 
 			base64_(m.base64_), 
 			length_(m.length_) {}
@@ -97,10 +97,6 @@ namespace Cyan
 			json result = 
 			{
 				{ "type", type_ },
-				{ "voiceId", voiceId_.empty() ? nullptr : voiceId_ },
-				{ "url", url_.empty() ? nullptr : url_ },
-				{ "path", path_.empty() ? nullptr : path_ },
-				{ "base64", base64_.empty() ? nullptr : base64_ },
 				{ "length", length_ }
 			};
 
@@ -153,7 +149,7 @@ namespace Cyan
 	private:
 		const string type_ = "Voice";
 	protected:
-		size_t length_;
+		size_t length_{};
 		string voiceId_;
 		string url_;
 		string path_;
