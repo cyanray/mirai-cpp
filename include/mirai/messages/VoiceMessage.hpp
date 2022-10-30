@@ -19,7 +19,7 @@ namespace Cyan
 			length_(0) {}
 		VoiceMessage(const VoiceMessage& m) : 
 			voiceId_(m.voiceId_), 
-			url_(m.voiceId_), 
+			url_(m.url_), 
 			path_(m.path_), 
 			base64_(m.base64_), 
 			length_(m.length_) {}
