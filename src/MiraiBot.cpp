@@ -530,7 +530,7 @@ namespace Cyan
           { "file", file_data, base_filename, "application/octet-stream"  }
         };
 
-        auto res = httpClient->Post("/uploadFileAndSend", items);
+        auto res = httpClient->Post("/file/upload", items);
         json re_json = ParseOrThrowException(res);
         MiraiFile result;
         result.FileSize = file_data.size();
