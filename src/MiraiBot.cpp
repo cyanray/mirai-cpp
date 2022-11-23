@@ -1002,14 +1002,16 @@ namespace Cyan
         ParseOrThrowException(res);
     }
 
-    FriendMessage MiraiBot::GetFriendMessageFromId(MessageId_t mid)
+    FriendMessage MiraiBot::GetFriendMessageFromId(MessageId_t mid,QQ_t fid)
     {
         stringstream api_url;
         api_url
             << "/messageFromId?sessionKey="
             << pmem->sessionKey
-            << "&id="
-            << mid;
+            << "&messageId="
+            << mid
+            << "&target="
+            << fid;
         auto res = pmem->httpClient->Get(api_url.str().data());
         json re_json = ParseOrThrowException(res);
         FriendMessage result;
@@ -1018,15 +1020,16 @@ namespace Cyan
     }
 
 
-    GroupMessage MiraiBot::GetGroupMessageFromId(MessageId_t mid)
+    GroupMessage MiraiBot::GetGroupMessageFromId(MessageId_t mid,GID_t gid)
     {
         stringstream api_url;
         api_url
             << "/messageFromId?sessionKey="
             << pmem->sessionKey
-            << "&id="
-            << mid;
-
+            << "&messageId="
+            << mid
+            << "&target="
+            << gid;
         auto res = pmem->httpClient->Get(api_url.str().data());
         json re_json = ParseOrThrowException(res);
         GroupMessage result;

@@ -425,14 +425,14 @@ namespace Cyan
          * \param mid 消息ID(MessageId)
          * \return 始终为 true 出错会抛出异常
          */
-        FriendMessage GetFriendMessageFromId(MessageId_t mid);
+        FriendMessage GetFriendMessageFromId(MessageId_t mid, QQ_t fid);
 
         /**
          * \brief 根据消息ID(MessageId)获取对应的群组消息
          * \param mid 消息ID(MessageId)
          * \return 始终为 true 出错会抛出异常
          */
-        GroupMessage GetGroupMessageFromId(MessageId_t mid);
+        GroupMessage GetGroupMessageFromId(MessageId_t mid, GID_t gid);
 
         /**
          * @brief 注册指令
