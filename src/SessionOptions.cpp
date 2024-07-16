@@ -65,21 +65,21 @@ namespace Cyan
 		if (json.contains("port"))
 		{
 			auto &json_port = json["port"];
-			short port;
+			int port;
 			if (json_port.type() == nlohmann::detail::value_t::string)
 			{
 				port = stoi(json_port.get<string>());
 			}
 			else
 			{
-				port = json_port.get<short>();
+				port = json_port.get<int>();
 			}
 			opt.HttpPort = port;
 			opt.WebSocketPort = port;
 		}
 		if (json.contains("httpPort"))
 		{
-			opt.HttpPort = json["httpPort"].get<short>();
+			opt.HttpPort = json["httpPort"].get<int>();
 		}
 		if (json.contains("http-port"))
 		{
@@ -87,7 +87,7 @@ namespace Cyan
 		}
 		if (json.contains("websocketPort"))
 		{
-			opt.WebSocketPort = json["websocketPort"].get<short>();
+			opt.WebSocketPort = json["websocketPort"].get<int>();
 		}
 		if (json.contains("websocket-port"))
 		{
