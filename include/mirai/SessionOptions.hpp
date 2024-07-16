@@ -27,12 +27,12 @@ namespace Cyan
 		/**
 		 * @brief 与 mirai-api-http 通信的端口(Http 适配器)，默认值为 8080.
 		*/
-		Property<short> HttpPort = 8080;
+		Property<int> HttpPort = 8080;
 
 		/**
 		 * @brief 与 mirai-api-http 通信的端口(WebSocket 适配器)，默认值为 8080.
 		*/
-		Property<short> WebSocketPort = 8080;
+		Property<int> WebSocketPort = 8080;
 
 		/**
 		 * @brief WebSocket 通信保留的同步ID(默认为"-1").
